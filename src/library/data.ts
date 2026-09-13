@@ -33,18 +33,18 @@ import {
   TAG_FAVS,
   TAG_PRIVATE,
 } from '@/tag';
-import { About, AboutSetFolder, AboutSetFolderRow } from '.';
-import { getAbout } from './query';
-import { getAboutCached } from './cache';
+import { Library, LibrarySetFolder, LibrarySetFolderRow } from '.';
+import { getLibrary } from './query';
+import { getLibraryCached } from './cache';
 
-const getAboutAvatar = (about?: About) =>
-  about?.photoIdAvatar
-    ? getPhotoCached(about?.photoIdAvatar ?? '', true)
+const getLibraryAvatar = (library?: Library) =>
+  library?.photoIdAvatar
+    ? getPhotoCached(library?.photoIdAvatar ?? '', true)
     : undefined;
 
-const getAboutHero = (about?: About) =>
-  about?.photoIdHero
-    ? getPhotoCached(about?.photoIdHero ?? '', true)
+const getLibraryHero = (library?: Library) =>
+  library?.photoIdHero
+    ? getPhotoCached(library?.photoIdHero ?? '', true)
     // Fall back to favorite photos if no hero photo is set
     : getPhotosCached({ tag: TAG_FAVS, limit: 1 })
       .then(photos => photos.length > 0
@@ -53,31 +53,26 @@ const getAboutHero = (about?: About) =>
         : getPhotosCached({ limit: 1, sortBy: 'takenAtAsc' })
           .then(photos => photos[0]));
 
-export const getAboutData = ({
+export const getLibraryData = ({
   includeHero = true,
 }: {
   includeHero?: boolean
 } = {}) =>
-  getAbout()
-    .then(async about => ({
-      about,
-      photoAvatar: await getAboutAvatar(about),
-      photoHero: includeHero ? await getAboutHero(about) : undefined,
+  getLibrary()
+    .then(async library => ({
+      library,
+      photoAvatar: await getLibraryAvatar(library),
+      photoHero: includeHero ? await getLibraryHero(library) : undefined,
     }));
 
-export const getAboutDataCached = ({
-  includeHero = true,
-}: {
-  includeHero?: boolean
-} = {}) =>
-  getAboutCached()
-    .then(async about => ({
-      about,
-      photoAvatar: await getAboutAvatar(about),
-      photoHero: includeHero ? await getAboutHero(about) : undefined,
+export const getLibraryDataCached = () =>
+  getLibraryCached()
+    .then(async library => ({
+      library,
+      photoAvatar: await getLibraryAvatar(library),
     }));
 
-type FolderQuery = Omit<AboutSetFolder, 'photos'> & {
+type FolderQuery = Omit<LibrarySetFolder, 'photos'> & {
   options: PhotoQueryOptions
 };
 
@@ -172,10 +167,10 @@ const getFolderQueriesForCategory = (
   }
 };
 
-export const getAboutFolderRows = async (
+export const getLibraryFolderRows = async (
   categories: PhotoSetCategories,
   appText: AppTextState,
-): Promise<AboutSetFolderRow[]> => {
+): Promise<LibrarySetFolderRow[]> => {
   const rows = CATEGORY_VISIBILITY.map(category => ({
     key: category,
     title: getCategoryTitle(category, appText),
@@ -203,7 +198,7 @@ export const getAboutFolderRows = async (
           caption: query.caption,
           path: query.path,
           count: query.count,
-          // Omit blurData so /about ISR stays under Vercel's 19MB page limit
+          // Omit blurData so /library ISR stays under Vercel's 19MB page limit
           photos: (folderPhotos[photoIndex++] ?? [])
             .map(({ blurData: _blurData, ...photo }) => photo),
         }))

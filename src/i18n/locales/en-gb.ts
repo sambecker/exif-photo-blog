@@ -50,7 +50,7 @@ export const TEXT: I18N = {
     full: 'Full',
     grid: 'Grid',
     viewOptions: 'View Options',
-    about: 'About',
+    library: 'Library',
     admin: 'Admin',
     search: 'Search',
     prev: 'Previous',
@@ -58,7 +58,7 @@ export const TEXT: I18N = {
     next: 'Next',
     nextShort: 'Next',
   },
-  about: {
+  library: {
     titleDefault: 'About this site',
     updated: 'Updated {{distance}} ago',
     photoCount: 'Photo Count',

@@ -1,12 +1,7 @@
-import { getAboutMeta } from '@/about';
-import AboutPageClient from '@/about/AboutPageClient';
-import { getAboutDataCached, getAboutFolderRows } from '@/about/data';
-import {
-  ABOUT_DESCRIPTION_DEFAULT,
-  SHOW_ABOUT_PAGE,
-  SHOW_NEW_ABOUT_PAGE,
-} from '@/app/config';
-import { PATH_ROOT } from '@/app/path';
+import { getLibraryMeta } from '@/library';
+import LibraryPageClient from '@/library/LibraryPageClient';
+import { getLibraryDataCached, getLibraryFolderRows } from '@/library/data';
+import { LIBRARY_DESCRIPTION_DEFAULT } from '@/app/config';
 import { getDataForCategoriesCached } from '@/category/cache';
 import {
   getLastModifiedForCategories,
@@ -19,37 +14,32 @@ import { getAllPhotoIdsWithUpdatedAt } from '@/photo/query';
 import { TAG_FAVS } from '@/tag';
 import { safelyParseFormattedHtml } from '@/utility/html';
 import { max } from 'date-fns';
-import { redirect } from 'next/navigation';
 
 export const dynamic = 'force-static';
 
-export default async function AboutPage() {
-  if (!SHOW_ABOUT_PAGE) { redirect(PATH_ROOT); }
-  
+export default async function LibraryPage() {  
   const appText = await getAppText();
 
   const [
     {
-      about,
+      library,
       photoAvatar,
-      photoHero,
     },
     photosMeta,
     photos,
     categories,
   ] = await Promise.all([
-    getAboutDataCached({ includeHero: !SHOW_NEW_ABOUT_PAGE })
+    getLibraryDataCached()
       .catch(() => ({
-        about: undefined,
+        library: undefined,
         photoAvatar: undefined,
-        photoHero: undefined,
       })),
     getPhotosMetaCached().catch(() => {}),
     getAllPhotoIdsWithUpdatedAt().catch(() => []),
     getDataForCategoriesCached().catch(() => (NULL_CATEGORY_DATA)),
   ]);
 
-  const description = about?.description || ABOUT_DESCRIPTION_DEFAULT;
+  const description = library?.description || LIBRARY_DESCRIPTION_DEFAULT;
 
   const descriptionHtml = description
     ? <div
@@ -71,29 +61,26 @@ export default async function AboutPage() {
 
   const lastModifiedSite = max([
     getLastModifiedForCategories(categories, photos),
-    about?.updatedAt,
+    library?.updatedAt,
   ].filter(date => date instanceof Date));
 
-  const { title, subhead } = getAboutMeta(
+  const { title, subhead } = getLibraryMeta(
     appText,
-    about?.title,
-    about?.subhead,
+    library?.title,
+    library?.subhead,
   );
 
-  const folderRows = SHOW_NEW_ABOUT_PAGE
-    ? await getAboutFolderRows(categories, appText)
-    : undefined;
+  const folderRows = await getLibraryFolderRows(categories, appText);
 
   return (
     (photosMeta?.count ?? 0) > 0
-      ? <AboutPageClient
+      ? <LibraryPageClient
         title={title}
         subhead={subhead}
         descriptionHtml={descriptionHtml}
         photosCount={photosMeta?.count}
         photosOldest={photosMeta?.dateRange?.start}
         photoAvatar={photoAvatar}
-        photoHero={photoHero}
         camera={cameras[0]?.camera}
         lens={lenses[0]?.lens}
         recipe={recipes[0]?.recipe}

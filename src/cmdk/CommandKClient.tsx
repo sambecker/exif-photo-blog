@@ -13,7 +13,7 @@ import {
   useTransition,
 } from 'react';
 import {
-  PATH_ABOUT,
+  PATH_LIBRARY,
   PATH_ADMIN_AI_MODELS,
   PATH_ADMIN_BASELINE,
   PATH_ADMIN_COMPONENTS,
@@ -40,7 +40,7 @@ import {
   PREFIX_RECENTS,
   isPathFull,
   isPathGrid,
-  isPathAbout,
+  isPathLibrary,
   isPathRoot,
 } from '../app/path';
 import Modal from '../components/Modal';
@@ -74,7 +74,6 @@ import {
   COLOR_SORT_ENABLED,
   GRID_HOMEPAGE_ENABLED,
   HIDE_TAGS_WITH_ONE_PHOTO,
-  SHOW_ABOUT_PAGE,
 } from '@/app/config';
 import { DialogDescription, DialogTitle } from '@radix-ui/react-dialog';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
@@ -649,13 +648,11 @@ export default function CommandKClient({
     ? [pageGrid, pageFull]
     : [pageFull, pageGrid];
 
-  if (SHOW_ABOUT_PAGE) {
-    pageItems.push({
-      label: appText.nav.about,
-      path: PATH_ABOUT,
-      annotation: renderCheck(isPathAbout(pathname)),
-    });
-  }
+  pageItems.push({
+    label: appText.nav.library,
+    path: PATH_LIBRARY,
+    annotation: renderCheck(isPathLibrary(pathname)),
+  });
 
   const sectionPages: CommandKSection = {
     heading: appText.cmdk.pages,

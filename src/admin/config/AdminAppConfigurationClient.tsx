@@ -27,7 +27,6 @@ import {
 import clsx from 'clsx/lite';
 import Link from 'next/link';
 import {
-  PATH_ABOUT,
   PATH_ADMIN_AI_MODELS,
   PATH_FEED_JSON,
   PATH_RSS_XML,
@@ -115,7 +114,6 @@ export default function AdminAppConfigurationClient({
   colorSortChromaCutoff,
   isSortWithPriority,
   // Display
-  showAboutPage,
   showKeyboardShortcutTooltips,
   showExifInfo,
   alwaysShowExposureComp,
@@ -859,16 +857,6 @@ export default function AdminAppConfigurationClient({
         </>;
       case 'Display':
         return <>
-          <ChecklistRow
-            title="Show about page"
-            status={showAboutPage}
-            optional
-          >
-            Set environment variable to {'"1"'} to hide
-            {' '}
-            {renderLink(PATH_ABOUT)} page
-            {renderEnvVars(['NEXT_PUBLIC_HIDE_ABOUT_PAGE'])}
-          </ChecklistRow>
           <ChecklistRow
             title="Show keyboard shortcut tooltips"
             status={showKeyboardShortcutTooltips}

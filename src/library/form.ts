@@ -1,6 +1,8 @@
-import { AboutInsert } from '.';
+import { LibraryInsert } from '.';
 
-export const convertFormDataToAbout = (formData: FormData): AboutInsert => {
+export const convertFormDataToLibrary = (
+  formData: FormData,
+): LibraryInsert => {
   const id = formData.get('id');
   return {
     id: id ? Number(id) : 0,

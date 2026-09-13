@@ -36,10 +36,10 @@ export const generateAppTextState = (i18n: I18N) => {
       found: (quantity: string) =>
         i18n.cmdk.found.replace('{{quantity}}', quantity),
     },
-    about: {
-      ...i18n.about,
+    library: {
+      ...i18n.library,
       updated: (distance: string) =>
-        i18n.about.updated.replace('{{distance}}', distance),
+        i18n.library.updated.replace('{{distance}}', distance),
     },
     admin: {
       ...i18n.admin,

@@ -20,8 +20,11 @@ export default function PhotoGridPageClient({
   photosCountWithExcludes,
   sortBy,
   sortWithPriority,
+  className,
+  aboutTextSafelyParsedHtml,
+  aboutTextHasBrParagraphBreaks,
   ...categories
-}: ComponentProps<typeof PhotoGridSidebar> & {
+}: Omit<ComponentProps<typeof PhotoGridSidebar>, 'containerHeight'> & {
   photos: Photo[]
   photosCount: number
   photosCountWithExcludes: number
@@ -78,6 +81,9 @@ export default function PhotoGridPageClient({
           >
             <PhotoGridSidebar {...{
               ...categories,
+              className,
+              aboutTextSafelyParsedHtml,
+              aboutTextHasBrParagraphBreaks,
               photosCount: photosCountWithExcludes,
               containerHeight,
             }} />

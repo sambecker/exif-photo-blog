@@ -1,5 +1,5 @@
-import AdminAboutEditPage from '@/about/AdminAboutEditPage';
-import { getAboutData } from '@/about/data';
+import AdminLibraryEditPage from '@/library/AdminLibraryEditPage';
+import { getLibraryData } from '@/library/data';
 import { PRESERVE_ORIGINAL_UPLOADS } from '@/app/config';
 import { feedQueryOptions } from '@/feed';
 import {
@@ -13,20 +13,19 @@ const PHOTO_CHOOSER_QUERY_OPTIONS = feedQueryOptions({
   excludeFromFeeds: false,
 });
 
-export default async function AboutEditPage() {
+export default async function LibraryEditPage() {
   const [
     {
-      about,
+      library,
       photoAvatar,
-      photoHero,
     },
     photos,
     photosCount,
     photosFavs,
   ] = await Promise.all([
-    getAboutData()
+    getLibraryData()
       .catch(() => ({
-        about: undefined,
+        library: undefined,
         photoAvatar: undefined,
         photoHero: undefined,
       })),
@@ -40,10 +39,9 @@ export default async function AboutEditPage() {
   ]);
 
   return (
-    <AdminAboutEditPage {...{
-      about,
+    <AdminLibraryEditPage {...{
+      library,
       photoAvatar,
-      photoHero,
       photos,
       photosCount,
       photosFavs,

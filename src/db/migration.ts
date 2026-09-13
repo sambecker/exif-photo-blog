@@ -5,7 +5,9 @@ interface Migration {
   label: string
   table?: 'photos' | 'albums'
   fields: string[]
-  run: () => ReturnType<typeof sql>
+  // Table-level migrations are invoked from safelyQuery
+  missingRelation?: string
+  run: () => ReturnType<typeof sql> | ReturnType<typeof query>
 }
 
 export const MIGRATIONS: Migration[] = [{
@@ -125,6 +127,26 @@ export const MIGRATIONS: Migration[] = [{
     ADD COLUMN IF NOT EXISTS location JSONB
   `,
 }];
+
+export const migrateAboutTableToLibrary = () =>
+  query(`
+    DO $$
+    BEGIN
+      IF EXISTS(
+        SELECT 1
+        FROM information_schema.tables
+        WHERE table_name='about'
+      )
+      AND NOT EXISTS(
+        SELECT 1
+        FROM information_schema.tables
+        WHERE table_name='library'
+      )
+      THEN
+        ALTER TABLE about RENAME TO library;
+      END IF;
+    END $$;
+  `);
 
 export const migrationForError = (e: any) =>
   MIGRATIONS.find(({ fields, table = 'photos' }) =>

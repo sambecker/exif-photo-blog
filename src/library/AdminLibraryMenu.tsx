@@ -1,16 +1,16 @@
 import MoreMenu from '@/components/more/MoreMenu';
-import { PATH_ADMIN_ABOUT_EDIT } from '@/app/path';
+import { PATH_ADMIN_LIBRARY_EDIT } from '@/app/path';
 import IconEdit from '@/components/icons/IconEdit';
 
-export default function AdminAlbumMenu() {
+export default function AdminLibraryMenu() {
   return (
     <MoreMenu
-      ariaLabel="About menu"
+      ariaLabel="Library menu"
       sections={[{
         items: [{
           label: 'Edit Page',
           icon: <IconEdit />,
-          href: PATH_ADMIN_ABOUT_EDIT,
+          href: PATH_ADMIN_LIBRARY_EDIT,
         }],
       }]}
     />

@@ -124,14 +124,12 @@ export default function PhotoPrevNextActions({
       switch (e.key.toUpperCase()) {
       // Public commands
         case KEY_COMMANDS.prev[0]:
-        case KEY_COMMANDS.prev[1]:
           if (pathPrevious) {
             setNextPhotoAnimation?.(ANIMATION_RIGHT);
             refPrevious.current?.click();
           }
           break;
         case KEY_COMMANDS.next[0]:
-        case KEY_COMMANDS.next[1]:
           if (pathNext) {
             setNextPhotoAnimation?.(ANIMATION_LEFT);
             refNext.current?.click();

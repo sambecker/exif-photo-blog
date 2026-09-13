@@ -35,7 +35,6 @@ import { useSelectPhotosState } from './select/SelectPhotosState';
 import { useEditTitlesState } from './edit-titles/EditTitlesState';
 import IconAlbum from '@/components/icons/IconAlbum';
 import IconEdit from '@/components/icons/IconEdit';
-import { SHOW_ABOUT_PAGE } from '@/app/config';
 import {
   HEIGHT_CLASS,
   SWITCHER_ITEM_WIDTH,
@@ -264,9 +263,7 @@ export default function AdminAppMenu({
       </div>}
       align="start"
       sideOffset={10}
-      alignOffset={SHOW_ABOUT_PAGE
-        ? -(SWITCHER_ITEM_WIDTH * 3)
-        : -(SWITCHER_ITEM_WIDTH * 2)}
+      alignOffset={-(SWITCHER_ITEM_WIDTH * 3)}
       onOpen={refreshAdminData}
       sections={sections}
       ariaLabel="Admin Menu"

@@ -472,7 +472,7 @@ export default function PhotoFolder({
             <span
               className={clsx(
                 'pl-1 inline-flex items-center',
-                'text-dim text-[0.7rem] whitespace-nowrap',
+                'text-dim text-[0.7rem] font-medium whitespace-nowrap',
               )}
               aria-hidden
             >

@@ -2,6 +2,7 @@ import clsx from 'clsx/lite';
 import { useMemo } from 'react';
 import { GrReturn } from 'react-icons/gr';
 import { PiBackspaceBold, PiCommandBold } from 'react-icons/pi';
+import { FaArrowLeft, FaArrowRight } from 'react-icons/fa6';
 import useIsApplePlatform from '@/utility/useIsApplePlatform';
 
 export default function KeyCommand({
@@ -16,10 +17,12 @@ export default function KeyCommand({
   const isApplePlatform = useIsApplePlatform();
 
   const keys = useMemo(() => {
-    const childrenFormatted = children === 'BACKSPACE'
-      ? '⌫'
-      : children;
-    return modifier ? [modifier, ...childrenFormatted] : [...childrenFormatted];
+    const childKeys = children === 'BACKSPACE'
+      ? ['⌫']
+      : children === 'ARROWRIGHT' || children === 'ARROWLEFT'
+        ? [children]
+        : [...children];
+    return modifier ? [modifier, ...childKeys] : childKeys;
   }, [modifier, children]);
 
   return (
@@ -42,7 +45,11 @@ export default function KeyCommand({
               ? <GrReturn size={14} />
               : key === '⌫'
                 ? <PiBackspaceBold size={14} />
-                : key}
+                : key === 'ARROWLEFT'
+                  ? <FaArrowLeft size={10} />
+                  : key === 'ARROWRIGHT'
+                    ? <FaArrowRight size={10} />
+                    : key}
         </span>
       ))}
     </span>

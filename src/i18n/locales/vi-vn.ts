@@ -50,7 +50,7 @@ export const TEXT: I18N = {
     full: 'Toàn bộ',
     grid: 'Lưới',
     viewOptions: 'Tùy chọn xem',
-    about: 'Giới thiệu',
+    library: 'Thư viện',
     admin: 'Quản trị',
     search: 'Tìm kiếm',
     prev: 'Trước',
@@ -58,7 +58,7 @@ export const TEXT: I18N = {
     next: 'Tiếp',
     nextShort: 'Tiếp',
   },
-  about: {
+  library: {
     titleDefault: 'Giới thiệu trang web',
     updated: 'Cập nhật {{distance}} trước',
     photoCount: 'Số lượng ảnh',

@@ -1,29 +1,27 @@
 'use client';
 
-import { PATH_ABOUT } from '@/app/path';
+import { PATH_LIBRARY } from '@/app/path';
 import LinkWithStatus from '@/components/LinkWithStatus';
 import { useState } from 'react';
-import { About, AboutInsert, getAboutMeta } from '.';
+import { Library, LibraryInsert, getLibraryMeta } from '.';
 import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import AdminChildPage from '@/components/AdminChildPage';
-import { updateAboutAction } from './actions';
+import { updateLibraryAction } from './actions';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import { Photo } from '@/photo';
 import { useAppText } from '@/i18n/state/client';
 import FieldsetPhotoChooser from '@/photo/form/FieldsetPhotoChooser';
-import { ABOUT_DESCRIPTION_DEFAULT } from '@/app/config';
+import { LIBRARY_DESCRIPTION_DEFAULT } from '@/app/config';
 
-export default function AdminAboutEditPage({
-  about,
+export default function AdminLibraryEditPage({
+  library,
   photoAvatar,
-  photoHero,
   photos,
   photosCount,
   photosFavs,
 }: {
-  about?: About
+  library?: Library
   photoAvatar?: Photo
-  photoHero?: Photo
   photos: Photo[]
   photosCount: number
   photosFavs: Photo[]
@@ -31,29 +29,30 @@ export default function AdminAboutEditPage({
 }) {
   const appText = useAppText();
 
-  const [aboutForm, setAboutForm] = useState<Partial<AboutInsert>>(about ?? {});
+  const [libraryForm, setLibraryForm] =
+    useState<Partial<LibraryInsert>>(library ?? {});
 
   const {
     title: placeholderTitle,
     subhead: placeholderSubhead,
-  } = getAboutMeta(appText);
+  } = getLibraryMeta(appText);
 
   return (
     <AdminChildPage
-      backPath={PATH_ABOUT}
-      backLabel="About"
-      breadcrumb="Edit About Page"
+      backPath={PATH_LIBRARY}
+      backLabel="Library"
+      breadcrumb="Edit Library Page"
     >
       <form
         className="space-y-12 mt-12"
-        action={updateAboutAction}
+        action={updateLibraryAction}
       >
         <div className="space-y-4">
           <FieldsetPhotoChooser
             id="photoIdAvatar"
             label="Avatar"
-            value={aboutForm?.photoIdAvatar ?? photoAvatar?.id ?? ''}
-            onChange={photoIdAvatar => setAboutForm(form =>
+            value={libraryForm?.photoIdAvatar ?? photoAvatar?.id ?? ''}
+            onChange={photoIdAvatar => setLibraryForm(form =>
               ({ ...form, photoIdAvatar }))}
             photo={photoAvatar}
             photos={photos}
@@ -62,41 +61,30 @@ export default function AdminAboutEditPage({
           />
           <FieldsetWithStatus
             label="Title"
-            value={aboutForm?.title ?? ''}
+            value={libraryForm?.title ?? ''}
             placeholder={placeholderTitle}
-            onChange={title => setAboutForm(form =>
+            onChange={title => setLibraryForm(form =>
               ({ ...form, title }))}
           />
           <FieldsetWithStatus
             label="Subhead"
-            value={aboutForm?.subhead ?? ''}
+            value={libraryForm?.subhead ?? ''}
             placeholder={placeholderSubhead}
-            onChange={subhead => setAboutForm(form =>
+            onChange={subhead => setLibraryForm(form =>
               ({ ...form, subhead }))}
           />
           <FieldsetWithStatus
             label="Description"
             type="textarea"
-            value={aboutForm?.description ?? ''}
-            placeholder={ABOUT_DESCRIPTION_DEFAULT}
-            onChange={description => setAboutForm(form =>
+            value={libraryForm?.description ?? ''}
+            placeholder={LIBRARY_DESCRIPTION_DEFAULT}
+            onChange={description => setLibraryForm(form =>
               ({ ...form, description }))}
-          />
-          <FieldsetPhotoChooser
-            id="photoIdHero"
-            label="Hero"
-            value={aboutForm?.photoIdHero || photoHero?.id || ''}
-            onChange={photoIdHero => setAboutForm(form =>
-              ({ ...form, photoIdHero }))}
-            photo={photoHero}
-            photos={photos}
-            photosCount={photosCount}
-            photosFavs={photosFavs}
           />
         </div>
         <div className="flex gap-2">
           <LinkWithStatus
-            href={PATH_ABOUT}
+            href={PATH_LIBRARY}
             className="button"
           >
             Cancel

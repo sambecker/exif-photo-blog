@@ -2,7 +2,7 @@ import { PATHS_ADMIN, PATHS_TO_CACHE } from '@/app/path';
 import { revalidatePath, revalidateTag } from 'next/cache';
 
 // Page keys
-export const KEY_ABOUT          = 'about';
+export const KEY_LIBRARY        = 'library';
 // Table key
 export const KEY_PHOTOS         = 'photos';
 export const KEY_PHOTO          = 'photo';
@@ -19,8 +19,8 @@ export const KEY_FOCAL_LENGTHS  = 'focal-lengths';
 export const KEY_COUNT          = 'count';
 export const KEY_DATE_RANGE     = 'date-range';
 
-export const revalidateAboutKey = () =>
-  revalidateTag(KEY_ABOUT, 'max');
+export const revalidateLibraryKey = () =>
+  revalidateTag(KEY_LIBRARY, 'max');
 
 export const revalidatePhotosKey = () =>
   revalidateTag(KEY_PHOTOS, 'max');
@@ -50,7 +50,7 @@ export const revalidateFocalLengthsKey = () =>
   revalidateTag(KEY_FOCAL_LENGTHS, 'max');
 
 export const revalidateAllKeys = () => {
-  revalidateAboutKey();
+  revalidateLibraryKey();
   revalidatePhotosKey();
   revalidateYearsKey();
   revalidateCamerasKey();

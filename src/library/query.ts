@@ -1,13 +1,13 @@
 import { sql } from '@/platforms/postgres';
-import { About, AboutInsert } from '.';
+import { Library, LibraryInsert } from '.';
 import { safelyQuery } from '@/db/query';
 import camelcaseKeys from 'camelcase-keys';
 
-const ABOUT_ID = 1;
+const LIBRARY_ID = 1;
 
-export const createAboutTable = () =>
+export const createLibraryTable = () =>
   sql`
-    CREATE TABLE IF NOT EXISTS about (
+    CREATE TABLE IF NOT EXISTS library (
       id SERIAL PRIMARY KEY,
       title VARCHAR(255),
       subhead TEXT,
@@ -19,9 +19,9 @@ export const createAboutTable = () =>
     )
   `;
 
-export const upsertAbout = (about: AboutInsert) =>
+export const upsertLibrary = (library: LibraryInsert) =>
   safelyQuery(() => sql`
-    INSERT INTO about (
+    INSERT INTO library (
       id,
       title,
       subhead,
@@ -31,12 +31,12 @@ export const upsertAbout = (about: AboutInsert) =>
       updated_at,
       created_at
     ) VALUES (
-      ${ABOUT_ID},
-      ${about.title},
-      ${about.subhead},
-      ${about.description},
-      ${about.photoIdAvatar},
-      ${about.photoIdHero},
+      ${LIBRARY_ID},
+      ${library.title},
+      ${library.subhead},
+      ${library.description},
+      ${library.photoIdAvatar},
+      ${library.photoIdHero},
       ${new Date().toISOString()},
       ${new Date().toISOString()}
     )
@@ -49,15 +49,15 @@ export const upsertAbout = (about: AboutInsert) =>
       updated_at = CURRENT_TIMESTAMP
     RETURNING id
   `.then(({ rows }) => rows[0]?.id as number)
-  , 'insertAbout');
+  , 'insertLibrary');
 
-export const getAbout = () =>
+export const getLibrary = () =>
   safelyQuery(() => sql`
-    SELECT * FROM about LIMIT 1
+    SELECT * FROM library LIMIT 1
   `.then(({ rows }) => rows[0]
       ? camelcaseKeys(
         rows[0] as unknown as Record<string, unknown>,
-      ) as unknown as About
+      ) as unknown as Library
       : undefined,
     )
-  , 'getAbout');
+  , 'getLibrary');

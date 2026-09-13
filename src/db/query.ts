@@ -1,9 +1,9 @@
-import { migrationForError } from './migration';
+import { migrateAboutTableToLibrary, migrationForError } from './migration';
 import { createPhotosTable } from '@/photo/query';
 import sleep from '@/utility/sleep';
 import { ADMIN_SQL_DEBUG_ENABLED } from '@/app/config';
 import { createAlbumPhotoTable, createAlbumsTable } from '@/album/query';
-import { createAboutTable } from '@/about/query';
+import { createLibraryTable } from '@/library/query';
 
 // Safe wrapper intended for most queries with JIT migration/table creation
 // Catches up to 3 migrations in older installations
@@ -55,7 +55,7 @@ export const safelyQuery = async <T>(
       await createPhotosTable();
       await createAlbumsTable();
       await createAlbumPhotoTable();
-      await createAboutTable();
+      await createLibraryTable();
       result = await callback();
     } else if (/relation "albums" does not exist/i.test(e.message)) {
       // Create albums tables if they don't exist
@@ -63,10 +63,12 @@ export const safelyQuery = async <T>(
       await createAlbumsTable();
       await createAlbumPhotoTable();
       result = await callback();
-    } else if (/relation "about" does not exist/i.test(e.message)) {
-      // Create about table if it doesn't exist
-      console.log('Creating about table ...');
-      await createAboutTable();
+    } else if (/relation "library" does not exist/i.test(e.message)) {
+      // Rename legacy `about` table if present, otherwise create `library`
+      console.log('Creating library table ...');
+      await migrateAboutTableToLibrary();
+      // Fine to call since it's idempotent
+      await createLibraryTable();
       result = await callback();
     } else if (/endpoint is in transition/i.test(e.message)) {
       console.log(

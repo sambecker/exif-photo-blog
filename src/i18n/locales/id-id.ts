@@ -50,7 +50,7 @@ export const TEXT: I18N = {
     full: 'Lengkap',
     grid: 'Grid',
     viewOptions: 'Opsi tampilan',
-    about: 'Tentang',
+    library: 'Pustaka',
     admin: 'Admin',
     search: 'Cari',
     prev: 'Sebelumnya',
@@ -58,7 +58,7 @@ export const TEXT: I18N = {
     next: 'Berikutnya',
     nextShort: 'Brkt',
   },
-  about: {
+  library: {
     titleDefault: 'Tentang situs ini',
     updated: 'Diperbarui {{distance}} yang lalu',
     photoCount: 'Jumlah foto',

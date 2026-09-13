@@ -3,7 +3,7 @@ import type { CategoryKey } from '@/category';
 import { AppTextState } from '@/i18n/state';
 import type { Photo } from '@/photo';
 
-export interface AboutInsert {
+export interface LibraryInsert {
   id: number
   title?: string
   subhead?: string
@@ -12,12 +12,12 @@ export interface AboutInsert {
   photoIdHero?: string
 }
 
-export interface About extends AboutInsert {
+export interface Library extends LibraryInsert {
   createdAt: Date
   updatedAt: Date
 }
 
-export interface AboutSetFolder {
+export interface LibrarySetFolder {
   key: string
   caption: string
   path: string
@@ -25,19 +25,19 @@ export interface AboutSetFolder {
   count: number
 }
 
-export interface AboutSetFolderRow {
+export interface LibrarySetFolderRow {
   key: CategoryKey
   title: string
-  folders: AboutSetFolder[]
+  folders: LibrarySetFolder[]
 }
 
 // Leave title/subhead blank to reveal default values
-export const getAboutMeta = (
+export const getLibraryMeta = (
   appText: AppTextState,
   title?: string,
   subhead?: string,
 ) => ({
-  title: title || META_TITLE || appText.about.titleDefault,
+  title: title || META_TITLE || appText.library.titleDefault,
   subhead: subhead || (SHOW_TEMPLATE_ATTRIBUTION
     ? appText.utility.madeWithExifPhotoBlog
     : undefined),

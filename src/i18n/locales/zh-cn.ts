@@ -50,7 +50,7 @@ export const TEXT: I18N = {
     full: '完整',
     grid: '网格',
     viewOptions: '视图选项',
-    about: '关于',
+    library: '图库',
     admin: '管理',
     search: '搜索',
     prev: '上一页',
@@ -58,7 +58,7 @@ export const TEXT: I18N = {
     next: '下一页',
     nextShort: '下一页',
   },
-  about: {
+  library: {
     titleDefault: '关于本网站',
     updated: '{{distance}} 前更新',
     photoCount: '照片数量',

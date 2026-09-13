@@ -50,7 +50,7 @@ export const TEXT: I18N = {
     full: 'Completo',
     grid: 'Grade',
     viewOptions: 'Opções de visualização',
-    about: 'Sobre',
+    library: 'Biblioteca',
     admin: 'Menu de administração',
     search: 'Pesquisar',
     prev: 'Anterior',
@@ -58,7 +58,7 @@ export const TEXT: I18N = {
     next: 'Próximo',
     nextShort: 'Próx',
   },
-  about: {
+  library: {
     titleDefault: 'Sobre este sítio',
     updated: 'Atualizado há {{distance}}',
     photoCount: 'Número de fotos',

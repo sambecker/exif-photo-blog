@@ -50,7 +50,7 @@ export const TEXT: I18N = {
     full: 'Tam',
     grid: 'Izgara',
     viewOptions: 'Görünüm seçenekleri',
-    about: 'Hakkında',
+    library: 'Kütüphane',
     admin: 'Yönetici',
     search: 'Ara',
     prev: 'Önceki',
@@ -58,7 +58,7 @@ export const TEXT: I18N = {
     next: 'Sonraki',
     nextShort: 'Sonraki',
   },
-  about: {
+  library: {
     titleDefault: 'Site hakkında',
     updated: '{{distance}} önce güncellendi',
     photoCount: 'Fotoğraf sayısı',

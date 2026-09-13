@@ -50,7 +50,7 @@ export const TEXT: I18N = {
     full: 'पूर्ण',
     grid: 'ग्रिड',
     viewOptions: 'दृश्य विकल्प',
-    about: 'के बारे में',
+    library: 'पुस्तकालय',
     admin: 'एडमिन',
     search: 'खोज',
     prev: 'पिछला',
@@ -58,7 +58,7 @@ export const TEXT: I18N = {
     next: 'अगला',
     nextShort: 'अगला',
   },
-  about: {
+  library: {
     titleDefault: 'इस साइट के बारे में',
     updated: '{{distance}} पहले अपडेट किया गया',
     photoCount: 'फोटो की संख्या',
