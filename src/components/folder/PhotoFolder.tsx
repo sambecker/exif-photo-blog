@@ -101,10 +101,29 @@ const FOLDER_TINT_CHROMA_MAX = 0.07;
 const PEEK_DIRECTIONS = [
   { x: -28, y: -40, r: -14 },
   { x: -16, y: -48, r: -4 },
-  { x: 18, y: -50, r: 6 },
-  { x: 30, y: -38, r: 14 },
-  { x: 2, y: -30, r: 4 },
+  { x: 0, y: -52, r: 0 },
+  { x: 16, y: -48, r: 6 },
+  { x: 28, y: -40, r: 14 },
 ] as const;
+
+type PeekSlot = (typeof PEEK_DIRECTIONS)[number];
+
+const getCenteredPeekSlots = (count: number) => {
+  const length = PEEK_DIRECTIONS.length;
+  const n = Math.min(count, length);
+  if (n <= 0) { return [] as PeekSlot[]; }
+  if (n % 2 === 1) {
+    const start = Math.floor((length - n) / 2);
+    return PEEK_DIRECTIONS.slice(start, start + n);
+  }
+  const center = Math.floor(length / 2);
+  const withoutCenter = [
+    ...PEEK_DIRECTIONS.slice(0, center),
+    ...PEEK_DIRECTIONS.slice(center + 1),
+  ];
+  const start = Math.floor((withoutCenter.length - n) / 2);
+  return withoutCenter.slice(start, start + n);
+};
 
 const hashToUnit = (value: string, salt: number) => {
   let hash = salt;
@@ -118,8 +137,8 @@ const getPeekStyle = (
   photo: Photo,
   index: number,
   folderWidth: number,
+  slot: PeekSlot,
 ): CSSProperties => {
-  const slot = PEEK_DIRECTIONS[index % PEEK_DIRECTIONS.length];
   const folderHeight = folderWidth * FOLDER_HEIGHT / FOLDER_WIDTH;
   const x = slot.x + (hashToUnit(photo.id, 1) - 0.5) * 8;
   const y = slot.y + (hashToUnit(photo.id, 2) - 0.5) * 10;
@@ -228,6 +247,7 @@ export default function PhotoFolder({
   const photosPeeking = unusedPhotos.length > 0
     ? unusedPhotos.slice(0, PHOTO_FOLDER_PEEK_PHOTOS)
     : photosInFolder.slice(0, PHOTO_FOLDER_PEEK_PHOTOS);
+  const peekSlots = getCenteredPeekSlots(photosPeeking.length);
 
   const tintColor = tint
     ? getProminentColorFromPhotos(photosInFolder)
@@ -313,7 +333,12 @@ export default function PhotoFolder({
             ...(tintStyle
               ? { backgroundColor: 'var(--folder-fill)' }
               : undefined),
-            ...getPeekStyle(photo, index, width),
+            ...getPeekStyle(
+              photo,
+              index,
+              width,
+              peekSlots[index] ?? PEEK_DIRECTIONS[2],
+            ),
           }}
         >
           <div
