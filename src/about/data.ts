@@ -222,7 +222,9 @@ export const getAboutFolderRows = async (
           caption: query.caption,
           path: query.path,
           count: query.count,
-          photos: folderPhotos[photoIndex++] ?? [],
+          // Omit blurData so /about ISR stays under Vercel's 19MB page limit
+          photos: (folderPhotos[photoIndex++] ?? [])
+            .map(({ blurData: _blurData, ...photo }) => photo),
         }))
         .filter(folder => folder.photos.length > 0),
     }))
