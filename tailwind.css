@@ -369,6 +369,12 @@ html {
     calc(-50% + var(--peek-y))
   ) translateZ(1px) rotate(var(--peek-rotate)) scale(1);
 }
+@utility folder-peek-active {
+  transform: translate(
+    calc(-50% + var(--peek-x) * 0.8),
+    calc(-50% + var(--peek-y) * 0.8)
+  ) translateZ(1px) rotate(calc(var(--peek-rotate) * 0.8)) scale(0.98);
+}
 
 @layer components {
   .component-surface {
