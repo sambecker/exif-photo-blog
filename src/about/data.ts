@@ -113,37 +113,42 @@ const getFolderQueriesForCategory = (
           options: { recent: true },
           caption: appText.category.recentPlural,
           path: PREFIX_RECENTS,
+          count: categories.recents[0].count,
         }]
         : [];
     case 'years':
-      return categories.years.map(({ year }) => ({
+      return categories.years.map(({ year, count }) => ({
         key: year,
         options: { year },
         caption: year,
         path: pathForYear(year),
+        count,
       }));
     case 'cameras':
-      return categories.cameras.map(({ camera, cameraKey }) => ({
+      return categories.cameras.map(({ camera, cameraKey, count }) => ({
         key: cameraKey,
         options: { camera },
         caption: formatCameraText(camera),
         path: pathForCamera(camera),
+        count,
       }));
     case 'lenses':
-      return categories.lenses.map(({ lens, lensKey }) => ({
+      return categories.lenses.map(({ lens, lensKey, count }) => ({
         key: lensKey,
         options: { lens },
         caption: formatLensText(lens),
         path: pathForLens(lens),
+        count,
       }));
     case 'albums':
       return categories.albums
         .filter(({ count }) => count > 0)
-        .map(({ album }) => ({
+        .map(({ album, count }) => ({
           key: album.slug,
           options: { album },
           caption: album.title,
           path: pathForAlbum(album),
+          count,
         }));
     case 'tags': {
       const tags = HIDE_TAGS_WITH_ONE_PHOTO
@@ -151,33 +156,37 @@ const getFolderQueriesForCategory = (
         : categories.tags;
       return tags
         .filter(({ tag }) => tag !== TAG_PRIVATE)
-        .map(({ tag }) => ({
+        .map(({ tag, count }) => ({
           key: tag,
           options: { tag },
           caption: formatTag(tag),
           path: pathForTag(tag),
+          count,
         }));
     }
     case 'recipes':
-      return categories.recipes.map(({ recipe }) => ({
+      return categories.recipes.map(({ recipe, count }) => ({
         key: recipe,
         options: { recipe },
         caption: formatRecipe(recipe),
         path: pathForRecipe(recipe),
+        count,
       }));
     case 'films':
-      return categories.films.map(({ film }) => ({
+      return categories.films.map(({ film, count }) => ({
         key: film,
         options: { film },
         caption: labelForFilm(film).medium,
         path: pathForFilm(film),
+        count,
       }));
     case 'focal-lengths':
-      return categories.focalLengths.map(({ focal }) => ({
+      return categories.focalLengths.map(({ focal, count }) => ({
         key: `${focal}`,
         options: { focal },
         caption: formatFocalLength(focal),
         path: pathForFocalLength(focal),
+        count,
       }));
   }
 };
@@ -211,6 +220,7 @@ export const getAboutFolderRows = async (
           key: query.key,
           caption: query.caption,
           path: query.path,
+          count: query.count,
           photos: folderPhotos[photoIndex++] ?? [],
         }))
         .filter(folder => folder.photos.length > 0),

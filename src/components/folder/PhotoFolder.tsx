@@ -14,6 +14,10 @@ import {
   Oklch,
 } from '@/photo/color/client';
 import { PHOTO_FOLDER_MAX_PHOTOS, PHOTO_FOLDER_PEEK_PHOTOS } from '.';
+import {
+  formatCount,
+  formatCountDescriptive,
+} from '@/utility/string';
 
 const FOLDER_WIDTH = 143;
 const FOLDER_HEIGHT = 93;
@@ -199,6 +203,7 @@ export default function PhotoFolder({
   channel = true,
   tint,
   caption,
+  count,
   href,
   maxPhotos = PHOTO_FOLDER_MAX_PHOTOS,
 }: {
@@ -208,6 +213,7 @@ export default function PhotoFolder({
   channel?: boolean
   tint?: boolean
   caption?: ReactNode
+  count?: number
   href?: string
   maxPhotos?: number
 }) {
@@ -383,12 +389,40 @@ export default function PhotoFolder({
       </div>
     </div>
     {caption &&
-      <Badge
-        type="small"
-        uppercase
-      >
-        {caption}
-      </Badge>}
+      <div className={clsx(
+        'flex items-center justify-center',
+        'w-full h-[17px] md:h-[18px]',
+      )}>
+        <Badge
+          type="small"
+          uppercase
+          className={clsx(
+            'min-w-0',
+            count !== undefined &&
+              'group-hover:max-w-[calc(100%-2.75rem)]',
+          )}
+        >
+          {caption}
+        </Badge>
+        {count !== undefined &&
+          <span
+            className={clsx(
+              'max-w-0 overflow-hidden opacity-0',
+              'group-hover:max-w-16 group-hover:opacity-100',
+              'transition-[max-width,opacity] duration-300 ease-out',
+              'motion-reduce:transition-none',
+              'pointer-events-none shrink-0',
+            )}
+            aria-label={formatCountDescriptive(count)}
+          >
+            <span
+              className="pl-1 text-dim text-[0.7rem] whitespace-nowrap"
+              aria-hidden
+            >
+              {formatCount(count)}
+            </span>
+          </span>}
+      </div>}
   </>;
 
   const folderStyle = { width };

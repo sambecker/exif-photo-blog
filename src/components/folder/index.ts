@@ -10,6 +10,7 @@ export interface AboutSetFolder {
   caption: string
   path: string
   photos: Photo[]
+  count: number
 }
 
 export interface AboutSetFolderRow {

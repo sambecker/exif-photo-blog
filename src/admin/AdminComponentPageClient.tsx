@@ -28,6 +28,7 @@ export default function AdminComponentPageClient({
     photos: Photo[]
     caption: string
     maxPhotos: number
+    count?: number
   }[]
 }) {
   const [valuePhoto, setValuePhoto] = useState(photo?.id ?? '');
@@ -59,6 +60,7 @@ export default function AdminComponentPageClient({
                 caption={folder.caption}
                 tint={tint}
                 maxPhotos={folder.maxPhotos}
+                count={folder.count}
               />
             </div>)}
         </div>

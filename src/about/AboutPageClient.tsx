@@ -297,6 +297,7 @@ export default function AboutPageClient({
                           <PhotoFolder
                             photos={folder.photos}
                             caption={folder.caption}
+                            count={folder.count}
                             href={folder.path}
                           />
                         </div>)}
