@@ -421,6 +421,8 @@ export const MATTE_COLOR =
   process.env.NEXT_PUBLIC_MATTE_COLOR;
 export const MATTE_COLOR_DARK =
   process.env.NEXT_PUBLIC_MATTE_COLOR_DARK;
+export const TINT_FOLDERS =
+  process.env.NEXT_PUBLIC_TINT_FOLDERS === '1';
 
 // SETTINGS
 
@@ -579,6 +581,7 @@ export const APP_CONFIGURATION = {
   matteColor: MATTE_COLOR,
   matteColorDark: MATTE_COLOR_DARK,
   arePhotoTitlesUppercase: UPPERCASE_TITLES,
+  areFoldersTinted: TINT_FOLDERS,
   // Settings
   arePublicDownloadsEnabled: ALLOW_PUBLIC_DOWNLOADS,
   hasSocialKeys: Boolean(process.env.NEXT_PUBLIC_SOCIAL_NETWORKS),
