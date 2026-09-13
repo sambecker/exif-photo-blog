@@ -218,7 +218,8 @@ export default function LibraryPageClient({
               )}
               items={items}
             />
-          </div>} />
+          </div>}
+        />
         {folderRows.length > 0 &&
           <AppGrid
             contentMain={<div className="space-y-8">
