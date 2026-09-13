@@ -335,6 +335,13 @@ export default function PhotoFolder({
           'group-hover:-rotate-x-[34deg]',
           'motion-reduce:transition-none',
           'motion-reduce:group-hover:rotate-x-0',
+          'after:pointer-events-none after:absolute after:inset-0',
+          'after:rounded-[inherit] after:content-[\'\']',
+          'after:bg-linear-to-b after:from-black/50 after:to-black/10',
+          'after:opacity-0 after:transition-opacity',
+          'after:duration-300 after:ease-out',
+          'group-hover:after:opacity-100',
+          'motion-reduce:group-hover:after:opacity-0',
           !tintStyle && 'bg-gray-100 dark:bg-gray-800',
           !tintStyle && 'outline-gray-300 dark:outline-gray-700',
         )}
