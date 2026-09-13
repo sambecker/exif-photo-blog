@@ -247,10 +247,10 @@ export default function PhotoFolder({
   } = getPhotoFolderLayout(photos.length, maxPhotos);
 
   const photosInFolder = photos.slice(0, photosToShow);
-  const unusedPhotos = photos.slice(photosToShow);
-  const photosPeeking = unusedPhotos.length > 0
-    ? unusedPhotos.slice(0, PHOTO_FOLDER_PEEK_PHOTOS)
-    : photosInFolder.slice(0, PHOTO_FOLDER_PEEK_PHOTOS);
+  const photosPeeking = [
+    ...photos.slice(photosToShow),
+    ...photosInFolder,
+  ].slice(0, PHOTO_FOLDER_PEEK_PHOTOS);
   const peekSlots = getCenteredPeekSlots(photosPeeking.length);
 
   const tintColor = tint
