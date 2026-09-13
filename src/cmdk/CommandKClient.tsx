@@ -265,6 +265,7 @@ export default function CommandKClient({
   const shouldCloseAfterWaiting = useRef(false);
   useEffect(() => {
     if (!isWaiting) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setKeyWaiting(undefined);
       if (shouldCloseAfterWaiting.current) {
         setIsOpen?.(false);
@@ -352,6 +353,7 @@ export default function CommandKClient({
 
   useEffect(() => {
     if (!isOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setQuery('');
       reset();
     } else if (nextCommandKQuery !== undefined) {
