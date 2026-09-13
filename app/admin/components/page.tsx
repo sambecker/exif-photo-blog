@@ -44,13 +44,6 @@ type FolderQuery = {
   count?: number
 };
 
-type PhotoFolderPreview = {
-  photos: Photo[]
-  caption: string
-  maxPhotos: number
-  count?: number
-};
-
 export default async function ComponentsPage() {
   const [
     photos,
@@ -162,8 +155,7 @@ export default async function ComponentsPage() {
       maxPhotos: FOLDER_LIMITS[index % FOLDER_LIMITS.length],
       count: query.count,
     }))
-    .filter((folder): folder is PhotoFolderPreview =>
-      folder.photos.length > 0);
+    .filter(folder => folder.photos.length > 0);
 
   return (
     <AdminComponentPageClient
