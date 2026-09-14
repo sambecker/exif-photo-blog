@@ -18,7 +18,6 @@ import { Films } from '@/film';
 import {
   AI_TEXT_AUTO_GENERATED_FIELDS,
   AI_CONTENT_GENERATION_ENABLED,
-  COLOR_SORT_ENABLED,
 } from '@/app/config';
 import {
   PhotoQueryOptions,
@@ -719,7 +718,7 @@ const needsAiTextWhereClauses =
       })
     : [];
 
-const needsColorDataWhereClauses = COLOR_SORT_ENABLED
+const needsColorDataWhereClauses = AI_CONTENT_GENERATION_ENABLED
   ? [`(
     color_data IS NULL OR
     color_sort IS NULL

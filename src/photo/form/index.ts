@@ -313,13 +313,13 @@ const FORM_METADATA = (
     type: COLOR_SORT_ENABLED ? 'textarea' : 'hidden',
     label: 'color data',
     isJson: true,
-    shouldHide: () => !COLOR_SORT_ENABLED && !aiTextGeneration,
+    shouldHide: () => !aiTextGeneration,
   },
   colorSort: {
     section: 'misc',
     type: COLOR_SORT_ENABLED ? 'text' : 'hidden',
     label: 'color sort',
-    shouldHide: () => !COLOR_SORT_ENABLED && !aiTextGeneration,
+    shouldHide: () => !aiTextGeneration,
   },
   priorityOrder: {
     section: 'misc',

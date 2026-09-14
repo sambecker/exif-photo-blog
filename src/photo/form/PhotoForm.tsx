@@ -197,12 +197,17 @@ export default function PhotoForm({
             }
           });
 
+        const colorData = generateColorDataFromString(
+          updatedExifData?.colorData,
+        );
+
         return {
           ...currentForm,
           ...updatedExifData,
           ...updatedExifData?.colorData !== undefined && {
             keyColor: convertOklchToJsonString(
-              generateColorDataFromString(updatedExifData.colorData)?.ai,
+              colorData?.ai ||
+              colorData?.colors[0],
             ),
           },
         };
