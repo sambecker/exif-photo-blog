@@ -2,7 +2,6 @@
 
 import PhotoAlbum from '@/album/PhotoAlbum';
 import { useAppState } from '@/app/AppState';
-import { TINT_FOLDERS } from '@/app/config';
 import PhotoCamera from '@/camera/PhotoCamera';
 import AnimateItems from '@/components/AnimateItems';
 import AppGrid from '@/components/AppGrid';
@@ -26,8 +25,7 @@ import { LuCirclePlus, LuUser } from 'react-icons/lu';
 import AdminEmptyState from '@/admin/AdminEmptyState';
 import { Place } from '@/place';
 import PlaceEntity from '@/place/PlaceEntity';
-import PhotoFolder from '@/components/folder/PhotoFolder';
-import CategoryIcon from '@/category/CategoryIcon';
+import LibrarySection from './LibrarySection';
 import type { LibrarySetFolderRow } from '.';
 
 export default function LibraryPageClient({
@@ -226,42 +224,12 @@ export default function LibraryPageClient({
           <AppGrid
             contentMain={<div className="space-y-8">
               {folderRows.map(({ key, title, folders }) =>
-                <div
+                <LibrarySection
                   key={key}
-                  className="border-t border-medium pt-1 space-y-3"
-                >
-                  <div className={clsx(
-                    'flex items-center gap-1',
-                    'text-[13px] uppercase tracking-wide text-dim',
-                  )}>
-                    <span className="w-[1rem]">
-                      <CategoryIcon category={key} />
-                    </span>
-                    {title}
-                  </div>
-                  <div className={clsx(
-                    'grid gap-3',
-                    'grid-cols-2 sm:grid-cols-3',
-                    'lg:grid-cols-5',
-                  )}>
-                    {folders.map(folder =>
-                      <div
-                        key={folder.key}
-                        className={clsx(
-                          'w-full h-full',
-                          'flex items-center justify-center',
-                        )}
-                      >
-                        <PhotoFolder
-                          photos={folder.photos}
-                          caption={folder.caption}
-                          count={folder.count}
-                          href={folder.path}
-                          tint={TINT_FOLDERS ? 'on' : 'off'}
-                        />
-                      </div>)}
-                  </div>
-                </div>)}
+                  category={key}
+                  title={title}
+                  folders={folders}
+                />)}
             </div>}
           />}
       </div>]}
