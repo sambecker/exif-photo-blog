@@ -177,6 +177,23 @@ export const generateOpenAiImageObjectQueryForModel = async <
   }
 };
 
+export const generateOpenAiImageQueryForModel = async (
+  imageBase64: string,
+  query: string,
+  modelId: OpenAIModel,
+) => {
+  if (openaiClient) {
+    await checkRateLimitAndThrow(true);
+    return generateText(getImageTextArgsForModel(
+      openaiClient(modelId),
+      imageBase64,
+      query,
+    )).then(({ text }) => cleanUpAiTextResponse(text));
+  } else {
+    throw new Error('OPENAI_SECRET_KEY required to query a specific model');
+  }
+};
+
 export const testOpenAiConnection = async () => {
   await checkRateLimitAndThrow();
 

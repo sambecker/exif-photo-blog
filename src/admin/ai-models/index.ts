@@ -1,3 +1,4 @@
+import { Oklch } from '@/photo/color/client';
 import {
   OPENAI_MODEL_COMPATIBLE,
   OPENAI_MODEL_DEFAULT,
@@ -21,10 +22,8 @@ export const AI_MODEL_OPTIONS: OpenAIModel[] = Array.from(new Set([
   ...OPENAI_MODELS_SELECTABLE,
 ]));
 
-// Compatibility and default anchor the first two columns, with the curated
-// list supplying the third, so editing that list can't leave it out of range
+// Default first, then the first curated model (currently astra)
 export const AI_MODEL_COLUMNS_DEFAULT: OpenAIModel[] = [
-  OPENAI_MODEL_COMPATIBLE,
   OPENAI_MODEL_DEFAULT,
   OPENAI_MODELS_SELECTABLE[0] ?? OPENAI_MODEL_DEFAULT,
 ];
@@ -35,6 +34,7 @@ export type AiModelResult = {
   model: OpenAIModel
   title?: string
   caption?: string
+  color?: Oklch
   error?: string
   durationInMs: number
 }

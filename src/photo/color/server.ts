@@ -4,7 +4,12 @@ import {
   IS_PREVIEW,
 } from '@/app/config';
 import { FastAverageColor } from 'fast-average-color';
-import { Oklch, PhotoColorData } from './client';
+import {
+  convertOklchToJsonString,
+  generateColorDataFromString,
+  Oklch,
+  PhotoColorData,
+} from './client';
 import sharp from 'sharp';
 import { extractColors } from 'extract-colors';
 import { getImageBase64FromUrl } from '../server';
@@ -107,13 +112,31 @@ export const getColorFieldsForPhotoDbInsert = async (
 export const getColorFieldsForPhotoForm = async (
   ...args: Parameters<typeof getColorFieldsForImageUrl>
 ) => {
-  const { colorSort, ...rest } =
+  const { colorSort, colorData, ...rest } =
     await getColorFieldsForPhotoDbInsert(...args) ?? {};
   if (colorSort !== undefined) {
     return {
       colorSort: `${colorSort}`,
+      colorData,
+      keyColor: convertOklchToJsonString(
+        generateColorDataFromString(colorData)?.ai,
+      ),
       ...rest,
     };
+  }
+};
+
+export const AI_COLOR_QUERY = `
+Does this image have a primary subject color?
+If yes, what is the approximate hex color of the subject.
+If not, what is the approximate hex color of the background.
+Prefer pops of color over large neutral fields.
+Respond only with a hex color value:`;
+
+export const parseAiColorResponse = (text?: string) => {
+  const hex = text?.match(/#*([a-f0-9]{6})/i)?.[1];
+  if (hex) {
+    return convertHexToOklch(`#${hex}`);
   }
 };
 
@@ -123,14 +146,7 @@ export const getColorFromAI = async (
 ) => {
   const url = getOptimizedPhotoUrlForManipulation(_url, IS_PREVIEW);
   const image = await getImageBase64FromUrl(url);
-  const hexColor = await generateOpenAiImageQuery(image, `
-    Does this image have a primary subject color?
-    If yes, what is the approximate hex color of the subject.
-    If not, what is the approximate hex color of the background?
-    Respond only with a hex color value:
-  `, isBatch);
-  const hex = hexColor?.match(/#*([a-f0-9]{6})/i)?.[1];
-  if (hex) {
-    return convertHexToOklch(`#${hex}`);
-  }
+  return parseAiColorResponse(
+    await generateOpenAiImageQuery(image, AI_COLOR_QUERY, isBatch),
+  );
 };

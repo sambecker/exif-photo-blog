@@ -6,7 +6,14 @@ import { getPhoto } from '@/photo/query';
 import { resizeImageFromUrl } from '@/photo/server';
 import { getOptimizedPhotoUrlForManipulation } from '@/photo/storage';
 import { getAiImageQuerySchema } from '@/photo/ai';
-import { generateOpenAiImageObjectQueryForModel } from '@/platforms/openai';
+import {
+  AI_COLOR_QUERY,
+  parseAiColorResponse,
+} from '@/photo/color/server';
+import {
+  generateOpenAiImageObjectQueryForModel,
+  generateOpenAiImageQueryForModel,
+} from '@/platforms/openai';
 import { OpenAIModel } from '@/platforms/openai/models';
 import { AiModelResult } from '.';
 
@@ -37,16 +44,29 @@ export const generateAiTextForModelsAction = async (
       const timeStart = Date.now();
       try {
         // Schema is built dynamically, so fields aren't statically inferred
-        const { title, caption }: {
+        const [{ title, caption }, colorText]: [{
           title?: string
           caption?: string
-        } = await generateOpenAiImageObjectQueryForModel(
-          imageBase64,
-          query,
-          schema,
+        }, string | undefined] = await Promise.all([
+          generateOpenAiImageObjectQueryForModel(
+            imageBase64,
+            query,
+            schema,
+            model,
+          ),
+          generateOpenAiImageQueryForModel(
+            imageBase64,
+            AI_COLOR_QUERY,
+            model,
+          ).catch(() => undefined),
+        ]);
+        return {
           model,
-        );
-        return { model, title, caption, durationInMs: Date.now() - timeStart };
+          title,
+          caption,
+          color: parseAiColorResponse(colorText),
+          durationInMs: Date.now() - timeStart,
+        };
       } catch (e: any) {
         return {
           model,

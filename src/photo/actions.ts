@@ -78,6 +78,7 @@ import { after } from 'next/server';
 import {
   getColorFieldsForImageUrl,
   getColorFieldsForPhotoDbInsert,
+  getColorFromAI,
 } from '@/photo/color/server';
 import { shouldBackfillPhotoStorage } from './update/server';
 import { getAlbumTitlesFromFormData } from '@/album/form';
@@ -455,6 +456,11 @@ export const getPhotosNeedingRecipeTitleCountAction = async (
 export const getRecipeDataForTitleAction = async (recipeTitle: string) =>
   runAuthenticatedAdminServerAction(async () =>
     await getRecipeDataForTitle(recipeTitle),
+  );
+
+export const getAiColorAction = async (url: string) =>
+  runAuthenticatedAdminServerAction(async () =>
+    await getColorFromAI(url),
   );
 
 export const storeColorDataForPhotoAction = async (photoId: string) =>

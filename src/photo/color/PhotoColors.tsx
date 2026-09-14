@@ -13,7 +13,7 @@ export default function PhotoColors({
 }) {
   return colorData
     ? <div className={clsx(
-      'flex gap-1 flex-wrap justify-start',
+      'flex gap-2.5 flex-wrap justify-start items-center',
       className,
     )}>
       {colorData.ai &&
@@ -22,19 +22,21 @@ export default function PhotoColors({
           className={classNameDot}
           color={colorData.ai}
         />}
-      <ColorDot
-        title="Average"
-        className={classNameDot}
-        color={colorData.average}
-      />
-      {colorData.colors.map((color, index) =>
+      <div className="flex gap-1">
         <ColorDot
-          key={index}
-          title={`Color ${index + 1}`}
+          title="Average"
           className={classNameDot}
-          color={color}
-        />,
-      )}
+          color={colorData.average}
+        />
+        {colorData.colors.map((color, index) =>
+          <ColorDot
+            key={index}
+            title={`Color ${index + 1}`}
+            className={classNameDot}
+            color={color}
+          />,
+        )}
+      </div>
     </div>
     : null;
 }

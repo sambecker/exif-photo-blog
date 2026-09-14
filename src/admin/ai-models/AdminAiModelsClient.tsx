@@ -21,7 +21,7 @@ import Spinner from '@/components/Spinner';
 import Tooltip from '@/components/Tooltip';
 import WarningNote from '@/components/WarningNote';
 import EnvVar from '@/components/EnvVar';
-import PhotoSmall from '@/photo/PhotoSmall';
+import PhotoMedium from '@/photo/PhotoMedium';
 import { Photo } from '@/photo';
 import { OpenAIModel } from '@/platforms/openai/models';
 import {
@@ -31,6 +31,8 @@ import {
   AiModelResult,
 } from '.';
 import { generateAiTextForModelsAction } from './actions';
+import ColorDot from '@/photo/color/ColorDot';
+import { Oklch } from '@/photo/color/client';
 
 type LoadingCell = {
   photoId: string
@@ -45,8 +47,7 @@ const CLASS_BUTTON_SIDEBAR = 'md:ml-4 w-16 justify-center';
 // item can't leave its own row. Sharing this keeps their columns lined up:
 // both auto tracks hold an identically sized button, so they resolve alike.
 const CLASS_GRID = clsx(
-  // Fixed first column, so the Start button can't stretch the
-  // thumbnails' border past the image it wraps
+  // Fixed thumbnail track, then Current + two model columns
   'grid grid-cols-[6rem_1fr_1fr_1fr_auto] items-start gap-x-3',
   // Reclaims the gap-x-3 preceding the collapsed row-button track,
   // so the last model column ends flush with the main grid section
@@ -63,6 +64,51 @@ const renderGenerateIcon = (
     <span className={dim ? 'text-dim' : undefined}>{modifier}</span>
     <HiSparkles size={16} />
   </span>;
+
+const renderColorTitleCaption = ({
+  color,
+  title,
+  caption,
+  colorTitle,
+  footer,
+}: {
+  color?: Oklch
+  title?: string
+  caption?: string
+  colorTitle?: string
+  footer?: ReactNode
+}) => {
+  if (!(color || title || caption)) {
+    return <span className={clsx(
+      'flex w-full h-full justify-center items-center',
+      'text-dim text-xl',
+    )}>
+      &mdash;
+    </span>;
+  }
+
+  return <>
+    {color &&
+      <div className={clsx(
+        (title || caption || footer) && 'mb-1',
+      )}>
+        <ColorDot
+          title={colorTitle}
+          className="size-[13px]!"
+          color={color}
+        />
+      </div>}
+    {title &&
+      <div className="font-bold">
+        {title}
+      </div>}
+    {caption &&
+      <div className="text-dim">
+        {caption}
+      </div>}
+    {footer}
+  </>;
+};
 
 export default function AdminAiModelsClient({
   photos,
@@ -141,18 +187,19 @@ export default function AdminAiModelsClient({
   }, [generate]);
 
   const modelOptions = useMemo(() =>
-    AI_MODEL_OPTIONS.map(model => {
-      const annotation = AI_MODEL_ANNOTATIONS[model as string];
-      return {
-        value: model as string,
-        label: annotation
-          ? <span>
-            {model as string}
-            <span className="text-dim">{` (${annotation})`}</span>
-          </span>
-          : model as string,
-      };
-    })
+    AI_MODEL_OPTIONS
+      .map(model => {
+        const annotation = AI_MODEL_ANNOTATIONS[model as string];
+        return {
+          value: model as string,
+          label: annotation
+            ? <span>
+              {model as string}
+              <span className="text-dim">{` (${annotation})`}</span>
+            </span>
+            : model as string,
+        };
+      })
   , []);
 
   const renderColumnHeader = (column: number) =>
@@ -195,15 +242,15 @@ export default function AdminAiModelsClient({
           ? <span className="text-error">
             {result.error}
           </span>
-          : result?.title || result?.caption
-            ? <>
-              <div className="font-bold">
-                {result.title}
-              </div>
-              <div>
-                {result.caption}
-              </div>
-              <div className="flex items-center text-sm text-dim">
+          : renderColorTitleCaption({
+            color: result?.color,
+            title: result?.title,
+            caption: result?.caption,
+            colorTitle: 'AI',
+            footer: result && (
+              result.title || result.caption || result.color
+            )
+              ? <div className="flex items-center text-sm text-dim">
                 {(result.durationInMs / 1000).toFixed(1)}s
                 {/* Names the model that ran, which the column's
                     dropdown may have moved on from since */}
@@ -213,13 +260,8 @@ export default function AdminAiModelsClient({
                   supportMobile
                 />
               </div>
-            </>
-            : <span className={clsx(
-              'flex w-full h-full justify-center items-center',
-              'text-dim text-xl',
-            )}>
-              &mdash;
-            </span>}
+              : undefined,
+          })}
     </div>;
   };
 
@@ -249,6 +291,9 @@ export default function AdminAiModelsClient({
                 tooltip="Shuffle photos"
                 className="h-full"
               />
+              <div className="self-stretch flex items-center min-w-0">
+                Current
+              </div>
               {allColumns.map(renderColumnHeader)}
               <div className="md:w-0">
                 <LoaderButton
@@ -268,11 +313,28 @@ export default function AdminAiModelsClient({
           </div>
           <div className={clsx(CLASS_GRID, 'gap-y-5')}>
             {photos.map(photo => <Fragment key={photo.id}>
-              <PhotoSmall
-                photo={photo}
-                className="w-full"
-                classNameImage="w-full h-auto"
-              />
+              <div className="min-w-0 w-full">
+                <div
+                  className="flex relative overflow-hidden w-full"
+                  style={{ aspectRatio: photo.aspectRatio }}
+                >
+                  <PhotoMedium
+                    className={clsx(
+                      'flex w-full h-full',
+                      'rounded-sm border border-dim overflow-hidden',
+                    )}
+                    photo={photo}
+                  />
+                </div>
+              </div>
+              <div className="min-w-0 h-full">
+                {renderColorTitleCaption({
+                  color: photo.colorData?.ai,
+                  title: photo.title,
+                  caption: photo.caption,
+                  colorTitle: 'Current',
+                })}
+              </div>
               {allColumns.map(column => renderResult(photo.id, column))}
               {/* Zero-width once there's a sidebar to overflow into, so the
                   button costs the model columns no width */}

@@ -21,9 +21,15 @@ import {
   getChangedFormFields,
   getFormErrors,
   isFormValid,
+  formDataWithUpdatedColorData,
+  formDataWithUpdatedKeyColor,
 } from '.';
 import FieldsetWithStatus from '@/components/FieldsetWithStatus';
-import { createPhotoAction, updatePhotoAction } from '../actions';
+import {
+  createPhotoAction,
+  getAiColorAction,
+  updatePhotoAction,
+} from '../actions';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import Link from 'next/link';
 import { clsx } from 'clsx/lite';
@@ -38,6 +44,8 @@ import ImageWithFallback from '@/components/image/ImageWithFallback';
 import { Tags, convertTagsForForm } from '@/tag';
 import { AiContent } from '../ai/useAiImageQueries';
 import AiButton from '../ai/AiButton';
+import { HiSparkles } from 'react-icons/hi';
+import LoaderButton from '@/components/primitives/LoaderButton';
 import Spinner from '@/components/Spinner';
 import usePreventNavigation from '@/utility/usePreventNavigation';
 import { useAppState } from '@/app/AppState';
@@ -59,7 +67,12 @@ import IconAddUpload from '@/components/icons/IconAddUpload';
 import { didVisibilityChange } from '../visibility';
 import FieldsetVisibility from '../visibility/FieldsetVisibility';
 import PhotoColors from '../color/PhotoColors';
-import { generateColorDataFromString } from '../color/client';
+import ColorDot from '../color/ColorDot';
+import {
+  convertJsonStringToOklch,
+  convertOklchToJsonString,
+  generateColorDataFromString,
+} from '../color/client';
 import { capitalize } from '@/utility/string';
 import AnchorSections from '@/components/AnchorSections';
 import useIsVisible from '@/utility/useIsVisible';
@@ -131,6 +144,7 @@ export default function PhotoForm({
     .sort((a, b) => a.localeCompare(b))
     .join(','));
   const [isLoadingPlace, setIsLoadingPlace] = useState(false);
+  const [isLoadingKeyColor, setIsLoadingKeyColor] = useState(false);
 
   const areAlbumTitlesModified = albumTitles !== photoAlbumTitles
     .sort((a, b) => a.localeCompare(b))
@@ -155,7 +169,8 @@ export default function PhotoForm({
   const canFormBeSubmitted =
     (type === 'create' || formHasChanged) &&
     isFormValid(formData) &&
-    !aiContent?.isLoading;
+    !aiContent?.isLoading &&
+    !isLoadingKeyColor;
 
   // Update form when EXIF data
   // is refreshed by parent
@@ -185,6 +200,11 @@ export default function PhotoForm({
         return {
           ...currentForm,
           ...updatedExifData,
+          ...updatedExifData?.colorData !== undefined && {
+            keyColor: convertOklchToJsonString(
+              generateColorDataFromString(updatedExifData.colorData)?.ai,
+            ),
+          },
         };
       });
 
@@ -204,6 +224,26 @@ export default function PhotoForm({
   }, [updatedExifData]);
 
   const url = formData.url ?? '';
+
+  const regenerateKeyColor = useCallback(async () => {
+    if (!url) { return; }
+    setIsLoadingKeyColor(true);
+    try {
+      const ai = await getAiColorAction(url);
+      if (ai) {
+        setFormData(data => formDataWithUpdatedKeyColor(
+          data,
+          convertOklchToJsonString(ai),
+        ));
+      } else {
+        toastWarning('Could not generate key color');
+      }
+    } catch (error: any) {
+      toastWarning(error.message || 'Could not generate key color');
+    } finally {
+      setIsLoadingKeyColor(false);
+    }
+  }, [url]);
 
   useEffect(() => {
     if (updatedBlurData) {
@@ -253,6 +293,8 @@ export default function PhotoForm({
         return aiContent?.isLoadingTags;
       case 'semanticDescription':
         return aiContent?.isLoadingSemantic;
+      case 'keyColor':
+        return isLoadingKeyColor;
       default:
         return false;
     }
@@ -291,6 +333,21 @@ export default function PhotoForm({
             aiContent={aiContent}
             requestFields={['semantic']}
             shouldConfirm={Boolean(formData.semanticDescription)}
+          />;
+        case 'keyColor':
+          return <LoaderButton
+            tabIndex={-1}
+            icon={<HiSparkles size={16} />}
+            className="h-full"
+            isLoading={isLoadingKeyColor}
+            onClick={() => {
+              if (
+                !formData.keyColor ||
+                confirm('Are you sure you want to overwrite existing content?')
+              ) {
+                regenerateKeyColor();
+              }
+            }}
           />;
         case 'blurData':
           return shouldDebugImageFallbacks && type === 'edit' && formData.url
@@ -721,7 +778,43 @@ export default function PhotoForm({
                             // eslint-disable-next-line max-len
                             colorData={generateColorDataFromString(formData.colorData)}
                           />}
+                          onChange={value => {
+                            const formUpdated = formDataWithUpdatedColorData(
+                              formData,
+                              value,
+                            );
+                            setFormData(formUpdated);
+                          }}
                         />;
+                      case 'keyColor': {
+                        const keyColorOklch =
+                          convertJsonStringToOklch(formData.keyColor) ??
+                          generateColorDataFromString(
+                            formData.colorData,
+                          )?.ai;
+                        return <FieldsetWithStatus
+                          key={key}
+                          {...fieldProps}
+                          noteComplex={keyColorOklch &&
+                            <ColorDot
+                              className="size-[13px]!"
+                              color={keyColorOklch}
+                            />}
+                          onChange={value => {
+                            const formUpdated = formDataWithUpdatedKeyColor(
+                              formData,
+                              value,
+                            );
+                            setFormData(formUpdated);
+                            if (validate) {
+                              setFormErrors({
+                                ...formErrors,
+                                [key]: validate(value),
+                              });
+                            }
+                          }}
+                        />;
+                      }
                       case 'tags':
                         return <FieldsetWithStatus
                           key={key}
