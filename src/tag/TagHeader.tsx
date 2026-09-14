@@ -48,7 +48,7 @@ export default async function TagHeader({
       indexNumber={indexNumber}
       count={count}
       dateRange={dateRange}
-      hasAiTextGeneration={AI_CONTENT_GENERATION_ENABLED}
+      hasAiContentGeneration={AI_CONTENT_GENERATION_ENABLED}
       includeShareButton
     />
   );

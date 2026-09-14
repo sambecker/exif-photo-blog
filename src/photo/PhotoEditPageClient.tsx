@@ -26,7 +26,7 @@ export default function PhotoEditPageClient({
   uniqueTags,
   uniqueRecipes,
   uniqueFilms,
-  hasAiTextGeneration,
+  hasAiContentGeneration,
   imageThumbnailBase64,
   blurData,
   hasLocationServices,
@@ -38,7 +38,7 @@ export default function PhotoEditPageClient({
   uniqueTags: Tags
   uniqueRecipes: Recipes
   uniqueFilms: Films
-  hasAiTextGeneration: boolean
+  hasAiContentGeneration: boolean
   imageThumbnailBase64: string
   blurData: string
   hasLocationServices?: boolean
@@ -71,7 +71,7 @@ export default function PhotoEditPageClient({
       breadcrumbEllipsis
       accessory={
         <div className="flex gap-2">
-          {hasAiTextGeneration &&
+          {hasAiContentGeneration &&
             <AiButton {...{
               aiContent,
               shouldConfirm: shouldConfirmAiTextGeneration,
@@ -95,7 +95,7 @@ export default function PhotoEditPageClient({
         uniqueTags={uniqueTags}
         uniqueRecipes={uniqueRecipes}
         uniqueFilms={uniqueFilms}
-        aiContent={hasAiTextGeneration ? aiContent : undefined}
+        aiContent={hasAiContentGeneration ? aiContent : undefined}
         hasLocationServices={hasLocationServices}
         onTitleChange={setUpdatedTitle}
         onFormStatusChange={setIsPending}

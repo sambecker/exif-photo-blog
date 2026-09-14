@@ -25,7 +25,7 @@ export default async function PrivateHeader({
       selectedPhoto={selectedPhoto}
       indexNumber={indexNumber}
       count={count}
-      hasAiTextGeneration={AI_CONTENT_GENERATION_ENABLED}
+      hasAiContentGeneration={AI_CONTENT_GENERATION_ENABLED}
     />
   );
 }

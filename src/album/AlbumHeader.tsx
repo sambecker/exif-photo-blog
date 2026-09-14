@@ -96,7 +96,7 @@ export default async function AlbumHeader({
             />}
         </div>
         : undefined}
-      hasAiTextGeneration={AI_CONTENT_GENERATION_ENABLED}
+      hasAiContentGeneration={AI_CONTENT_GENERATION_ENABLED}
       includeShareButton
     />
   );

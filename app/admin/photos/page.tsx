@@ -47,7 +47,7 @@ export default async function AdminPhotosPage() {
       photosCount,
       photosCountNeedsSync,
       shouldResize: !PRESERVE_ORIGINAL_UPLOADS,
-      hasAiTextGeneration: AI_CONTENT_GENERATION_ENABLED,
+      hasAiContentGeneration: AI_CONTENT_GENERATION_ENABLED,
       onLastUpload: async () => {
         'use server';
         // Update upload count in admin nav

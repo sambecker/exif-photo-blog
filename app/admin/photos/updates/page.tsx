@@ -11,7 +11,7 @@ export default async function AdminUpdatesPage() {
   return (
     <AdminPhotosUpdateClient {...{
       photos,
-      hasAiTextGeneration: AI_CONTENT_GENERATION_ENABLED,
+      hasAiContentGeneration: AI_CONTENT_GENERATION_ENABLED,
     }} />
   );
 }

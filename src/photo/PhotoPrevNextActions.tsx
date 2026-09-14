@@ -40,13 +40,13 @@ export default function PhotoPrevNextActions({
   photo,
   photos = [],
   className,
-  hasAiTextGeneration,
+  hasAiContentGeneration,
   ...categories
 }: {
   photo?: Photo
   photos?: Photo[]
   className?: string
-  hasAiTextGeneration: boolean
+  hasAiContentGeneration: boolean
 } & PhotoSetCategory) {
   const { setNextPhotoAnimation, isUserSignedIn } = useAppState();
 
@@ -164,7 +164,7 @@ export default function PhotoPrevNextActions({
           if (
             isUserSignedIn &&
             photo &&
-            window.confirm(syncPhotoConfirmText(photo, hasAiTextGeneration))
+            window.confirm(syncPhotoConfirmText(photo, hasAiContentGeneration))
           ) {
             syncPhoto();
           }
@@ -184,7 +184,7 @@ export default function PhotoPrevNextActions({
     downloadFileName,
     syncPhoto,
     deletePhoto,
-    hasAiTextGeneration,
+    hasAiContentGeneration,
   ]);
   useKeydownHandler({ onKeyDown });
 

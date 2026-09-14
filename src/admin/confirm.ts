@@ -2,7 +2,7 @@ import { Photo } from '@/photo';
 
 export const syncPhotoConfirmText = (
   photo: Photo,
-  hasAiTextGeneration: boolean,
+  hasAiContentGeneration: boolean,
   onlySyncColorData?: boolean,
 ) => {
   const confirmText = ['Sync'];
@@ -11,7 +11,7 @@ export const syncPhotoConfirmText = (
     confirmText.push('color data?');
   } else {
     confirmText.push('data from original image file?');
-    if (hasAiTextGeneration) { confirmText.push(
+    if (hasAiContentGeneration) { confirmText.push(
       'AI text will be generated for undefined fields.'); }
   }
   confirmText.push('This action cannot be undone.');

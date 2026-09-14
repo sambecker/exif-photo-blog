@@ -22,7 +22,7 @@ export default function UploadPageClient({
   uniqueTags,
   uniqueRecipes,
   uniqueFilms,
-  hasAiTextGeneration,
+  hasAiContentGeneration,
   imageThumbnailBase64,
   shouldStripGpsData,
   hasLocationServices,
@@ -33,7 +33,7 @@ export default function UploadPageClient({
   uniqueTags: Tags
   uniqueRecipes: Recipes
   uniqueFilms: Films
-  hasAiTextGeneration?: boolean
+  hasAiContentGeneration?: boolean
   imageThumbnailBase64?: string
   shouldStripGpsData?: boolean
   hasLocationServices?: boolean
@@ -65,7 +65,7 @@ export default function UploadPageClient({
         ? updatedTitle
         : blobId}
       breadcrumbEllipsis
-      accessory={hasAiTextGeneration &&
+      accessory={hasAiContentGeneration &&
         <AiButton {...{
           aiContent,
           shouldConfirm: shouldConfirmAiTextGeneration,
@@ -79,7 +79,7 @@ export default function UploadPageClient({
         uniqueTags={uniqueTags}
         uniqueRecipes={uniqueRecipes}
         uniqueFilms={uniqueFilms}
-        aiContent={hasAiTextGeneration ? aiContent : undefined}
+        aiContent={hasAiContentGeneration ? aiContent : undefined}
         shouldStripGpsData={shouldStripGpsData}
         hasLocationServices={hasLocationServices}
         onTitleChange={setUpdatedTitle}

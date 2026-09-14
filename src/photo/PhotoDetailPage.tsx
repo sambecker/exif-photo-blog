@@ -160,7 +160,7 @@ export default function PhotoDetailPage({
           selectedPhoto={photo}
           photos={photos}
           recipe={recipe}
-          hasAiTextGeneration={AI_CONTENT_GENERATION_ENABLED}
+          hasAiContentGeneration={AI_CONTENT_GENERATION_ENABLED}
         />}
       />
       <AnimateItems

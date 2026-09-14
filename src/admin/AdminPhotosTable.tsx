@@ -26,7 +26,7 @@ export default function AdminPhotosTable({
   onLastPhotoVisible,
   revalidatePhoto,
   photoIdsSyncing = [],
-  hasAiTextGeneration,
+  hasAiContentGeneration,
   dateType = 'createdAt',
   canEdit = true,
   canSync,
@@ -40,7 +40,7 @@ export default function AdminPhotosTable({
   onLastPhotoVisible?: () => void
   revalidatePhoto?: RevalidatePhoto
   photoIdsSyncing?: string[]
-  hasAiTextGeneration: boolean
+  hasAiContentGeneration: boolean
   dateType?: 'createdAt' | 'updatedAt'
   canEdit?: boolean
   canSync?: boolean
@@ -135,7 +135,7 @@ export default function AdminPhotosTable({
                 photo={photo}
                 onSyncComplete={invalidateSwr}
                 isSyncingExternal={photoIdsSyncing.includes(photo.id)}
-                hasAiTextGeneration={hasAiTextGeneration}
+                hasAiContentGeneration={hasAiContentGeneration}
                 disabled={photoIdsSyncing.length > 0}
                 className={opacityForPhotoId(photo.id)}
                 shouldConfirm

@@ -79,7 +79,7 @@ export default async function UploadPage({ params, searchParams }: Params) {
     }),
   ]);
 
-  const hasAiTextGeneration = AI_CONTENT_GENERATION_ENABLED;
+  const hasAiContentGeneration = AI_CONTENT_GENERATION_ENABLED;
 
   if (formDataFromExif) {
     if (recipeTitle) {
@@ -99,7 +99,7 @@ export default async function UploadPage({ params, searchParams }: Params) {
         uniqueTags,
         uniqueRecipes,
         uniqueFilms,
-        hasAiTextGeneration,
+        hasAiContentGeneration,
         imageThumbnailBase64,
         shouldStripGpsData,
         hasLocationServices: HAS_LOCATION_SERVICES,

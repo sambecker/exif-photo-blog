@@ -17,7 +17,7 @@ export default function PhotoSyncButton({
   updateMode,
   className,
   isSyncingExternal,
-  hasAiTextGeneration,
+  hasAiContentGeneration,
   disabled,
   shouldConfirm,
   shouldToast,
@@ -27,7 +27,7 @@ export default function PhotoSyncButton({
   onSyncComplete?: () => void
   updateMode?: boolean
   isSyncingExternal?: boolean
-  hasAiTextGeneration: boolean
+  hasAiContentGeneration: boolean
   shouldConfirm?: boolean
   shouldToast?: boolean
   shouldScrollIntoViewOnExternalSync?: boolean
@@ -69,7 +69,7 @@ export default function PhotoSyncButton({
             !shouldConfirm ||
             window.confirm(syncPhotoConfirmText(
               photo,
-              hasAiTextGeneration,
+              hasAiContentGeneration,
               onlySyncColorData,
             ))
           ) {

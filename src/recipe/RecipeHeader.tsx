@@ -53,7 +53,7 @@ export default function RecipeHeader({
       indexNumber={indexNumber}
       count={count}
       dateRange={dateRange}
-      hasAiTextGeneration={AI_CONTENT_GENERATION_ENABLED}
+      hasAiContentGeneration={AI_CONTENT_GENERATION_ENABLED}
       includeShareButton
     />
   );

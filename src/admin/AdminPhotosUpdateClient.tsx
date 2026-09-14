@@ -22,10 +22,10 @@ const SYNC_BATCH_SIZE_MAX = 3;
 
 export default function AdminPhotosUpdateClient({
   photos,
-  hasAiTextGeneration,
+  hasAiContentGeneration,
 }: {
   photos: Photo[]
-  hasAiTextGeneration: boolean
+  hasAiContentGeneration: boolean
 }) {
   // Use refs for non-reactive while loop state
   const photoIdsToSync = useRef(photos.map(photo => photo.id));
@@ -149,7 +149,7 @@ export default function AdminPhotosUpdateClient({
           <AdminPhotosTable
             photos={photos}
             photoIdsSyncing={photoIdsSyncing}
-            hasAiTextGeneration={hasAiTextGeneration}
+            hasAiContentGeneration={hasAiContentGeneration}
             canEdit={false}
             canSync={true}
             canDelete={false}

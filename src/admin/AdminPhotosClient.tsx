@@ -24,7 +24,7 @@ export default function AdminPhotosClient({
   photosCountNeedsSync,
   blobPhotoUrls,
   shouldResize,
-  hasAiTextGeneration,
+  hasAiContentGeneration,
   onLastUpload,
   infiniteScrollInitial,
   infiniteScrollMultiple,
@@ -36,7 +36,7 @@ export default function AdminPhotosClient({
   photosCountNeedsSync: number
   blobPhotoUrls: StorageListResponse
   shouldResize: boolean
-  hasAiTextGeneration: boolean
+  hasAiContentGeneration: boolean
   onLastUpload: () => Promise<void>
   infiniteScrollInitial: number
   infiniteScrollMultiple: number
@@ -111,7 +111,7 @@ export default function AdminPhotosClient({
           <div className="space-y-[6px] sm:space-y-[10px]">
             <AdminPhotosTable
               photos={photos}
-              hasAiTextGeneration={hasAiTextGeneration}
+              hasAiContentGeneration={hasAiContentGeneration}
               timezone={timezone}
               debugColorData={debugColorData}
             />
@@ -119,7 +119,7 @@ export default function AdminPhotosClient({
               <AdminPhotosTableInfinite
                 initialOffset={infiniteScrollInitial}
                 itemsPerPage={infiniteScrollMultiple}
-                hasAiTextGeneration={hasAiTextGeneration}
+                hasAiContentGeneration={hasAiContentGeneration}
                 timezone={timezone}
                 debugColorData={debugColorData}
               />}

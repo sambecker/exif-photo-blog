@@ -31,7 +31,7 @@ export default function PhotoHeader({
   count,
   dateRange,
   richContent,
-  hasAiTextGeneration,
+  hasAiContentGeneration,
   includeShareButton,
   ...categories
 }: {
@@ -45,7 +45,7 @@ export default function PhotoHeader({
   count?: number
   dateRange?: PhotoDateRangePostgres
   richContent?: ReactNode
-  hasAiTextGeneration: boolean
+  hasAiContentGeneration: boolean
   includeShareButton?: boolean
 } & PhotoSetCategory) {
   const { isGridHighDensity } = useAppState();
@@ -73,7 +73,7 @@ export default function PhotoHeader({
     <PhotoPrevNextActions {...{
       photo: selectedPhoto,
       photos,
-      hasAiTextGeneration,
+      hasAiContentGeneration,
       ...categories,
     }} />;
 
