@@ -65,10 +65,13 @@ export const convertOklchToCss = (oklch: Oklch, alpha?: number) =>
     ? `oklch(${oklch.l} ${oklch.c} ${oklch.h})`
     : `oklch(${oklch.l} ${oklch.c} ${oklch.h} / ${alpha})`;
 
-export const getDominantColorFromPhoto = (
+export const getKeyColorFromData = (colorData?: PhotoColorData) =>
+  colorData?.ai ?? colorData?.colors[0];
+
+export const getKeyColorFromPhoto = (
   photo?: { colorData?: PhotoColorData },
 ): Oklch | undefined =>
-  photo?.colorData?.ai ?? photo?.colorData?.colors[0];
+  getKeyColorFromData(photo?.colorData);
 
 export const logOklch = (oklch: Oklch) =>
   `L:${oklch.l.toFixed(2)} C:${oklch.c.toFixed(2)} H:${oklch.h.toFixed(2)}`;

@@ -72,6 +72,7 @@ import {
   convertJsonStringToOklch,
   convertOklchToJsonString,
   generateColorDataFromString,
+  getKeyColorFromData,
 } from '../color/client';
 import { capitalize } from '@/utility/string';
 import AnchorSections from '@/components/AnchorSections';
@@ -200,16 +201,14 @@ export default function PhotoForm({
         const colorData = generateColorDataFromString(
           updatedExifData?.colorData,
         );
+        const keyColor = convertOklchToJsonString(
+          getKeyColorFromData(colorData),
+        );
 
         return {
           ...currentForm,
           ...updatedExifData,
-          ...updatedExifData?.colorData !== undefined && {
-            keyColor: convertOklchToJsonString(
-              colorData?.ai ||
-              colorData?.colors[0],
-            ),
-          },
+          ...updatedExifData?.colorData !== undefined && { keyColor },
         };
       });
 

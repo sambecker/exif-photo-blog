@@ -598,11 +598,11 @@ export const getExifDataAction = async (
 // - strip GPS data if necessary
 // - update blur data (or destroy if blur is disabled)
 // - generate AI text data, if enabled, and auto-generated fields are empty
+// - recalculate color data/sort if AI or color sort is enabled
 export const syncPhotoAction = async (
   photoId: string, {
     isBatch,
     syncMode = 'auto',
-    updateMode,
   }: {
     isBatch?: boolean,
     syncMode?: 'auto' | 'only-missing' | 'overwrite',
@@ -622,12 +622,7 @@ export const syncPhotoAction = async (
         includeInitialPhotoFields: false,
         generateBlurData: BLUR_ENABLED,
         generateResizedImage: AI_CONTENT_GENERATION_ENABLED,
-        // In update mode, only update color fields if necessary
-        updateColorFields: !(
-          updateMode &&
-          photo.colorData !== undefined &&
-          photo.colorSort !== undefined
-        ),
+        updateColorFields: AI_CONTENT_GENERATION_ENABLED,
       });
 
       const uniqueTags = await getUniqueTags();
@@ -663,6 +658,9 @@ export const syncPhotoAction = async (
 
         const formDataFromPhoto = convertPhotoToFormData(photo);
 
+        const colorDataFromExif = formDataFromExif.colorData;
+        const colorSortFromExif = formDataFromExif.colorSort;
+
         Object.entries(formDataFromExif).forEach(([field, value]) => {
           const existingValue =
             formDataFromPhoto[field as keyof PhotoFormData];
@@ -686,6 +684,14 @@ export const syncPhotoAction = async (
           await convertFormDataToPhotoDbInsertAndLookupRecipeTitle({
             ...formDataFromPhoto,
             ...formDataFromExif,
+            ...AI_CONTENT_GENERATION_ENABLED && {
+              ...colorDataFromExif !== undefined && {
+                colorData: colorDataFromExif,
+              },
+              ...colorSortFromExif !== undefined && {
+                colorSort: colorSortFromExif,
+              },
+            },
             ...!BLUR_ENABLED && { blurData: undefined },
             ...!photo.title && { title: atTitle },
             ...!photo.caption && { caption: aiCaption },

@@ -11,7 +11,7 @@ import Spinner from '@/components/Spinner';
 import { CSSProperties, ReactNode } from 'react';
 import {
   convertOklchToCss,
-  getDominantColorFromPhoto,
+  getKeyColorFromPhoto,
   Oklch,
 } from '@/photo/color/client';
 import { PHOTO_FOLDER_MAX_PHOTOS, PHOTO_FOLDER_PEEK_PHOTOS } from '.';
@@ -274,7 +274,7 @@ export default function PhotoFolder({
 
   const isTinted = tint === 'on' || tint === 'debug';
   const tintColor = isTinted
-    ? getDominantColorFromPhoto(photosInFolder[0])
+    ? getKeyColorFromPhoto(photosInFolder[0])
     : undefined;
   const tintStyle = tintColor
     ? getFolderTint(tintColor)
