@@ -5,6 +5,7 @@ import {
   ReactNode,
   useCallback,
   useMemo,
+  useRef,
   useState,
   useTransition,
 } from 'react';
@@ -123,6 +124,10 @@ export default function AdminAiModelsClient({
   const [results, setResults] =
     useState<Record<string, AiModelResult[]>>({});
   const [cellsLoading, setCellsLoading] = useState<LoadingCell[]>([]);
+  const cellsLoadingRef = useRef<LoadingCell[]>([]);
+  const [loadingRowIds, setLoadingRowIds] = useState<string[]>([]);
+  const [loadingColumns, setLoadingColumns] = useState<number[]>([]);
+  const [isGeneratingAll, setIsGeneratingAll] = useState(false);
 
   const router = useRouter();
   const [isShuffling, startShuffling] = useTransition();
@@ -131,6 +136,12 @@ export default function AdminAiModelsClient({
 
   const isColumnLoading = (column: number) =>
     cellsLoading.some(cell => cell.column === column);
+
+  const isColumnGenerating = (column: number) =>
+    loadingColumns.includes(column);
+
+  const isRowGenerating = (photoId: string) =>
+    loadingRowIds.includes(photoId);
 
   const isCellLoading = (photoId: string, column: number) =>
     cellsLoading.some(cell =>
@@ -144,15 +155,24 @@ export default function AdminAiModelsClient({
     photoId: string,
     columns: number[],
   ) => {
-    setCellsLoading(current =>
-      current.concat(columns.map(column => ({ photoId, column }))));
+    // Skip cells another row/column run already has in flight so overlapping
+    // clicks can run in parallel without doubling the same request
+    const columnsToRun = columns.filter(column =>
+      !cellsLoadingRef.current.some(cell =>
+        cell.photoId === photoId && cell.column === column));
+    if (columnsToRun.length === 0) { return; }
+
+    cellsLoadingRef.current = cellsLoadingRef.current.concat(
+      columnsToRun.map(column => ({ photoId, column })),
+    );
+    setCellsLoading(cellsLoadingRef.current);
 
     const applyToColumns = (
       current: Record<string, AiModelResult[]>,
       getResult: (column: number, index: number) => AiModelResult,
     ) => {
       const photoResults = [...current[photoId] ?? []];
-      columns.forEach((column, index) => {
+      columnsToRun.forEach((column, index) => {
         photoResults[column] = getResult(column, index);
       });
       return { ...current, [photoId]: photoResults };
@@ -161,7 +181,7 @@ export default function AdminAiModelsClient({
     try {
       const generated = await generateAiTextForModelsAction(
         photoId,
-        columns.map(column => columnModels[column]),
+        columnsToRun.map(column => columnModels[column]),
       );
       setResults(current =>
         applyToColumns(current, (_, index) => generated[index]));
@@ -172,8 +192,10 @@ export default function AdminAiModelsClient({
         durationInMs: 0,
       })));
     } finally {
-      setCellsLoading(current => current.filter(cell =>
-        cell.photoId !== photoId || !columns.includes(cell.column)));
+      cellsLoadingRef.current = cellsLoadingRef.current.filter(cell =>
+        cell.photoId !== photoId ||
+        !columnsToRun.includes(cell.column));
+      setCellsLoading(cellsLoadingRef.current);
     }
   }, [columnModels]);
 
@@ -185,6 +207,28 @@ export default function AdminAiModelsClient({
       await generate(photo.id, columns);
     }
   }, [generate]);
+
+  const generateRow = useCallback((photoId: string) => {
+    setLoadingRowIds(current => current.concat(photoId));
+    void generate(photoId, allColumns).finally(() => {
+      setLoadingRowIds(current => current.filter(id => id !== photoId));
+    });
+  }, [allColumns, generate]);
+
+  const generateColumn = useCallback((column: number) => {
+    setLoadingColumns(current => current.concat(column));
+    void generateForPhotos(photos, [column]).finally(() => {
+      setLoadingColumns(current =>
+        current.filter(currentColumn => currentColumn !== column));
+    });
+  }, [generateForPhotos, photos]);
+
+  const generateAll = useCallback(() => {
+    setIsGeneratingAll(true);
+    void generateForPhotos(photos, allColumns).finally(() => {
+      setIsGeneratingAll(false);
+    });
+  }, [allColumns, generateForPhotos, photos]);
 
   const modelOptions = useMemo(() =>
     AI_MODEL_OPTIONS
@@ -219,12 +263,13 @@ export default function AdminAiModelsClient({
         readOnly={isColumnLoading(column)}
         className="grow min-w-0 h-full"
       />
-      {/* Only this column's own run blocks it, so columns can be
-          compared independently, or run at the same time */}
+      {/* Only this column's own run blocks it, so other columns and
+          individual rows can still be started in parallel */}
       <LoaderButton
         icon={renderGenerateIcon(<FiArrowDown size={18} />)}
-        onClick={() => generateForPhotos(photos, [column])}
-        disabled={isShuffling || isColumnLoading(column)}
+        onClick={() => generateColumn(column)}
+        isLoading={isColumnGenerating(column)}
+        disabled={isShuffling || isGeneratingAll}
         tooltip="Generate this column for all photos"
         className="h-full px-2"
       />
@@ -301,9 +346,9 @@ export default function AdminAiModelsClient({
                     <LuExpand size={14} className="rotate-45" />,
                     { dim: false },
                   )}
-                  onClick={() => generateForPhotos(photos, allColumns)}
-                  isLoading={isBusy}
-                  disabled={isShuffling}
+                  onClick={generateAll}
+                  isLoading={isGeneratingAll}
+                  disabled={isShuffling || isBusy}
                   tooltip="Generate every row"
                   className={CLASS_BUTTON_SIDEBAR}
                   primary
@@ -339,12 +384,13 @@ export default function AdminAiModelsClient({
               {/* Zero-width once there's a sidebar to overflow into, so the
                   button costs the model columns no width */}
               <div className="md:w-0 h-full flex items-center">
-                {/* Spans every column, so unlike the column buttons it needs
-                    all of them free to avoid running a cell twice at once */}
+                {/* Only this row's own run blocks it, so other rows and
+                    columns can still be started in parallel */}
                 <LoaderButton
                   icon={renderGenerateIcon(<FiArrowLeft size={18} />)}
-                  onClick={() => generate(photo.id, allColumns)}
-                  disabled={isShuffling || isBusy}
+                  onClick={() => generateRow(photo.id)}
+                  isLoading={isRowGenerating(photo.id)}
+                  disabled={isShuffling || isGeneratingAll}
                   tooltip="Generate this row"
                   className={CLASS_BUTTON_SIDEBAR}
                 />
