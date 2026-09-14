@@ -243,6 +243,7 @@ export default function PhotoFolder({
   channel = true,
   tint = 'off',
   caption,
+  captionIcon,
   count,
   href,
   maxPhotos = PHOTO_FOLDER_MAX_PHOTOS,
@@ -253,6 +254,7 @@ export default function PhotoFolder({
   channel?: boolean
   tint?: PhotoFolderTint
   caption?: ReactNode
+  captionIcon?: ReactNode
   count?: number
   href?: string
   maxPhotos?: number
@@ -484,13 +486,18 @@ export default function PhotoFolder({
           uppercase
           className={clsx(
             'min-w-0',
+            captionIcon && '*:flex *:items-center *:gap-1',
             count !== undefined && clsx(
               'group-hover:max-w-[calc(100%-2.75rem)]',
               isLoading && 'max-w-[calc(100%-2.75rem)]',
             ),
           )}
         >
-          {caption}
+          {captionIcon &&
+            <span className="shrink-0 inline-flex">
+              {captionIcon}
+            </span>}
+          <span className="truncate">{caption}</span>
         </Badge>
         {count !== undefined &&
           <span

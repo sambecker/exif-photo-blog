@@ -171,11 +171,28 @@ export const getLibraryFolderRows = async (
   categories: PhotoSetCategories,
   appText: AppTextState,
 ): Promise<LibrarySetFolderRow[]> => {
-  const rows = CATEGORY_VISIBILITY.map(category => ({
-    key: category,
-    title: getCategoryTitle(category, appText),
-    queries: getFolderQueriesForCategory(category, categories, appText),
-  }))
+  const recentsQueries = getFolderQueriesForCategory(
+    'recents',
+    categories,
+    appText,
+  );
+
+  const rows = CATEGORY_VISIBILITY.map(category => {
+    const queries = getFolderQueriesForCategory(
+      category,
+      categories,
+      appText,
+    );
+    return {
+      key: category,
+      title: getCategoryTitle(category, appText),
+      queries: category === 'years' &&
+        recentsQueries.length > 0 &&
+        queries.length > 0
+        ? [...recentsQueries, ...queries]
+        : queries,
+    };
+  })
     .filter(({ key, queries }) =>
       queries.length > 0 &&
       key !== 'recents',
