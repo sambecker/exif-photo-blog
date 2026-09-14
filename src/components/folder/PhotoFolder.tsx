@@ -163,9 +163,9 @@ const getFolderTint = (color: Oklch) => {
     '--folder-stroke-light': convertOklchToCss(
       { l: 0.87, c: c * 0.7, h: color.h }),
     '--folder-fill-dark': convertOklchToCss(
-      { l: 0.27, c, h: color.h }),
+      { l: 0.33, c, h: color.h }),
     '--folder-stroke-dark': convertOklchToCss(
-      { l: 0.36, c: c * 0.75, h: color.h }),
+      { l: 0.43, c: c * 0.75, h: color.h }),
   } as CSSProperties;
 };
 
