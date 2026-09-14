@@ -2,7 +2,7 @@ import { gateway, generateText, LanguageModel, Output, streamText } from 'ai';
 import { createStreamableValue } from '@ai-sdk/rsc';
 import { createOpenAI } from '@ai-sdk/openai';
 import {
-  AI_ACTIVE_TEXT_GENERATION_PROVIDER,
+  AI_CONTENT_GENERATION_PROVIDER,
   AI_GATEWAY_MODEL,
   OPENAI_BASE_URL,
   OPENAI_MODEL,
@@ -37,14 +37,14 @@ const openaiClient = OPENAI_SECRET_KEY
   })
   : undefined;
 
-// AI_ACTIVE_TEXT_GENERATION_PROVIDER (src/app/config.ts) is the single
+// AI_CONTENT_GENERATION_PROVIDER (src/app/config.ts) is the single
 // source of truth for which provider wins: direct OpenAI when a secret key
 // is set, else Vercel AI Gateway when a model is set, else off. `model`
 // stays undefined when off, which is the no-auto-spend backstop below.
 const model: LanguageModel | undefined =
-  AI_ACTIVE_TEXT_GENERATION_PROVIDER === 'gateway' && AI_GATEWAY_MODEL
+  AI_CONTENT_GENERATION_PROVIDER === 'gateway' && AI_GATEWAY_MODEL
     ? gateway(AI_GATEWAY_MODEL)
-    : AI_ACTIVE_TEXT_GENERATION_PROVIDER === 'openai'
+    : AI_CONTENT_GENERATION_PROVIDER === 'openai'
       ? openaiClient?.(OPENAI_MODEL_ID)
       : undefined;
 

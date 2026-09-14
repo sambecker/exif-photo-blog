@@ -101,7 +101,7 @@ export const testConnectionsAction = async () =>
       hasStorageProvider,
       hasRedisStorage,
       hasLocationServices,
-      isAiTextGenerationEnabled,
+      isAiContentGenerationEnabled,
     } = APP_CONFIGURATION;
 
     const [
@@ -114,7 +114,7 @@ export const testConnectionsAction = async () =>
       scanForError(hasDatabase, testDatabaseConnection),
       scanForError(hasStorageProvider, testStorageConnection),
       scanForError(hasRedisStorage, testRedisConnection),
-      scanForError(isAiTextGenerationEnabled, testOpenAiConnection),
+      scanForError(isAiContentGenerationEnabled, testOpenAiConnection),
       scanForError(hasLocationServices, testGooglePlacesConnection),
     ]);
 
