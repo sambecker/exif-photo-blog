@@ -22,8 +22,9 @@ import Spinner from '@/components/Spinner';
 import Tooltip from '@/components/Tooltip';
 import WarningNote from '@/components/WarningNote';
 import EnvVar from '@/components/EnvVar';
-import PhotoMedium from '@/photo/PhotoMedium';
+import PhotoFolder from '@/components/folder/PhotoFolder';
 import { Photo } from '@/photo';
+import { pathForPhoto } from '@/app/path';
 import { OpenAIModel } from '@/platforms/openai/models';
 import {
   AI_MODEL_ANNOTATIONS,
@@ -48,8 +49,7 @@ const CLASS_BUTTON_SIDEBAR = 'md:ml-4 w-16 justify-center';
 // item can't leave its own row. Sharing this keeps their columns lined up:
 // both auto tracks hold an identically sized button, so they resolve alike.
 const CLASS_GRID = clsx(
-  // Fixed thumbnail track, then Current + two model columns
-  'grid grid-cols-[6rem_1fr_1fr_1fr_auto] items-start gap-x-3',
+  'grid grid-cols-[1fr_1fr_1fr_auto] items-start gap-x-3',
   // Reclaims the gap-x-3 preceding the collapsed row-button track,
   // so the last model column ends flush with the main grid section
   'md:-mr-3',
@@ -336,9 +336,6 @@ export default function AdminAiModelsClient({
                 tooltip="Shuffle photos"
                 className="h-full"
               />
-              <div className="self-stretch flex items-center min-w-0">
-                Current
-              </div>
               {allColumns.map(renderColumnHeader)}
               <div className="md:w-0">
                 <LoaderButton
@@ -358,27 +355,20 @@ export default function AdminAiModelsClient({
           </div>
           <div className={clsx(CLASS_GRID, 'gap-y-5')}>
             {photos.map(photo => <Fragment key={photo.id}>
-              <div className="min-w-0 w-full">
-                <div
-                  className="flex relative overflow-hidden w-full"
-                  style={{ aspectRatio: photo.aspectRatio }}
-                >
-                  <PhotoMedium
-                    className={clsx(
-                      'flex w-full h-full',
-                      'rounded-sm border border-dim overflow-hidden',
-                    )}
-                    photo={photo}
-                  />
+              <div className="flex items-center gap-3 min-w-0">
+                <PhotoFolder
+                  photos={[photo]}
+                  tint="on"
+                  href={pathForPhoto({ photo })}
+                />
+                <div className="min-w-0">
+                  {renderColorTitleCaption({
+                    color: photo.colorData?.ai,
+                    title: photo.title,
+                    caption: photo.caption,
+                    colorTitle: 'Current',
+                  })}
                 </div>
-              </div>
-              <div className="min-w-0 h-full">
-                {renderColorTitleCaption({
-                  color: photo.colorData?.ai,
-                  title: photo.title,
-                  caption: photo.caption,
-                  colorTitle: 'Current',
-                })}
               </div>
               {allColumns.map(column => renderResult(photo.id, column))}
               {/* Zero-width once there's a sidebar to overflow into, so the
