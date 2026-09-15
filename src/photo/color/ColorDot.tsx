@@ -46,7 +46,7 @@ export default function ColorDot({
     <Tooltip content={tooltipContent}>
       <div
         className={clsx(
-          size === 'small' ? 'size-3' : 'size-4',
+          size === 'small' ? 'size-2.5' : 'size-4',
           'rounded-full',
           color
             ? 'outline outline-white/25'
