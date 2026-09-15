@@ -7,12 +7,18 @@ import PhotoGridHybridContainer from './PhotoGridHybridContainer';
 import { ComponentProps, useMemo, useRef } from 'react';
 import clsx from 'clsx/lite';
 import MaskedScroll from '@/components/MaskedScroll';
-import { IS_RECENTS_FIRST, SHOW_CATEGORIES_ON_MOBILE } from '@/app/config';
+import {
+  HOME_FOLDERS_ENABLED,
+  IS_RECENTS_FIRST,
+  SHOW_CATEGORIES_ON_MOBILE,
+} from '@/app/config';
 import { SortBy } from './sort';
 import useViewportHeight from '@/utility/useViewportHeight';
 import TopPhotoEntities from './TopPhotoEntities';
+import TopPhotoFolders from './TopPhotoFolders';
 import AnimateItems from '@/components/AnimateItems';
 import { hasEnoughTopEntities } from '@/category/mobile';
+import type { LibrarySetFolder } from '@/library';
 
 export default function PhotoGridPageClient({
   photos,
@@ -23,6 +29,7 @@ export default function PhotoGridPageClient({
   className,
   aboutTextSafelyParsedHtml,
   aboutTextHasBrParagraphBreaks,
+  folders,
   ...categories
 }: Omit<ComponentProps<typeof PhotoGridSidebar>, 'containerHeight'> & {
   photos: Photo[]
@@ -30,6 +37,7 @@ export default function PhotoGridPageClient({
   photosCountWithExcludes: number
   sortBy: SortBy
   sortWithPriority: boolean
+  folders?: LibrarySetFolder[]
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -42,21 +50,38 @@ export default function PhotoGridPageClient({
     SHOW_CATEGORIES_ON_MOBILE && hasEnoughTopEntities(categories),
   [categories]);
 
+  const shouldShowFolders = Boolean(
+    HOME_FOLDERS_ENABLED &&
+    folders &&
+    folders.length > 0,
+  );
+
   return (
     <div>
       {shouldShowTopEntities &&
         <AnimateItems
           type="bottom"
+          // Elevate above sticky nav (z-10). Must live on this motion.div —
+          // its transform creates a stacking context that would otherwise
+          // trap descendant z-indexes below the nav.
+          classNameItem={shouldShowFolders
+            ? 'relative z-11'
+            : undefined}
           items={[
             <div key="mobile-sidebar" className={clsx(
               'flex gap-x-2',
               'md:hidden',
               'mb-4',
             )}>
-              <TopPhotoEntities
-                className="grow"
-                {...categories}
-              />
+              {shouldShowFolders && folders
+                ? <TopPhotoFolders
+                  className="grow"
+                  folders={folders}
+                />
+                : <TopPhotoEntities
+                  className="grow"
+                  {...categories}
+                />}
             </div>,
           ]} />}
       <PhotoGridHybridContainer

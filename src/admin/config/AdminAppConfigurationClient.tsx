@@ -104,6 +104,7 @@ export default function AdminAppConfigurationClient({
   showCategoryImageHover,
   collapseSidebarCategories,
   hideTagsWithOnePhoto,
+  areHomeFoldersEnabled,
   // Sort
   hasDefaultSortBy,
   defaultSortBy,
@@ -746,6 +747,19 @@ export default function AdminAppConfigurationClient({
                 Set environment variable to {'"1"'} to prevent categories
                 displaying on mobile grid view
                 {renderEnvVars(['NEXT_PUBLIC_HIDE_CATEGORIES_ON_MOBILE'])}
+              </div>
+            </div>
+          </ChecklistRow>
+          <ChecklistRow
+            title="Home folders"
+            status={areHomeFoldersEnabled}
+            optional
+          >
+            <div className="flex flex-col gap-2">
+              <div>
+                Set environment variable to {'"1"'} to replace category badges
+                with folder representations on mobile grid view
+                {renderEnvVars(['NEXT_PUBLIC_HOME_FOLDERS'])}
               </div>
             </div>
           </ChecklistRow>
