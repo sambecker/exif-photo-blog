@@ -16,7 +16,9 @@ import clsx from 'clsx/lite';
 import { ReactNode } from 'react';
 import { BiExpandVertical } from 'react-icons/bi';
 
-const FOLDER_WIDTH = 110;
+const SCALE_DOWN_FOLDERS = false;
+
+const FOLDER_WIDTH = SCALE_DOWN_FOLDERS ? 110 : 143;
 // Match PhotoFolder aspect (143×93)
 const FOLDER_HEIGHT = FOLDER_WIDTH * 93 / 143;
 // Room for hover peeks that stick above the folder body
