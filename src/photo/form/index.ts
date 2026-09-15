@@ -484,7 +484,7 @@ export const convertFormDataToPhotoDbInsert = (
   }
   const locationDisplayName = photoForm.locationDisplayName;
   const keyColor = photoForm.keyColor;
-  const hasKeyColorField = typeof keyColor === 'string';
+  const hasKeyColorField = typeof keyColor === 'string' && keyColor.length > 0;
 
   // Parse FormData:
   // - remove server action ID

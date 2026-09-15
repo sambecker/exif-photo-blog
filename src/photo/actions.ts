@@ -658,9 +658,6 @@ export const syncPhotoAction = async (
 
         const formDataFromPhoto = convertPhotoToFormData(photo);
 
-        const colorDataFromExif = formDataFromExif.colorData;
-        const colorSortFromExif = formDataFromExif.colorSort;
-
         Object.entries(formDataFromExif).forEach(([field, value]) => {
           const existingValue =
             formDataFromPhoto[field as keyof PhotoFormData];
@@ -684,14 +681,6 @@ export const syncPhotoAction = async (
           await convertFormDataToPhotoDbInsertAndLookupRecipeTitle({
             ...formDataFromPhoto,
             ...formDataFromExif,
-            ...AI_CONTENT_GENERATION_ENABLED && {
-              ...colorDataFromExif !== undefined && {
-                colorData: colorDataFromExif,
-              },
-              ...colorSortFromExif !== undefined && {
-                colorSort: colorSortFromExif,
-              },
-            },
             ...!BLUR_ENABLED && { blurData: undefined },
             ...!photo.title && { title: atTitle },
             ...!photo.caption && { caption: aiCaption },

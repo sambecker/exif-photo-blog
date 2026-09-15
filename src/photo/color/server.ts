@@ -84,8 +84,9 @@ export const getColorFieldsForImageUrl = async (
   isBatch?: boolean,
 ) => {
   try {
-    const colorData = _colorData ??
-      await getColorDataFromImageUrl(url, isBatch);
+    const colorData = _colorData && _colorData.ai
+      ? _colorData
+      : await getColorDataFromImageUrl(url, isBatch);
     return {
       colorData,
       colorSort: calculateColorSort(colorData),
