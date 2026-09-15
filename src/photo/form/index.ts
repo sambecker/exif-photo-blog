@@ -14,7 +14,6 @@ import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
 import { ReactNode } from 'react';
 import { FujifilmSimulation } from '@/platforms/fujifilm/simulation';
 import { SelectMenuOptionType } from '@/components/SelectMenuOption';
-import { COLOR_SORT_ENABLED } from '@/app/config';
 import {
   applyAiColorToColorData,
   convertJsonStringToOklch,
@@ -90,7 +89,7 @@ const FORM_METADATA = (
   tagOptions?: AnnotatedTag[],
   recipeOptions?: AnnotatedTag[],
   filmOptions?: AnnotatedTag[],
-  aiTextGeneration?: boolean,
+  hasAiContentGeneration?: boolean,
   shouldStripGpsData?: boolean,
   hasLocationServices?: boolean,
 ): Record<keyof PhotoFormData, FormMeta> => ({
@@ -118,20 +117,19 @@ const FORM_METADATA = (
     label: 'semantic description (not visible)',
     capitalize: true,
     validateStringMaxLength: STRING_MAX_LENGTH_LONG,
-    shouldHide: () => !aiTextGeneration,
+    shouldHide: () => !hasAiContentGeneration,
   },
   keyColor: {
     section: 'text',
     label: 'key color',
     excludeFromInsert: true,
-    shouldHide: () => !aiTextGeneration,
+    shouldHide: () => !hasAiContentGeneration,
     validate: value => value && !convertJsonStringToOklch(value)
       ? 'Invalid color'
       : undefined,
   },
   visibility: {
     section: 'text',
-    type: 'text',
     label: 'visibility',
     excludeFromInsert: true,
   },
@@ -310,16 +308,13 @@ const FORM_METADATA = (
   },
   colorData: {
     section: 'misc',
-    type: COLOR_SORT_ENABLED ? 'textarea' : 'hidden',
+    type: 'textarea',
     label: 'color data',
     isJson: true,
-    shouldHide: () => !aiTextGeneration,
   },
   colorSort: {
     section: 'misc',
-    type: COLOR_SORT_ENABLED ? 'text' : 'hidden',
     label: 'color sort',
-    shouldHide: () => !aiTextGeneration,
   },
   priorityOrder: {
     section: 'misc',
