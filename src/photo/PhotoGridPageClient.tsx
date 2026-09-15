@@ -71,7 +71,7 @@ export default function PhotoGridPageClient({
             <div key="mobile-sidebar" className={clsx(
               'flex gap-x-2',
               'md:hidden',
-              'mb-4',
+              shouldShowFolders ? 'mt-8 mb-10' : 'mb-4',
             )}>
               {shouldShowFolders && folders
                 ? <TopPhotoFolders
