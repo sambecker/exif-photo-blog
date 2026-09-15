@@ -523,7 +523,7 @@ export default function AdminAppConfigurationClient({
             title={aiContentGenerationProvider === 'gateway'
               && isAnalyzingConfiguration
               ? 'Testing AI Gateway connection'
-              : 'AI Gateway'}
+              : 'AI (Gateway)'}
             status={aiContentGenerationProvider === 'gateway'}
             showWarning={hasAiGatewayModel
               && aiContentGenerationProvider !== 'gateway'}
@@ -543,7 +543,7 @@ export default function AdminAppConfigurationClient({
               'Vercel AI Gateway',
             )}
             {' '}
-            to enable AI-generated text descriptions,
+            to enabled AI-powered color analysis and text generation,
             including an invisible field called
             {' '}
             {'"Semantic Description"'}, which supports CMD-K search
@@ -557,7 +557,7 @@ export default function AdminAppConfigurationClient({
           <ChecklistRow
             title={hasOpenaiSecretKey && isAnalyzingConfiguration
               ? 'Testing OpenAI connection'
-              : 'OpenAI (legacy)'}
+              : 'AI (legacy OpenAI)'}
             status={hasOpenaiSecretKey}
             isPending={hasOpenaiSecretKey && isAnalyzingConfiguration}
             optional

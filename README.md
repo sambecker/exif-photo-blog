@@ -103,9 +103,9 @@ See FAQ for [limitations of local development](#can-i-work-locally-without-acces
 - `NEXT_PUBLIC_IMAGE_QUALITY = 1-100` controls the quality of large photos
 - `NEXT_PUBLIC_DISABLE_BLUR = 1` prevents image blur data being stored and displayed (potentially useful for limiting Postgres usage)
 
-### AI text generation
+### AI content generation
 
-To auto-generate text descriptions of photos, configure a provider. Vercel AI Gateway is the recommended path; direct OpenAI (or an OpenAI-compatible endpoint) is available as an alternate. If both variables are set, `OPENAI_SECRET_KEY` takes precedence.
+To enable AI-powered color analysis and text descriptions of photos, configure a provider. Vercel AI Gateway is the recommended path; direct OpenAI (or an OpenAI-compatible endpoint) is available as an alternate. If both variables are set, `OPENAI_SECRET_KEY` takes precedence.
 
 #### Vercel AI Gateway
 
