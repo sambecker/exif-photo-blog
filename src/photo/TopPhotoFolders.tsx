@@ -4,7 +4,6 @@ import { TINT_FOLDERS } from '@/app/config';
 import { PATH_LIBRARY } from '@/app/path';
 import PhotoFolder from '@/components/folder/PhotoFolder';
 import IconFavs from '@/components/icons/IconFavs';
-import IconRecents from '@/components/icons/IconRecents';
 import MaskedScroll from '@/components/MaskedScroll';
 import PathLoaderButton from '@/components/primitives/PathLoaderButton';
 import PhotoFilmIcon from '@/film/PhotoFilmIcon';
@@ -34,15 +33,12 @@ export default function TopPhotoFolders({
   const { utility } = useAppText();
 
   const getFolderCaptionIcon = (key: string): ReactNode => {
-    switch (key) {
-      case TAG_FAVS:
-        return <IconFavs
-          size={10}
-          className="translate-y-[-0.5px]"
-          highlight
-        />;
-      case 'recents':
-        return <IconRecents size={10} solid />;
+    if (key === TAG_FAVS) {
+      return <IconFavs
+        size={10}
+        className="translate-y-[-0.5px]"
+        highlight
+      />;
     }
     if (isStringFujifilmSimulation(key)) {
       return <PhotoFilmIcon

@@ -197,7 +197,6 @@ const getTopEntityFolderQueries = (
 ): FolderQuery[] => {
   const {
     hasFavs,
-    hasRecents,
     albums,
     tags,
     camera,
@@ -220,14 +219,6 @@ const getTopEntityFolderQueries = (
         count: fav.count,
       });
     }
-  }
-
-  if (hasRecents) {
-    queries.push(...getFolderQueriesForCategory(
-      'recents',
-      categories,
-      appText,
-    ));
   }
 
   albums.forEach(({ album, count }) => {
