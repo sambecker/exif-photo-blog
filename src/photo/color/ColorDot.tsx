@@ -51,8 +51,11 @@ export default function ColorDot({
           color
             ? 'outline outline-white/25'
             : clsx(
-              'flex items-center justify-center',
-              'outline outline-gray-400/50 dark:outline-gray-500/50',
+              'flex items-center justify-center overflow-hidden',
+              'outline',
+              color
+                ? 'outline-medium'
+                : 'outline-black/50 dark:outline-white/50',
             ),
           className,
         )}
@@ -63,7 +66,10 @@ export default function ColorDot({
           : undefined}
       >
         {!color &&
-          <div className="size-[40%] rounded-full bg-medium" />}
+          <div className={clsx(
+            'w-full h-px rotate-135',
+            'bg-black/50 dark:bg-white/50',
+          )} />}
       </div>
     </Tooltip>
   );
