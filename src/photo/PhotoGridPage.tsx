@@ -4,10 +4,21 @@ import {
   htmlHasBrParagraphBreaks,
   safelyParseFormattedHtml,
 } from '@/utility/html';
-import { SIDEBAR_TEXT } from '@/app/config';
+import {
+  HOME_FOLDERS_ENABLED,
+  SHOW_CATEGORIES_ON_MOBILE,
+  SIDEBAR_TEXT,
+} from '@/app/config';
+import { hasEnoughTopEntities } from '@/category/mobile';
+import { getAppText } from '@/i18n/state/server';
+import { getTopEntityFolders } from '@/library/data';
 
-export default function PhotoGridPage(
-  props: ComponentProps<typeof PhotoGridPageClient>,
+export default async function PhotoGridPage(
+  props: Omit<ComponentProps<typeof PhotoGridPageClient>,
+    'aboutTextSafelyParsedHtml' |
+    'aboutTextHasBrParagraphBreaks' |
+    'folders'
+  >,
 ) {
   const aboutTextSafelyParsedHtml = SIDEBAR_TEXT
     ? safelyParseFormattedHtml(SIDEBAR_TEXT)
@@ -16,9 +27,17 @@ export default function PhotoGridPage(
     ? htmlHasBrParagraphBreaks(SIDEBAR_TEXT)
     : false;
 
+  const folders = HOME_FOLDERS_ENABLED &&
+    SHOW_CATEGORIES_ON_MOBILE &&
+    hasEnoughTopEntities(props)
+    ? await getTopEntityFolders(props, await getAppText())
+      .catch(() => [])
+    : undefined;
+
   return <PhotoGridPageClient {...{
     ...props,
     aboutTextSafelyParsedHtml,
     aboutTextHasBrParagraphBreaks,
+    folders,
   }} />;
 }

@@ -169,6 +169,7 @@ Create Upstash Redis store from storage tab of Vercel dashboard and link to your
      - `films` (default)
      - `focal-lengths`
 - `NEXT_PUBLIC_HIDE_CATEGORIES_ON_MOBILE = 1` prevents categories displaying on mobile grid view
+- `NEXT_PUBLIC_HOME_FOLDERS = 1` replaces highlighted category badges with folder representations on mobile grid view
 - `NEXT_PUBLIC_HIDE_CATEGORY_IMAGE_HOVERS = 1` prevents images displaying when hovering over category links
 - `NEXT_PUBLIC_EXHAUSTIVE_SIDEBAR_CATEGORIES = 1` always shows expanded sidebar content
 - `NEXT_PUBLIC_HIDE_TAGS_WITH_ONE_PHOTO = 1` to only show tags with 2 or more photos
