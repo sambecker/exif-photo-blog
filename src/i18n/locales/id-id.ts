@@ -154,6 +154,8 @@ export const TEXT: I18N = {
     download: 'Unduh',
     sync: 'Sinkronkan',
     syncAutomatic: 'Otomatis',
+    syncUpdateColor: 'Perbarui warna',
+    syncUpdateColorSuccess: 'Warna diperbarui:',
     syncOverwrite: 'Timpa',
     // eslint-disable-next-line max-len
     syncOverwriteConfirm: 'Apakah Anda yakin ingin menimpa semua bidang foto? Data yang disesuaikan mungkin hilang.',

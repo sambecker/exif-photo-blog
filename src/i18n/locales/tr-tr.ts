@@ -154,6 +154,8 @@ export const TEXT: I18N = {
     download: 'İndir',
     sync: 'Senkronize Et',
     syncAutomatic: 'Otomatik',
+    syncUpdateColor: 'Rengi güncelle',
+    syncUpdateColorSuccess: 'Renk güncellendi:',
     syncOverwrite: 'Üzerine Yaz',
     // eslint-disable-next-line max-len
     syncOverwriteConfirm: 'Tüm fotoğraf alanlarının üzerine yazmak istediğinize emin misiniz? Özelleştirilmiş veriler kaybolabilir.',

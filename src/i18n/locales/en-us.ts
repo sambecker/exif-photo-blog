@@ -153,6 +153,8 @@ export const TEXT = {
     download: 'Download',
     sync: 'Sync',
     syncAutomatic: 'Automatic',
+    syncUpdateColor: 'Update color',
+    syncUpdateColorSuccess: 'Color updated:',
     syncOverwrite: 'Overwrite',
     // eslint-disable-next-line max-len
     syncOverwriteConfirm: 'Are you sure you want to overwrite all photo fields? Customized data may be lost.',

@@ -154,6 +154,8 @@ export const TEXT: I18N = {
     download: 'Tải xuống',
     sync: 'Đồng bộ',
     syncAutomatic: 'Tự động',
+    syncUpdateColor: 'Cập nhật màu',
+    syncUpdateColorSuccess: 'Đã cập nhật màu:',
     syncOverwrite: 'Ghi đè',
     // eslint-disable-next-line max-len
     syncOverwriteConfirm: 'Bạn có chắc chắn muốn ghi đè tất cả các trường ảnh? Dữ liệu tùy chỉnh có thể bị mất.',

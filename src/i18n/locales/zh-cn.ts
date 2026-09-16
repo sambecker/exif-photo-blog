@@ -154,6 +154,8 @@ export const TEXT: I18N = {
     download: '下载',
     sync: '同步',
     syncAutomatic: '自动',
+    syncUpdateColor: '更新颜色',
+    syncUpdateColorSuccess: '颜色已更新：',
     syncOverwrite: '覆盖',
     syncOverwriteConfirm: '确定要覆盖所有照片字段吗？自定义数据可能会丢失。',
     reupload: '重新上传',

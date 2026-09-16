@@ -154,6 +154,8 @@ export const TEXT: I18N = {
     download: 'Baixar',
     sync: 'Sincronizar',
     syncAutomatic: 'Automático',
+    syncUpdateColor: 'Atualizar cor',
+    syncUpdateColorSuccess: 'Cor atualizada:',
     syncOverwrite: 'Sobrescrever',
     // eslint-disable-next-line max-len
     syncOverwriteConfirm: 'Tem certeza de que deseja sobrescrever todos os campos da foto? Dados personalizados podem ser perdidos.',

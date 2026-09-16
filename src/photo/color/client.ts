@@ -1,3 +1,5 @@
+import { Photo } from '..';
+
 export interface Oklch {
   l: number
   c: number
@@ -65,13 +67,11 @@ export const convertOklchToCss = (oklch: Oklch, alpha?: number) =>
     ? `oklch(${oklch.l} ${oklch.c} ${oklch.h})`
     : `oklch(${oklch.l} ${oklch.c} ${oklch.h} / ${alpha})`;
 
-export const getKeyColorFromData = (colorData?: PhotoColorData) =>
+export const getKeyColorFromColorData = (colorData?: PhotoColorData) =>
   colorData?.ai ?? colorData?.colors[0];
 
-export const getKeyColorFromPhoto = (
-  photo?: { colorData?: PhotoColorData },
-): Oklch | undefined =>
-  getKeyColorFromData(photo?.colorData);
+export const getKeyColorFromPhoto = (photo?: Photo): Oklch | undefined =>
+  getKeyColorFromColorData(photo?.colorData);
 
 export const logOklch = (oklch: Oklch) =>
   `L:${oklch.l.toFixed(2)} C:${oklch.c.toFixed(2)} H:${oklch.h.toFixed(2)}`;

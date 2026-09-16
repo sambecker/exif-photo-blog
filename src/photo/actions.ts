@@ -80,6 +80,10 @@ import {
   getColorFieldsForPhotoDbInsert,
   getColorFromAI,
 } from '@/photo/color/server';
+import {
+  getKeyColorFromColorData,
+  getKeyColorFromPhoto,
+} from '@/photo/color/client';
 import { shouldBackfillPhotoStorage } from './update/server';
 import { getAlbumTitlesFromFormData } from '@/album/form';
 import {
@@ -463,19 +467,28 @@ export const getAiColorAction = async (url: string) =>
     await getColorFromAI(url),
   );
 
-export const storeColorDataForPhotoAction = async (photoId: string) =>
+export const storeColorDataForPhotoAction = async (
+  photoId: string,
+  { force }: { force?: boolean } = {},
+) =>
   runAuthenticatedAdminServerAction(async () => {
     const photo = await getPhoto(photoId, true);
     if (photo) {
+      const oldColor = getKeyColorFromPhoto(photo);
       const colorFields = await getColorFieldsForImageUrl(
         photo.url,
-        photo.colorData,
+        force ? undefined : photo.colorData,
       );
       if (colorFields) {
         await updatePhoto(convertPhotoToPhotoDbInsert({
           ...photo,
           ...colorFields,
         }));
+        revalidatePhoto(photo.id);
+        return {
+          oldColor,
+          newColor: getKeyColorFromColorData(colorFields.colorData),
+        };
       }
       revalidatePhoto(photo.id);
     }

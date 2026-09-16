@@ -154,6 +154,8 @@ export const TEXT: I18N = {
     download: 'डाउनलोड करें',
     sync: 'सिंक करें',
     syncAutomatic: 'स्वचालित',
+    syncUpdateColor: 'रंग अपडेट करें',
+    syncUpdateColorSuccess: 'रंग अपडेट किया गया:',
     syncOverwrite: 'अधिलेखित करें',
     // eslint-disable-next-line max-len
     syncOverwriteConfirm: 'क्या आप सुनिश्चित हैं कि आप सभी फोटो फ़ील्ड को अधिलेखित करना चाहते हैं? अनुकूलित डेटा खो सकता है।',

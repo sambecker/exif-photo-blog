@@ -154,6 +154,8 @@ export const TEXT: I18N = {
     download: 'Download',
     sync: 'Sync',
     syncAutomatic: 'Automatic',
+    syncUpdateColor: 'Update color',
+    syncUpdateColorSuccess: 'Color updated:',
     syncOverwrite: 'Overwrite',
     // eslint-disable-next-line max-len
     syncOverwriteConfirm: 'Are you sure you want to overwrite all photo fields? Customised data may be lost.',
