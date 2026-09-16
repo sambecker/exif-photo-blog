@@ -7,12 +7,12 @@ allowBuilds:
   sharp: true
   unrs-resolver: true
 minimumReleaseAgeExclude:
-  - '@ai-sdk/gateway@4.0.8 || 4.0.22 || 4.0.52 || 4.0.64 || 4.0.67 || 4.0.80'
-  - '@ai-sdk/openai@4.0.5 || 4.0.47 || 4.0.50'
-  - '@ai-sdk/provider-utils@5.0.3 || 5.0.30 || 5.0.32'
-  - '@ai-sdk/rsc@3.0.11 || 3.0.30 || 3.0.65 || 3.0.79 || 3.0.83 || 3.0.99'
+  - '@ai-sdk/gateway@4.0.8 || 4.0.22 || 4.0.52 || 4.0.64 || 4.0.67 || 4.0.80 || 4.0.82'
+  - '@ai-sdk/openai@4.0.5 || 4.0.47 || 4.0.50 || 4.0.67'
+  - '@ai-sdk/provider-utils@5.0.3 || 5.0.30 || 5.0.32 || 5.0.41'
+  - '@ai-sdk/rsc@3.0.11 || 3.0.30 || 3.0.65 || 3.0.79 || 3.0.83 || 3.0.99 || 3.0.102'
   - '@aws-sdk/checksums@3.1000.11'
-  - '@aws-sdk/client-s3@3.1078.0 || 3.1089.0 || 3.1110.0 || 3.1117.0 || 3.1119.0'
+  - '@aws-sdk/client-s3@3.1078.0 || 3.1089.0 || 3.1110.0 || 3.1117.0 || 3.1119.0 || 3.1133.0'
   - '@aws-sdk/core@3.974.26'
   - '@aws-sdk/credential-provider-env@3.972.52'
   - '@aws-sdk/credential-provider-http@3.972.54'
@@ -24,7 +24,7 @@ minimumReleaseAgeExclude:
   - '@aws-sdk/credential-provider-web-identity@3.972.58'
   - '@aws-sdk/middleware-sdk-s3@3.972.57'
   - '@aws-sdk/nested-clients@3.997.26'
-  - '@aws-sdk/s3-request-presigner@3.1078.0 || 3.1089.0 || 3.1110.0 || 3.1117.0 || 3.1119.0'
+  - '@aws-sdk/s3-request-presigner@3.1078.0 || 3.1089.0 || 3.1110.0 || 3.1117.0 || 3.1119.0 || 3.1133.0'
   - '@aws-sdk/signature-v4-multi-region@3.996.38'
   - '@aws-sdk/token-providers@3.1078.0'
   - '@aws-sdk/types@3.973.15'
@@ -40,8 +40,8 @@ minimumReleaseAgeExclude:
   - '@next/swc-linux-x64-musl@16.2.10 || 16.3.1'
   - '@next/swc-win32-arm64-msvc@16.2.10 || 16.3.1'
   - '@next/swc-win32-x64-msvc@16.2.10 || 16.3.1'
-  - ai@7.0.11 || 7.0.30 || 7.0.65 || 7.0.79 || 7.0.83 || 7.0.99
-  - baseline-browser-mapping@2.10.41 || 2.11.19 || 2.11.23
+  - ai@7.0.11 || 7.0.30 || 7.0.65 || 7.0.79 || 7.0.83 || 7.0.99 || 7.0.102
+  - baseline-browser-mapping@2.10.41 || 2.11.19 || 2.11.23 || 2.11.24
   - eslint-config-next@16.2.10 || 16.3.1
   - next@16.2.10 || 16.3.1
   - '@tailwindcss/node@4.3.3'
@@ -60,7 +60,7 @@ minimumReleaseAgeExclude:
   - '@tailwindcss/oxide@4.3.3'
   - '@tailwindcss/postcss@4.3.3'
   - tailwindcss@4.3.3
-  - '@ai-sdk/provider@4.0.8'
+  - '@ai-sdk/provider@4.0.8 || 4.0.15'
   - '@types/node@26.3.0 || 26.4.0 || 26.5.0'
   - '@img/sharp-darwin-arm64@0.35.4'
   - '@img/sharp-darwin-x64@0.35.4'
@@ -91,3 +91,4 @@ minimumReleaseAgeExclude:
   - '@upstash/redis@1.38.3'
   - sharp@0.35.4
   - viewerjs@1.14.0
+  - framer-motion@13.4.0
