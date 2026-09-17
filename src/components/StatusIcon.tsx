@@ -47,7 +47,7 @@ export default function StatusIcon({
 
   return (
     <span className={clsx(
-      'size-[14px] rounded-[5px] overflow-hidden',
+      'size-[14px] rounded-[5px] overflow-hidden shrink-0',
       'inline-flex items-center justify-center',
       !loading && getBgColor(),
       className,
