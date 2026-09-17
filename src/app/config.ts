@@ -464,6 +464,9 @@ export const ADMIN_STORAGE_DEBUG_ENABLED =
 export const ADMIN_AI_MODEL_DEBUG_ENABLED =
   process.env.ADMIN_AI_MODEL_DEBUG === '1';
 
+// ⚠️ Add `APP_CONFIGURATION` keys with caution
+// Under certain debugging conditions, this object
+// is exposed to the client 
 export const APP_CONFIGURATION = {
   // Storage
   hasDatabase: HAS_DATABASE,
