@@ -447,7 +447,10 @@ export default function PhotoFolder({
                   classNameImage="object-cover w-full h-full"
                   size={photosInFolder.length === 1
                     ? 'large'
-                    : index === 0
+                    : (
+                      index === 0 ||
+                      (index === 1 && photosInFolder.length <= 2)
+                    )
                       ? 'medium'
                       : 'small'}
                 />
