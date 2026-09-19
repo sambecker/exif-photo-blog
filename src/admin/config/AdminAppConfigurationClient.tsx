@@ -28,6 +28,7 @@ import clsx from 'clsx/lite';
 import Link from 'next/link';
 import {
   PATH_ADMIN_AI_MODELS,
+  PATH_DEBUG_CONFIGURATION,
   PATH_FEED_JSON,
   PATH_LIBRARY,
   PATH_RSS_XML,
@@ -1111,6 +1112,10 @@ export default function AdminAppConfigurationClient({
           >
             Set environment variable to {'"1"'} to disable build identifier
             and admin configuration export
+            {isDebuggingEnabled && <>
+              {' '}
+              ({renderLink(PATH_DEBUG_CONFIGURATION, 'view export.json')})
+            </>}
             {renderEnvVars(['DISABLE_DEBUG_OUTPUTS'])}
           </ChecklistRow>
         </>;

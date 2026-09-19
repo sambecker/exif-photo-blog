@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { Photo } from '@/photo';
 import { PhotoSetCategory } from '@/category';
 import { getBaseUrl, GRID_HOMEPAGE_ENABLED } from './config';
@@ -85,6 +86,7 @@ export const PATH_ADMIN_COMPONENTS      = `${PATH_ADMIN}/components`;
 export const PATH_ADMIN_AI_MODELS       = `${PATH_ADMIN}/ai-models`;
 
 // Debug paths
+export const PATH_DEBUG_CONFIGURATION   = `${PATH_ADMIN_CONFIGURATION}/export.json`;
 export const PATH_OG_ALL                = `${PATH_OG}/all`;
 export const PATH_OG_SAMPLE             = `${PATH_OG}/sample`;
 
@@ -152,7 +154,6 @@ const getAlbumSlug = (albumOrAlbumSlug: AlbumOrAlbumSlug) =>
     : albumOrAlbumSlug.slug;
 
 export const pathForAdminUploadUrl = (url: string, title?: string) =>
-  // eslint-disable-next-line max-len
   `${PATH_ADMIN_UPLOADS}/${encodeURIComponent(url)}${title ? `?${PARAM_UPLOAD_TITLE}=${encodeURIComponent(title)}` : ''}`;
 
 export const pathForAdminPhotoEdit = (photo: PhotoOrPhotoId) =>
