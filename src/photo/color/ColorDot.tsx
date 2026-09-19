@@ -63,8 +63,9 @@ export default function ColorDot({
   };
 
   const dot = (
-    <div
+    <button
       className={clsx(
+        'link',
         size === 'small' ? 'size-2.5' : 'size-4',
         'rounded-full',
         canCopy && 'cursor-pointer',
@@ -91,7 +92,7 @@ export default function ColorDot({
           'w-full h-px rotate-135',
           'bg-black/50 dark:bg-white/50',
         )} />}
-    </div>
+    </button>
   );
 
   return includeTooltip
