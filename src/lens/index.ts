@@ -1,5 +1,11 @@
 import { Photo } from '@/photo';
-import { MakeModelTextLength, parameterize } from '@/utility/string';
+import type { AnnotatedTag } from '@/photo/form';
+import {
+  MakeModelTextLength,
+  formatCount,
+  formatCountDescriptive,
+  parameterize,
+} from '@/utility/string';
 import { formatAppleLensText, isLensApple } from '../platforms/apple';
 import { MISSING_FIELD } from '@/app/path';
 import { formatGoogleLensText, isLensGoogle } from '../platforms/google-pixel';
@@ -116,3 +122,30 @@ export const formatLensText = (
       return model;
   }
 };
+
+const convertLensFieldForForm = (
+  lenses: Lenses = [],
+  getValue: (lens: Lens) => string | undefined,
+): AnnotatedTag[] => {
+  // A make spans multiple models, so sum counts per value
+  const counts = new Map<string, number>();
+  lenses.forEach(({ lens, count }) => {
+    const value = getValue(lens);
+    if (value) {
+      counts.set(value, (counts.get(value) ?? 0) + count);
+    }
+  });
+  return Array.from(counts.entries())
+    .map(([value, count]) => ({
+      value,
+      annotation: formatCount(count),
+      annotationAria: formatCountDescriptive(count),
+    }))
+    .sort((a, b) => a.value.localeCompare(b.value));
+};
+
+export const convertLensMakesForForm = (lenses: Lenses = []) =>
+  convertLensFieldForForm(lenses, ({ make }) => make);
+
+export const convertLensModelsForForm = (lenses: Lenses = []) =>
+  convertLensFieldForForm(lenses, ({ model }) => model);

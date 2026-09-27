@@ -59,6 +59,16 @@ import deepEqual from 'fast-deep-equal/es6/react';
 import ApplyRecipeTitleGloballyCheckbox from './ApplyRecipesGloballyCheckbox';
 import FieldsetRecipeData from './FieldsetRecipeData';
 import { convertFilmsForForm, Films } from '@/film';
+import {
+  Cameras,
+  convertCameraMakesForForm,
+  convertCameraModelsForForm,
+} from '@/camera';
+import {
+  Lenses,
+  convertLensMakesForForm,
+  convertLensModelsForForm,
+} from '@/lens';
 import { isMakeFujifilm } from '@/platforms/fujifilm';
 import PhotoFilmIcon from '@/film/PhotoFilmIcon';
 import FieldsetFavs from './FieldsetFavs';
@@ -104,6 +114,8 @@ export default function PhotoForm({
   uniqueTags,
   uniqueRecipes,
   uniqueFilms,
+  uniqueCameras,
+  uniqueLenses,
   aiContent,
   shouldStripGpsData,
   hasLocationServices,
@@ -121,6 +133,8 @@ export default function PhotoForm({
   uniqueTags: Tags
   uniqueRecipes: Recipes
   uniqueFilms: Films
+  uniqueCameras?: Cameras
+  uniqueLenses?: Lenses
   aiContent?: AiContent
   shouldStripGpsData?: boolean
   hasLocationServices?: boolean
@@ -487,6 +501,10 @@ export default function PhotoForm({
         detectedFilm,
         formData.make,
       ),
+      convertCameraMakesForForm(uniqueCameras),
+      convertCameraModelsForForm(uniqueCameras),
+      convertLensMakesForForm(uniqueLenses),
+      convertLensModelsForForm(uniqueLenses),
       aiContent !== undefined,
       shouldStripGpsData,
       hasLocationServices,
@@ -495,6 +513,8 @@ export default function PhotoForm({
     appText,
     uniqueRecipes,
     uniqueFilms,
+    uniqueCameras,
+    uniqueLenses,
     formData.make,
     detectedFilm,
     aiContent,

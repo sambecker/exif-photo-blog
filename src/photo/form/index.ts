@@ -85,10 +85,28 @@ export type FormMeta = {
 const STRING_MAX_LENGTH_SHORT = 255;
 const STRING_MAX_LENGTH_LONG  = 1000;
 
+// Omit options entirely (an empty array still renders the dropdown)
+const tagOptionsForAutocomplete = (
+  options?: AnnotatedTag[],
+): Pick<
+  FormMeta,
+  'tagOptions' | 'tagOptionsLimit' | 'tagOptionsShouldParameterize'
+> => options && options.length > 0
+  ? {
+    tagOptions: options,
+    tagOptionsLimit: 1,
+    tagOptionsShouldParameterize: false,
+  }
+  : {};
+
 const FORM_METADATA = (
   tagOptions?: AnnotatedTag[],
   recipeOptions?: AnnotatedTag[],
   filmOptions?: AnnotatedTag[],
+  cameraMakeOptions?: AnnotatedTag[],
+  cameraModelOptions?: AnnotatedTag[],
+  lensMakeOptions?: AnnotatedTag[],
+  lensModelOptions?: AnnotatedTag[],
   hasAiContentGeneration?: boolean,
   shouldStripGpsData?: boolean,
   hasLocationServices?: boolean,
@@ -157,10 +175,12 @@ const FORM_METADATA = (
   make: {
     section: 'exif',
     label: 'camera make',
+    ...tagOptionsForAutocomplete(cameraMakeOptions),
   },
   model: {
     section: 'exif',
     label: 'camera model',
+    ...tagOptionsForAutocomplete(cameraModelOptions),
   },
   film: {
     section: 'exif',
@@ -221,8 +241,16 @@ const FORM_METADATA = (
     section: 'exif',
     label: 'focal length 35mm-equivalent',
   },
-  lensMake: { section: 'exif', label: 'lens make' },
-  lensModel: { section: 'exif', label: 'lens model' },
+  lensMake: {
+    section: 'exif',
+    label: 'lens make',
+    ...tagOptionsForAutocomplete(lensMakeOptions),
+  },
+  lensModel: {
+    section: 'exif',
+    label: 'lens model',
+    ...tagOptionsForAutocomplete(lensModelOptions),
+  },
   fNumber: { section: 'exif', label: 'aperture' },
   iso: { section: 'exif', label: 'ISO' },
   exposureTime: { section: 'exif', label: 'exposure time' },

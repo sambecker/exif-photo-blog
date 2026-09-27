@@ -1,5 +1,19 @@
 /* eslint-disable max-len */
-import { formatLensText, Lens } from '@/lens';
+import {
+  Lens,
+  LensWithMeta,
+  convertLensMakesForForm,
+  convertLensModelsForForm,
+  createLensKey,
+  formatLensText,
+} from '@/lens';
+
+const lensWithMeta = (lens: Lens, count: number): LensWithMeta => ({
+  lensKey: createLensKey(lens),
+  lens,
+  count,
+  lastModified: new Date(),
+});
 
 const IPHONE_15_PRO_FRONT: Lens = { make: 'Apple', model: 'iPhone 15 Pro front TrueDepth camera 2.69mm f/1.9' };
 const IPHONE_15_PRO_BACK_WIDE: Lens = { make: 'Apple', model: 'iPhone 15 Pro back triple camera 6.765mm f/2.2' };
@@ -31,6 +45,31 @@ describe('Lens', () => {
       expect(formatLensText(PIXEL_8_PRO_BACK, 'short')).toBe('Back Camera (6.9mm)');
       expect(formatLensText(PIXEL_6A_BACK, 'medium')).toBe('Pixel 6a Back (2.35mm)');
       expect(formatLensText(PIXEL_6A_BACK, 'short')).toBe('Back Camera (2.35mm)');
+    });
+  });
+  describe('form options', () => {
+    it('offers no options when no lenses exist', () => {
+      expect(convertLensMakesForForm()).toStrictEqual([]);
+      expect(convertLensModelsForForm([])).toStrictEqual([]);
+    });
+    it('dedupes makes across models, summing photo counts', () => {
+      const lenses = [
+        lensWithMeta(PIXEL_8_PRO_BACK, 4),
+        lensWithMeta(PIXEL_6A_BACK, 1),
+      ];
+      expect(convertLensMakesForForm(lenses)).toStrictEqual([
+        {
+          value: 'Google',
+          annotation: '× 5',
+          annotationAria: 'found in 5 photos',
+        },
+      ]);
+    });
+    it('keeps models of lenses that have no make', () => {
+      const lenses = [lensWithMeta(PIXEL_8_PRO_BACK_NO_MAKE, 2)];
+      expect(convertLensMakesForForm(lenses)).toStrictEqual([]);
+      expect(convertLensModelsForForm(lenses).map(({ value }) => value))
+        .toStrictEqual([PIXEL_8_PRO_BACK_NO_MAKE.model]);
     });
   });
 });
