@@ -31,11 +31,12 @@ import {
   getRecipeTitleForData,
   updateAllMatchingRecipeTitles,
 } from '@/photo/query';
-import { PhotoDbInsert } from '.';
+import { MAX_PHOTO_UPLOAD_SIZE_IN_BYTES, PhotoDbInsert } from '.';
 import { convertExifToFormData } from './form/server';
 import { getColorFieldsForPhotoForm } from './color/server';
 import exifr from 'exifr';
 import { getCompatibleExifValue } from '@/utility/exif';
+import { fetchImageBytes } from '@/utility/image';
 import { getPlaceFromCoordinates } from '@/platforms/google-places';
 
 const IMAGE_WIDTH_BLUR = 200;
@@ -81,7 +82,7 @@ export const extractImageDataFromBlobPath = async (
   let error: string | undefined;
 
   const fileBytes = blobPath
-    ? await fetch(url, { cache: 'no-store' }).then(res => res.arrayBuffer())
+    ? await fetchImageBytes(url, MAX_PHOTO_UPLOAD_SIZE_IN_BYTES)
       .catch(e => {
         error = `Error fetching image from ${url}: "${e.message}"`;
         return undefined;
