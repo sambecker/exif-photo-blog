@@ -306,45 +306,45 @@ export const getPhotosMostRecentUpdate = async () =>
   `.then(({ rows }) => rows[0] ? rows[0].updated_at as Date : undefined)
   , 'getPhotosMostRecentUpdate');
 
-export const getUniqueCameras = async () =>
-  safelyQuery(() => sql`
+export const getUniqueCameras = async (includeHidden?: boolean) =>
+  safelyQuery(() => query(`
     SELECT DISTINCT make||' '||model as camera, make, model,
       COUNT(*),
       MAX(updated_at) as last_modified
     FROM photos
-    WHERE hidden IS NOT TRUE
-    AND trim(make) <> ''
+    WHERE trim(make) <> ''
     AND trim(model) <> ''
+    ${includeHidden ? '' : 'AND hidden IS NOT TRUE'}
     GROUP BY make, model
     ORDER BY camera ASC
-  `.then(({ rows }): Cameras => rows.map(({
-      make, model, count, last_modified,
-    }) => ({
-      cameraKey: createCameraKey({ make, model }),
-      camera: { make, model },
-      count: parseInt(count, 10), 
-      lastModified: last_modified as Date,
-    })))
+  `).then(({ rows }): Cameras => rows.map(({
+    make, model, count, last_modified,
+  }) => ({
+    cameraKey: createCameraKey({ make, model }),
+    camera: { make, model },
+    count: parseInt(count, 10), 
+    lastModified: last_modified as Date,
+  })))
   , 'getUniqueCameras');
 
-export const getUniqueLenses = async () =>
-  safelyQuery(() => sql`
+export const getUniqueLenses = async (includeHidden?: boolean) =>
+  safelyQuery(() => query(`
     SELECT DISTINCT lens_make||' '||lens_model as lens,
       lens_make, lens_model,
       COUNT(*),
       MAX(updated_at) as last_modified
     FROM photos
-    WHERE hidden IS NOT TRUE
-    AND trim(lens_model) <> ''
+    WHERE trim(lens_model) <> ''
+    ${includeHidden ? '' : 'AND hidden IS NOT TRUE'}
     GROUP BY lens_make, lens_model
     ORDER BY lens ASC
-  `.then(({ rows }): Lenses => rows
-      .map(({ lens_make: make, lens_model: model, count, last_modified }) => ({
-        lensKey: createLensKey({ make, model }),
-        lens: { make, model },
-        count: parseInt(count, 10), 
-        lastModified: last_modified as Date,
-      })))
+  `).then(({ rows }): Lenses => rows
+    .map(({ lens_make: make, lens_model: model, count, last_modified }) => ({
+      lensKey: createLensKey({ make, model }),
+      lens: { make, model },
+      count: parseInt(count, 10), 
+      lastModified: last_modified as Date,
+    })))
   , 'getUniqueLenses');
 
 export const getUniqueTags = async (includeHidden?: boolean) =>

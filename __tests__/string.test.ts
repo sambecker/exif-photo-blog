@@ -1,4 +1,5 @@
 import {
+  convertStringToArray,
   depluralize,
   parameterize,
   startsWithHangingPunctuation,
@@ -29,5 +30,19 @@ describe('String', () => {
     expect(startsWithHangingPunctuation('(Parenthetical)')).toBe(true);
     expect(startsWithHangingPunctuation('Plain description')).toBe(false);
     expect(startsWithHangingPunctuation('A “quote” later')).toBe(false);
+  });
+  it('converts comma-delimited strings to arrays', () => {
+    expect(convertStringToArray('a,b,c')).toStrictEqual(['a', 'b', 'c']);
+    expect(convertStringToArray('a, b, c', false))
+      .toStrictEqual(['a', 'b', 'c']);
+    expect(convertStringToArray()).toStrictEqual([]);
+  });
+  it('preserves commas when not splitting', () => {
+    expect(convertStringToArray('RICOH IMAGING COMPANY, LTD.', false))
+      .toStrictEqual(['RICOH IMAGING COMPANY', 'LTD.']);
+    expect(convertStringToArray('RICOH IMAGING COMPANY, LTD.', false, false))
+      .toStrictEqual(['RICOH IMAGING COMPANY, LTD.']);
+    expect(convertStringToArray('XCD, 45P', false, false))
+      .toStrictEqual(['XCD, 45P']);
   });
 });

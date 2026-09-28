@@ -48,8 +48,8 @@ export default async function PhotoEditPage({
     getUniqueTagsCached(),
     getUniqueRecipesCached(),
     getUniqueFilmsCached(),
-    getUniqueCamerasCached(),
-    getUniqueLensesCached(),
+    getUniqueCamerasCached(true),
+    getUniqueLensesCached(true),
   ]);
 
   if (!photo) { redirect(PATH_ADMIN); }
