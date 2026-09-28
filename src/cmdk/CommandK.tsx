@@ -20,6 +20,7 @@ export default async function CommandK() {
   return (
     <CommandKClient
       {...categories}
+      isInEmptyState={!count}
       footer={photoQuantityText(count, appText, false)}
     />
   );

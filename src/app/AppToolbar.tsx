@@ -45,11 +45,11 @@ import AppViewMenuCompact from './AppViewMenuCompact';
 export default function AppToolbar({
   className,
   animate = true,
-  hideSortControl,
+  isInEmptyState,
 }: {
   className?: string
   animate?: boolean
-  hideSortControl?: boolean
+  isInEmptyState?: boolean
 }) {
   const pathname = usePathname();
   
@@ -78,8 +78,7 @@ export default function AppToolbar({
 
   const showSortControl =
     NAV_SORT_CONTROL !== 'none' &&
-    doesPathOfferSort &&
-    !hideSortControl;
+    doesPathOfferSort;
 
   const hasLoadedRef = useRef(false);
   useEffect(() => {
@@ -221,53 +220,54 @@ export default function AppToolbar({
             noPadding
           />}
       </Switcher>
-      <motion.div
-        initial={animate ? { opacity: 0, width: 0 } : false}
-        animate={{
-          opacity: showViewMenu ? 1 : 0,
-          width: showViewMenu ? 'auto' : 0,
-        }}
-        transition={{ duration: 0.2, ease: 'easeInOut' }}
-      >
-        <AppViewMenuCompact
-          className="sm:hidden"
-          isViewFull={isViewFull}
-          isMasonry={MASONRY_GRID_ENABLED && isHome}
-          // Sort-aware paths retain the active sort while switching views
-          hrefGrid={isHome ? pathGrid : undefined}
-          hrefFull={isHome ? pathFull : undefined}
-          onSelectView={setIsPhotoSetFull}
-          isLoading={isViewSwitchLoading}
-          showSortItems={showSortControl}
-          sortConfig={sortConfig}
-          isOpen={isViewMenuOpen}
-          setIsOpen={isOpen => {
-            setIsViewMenuOpen(isOpen);
-            if (isOpen) {
-              setIsAdminMenuOpen(false);
-              setIsSortMenuOpen(false);
-            }
+      {!isInEmptyState &&
+        <motion.div
+          initial={animate ? { opacity: 0, width: 0 } : false}
+          animate={{
+            opacity: showViewMenu ? 1 : 0,
+            width: showViewMenu ? 'auto' : 0,
           }}
-        />
-        <AppViewMenu
-          className="max-sm:hidden"
-          isViewFull={isViewFull}
-          isMasonry={MASONRY_GRID_ENABLED && isHome}
-          hrefGrid={isHome ? pathGrid : undefined}
-          hrefFull={isHome ? pathFull : undefined}
-          onSelectView={setIsPhotoSetFull}
-          showSortControl={showSortControl}
-          sortConfig={sortConfig}
-          isSortMenuOpen={isSortMenuOpen}
-          setIsSortMenuOpen={isOpen => {
-            setIsSortMenuOpen(isOpen);
-            if (isOpen) {
-              setIsAdminMenuOpen(false);
-              setIsViewMenuOpen(false);
-            }
-          }}
-        />
-      </motion.div>
+          transition={{ duration: 0.2, ease: 'easeInOut' }}
+        >
+          <AppViewMenuCompact
+            className="sm:hidden"
+            isViewFull={isViewFull}
+            isMasonry={MASONRY_GRID_ENABLED && isHome}
+            // Sort-aware paths retain the active sort while switching views
+            hrefGrid={isHome ? pathGrid : undefined}
+            hrefFull={isHome ? pathFull : undefined}
+            onSelectView={setIsPhotoSetFull}
+            isLoading={isViewSwitchLoading}
+            showSortItems={showSortControl}
+            sortConfig={sortConfig}
+            isOpen={isViewMenuOpen}
+            setIsOpen={isOpen => {
+              setIsViewMenuOpen(isOpen);
+              if (isOpen) {
+                setIsAdminMenuOpen(false);
+                setIsSortMenuOpen(false);
+              }
+            }}
+          />
+          <AppViewMenu
+            className="max-sm:hidden"
+            isViewFull={isViewFull}
+            isMasonry={MASONRY_GRID_ENABLED && isHome}
+            hrefGrid={isHome ? pathGrid : undefined}
+            hrefFull={isHome ? pathFull : undefined}
+            onSelectView={setIsPhotoSetFull}
+            showSortControl={showSortControl}
+            sortConfig={sortConfig}
+            isSortMenuOpen={isSortMenuOpen}
+            setIsSortMenuOpen={isOpen => {
+              setIsSortMenuOpen(isOpen);
+              if (isOpen) {
+                setIsAdminMenuOpen(false);
+                setIsViewMenuOpen(false);
+              }
+            }}
+          />
+        </motion.div>}
     </div>
   );
 }
