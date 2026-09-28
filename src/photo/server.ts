@@ -43,6 +43,9 @@ const IMAGE_WIDTH_BLUR = 200;
 const IMAGE_WIDTH_DEFAULT = 200;
 const IMAGE_QUALITY_DEFAULT = 80;
 
+export const fetchPhotoUploadSafely = (url: string) =>
+  fetchImageBytes(url, MAX_PHOTO_UPLOAD_SIZE_IN_BYTES);
+
 export const extractImageDataFromBlobPath = async (
   blobPath: string, {
     includeInitialPhotoFields,
@@ -82,7 +85,7 @@ export const extractImageDataFromBlobPath = async (
   let error: string | undefined;
 
   const fileBytes = blobPath
-    ? await fetchImageBytes(url, MAX_PHOTO_UPLOAD_SIZE_IN_BYTES)
+    ? await fetchPhotoUploadSafely(url)
       .catch(e => {
         error = `Error fetching image from ${url}: "${e.message}"`;
         return undefined;

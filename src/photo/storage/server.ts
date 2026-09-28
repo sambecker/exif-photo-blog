@@ -5,13 +5,15 @@ import {
   moveFile,
   putFile,
 } from '@/platforms/storage';
-import { removeGpsData, resizeImageToBytes } from '../server';
+import {
+  fetchPhotoUploadSafely,
+  removeGpsData,
+  resizeImageToBytes,
+} from '../server';
 import {
   generateRandomFileNameForPhoto,
   getOptimizedPhotoFileMeta,
 } from '.';
-import { MAX_PHOTO_UPLOAD_SIZE_IN_BYTES } from '..';
-import { fetchImageBytes } from '@/utility/image';
 
 export const storeOptimizedPhotosForUrl = async (
   url: string,
@@ -19,7 +21,7 @@ export const storeOptimizedPhotosForUrl = async (
 ) => {
   const fileBytes = _fileBytes
     ? _fileBytes
-    : await fetchImageBytes(url, MAX_PHOTO_UPLOAD_SIZE_IN_BYTES);
+    : await fetchPhotoUploadSafely(url);
   const { fileNameBase } = getFileNamePartsFromStorageUrl(url);
   const optimizedPhotoFileMeta = getOptimizedPhotoFileMeta(fileNameBase);
   for (const { fileName, size, quality } of optimizedPhotoFileMeta) {
