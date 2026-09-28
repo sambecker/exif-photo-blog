@@ -312,67 +312,49 @@ export const getPhotosMostRecentUpdate = async () =>
 export const getUniqueCameras = async () =>
   safelyQuery(() => query(`
     SELECT
-      (ARRAY_AGG(make ORDER BY variant_count DESC, updated_at DESC))[1]
-        AS make,
-      (ARRAY_AGG(model ORDER BY variant_count DESC, updated_at DESC))[1]
-        AS model,
+      MIN(make) AS make,
+      MIN(model) AS model,
       COUNT(*) AS count,
       MAX(updated_at) AS last_modified
-    FROM (
-      SELECT
-        make,
-        model,
-        updated_at,
-        COUNT(*) OVER (PARTITION BY make, model) AS variant_count,
-        ${parameterizeForDb('make')} AS make_normalized,
-        ${parameterizeForDb('model')} AS model_normalized
-      FROM photos
-      WHERE hidden IS NOT TRUE
-      AND trim(make) <> ''
-      AND trim(model) <> ''
-    ) AS camera_variants
-    GROUP BY make_normalized, model_normalized
-    ORDER BY make_normalized ASC, model_normalized ASC
+    FROM photos
+    WHERE hidden IS NOT TRUE
+    AND trim(make) <> ''
+    AND trim(model) <> ''
+    GROUP BY
+      ${parameterizeForDb('make')},
+      ${parameterizeForDb('model')}
+    ORDER BY 1, 2
   `).then(({ rows }): Cameras => rows.map(({
-      make, model, count, last_modified,
-    }) => ({
-      cameraKey: createCameraKey({ make, model }),
-      camera: { make, model },
-      count: parseInt(count, 10), 
-      lastModified: last_modified as Date,
-    })))
+    make, model, count, last_modified,
+  }) => ({
+    cameraKey: createCameraKey({ make, model }),
+    camera: { make, model },
+    count: parseInt(count, 10), 
+    lastModified: last_modified as Date,
+  })))
   , 'getUniqueCameras');
 
 export const getUniqueLenses = async () =>
   safelyQuery(() => query(`
     SELECT
-      (ARRAY_AGG(lens_make ORDER BY variant_count DESC, updated_at DESC))[1]
-        AS lens_make,
-      (ARRAY_AGG(lens_model ORDER BY variant_count DESC, updated_at DESC))[1]
-        AS lens_model,
+      MIN(lens_make) AS lens_make,
+      MIN(lens_model) AS lens_model,
       COUNT(*) AS count,
       MAX(updated_at) AS last_modified
-    FROM (
-      SELECT
-        lens_make,
-        lens_model,
-        updated_at,
-        COUNT(*) OVER (PARTITION BY lens_make, lens_model) AS variant_count,
-        ${parameterizeForDb('lens_make')} AS lens_make_normalized,
-        ${parameterizeForDb('lens_model')} AS lens_model_normalized
-      FROM photos
-      WHERE hidden IS NOT TRUE
-      AND trim(lens_model) <> ''
-    ) AS lens_variants
-    GROUP BY lens_make_normalized, lens_model_normalized
-    ORDER BY lens_make_normalized ASC, lens_model_normalized ASC
+    FROM photos
+    WHERE hidden IS NOT TRUE
+    AND trim(lens_model) <> ''
+    GROUP BY
+      ${parameterizeForDb('lens_make')},
+      ${parameterizeForDb('lens_model')}
+    ORDER BY 1, 2
   `).then(({ rows }): Lenses => rows
-      .map(({ lens_make: make, lens_model: model, count, last_modified }) => ({
-        lensKey: createLensKey({ make, model }),
-        lens: { make, model },
-        count: parseInt(count, 10), 
-        lastModified: last_modified as Date,
-      })))
+    .map(({ lens_make: make, lens_model: model, count, last_modified }) => ({
+      lensKey: createLensKey({ make, model }),
+      lens: { make, model },
+      count: parseInt(count, 10), 
+      lastModified: last_modified as Date,
+    })))
   , 'getUniqueLenses');
 
 export const getUniqueTags = async (includeHidden?: boolean) =>
