@@ -12,6 +12,7 @@ import { downloadFileFromBrowser } from '@/utility/url';
 import KeyCommand from '../primitives/KeyCommand';
 import LoaderLink from '../LoaderLink';
 import IconCheck from '../icons/IconCheck';
+import { getMenuItemColorClasses } from '../primitives/surface';
 
 // Indicate the active option in a menu of mutually-exclusive choices
 export const renderMenuItemCheck = (isChecked: boolean) => isChecked
@@ -58,23 +59,6 @@ export default function MoreMenuItem({
 }) {
   const [isLoading, setIsLoading] = useState(false);
 
-  const getColorClasses = () => {
-    switch (color) {
-      case 'grey': return clsx(
-        'hover:bg-gray-100/90 active:bg-gray-200/75',
-        'dark:hover:bg-gray-800/60 dark:active:bg-gray-900/80',
-      );
-      case 'red': return clsx(
-        'hover:bg-red-100/50 active:bg-red-100/75',
-        'dark:hover:bg-red-950/55 dark:active:bg-red-950/80',
-      );
-      case 'yellow': return clsx(
-        'hover:bg-amber-100/50 active:bg-amber-100/75',
-        'dark:hover:bg-amber-950/55 dark:active:bg-amber-950/80',
-      );
-    }
-  };
-
   const buttonContent = <>
     <span>
       {labelComplex ?? label}
@@ -92,7 +76,7 @@ export default function MoreMenuItem({
         'flex items-center h-8.5 gap-4',
         'px-2 py-2 rounded-lg',
         'select-none hover:outline-hidden',
-        getColorClasses(),
+        getMenuItemColorClasses(color),
         'whitespace-nowrap',
         isLoading
           ? 'cursor-not-allowed opacity-50'

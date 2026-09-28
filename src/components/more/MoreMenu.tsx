@@ -13,7 +13,10 @@ import { FiMoreHorizontal } from 'react-icons/fi';
 import MoreMenuItem from './MoreMenuItem';
 import { clearGlobalFocus } from '@/utility/dom';
 import { FaChevronRight } from 'react-icons/fa6';
-import { MENU_SURFACE_STYLES } from '../primitives/surface';
+import {
+  getMenuItemColorClasses,
+  MENU_SURFACE_STYLES,
+} from '../primitives/surface';
 
 type MoreMenuOpenListener = (menuId: string) => void;
 
@@ -134,8 +137,7 @@ export default function MoreMenu({
                       'rounded-sm p-2.5',
                       'items-center gap-1.5',
                       'text-sm text-main hover:text-main',
-                      'hover:bg-gray-100/90 active:bg-gray-200/75',
-                      'dark:hover:bg-gray-800/60 dark:active:bg-gray-900/80',
+                      getMenuItemColorClasses(),
                       'select-none',
                       'cursor-pointer',
                       'whitespace-nowrap',

@@ -192,11 +192,6 @@ html {
   @apply
     bg-gray-50 dark:bg-gray-900/60
 }
-@utility bg-content {
-  @apply
-    /* '!' necessary for radix controls */
-    bg-main outline-medium!
-}
 @utility bg-invert {
   @apply
     bg-gray-900 dark:bg-gray-100
@@ -386,7 +381,7 @@ html {
 @layer components {
   .component-surface {
     @apply
-      text-main bg-content rounded-xl
+      text-main bg-main outline-medium! rounded-xl
   }
   .component-surface-light {
     @apply
@@ -396,7 +391,16 @@ html {
     @apply
       text-light bg-black rounded-xl
   }
+  /* Used in surfaces ••• menus */
   .component-surface-frosted {
+    @apply
+      text-main
+      outline-medium! /* '!' necessary for radix controls */
+      bg-white/90 dark:bg-black/80 backdrop-blur-sm
+      rounded-xl
+  }
+  /* Used in prominent overlays like recipes */
+  .component-surface-frosted-light {
     @apply
       text-black bg-neutral-200/95 rounded-xl
   }

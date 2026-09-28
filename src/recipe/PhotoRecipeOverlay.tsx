@@ -144,7 +144,7 @@ export default function PhotoRecipeOverlay({
             'hover:text-black/40',
           )}
           tooltip={appText.tooltip.recipeCopy}
-          tooltipColor="frosted"
+          tooltipColor="frosted-light"
         />
         <span>
           <LoaderButton
