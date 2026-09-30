@@ -79,8 +79,9 @@ export default function MoreMenuItem({
         getMenuItemColorClasses(color),
         'whitespace-nowrap',
         isLoading
-          ? 'cursor-not-allowed opacity-50'
+          ? 'cursor-not-allowed'
           : 'cursor-pointer',
+        isLoading && icon && 'text-dim',
         className,
       )}
       onSelect={async e => {

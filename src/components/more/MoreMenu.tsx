@@ -130,27 +130,34 @@ export default function MoreMenu({
             isSubmenu(item)
               ? <DropdownMenu.DropdownMenuSub key={item.label}>
                 <DropdownMenu.SubTrigger asChild>
-                  <div className="mx-1 focus:outline-none">
+                  <div className="px-1 focus:outline-none">
                     <div className={clsx(
-                      'link outline-none focus:outline-none',
-                      'inline-flex w-full items-center h-8.5',
-                      'rounded-sm p-2.5',
-                      'items-center gap-1.5',
+                      'outline-none focus:outline-none',
+                      'flex items-center h-8.5 gap-4',
+                      'px-2 py-2 rounded-lg',
                       'text-sm text-main hover:text-main',
                       getMenuItemColorClasses(),
                       'select-none',
                       'cursor-pointer',
                       'whitespace-nowrap',
                     )}>
-                      {item.icon && <div className="w-4.5">
-                        {item.icon}
-                      </div>}
-                      <span className="grow min-w-0 text-left">
-                        {item.labelComplex ?? item.label}
+                      <span className={clsx(
+                        'inline-flex items-center gap-1.5 grow min-w-0',
+                      )}>
+                        {item.icon &&
+                          <span className={clsx(
+                            'inline-flex items-center justify-center',
+                            'min-w-[1.25rem] h-6 shrink-0',
+                          )}>
+                            {item.icon}
+                          </span>}
+                        <span className="grow min-w-0 text-left">
+                          {item.labelComplex ?? item.label}
+                        </span>
                       </span>
                       <FaChevronRight
                         size={11}
-                        className="text-dim ml-1"
+                        className="text-dim shrink-0"
                       />
                     </div>
                   </div>

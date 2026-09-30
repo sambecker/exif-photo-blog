@@ -83,7 +83,7 @@ export default function LoaderButton({
       )}
       disabled={isLoading || disabled}
     >
-      {(icon || isLoading) &&
+      {icon &&
         <span className={clsx(
           'min-w-[1.25rem] max-h-5',
           styleAs === 'button' ? 'translate-y-[-0.5px]' : 'translate-y-[0.5px]',
