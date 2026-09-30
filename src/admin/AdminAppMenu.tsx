@@ -15,8 +15,7 @@ import { IoArrowDown, IoArrowUp } from 'react-icons/io5';
 import { clsx } from 'clsx/lite';
 import AdminAppInfoIcon from './AdminAppInfoIcon';
 import { signOutAction } from '@/auth/actions';
-import { ComponentProps, useMemo } from 'react';
-import useIsKeyBeingPressed from '@/utility/useIsKeyBeingPressed';
+import { useMemo } from 'react';
 import IconPhoto from '@/components/icons/IconPhoto';
 import IconUpload from '@/components/icons/IconUpload';
 import IconRecipe from '@/components/icons/IconRecipe';
@@ -25,7 +24,6 @@ import IconFolder from '@/components/icons/IconFolder';
 import IconSignOut from '@/components/icons/IconSignOut';
 import IconBroom from '@/components/icons/IconBroom';
 import InsightsIndicatorDot from './insights/InsightsIndicatorDot';
-import MoreMenuItem from '@/components/more/MoreMenuItem';
 import Spinner from '@/components/Spinner';
 import { useAppText } from '@/i18n/state/client';
 import SwitcherItemMenu from '@/components/switcher/SwitcherItemMenu';
@@ -75,10 +73,6 @@ export default function AdminAppMenu({
 
   const appText = useAppText();
 
-  const isAltPressed = useIsKeyBeingPressed('alt');
-
-  const showAppInsightsLink = photosCountTotal > 0 && !isAltPressed;
-
   const sectionUpload: MoreMenuSection = useMemo(() => ({ items: [{
     label: appText.admin.uploadPhotos,
     icon: <IconUpload
@@ -91,7 +85,7 @@ export default function AdminAppMenu({
   }]}), [appText, isLoadingAdminData, startUpload]);
 
   const sectionMain: MoreMenuSection = useMemo(() => {
-    const items: ComponentProps<typeof MoreMenuItem>[] = [];
+    const items: MoreMenuSection['items'] = [];
 
     if (uploadsCount) {
       items.push({
@@ -207,16 +201,18 @@ export default function AdminAppMenu({
       });
     }
     items.push({
-      label: showAppInsightsLink
-        ? appText.admin.appInsights
-        : appText.admin.appConfig,
+      label: appText.admin.app,
       icon: <AdminAppInfoIcon
         size="small"
         className="translate-x-[-0.5px]"
       />,
-      href: showAppInsightsLink
-        ? PATH_ADMIN_INSIGHTS
-        : PATH_ADMIN_CONFIGURATION,
+      items: [{
+        label: appText.admin.appInsightsShort,
+        href: PATH_ADMIN_INSIGHTS,
+      }, {
+        label: appText.admin.appConfigShort,
+        href: PATH_ADMIN_CONFIGURATION,
+      }],
     });
 
     return { items };
@@ -231,7 +227,6 @@ export default function AdminAppMenu({
     photosCountNeedSync,
     photosCountTotal,
     recipesCount,
-    showAppInsightsLink,
     albumsCount,
     tagsCount,
     uploadsCount,

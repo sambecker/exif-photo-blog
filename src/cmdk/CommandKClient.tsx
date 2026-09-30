@@ -752,7 +752,6 @@ export default function CommandKClient({
         {insightsIndicatorStatus &&
           <InsightsIndicatorDot />}
       </span>,
-      keywords: ['app insights'],
       annotation: <IconLock narrow />,
       path: PATH_ADMIN_INSIGHTS,
     }, {
