@@ -1,6 +1,7 @@
-import { Camera, formatCameraText } from '@/camera';
+import { Camera, createCameraKey, formatCameraText } from '@/camera';
 import { getCameraBrand } from '@/camera/brand';
 import { MAKE_SONY } from '@/platforms/sony';
+import { parameterize } from '@/utility/string';
 
 const APPLE     : Camera = { make: 'Apple', model: 'iPhone 11 Pro' };
 const APPLE_01  : Camera = { make: 'Apple', model: 'iPhone 11' };
@@ -101,5 +102,13 @@ describe('Camera', () => {
       expect(formatCameraText(camera, 'medium'))
         .toBe(`${MAKE_SONY} ${expected}`.toLocaleUpperCase());
     });
+  });
+  it('normalizes camera identity regardless of casing', () => {
+    const majority: Camera = { make: 'Canon', model: 'Canon EOS R6 Mk II' };
+    const variant: Camera = { make: 'Canon', model: 'Canon EOS R6 MK II' };
+    expect(parameterize(variant.model))
+      .toBe(parameterize(majority.model));
+    expect(createCameraKey(variant))
+      .toBe(createCameraKey(majority));
   });
 });
