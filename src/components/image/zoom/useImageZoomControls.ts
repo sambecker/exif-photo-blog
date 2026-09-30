@@ -10,7 +10,7 @@ import {
 } from 'react';
 import Viewer from 'viewerjs';
 import ZoomControls from './ZoomControls';
-import anchorViewerZoom, { isPointerGestureActive } from './anchorViewerZoom';
+import { anchorViewerZoom, isPointerGestureActive } from '.';
 
 export default function useImageZoomControls({
   refImageContainer,

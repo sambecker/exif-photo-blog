@@ -43,7 +43,8 @@ import { useAppState } from '@/app/AppState';
 import { LuExpand } from 'react-icons/lu';
 import LoaderButton from '@/components/primitives/LoaderButton';
 import Tooltip from '@/components/Tooltip';
-import ZoomControls, { ZoomControlsRef } from '@/components/image/ZoomControls';
+import ZoomControls, { ZoomControlsRef }
+  from '@/components/image/zoom/ZoomControls';
 import { AnimatePresence } from 'framer-motion';
 import useRecipeOverlay from '../recipe/useRecipeOverlay';
 import PhotoRecipeOverlay from '@/recipe/PhotoRecipeOverlay';

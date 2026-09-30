@@ -92,7 +92,7 @@ export const isPointerGestureActive = (viewer: Viewer | null): boolean => {
   return action !== false || gesturing;
 };
 
-export default function anchorViewerZoom(viewer: Viewer): void {
+export const anchorViewerZoom = (viewer: Viewer): void => {
   // viewer.js publishes no type for the state above, so this cast is the only
   // way to reach it
   const internals = viewer as unknown as ViewerInternals;
@@ -153,4 +153,4 @@ export default function anchorViewerZoom(viewer: Viewer): void {
       );
     }
   };
-}
+};
