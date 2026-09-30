@@ -66,6 +66,21 @@ const getVisibleCenter = ({ imageData, viewerData }: ViewerInternals) => {
     : undefined;
 };
 
+// The pinch-follow patch reaches into private viewer.js state. If a future
+// release renames or drops these fields, skip the patch and keep stock pinch.
+const canPatchPinchFollow = (viewer: Viewer): boolean => {
+  const internals = viewer as unknown as Partial<ViewerInternals>;
+  return (
+    typeof internals.change === 'function' &&
+    typeof viewer.move === 'function' &&
+    typeof viewer.zoomTo === 'function' &&
+    'gesturing' in internals &&
+    'action' in internals &&
+    internals.pointers !== null &&
+    typeof internals.pointers === 'object'
+  );
+};
+
 // True while a pointer or a Safari gesture drives the viewer. viewer.js reads
 // `transition.zoom` on every zoom, so a zoom during a gesture can skip the
 // ease and land in the same frame as the fingers. Every other zoom keeps the
@@ -82,7 +97,6 @@ export default function anchorViewerZoom(viewer: Viewer): void {
   // way to reach it
   const internals = viewer as unknown as ViewerInternals;
   const { zoomTo } = viewer;
-  const { change } = internals;
 
   viewer.zoomTo = (ratio, hasTooltip, pivot) => {
     // viewer.js anchors a zoom on the event that started it. But viewer.js
@@ -99,6 +113,14 @@ export default function anchorViewerZoom(viewer: Viewer): void {
       pivot ?? getVisibleCenter(internals),
     );
   };
+
+  // Pinch-follow and the Safari double-zoom skip depend on private fields.
+  // If they are missing, leave viewer.js pinch behavior alone.
+  if (!canPatchPinchFollow(viewer)) {
+    return;
+  }
+
+  const { change } = internals;
 
   internals.change = event => {
     if (!isPinching(internals)) {
