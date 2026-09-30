@@ -165,6 +165,7 @@ export default function MoreMenu({
                 <DropdownMenu.Portal>
                   <DropdownMenu.SubContent
                     className={MENU_SURFACE_STYLES}
+                    sideOffset={-4}
                   >
                     {renderSections(item.sections ?? [{ items: item.items }])}
                   </DropdownMenu.SubContent>
