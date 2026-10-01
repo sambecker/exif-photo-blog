@@ -93,7 +93,10 @@ export default function TagInput({
       // Check already-parameterized values
       return inputTextFormatted &&
       !optionValues.includes(inputTextFormatted) &&
-      !selectedOptions.includes(inputTextFormatted);
+      (
+        isRevealingRawText ||
+        !selectedOptions.includes(inputTextFormatted)
+      );
     } else {
       // Parameterize for check only
       const inputTextParameterized = parameterize(inputTextFormatted);
@@ -101,11 +104,20 @@ export default function TagInput({
       !optionValues
         .map(value => parameterize(value))
         .includes((inputTextParameterized)) &&
-      !selectedOptions
-        .map(value => parameterize(value))
-        .includes(inputTextParameterized);
+      (
+        isRevealingRawText ||
+        !selectedOptions
+          .map(value => parameterize(value))
+          .includes(inputTextParameterized)
+      );
     }
-  }, [shouldParameterize, inputTextFormatted, optionValues, selectedOptions]);
+  }, [
+    shouldParameterize,
+    inputTextFormatted,
+    optionValues,
+    selectedOptions,
+    isRevealingRawText,
+  ]);
 
   const optionsFiltered = useMemo<AnnotatedTag[]>(() => hasReachedLimit
     ? [{ value: limitValidationMessage ?? `Limit reached (${limit})` }]
@@ -114,9 +126,11 @@ export default function TagInput({
       : []
     ).concat(options
       .filter(({ value, label }) =>{
-        // Include label when it exists so both are searchable
+        // Include label when it exists so both are searchable.
+        // While raw text is showing, the committed value is stale until
+        // blur, so keep that option searchable.
         const key = label ? `${value}-${label}` : value;
-        return !selectedOptions.includes(key) && (
+        return (isRevealingRawText || !selectedOptions.includes(key)) && (
           !inputTextFormatted ||
           (shouldParameterize
             ? key.includes(inputTextFormatted)
@@ -132,6 +146,7 @@ export default function TagInput({
     limitValidationMessage,
     options,
     selectedOptions,
+    isRevealingRawText,
     shouldParameterize,
   ]);
 
