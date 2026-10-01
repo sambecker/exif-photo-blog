@@ -97,6 +97,10 @@ export default function TagInput({
         isRevealingRawText ||
         !selectedOptions.includes(inputTextFormatted)
       );
+    } else if (isRevealingRawText) {
+      // Case-sensitive, so "nikon" can be created when "Nikon" exists
+      return inputTextFormatted &&
+        !optionValues.includes(inputTextFormatted);
     } else {
       // Parameterize for check only
       const inputTextParameterized = parameterize(inputTextFormatted);
@@ -104,12 +108,9 @@ export default function TagInput({
       !optionValues
         .map(value => parameterize(value))
         .includes((inputTextParameterized)) &&
-      (
-        isRevealingRawText ||
-        !selectedOptions
-          .map(value => parameterize(value))
-          .includes(inputTextParameterized)
-      );
+      !selectedOptions
+        .map(value => parameterize(value))
+        .includes(inputTextParameterized);
     }
   }, [
     shouldParameterize,
