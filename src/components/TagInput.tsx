@@ -35,6 +35,7 @@ export default function TagInput({
   limitValidationMessage,
   allowNewValues = true,
   shouldParameterize,
+  shouldRevealRawText,
 }: {
   id?: string
   name: string
@@ -53,6 +54,7 @@ export default function TagInput({
   limitValidationMessage?: string
   allowNewValues?: boolean
   shouldParameterize?: boolean
+  shouldRevealRawText?: boolean
 }) {
   const behavesAsDropdown = limit === 1;
 
@@ -62,15 +64,20 @@ export default function TagInput({
 
   const [shouldShowMenu, setShouldShowMenu] = useState(false);
   const [inputText, setInputText] = useState('');
+  const [isRevealingRawText, setIsRevealingRawText] = useState(false);
   const [selectedOptionIndex, setSelectedOptionIndex] = useState<number>();
+  // Set when a suggestion is chosen so the following blur does not
+  // write the in-progress query back over that choice.
+  const ignoreRawTextCommitRef = useRef(false);
+  const rawTextOnFocusRef = useRef<string>(null);
 
   const optionValues = useMemo(() =>
     options.map(({ value }) => value)
   , [options]);
 
   const selectedOptions = useMemo(() =>
-    convertStringToArray(value, shouldParameterize)
-  , [value, shouldParameterize]);
+    convertStringToArray(value, shouldParameterize, !behavesAsDropdown)
+  , [value, behavesAsDropdown, shouldParameterize]);
 
   const hasReachedLimit = useMemo(() =>
     limit !== undefined &&
@@ -86,7 +93,14 @@ export default function TagInput({
       // Check already-parameterized values
       return inputTextFormatted &&
       !optionValues.includes(inputTextFormatted) &&
-      !selectedOptions.includes(inputTextFormatted);
+      (
+        isRevealingRawText ||
+        !selectedOptions.includes(inputTextFormatted)
+      );
+    } else if (isRevealingRawText) {
+      // Case-sensitive, so "nikon" can be created when "Nikon" exists
+      return inputTextFormatted &&
+        !optionValues.includes(inputTextFormatted);
     } else {
       // Parameterize for check only
       const inputTextParameterized = parameterize(inputTextFormatted);
@@ -98,7 +112,13 @@ export default function TagInput({
         .map(value => parameterize(value))
         .includes(inputTextParameterized);
     }
-  }, [shouldParameterize, inputTextFormatted, optionValues, selectedOptions]);
+  }, [
+    shouldParameterize,
+    inputTextFormatted,
+    optionValues,
+    selectedOptions,
+    isRevealingRawText,
+  ]);
 
   const optionsFiltered = useMemo<AnnotatedTag[]>(() => hasReachedLimit
     ? [{ value: limitValidationMessage ?? `Limit reached (${limit})` }]
@@ -107,9 +127,11 @@ export default function TagInput({
       : []
     ).concat(options
       .filter(({ value, label }) =>{
-        // Make value and key searchable
-        const key = `${value}-${label}`;
-        return !selectedOptions.includes(key) && (
+        // Include label when it exists so both are searchable.
+        const key = label ? `${value}-${label}` : value;
+        // While raw text is showing, the committed value is stale until
+        // blur, so keep that option searchable.
+        return (isRevealingRawText || !selectedOptions.includes(key)) && (
           !inputTextFormatted ||
           (shouldParameterize
             ? key.includes(inputTextFormatted)
@@ -125,6 +147,7 @@ export default function TagInput({
     limitValidationMessage,
     options,
     selectedOptions,
+    isRevealingRawText,
     shouldParameterize,
   ]);
 
@@ -137,6 +160,11 @@ export default function TagInput({
   }, []);
 
   const addOptions = useCallback((options: (string | undefined)[]) => {
+    if (shouldRevealRawText) {
+      ignoreRawTextCommitRef.current = true;
+      setIsRevealingRawText(false);
+    }
+
     const optionsToAdd = (options
       .filter(Boolean) as string[])
       .map(option => option.startsWith(CREATE_LABEL)
@@ -175,29 +203,46 @@ export default function TagInput({
     behavesAsDropdown,
     selectedOptions,
     shouldParameterize,
+    shouldRevealRawText,
     onChange,
     hideMenu,
   ]);
 
   const removeOption = useCallback((option: string) => {
-    onChange?.(selectedOptions
+    const next = selectedOptions
       .filter(o => o !== (shouldParameterize ? parameterize(option) : option))
-      .join(','));
+      .join(',');
+    onChange?.(next);
     setSelectedOptionIndex(undefined);
+    if (shouldRevealRawText) {
+      rawTextOnFocusRef.current = next;
+    }
     inputRef.current?.focus();
-  }, [shouldParameterize, onChange, selectedOptions]);
+  }, [shouldParameterize, shouldRevealRawText, onChange, selectedOptions]);
 
-  // Show options when input text changes
+  // Show options when input text changes.
+  // Raw-text editing keeps commas in the field until blur.
   useEffect(() => {
-    if (inputText) {
-      if (inputText.includes(',') && !behavesAsDropdown) {
+    if (inputText && !(shouldRevealRawText && !isRevealingRawText)) {
+      if (
+        inputText.includes(',') &&
+        !behavesAsDropdown &&
+        !shouldRevealRawText
+      ) {
         // eslint-disable-next-line react-hooks/set-state-in-effect
         addOptions(inputText.split(','));
       } else {
         setShouldShowMenu(true);
       }
     }
-  }, [inputText, behavesAsDropdown, addOptions, selectedOptions]);
+  }, [
+    inputText,
+    behavesAsDropdown,
+    addOptions,
+    selectedOptions,
+    shouldRevealRawText,
+    isRevealingRawText,
+  ]);
 
   // Focus option in the DOM when selected index changes
   useEffect(() => {
@@ -224,10 +269,13 @@ export default function TagInput({
       switch (e.key) {
         case 'Enter':
           // Only trap focus if there are options to select
-          // otherwise allow form to submit
+          // otherwise allow form to submit.
+          // With raw text visible, Enter keeps that text unless a
+          // suggestion was highlighted with the arrow keys.
           if (
             shouldShowMenu &&
-            optionsFiltered.length > 0
+            optionsFiltered.length > 0 &&
+            !(shouldRevealRawText && selectedOptionIndex === undefined)
           ) {
             e.stopImmediatePropagation();
             e.preventDefault();
@@ -240,6 +288,7 @@ export default function TagInput({
           if (shouldShowMenu) {
             setSelectedOptionIndex(i => {
               if (i === undefined) {
+                if (shouldRevealRawText) { return 0; }
                 return optionsFiltered.length > 1 ? 1 : 0;
               } else if (i >= optionsFiltered.length - 1) {
                 return 0;
@@ -267,7 +316,11 @@ export default function TagInput({
           });
           break;
         case 'Backspace':
-          if (inputText === '' && selectedOptions.length > 0) {
+          if (
+            !isRevealingRawText &&
+            inputText === '' &&
+            selectedOptions.length > 0
+          ) {
             removeOption(selectedOptions[selectedOptions.length - 1]);
             if (!behavesAsDropdown) { hideMenu(); }
           }
@@ -291,6 +344,8 @@ export default function TagInput({
     optionsFiltered,
     addOptions,
     shouldShowMenu,
+    shouldRevealRawText,
+    isRevealingRawText,
     hasReachedLimit,
     limit,
   ]);
@@ -315,8 +370,26 @@ export default function TagInput({
       onFocus={() => setShouldShowMenu(true)}
       onBlur={e => {
         if (!e.currentTarget.contains(e.relatedTarget)) {
-          // Capture text on blur if limit not yet reached
-          if (inputText && !hasReachedLimit && allowNewValues) {
+          if (shouldRevealRawText) {
+            if (
+              isRevealingRawText &&
+              !ignoreRawTextCommitRef.current &&
+              !readOnly
+            ) {
+              const next = convertStringToArray(
+                inputText,
+                shouldParameterize,
+                !behavesAsDropdown,
+              ).join(',');
+              if (next !== value) {
+                onChange?.(next);
+              }
+            }
+            ignoreRawTextCommitRef.current = false;
+            setInputText('');
+            setIsRevealingRawText(false);
+          } else if (inputText && !hasReachedLimit && allowNewValues) {
+            // Capture text on blur if limit not yet reached
             addOptions([inputText]);
           } else if (allowNewValues) {
             // Only clear text when there's the possibility of
@@ -352,7 +425,7 @@ export default function TagInput({
         )}
       >
         {/* Selected Options */}
-        {selectedOptions
+        {!(shouldRevealRawText && isRevealingRawText) && selectedOptions
           .filter(Boolean)
           .map(option =>
             <button
@@ -389,6 +462,7 @@ export default function TagInput({
           size={10}
           value={inputText}
           onChange={e => {
+            ignoreRawTextCommitRef.current = false;
             setInputText(e.target.value);
             onInputTextChange?.(e.target.value);
           }}
@@ -396,8 +470,21 @@ export default function TagInput({
           autoCapitalize="off"
           autoCorrect="off"
           readOnly={readOnly}
-          placeholder={selectedOptions.length === 0 ? placeholder : undefined}
-          onFocus={() => setSelectedOptionIndex(undefined)}
+          placeholder={
+            !isRevealingRawText && selectedOptions.length === 0
+              ? placeholder
+              : undefined
+          }
+          onFocus={() => {
+            setSelectedOptionIndex(undefined);
+            if (shouldRevealRawText && !isRevealingRawText) {
+              const next = rawTextOnFocusRef.current ?? value;
+              rawTextOnFocusRef.current = null;
+              ignoreRawTextCommitRef.current = false;
+              setInputText(next);
+              setIsRevealingRawText(true);
+            }
+          }}
           onClick={() => {
             if (!shouldShowMenu) { setShouldShowMenu(true); }
           }}
@@ -407,7 +494,17 @@ export default function TagInput({
           aria-controls={shouldShowMenu ? ARIA_ID_TAG_OPTIONS : undefined}
           role="combobox"
         />
-        <input type="hidden" name={name} value={value} />
+        <input
+          type="hidden"
+          name={name}
+          value={isRevealingRawText
+            ? convertStringToArray(
+              inputText,
+              shouldParameterize,
+              !behavesAsDropdown,
+            ).join(',')
+            : value}
+        />
         {accessory}
       </div>
       <div className="relative">
@@ -442,7 +539,11 @@ export default function TagInput({
                   role="option"
                   aria-selected={
                     index === selectedOptionIndex ||
-                    (index === 0 && selectedOptionIndex === undefined)
+                    (
+                      !shouldRevealRawText &&
+                      index === 0 &&
+                      selectedOptionIndex === undefined
+                    )
                   }
                   tabIndex={0}
                   className={clsx(
@@ -454,7 +555,9 @@ export default function TagInput({
                     !hasReachedLimit &&
                       'active:bg-gray-50 dark:active:bg-gray-900',
                     'focus:bg-gray-100 dark:focus:bg-gray-800',
-                    index === 0 && selectedOptionIndex === undefined &&
+                    !shouldRevealRawText &&
+                    index === 0 &&
+                    selectedOptionIndex === undefined &&
                       'bg-gray-100 dark:bg-gray-800',
                     'outline-hidden',
                   )}

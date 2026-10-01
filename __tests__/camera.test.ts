@@ -1,7 +1,21 @@
-import { Camera, createCameraKey, formatCameraText } from '@/camera';
+import {
+  Camera,
+  CameraWithMeta,
+  convertCameraMakesForForm,
+  convertCameraModelsForForm,
+  createCameraKey,
+  formatCameraText,
+} from '@/camera';
 import { getCameraBrand } from '@/camera/brand';
 import { MAKE_SONY } from '@/platforms/sony';
 import { parameterize } from '@/utility/string';
+
+const cameraWithMeta = (camera: Camera, count: number): CameraWithMeta => ({
+  cameraKey: createCameraKey(camera),
+  camera,
+  count,
+  lastModified: new Date(),
+});
 
 const APPLE     : Camera = { make: 'Apple', model: 'iPhone 11 Pro' };
 const APPLE_01  : Camera = { make: 'Apple', model: 'iPhone 11' };
@@ -110,5 +124,50 @@ describe('Camera', () => {
       .toBe(parameterize(majority.model));
     expect(createCameraKey(variant))
       .toBe(createCameraKey(majority));
+  });
+});
+
+describe('Camera form options', () => {
+  it('offers no options when no cameras exist', () => {
+    expect(convertCameraMakesForForm()).toStrictEqual([]);
+    expect(convertCameraModelsForForm([])).toStrictEqual([]);
+  });
+  it('dedupes makes across models, summing photo counts', () => {
+    const cameras = [
+      cameraWithMeta(APPLE, 3),
+      cameraWithMeta(APPLE_02, 2),
+      cameraWithMeta(FUJIFILM, 1),
+    ];
+    expect(convertCameraMakesForForm(cameras)).toStrictEqual([
+      {
+        value: 'Apple',
+        annotation: '× 5',
+        annotationAria: 'found in 5 photos',
+      },
+      {
+        value: 'Fujifilm',
+        annotation: '× 1',
+        annotationAria: 'found in 1 photo',
+      },
+    ]);
+  });
+  it('sorts unique models', () => {
+    const cameras = [
+      cameraWithMeta(FUJIFILM, 1),
+      cameraWithMeta(APPLE_02, 2),
+      cameraWithMeta(APPLE, 3),
+    ];
+    expect(convertCameraModelsForForm(cameras).map(({ value }) => value))
+      .toStrictEqual(['iPhone 11 Pro', 'iPhone 15 Pro Max', 'X-T5']);
+  });
+  it('ignores cameras missing a make or model', () => {
+    const cameras = [
+      cameraWithMeta({ make: '', model: 'Untitled' }, 2),
+      cameraWithMeta({ make: 'Canon', model: '' }, 1),
+    ];
+    expect(convertCameraMakesForForm(cameras).map(({ value }) => value))
+      .toStrictEqual(['Canon']);
+    expect(convertCameraModelsForForm(cameras).map(({ value }) => value))
+      .toStrictEqual(['Untitled']);
   });
 });

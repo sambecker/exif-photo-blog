@@ -17,6 +17,8 @@ import { Recipes } from '@/recipe';
 import { Films } from '@/film';
 import { StorageListResponse } from '@/platforms/storage';
 import { Albums } from '@/album';
+import { Cameras } from '@/camera';
+import { Lenses } from '@/lens';
 
 export default function PhotoEditPageClient({
   photo,
@@ -26,6 +28,8 @@ export default function PhotoEditPageClient({
   uniqueTags,
   uniqueRecipes,
   uniqueFilms,
+  uniqueCameras,
+  uniqueLenses,
   hasAiContentGeneration,
   imageThumbnailBase64,
   blurData,
@@ -38,6 +42,8 @@ export default function PhotoEditPageClient({
   uniqueTags: Tags
   uniqueRecipes: Recipes
   uniqueFilms: Films
+  uniqueCameras: Cameras
+  uniqueLenses: Lenses
   hasAiContentGeneration: boolean
   imageThumbnailBase64: string
   blurData: string
@@ -95,6 +101,8 @@ export default function PhotoEditPageClient({
         uniqueTags={uniqueTags}
         uniqueRecipes={uniqueRecipes}
         uniqueFilms={uniqueFilms}
+        uniqueCameras={uniqueCameras}
+        uniqueLenses={uniqueLenses}
         aiContent={hasAiContentGeneration ? aiContent : undefined}
         hasLocationServices={hasLocationServices}
         onTitleChange={setUpdatedTitle}
