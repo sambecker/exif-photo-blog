@@ -8,6 +8,7 @@ import {
 } from '@/camera';
 import { getCameraBrand } from '@/camera/brand';
 import { MAKE_SONY } from '@/platforms/sony';
+import { parameterize } from '@/utility/string';
 
 const cameraWithMeta = (camera: Camera, count: number): CameraWithMeta => ({
   cameraKey: createCameraKey(camera),
@@ -115,6 +116,14 @@ describe('Camera', () => {
       expect(formatCameraText(camera, 'medium'))
         .toBe(`${MAKE_SONY} ${expected}`.toLocaleUpperCase());
     });
+  });
+  it('normalizes camera identity regardless of casing', () => {
+    const majority: Camera = { make: 'Canon', model: 'Canon EOS R6 Mk II' };
+    const variant: Camera = { make: 'Canon', model: 'Canon EOS R6 MK II' };
+    expect(parameterize(variant.model))
+      .toBe(parameterize(majority.model));
+    expect(createCameraKey(variant))
+      .toBe(createCameraKey(majority));
   });
 });
 

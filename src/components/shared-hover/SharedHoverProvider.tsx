@@ -193,8 +193,8 @@ function SharedHoverOverlay({
             >
               <div
                 className={clsx(
-                  'relative rounded-[9px] overflow-clip',
-                  hoverProps.color !== 'frosted' && 'bg-extra-dim',
+                  'relative rounded-[10px] overflow-clip',
+                  hoverProps.color !== 'frosted-light' && 'bg-extra-dim',
                 )}
                 style={{
                   width: hoverProps.width,
@@ -206,8 +206,8 @@ function SharedHoverOverlay({
                 {/* Border */}
                 <div className={clsx(
                   'absolute inset-0',
-                  'border rounded-[0.25rem]',
-                  hoverProps.color === 'frosted'
+                  'border rounded-[10px]',
+                  hoverProps.color === 'frosted-light'
                     ? 'border-gray-400/25'
                     : 'border-medium',
                 )} />

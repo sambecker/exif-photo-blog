@@ -3,7 +3,10 @@ import {
   sql,
   query,
 } from '@/platforms/postgres';
-import { convertArrayToPostgresString } from '@/db';
+import {
+  convertArrayToPostgresString,
+  parameterizeForDb,
+} from '@/db';
 import {
   PhotoDb,
   PhotoDbInsert,
@@ -308,15 +311,19 @@ export const getPhotosMostRecentUpdate = async () =>
 
 export const getUniqueCameras = async (includeHidden?: boolean) =>
   safelyQuery(() => query(`
-    SELECT DISTINCT make||' '||model as camera, make, model,
-      COUNT(*),
-      MAX(updated_at) as last_modified
+    SELECT
+      MIN(make) AS make,
+      MIN(model) AS model,
+      COUNT(*) AS count,
+      MAX(updated_at) AS last_modified
     FROM photos
     WHERE trim(make) <> ''
     AND trim(model) <> ''
     ${includeHidden ? '' : 'AND hidden IS NOT TRUE'}
-    GROUP BY make, model
-    ORDER BY camera ASC
+    GROUP BY
+      ${parameterizeForDb('make')},
+      ${parameterizeForDb('model')}
+    ORDER BY 1, 2
   `).then(({ rows }): Cameras => rows.map(({
     make, model, count, last_modified,
   }) => ({
@@ -329,15 +336,18 @@ export const getUniqueCameras = async (includeHidden?: boolean) =>
 
 export const getUniqueLenses = async (includeHidden?: boolean) =>
   safelyQuery(() => query(`
-    SELECT DISTINCT lens_make||' '||lens_model as lens,
-      lens_make, lens_model,
-      COUNT(*),
-      MAX(updated_at) as last_modified
+    SELECT
+      MIN(lens_make) AS lens_make,
+      MIN(lens_model) AS lens_model,
+      COUNT(*) AS count,
+      MAX(updated_at) AS last_modified
     FROM photos
     WHERE trim(lens_model) <> ''
     ${includeHidden ? '' : 'AND hidden IS NOT TRUE'}
-    GROUP BY lens_make, lens_model
-    ORDER BY lens ASC
+    GROUP BY
+      ${parameterizeForDb('lens_make')},
+      ${parameterizeForDb('lens_model')}
+    ORDER BY 1, 2
   `).then(({ rows }): Lenses => rows
     .map(({ lens_make: make, lens_model: model, count, last_modified }) => ({
       lensKey: createLensKey({ make, model }),
@@ -477,7 +487,9 @@ export const getUniqueFocalLengths = async () =>
       COUNT(*),
       MAX(updated_at) as last_modified
     FROM photos
-    WHERE hidden IS NOT TRUE AND focal_length IS NOT NULL
+    WHERE hidden IS NOT TRUE
+    AND focal_length IS NOT NULL
+    AND focal_length > 0
     GROUP BY focal_length
     ORDER BY focal_length ASC
   `.then(({ rows }): FocalLengths => rows

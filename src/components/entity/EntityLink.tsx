@@ -219,7 +219,7 @@ export default function EntityLink({
               ...hoverQueryOptions,
               ...PHOTO_PREVIEW_QUERY_OPTIONS,
             })}
-          color={contrast === 'frosted' ? 'frosted' : undefined}
+          color={contrast === 'frosted' ? 'frosted-light' : undefined}
         >
           {renderLink()}
         </PhotosHover>

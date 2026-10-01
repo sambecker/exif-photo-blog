@@ -5,7 +5,11 @@ import {
   moveFile,
   putFile,
 } from '@/platforms/storage';
-import { removeGpsData, resizeImageToBytes } from '../server';
+import {
+  fetchImageUrlSafely,
+  removeGpsData,
+  resizeImageToBytes,
+} from '../server';
 import {
   generateRandomFileNameForPhoto,
   getOptimizedPhotoFileMeta,
@@ -17,7 +21,7 @@ export const storeOptimizedPhotosForUrl = async (
 ) => {
   const fileBytes = _fileBytes
     ? _fileBytes
-    : await fetch(url).then(res => res.arrayBuffer());
+    : await fetchImageUrlSafely(url);
   const { fileNameBase } = getFileNamePartsFromStorageUrl(url);
   const optimizedPhotoFileMeta = getOptimizedPhotoFileMeta(fileNameBase);
   for (const { fileName, size, quality } of optimizedPhotoFileMeta) {
@@ -42,7 +46,7 @@ export const convertUploadToPhoto = async ({
   const fileName = `${fileNameBase}.${fileExtension}`;
   const fileBytes = _fileBytes
     ? _fileBytes
-    : await fetch(uploadUrl).then(res => res.arrayBuffer());
+    : await fetchImageUrlSafely(uploadUrl);
   let promise: Promise<string>;
   if (shouldStripGpsData) {
     const fileWithoutGps = await removeGpsData(fileBytes);

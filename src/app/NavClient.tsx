@@ -76,7 +76,7 @@ export default function NavClient({
               )}>
               <AppToolbar
                 animate={hasLoadedWithAnimations && isNavVisible}
-                hideSortControl={isInEmptyState}
+                isInEmptyState={isInEmptyState}
               />
               <div className={clsx(
                 'grow text-right min-w-0',

@@ -10,7 +10,7 @@ export default function ComponentSurface({
   ref?: RefObject<HTMLDivElement | null>
   children: ReactNode
   className?: string
-  color?: 'light' | 'dark' | 'frosted'
+  color?: 'light' | 'dark' | 'frosted-light'
 }) {
   return (
     <div
@@ -19,7 +19,8 @@ export default function ComponentSurface({
         color === undefined && 'component-surface shadow-sm dark:shadow-md',
         color === 'light' && 'component-surface-light shadow-sm',
         color === 'dark' && 'component-surface-dark shadow-md',
-        color === 'frosted' && 'component-surface-frosted shadow-sm',
+        color === 'frosted-light' &&
+          'component-surface-frosted-light shadow-sm',
         'px-2 py-1.5 max-w-[14rem]',
         'text-[0.8rem] leading-tight',
         'text-balance text-center',

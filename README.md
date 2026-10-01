@@ -10,6 +10,8 @@ https://github.com/sambecker/exif-photo-blog/assets/169298/4253ea54-558a-4358-88
 - [birdnerd.photo](https://birdnerd.photo)
 - [booshie.photo](https://booshie.photo)
 - [photos.sconetto.me](https://photos.sconetto.me)
+- [photos.dteles.dev](https://photos.dteles.dev)
+- [jahidshots.com](https://jahidshots.com)
 
 _Submit your site as an example by [opening an issue](https://github.com/sambecker/exif-photo-blog/issues/new?template=example_site_submission.md)_
 

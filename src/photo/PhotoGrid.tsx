@@ -132,6 +132,7 @@ export default function PhotoGrid({
               'shadow-none',
             )}
             classNameButtonOpen="bg-black/60!"
+            alignOffset={-4}
           />
         </div>}
       {isSelectingPhotos &&

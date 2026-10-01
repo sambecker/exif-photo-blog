@@ -164,8 +164,10 @@ export default function CommandKClient({
   recipes,
   films,
   focalLengths,
+  isInEmptyState,
   footer,
 }: {
+  isInEmptyState?: boolean
   footer?: string
 } & PhotoSetCategories) {
   const pathname = usePathname();
@@ -619,7 +621,7 @@ export default function CommandKClient({
   const sortSection: CommandKSection = {
     heading: appText.sort.sort,
     accessory: <IconSort size={14} className="translate-x-[0.5px]" />,
-    items: doesPathOfferSort
+    items: doesPathOfferSort && !isInEmptyState
       ? sortItems
       : [],
   };
@@ -750,7 +752,6 @@ export default function CommandKClient({
         {insightsIndicatorStatus &&
           <InsightsIndicatorDot />}
       </span>,
-      keywords: ['app insights'],
       annotation: <IconLock narrow />,
       path: PATH_ADMIN_INSIGHTS,
     }, {

@@ -31,16 +31,22 @@ import {
   getRecipeTitleForData,
   updateAllMatchingRecipeTitles,
 } from '@/photo/query';
-import { PhotoDbInsert } from '.';
+import { MAX_PHOTO_UPLOAD_SIZE_IN_BYTES, PhotoDbInsert } from '.';
 import { convertExifToFormData } from './form/server';
 import { getColorFieldsForPhotoForm } from './color/server';
 import exifr from 'exifr';
 import { getCompatibleExifValue } from '@/utility/exif';
+import { fetchUrlWithByteLimit } from '@/utility/fetch';
 import { getPlaceFromCoordinates } from '@/platforms/google-places';
 
 const IMAGE_WIDTH_BLUR = 200;
 const IMAGE_WIDTH_DEFAULT = 200;
 const IMAGE_QUALITY_DEFAULT = 80;
+
+// Buffers an image, refusing to exceed `maxBytes`, so that oversized
+// photos fail fast instead of exhausting serverless memory
+export const fetchImageUrlSafely = (url: string) =>
+  fetchUrlWithByteLimit(url, MAX_PHOTO_UPLOAD_SIZE_IN_BYTES);
 
 export const extractImageDataFromBlobPath = async (
   blobPath: string, {
@@ -81,7 +87,7 @@ export const extractImageDataFromBlobPath = async (
   let error: string | undefined;
 
   const fileBytes = blobPath
-    ? await fetch(url, { cache: 'no-store' }).then(res => res.arrayBuffer())
+    ? await fetchImageUrlSafely(url)
       .catch(e => {
         error = `Error fetching image from ${url}: "${e.message}"`;
         return undefined;

@@ -10,6 +10,7 @@ import {
 } from 'react';
 import Viewer from 'viewerjs';
 import ZoomControls from './ZoomControls';
+import { anchorViewerZoom, isPointerGestureActive } from '.';
 
 export default function useImageZoomControls({
   refImageContainer,
@@ -54,6 +55,19 @@ export default function useImageZoomControls({
         viewerRef.current = new Viewer(imageRef, {
           navbar: false,
           title: false,
+          // This UI has no rotate control, and rotation makes viewer.js turn
+          // the photo during a two-finger pinch
+          rotatable: false,
+          // viewer.js applies its 300ms transition again on every zoom and
+          // every move, and it sends one of each per pointer frame. The photo
+          // then arrives 300ms after the pointer. Drop the ease while a
+          // gesture drives the viewer, and keep it everywhere else.
+          transition: {
+            move: false,
+            get zoom() {
+              return !isPointerGestureActive(viewerRef.current);
+            },
+          },
           toolbar: {
             zoomIn: 1,
             reset: 2,
@@ -83,6 +97,7 @@ export default function useImageZoomControls({
             setZoomLevel(ratio);
           },
         });
+        anchorViewerZoom(viewerRef.current);
         return () => {
           viewerRef.current?.destroy();
           viewerRef.current = null;
