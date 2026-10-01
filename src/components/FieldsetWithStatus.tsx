@@ -33,6 +33,7 @@ export default function FieldsetWithStatus({
   tagOptionsLimit,
   tagOptionsLimitValidationMessage,
   tagOptionsShouldParameterize,
+  tagOptionsShouldRevealRawText,
   tagOptionsDefaultIcon,
   tagOptionsDefaultIconSelected,
   tagOptionsLabelOverride,
@@ -71,6 +72,7 @@ export default function FieldsetWithStatus({
   tagOptionsLimit?: number
   tagOptionsLimitValidationMessage?: string
   tagOptionsShouldParameterize?: boolean
+  tagOptionsShouldRevealRawText?: boolean
   tagOptionsDefaultIcon?: ReactNode
   tagOptionsDefaultIconSelected?: ReactNode
   tagOptionsLabelOverride?: (value: string) => string | undefined
@@ -244,6 +246,7 @@ export default function FieldsetWithStatus({
                 limitValidationMessage={tagOptionsLimitValidationMessage}
                 allowNewValues={tagOptionsAllowNewValues}
                 shouldParameterize={tagOptionsShouldParameterize}
+                shouldRevealRawText={tagOptionsShouldRevealRawText}
               />
               : type === 'textarea'
                 ? <textarea

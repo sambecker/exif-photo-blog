@@ -78,6 +78,7 @@ export type FormMeta = {
   tagOptionsLimit?: number
   tagOptionsLimitValidationMessage?: string
   tagOptionsShouldParameterize?: boolean
+  tagOptionsShouldRevealRawText?: boolean
   isJson?: boolean
   staticValue?: string
 };
@@ -90,12 +91,16 @@ const tagOptionsForAutocomplete = (
   options?: AnnotatedTag[],
 ): Pick<
   FormMeta,
-  'tagOptions' | 'tagOptionsLimit' | 'tagOptionsShouldParameterize'
+  'tagOptions' |
+  'tagOptionsLimit' |
+  'tagOptionsShouldParameterize' |
+  'tagOptionsShouldRevealRawText'
 > => options && options.length > 0
   ? {
     tagOptions: options,
     tagOptionsLimit: 1,
     tagOptionsShouldParameterize: false,
+    tagOptionsShouldRevealRawText: true,
   }
   : {};
 
