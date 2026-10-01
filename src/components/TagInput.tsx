@@ -114,8 +114,8 @@ export default function TagInput({
       : []
     ).concat(options
       .filter(({ value, label }) =>{
-        // Make value and key searchable
-        const key = `${value}-${label}`;
+        // Include label when it exists so both are searchable
+        const key = label ? `${value}-${label}` : value;
         return !selectedOptions.includes(key) && (
           !inputTextFormatted ||
           (shouldParameterize
