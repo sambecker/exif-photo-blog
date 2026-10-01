@@ -100,7 +100,6 @@ const convertCameraFieldForForm = (
   cameras: Cameras = [],
   getValue: (camera: Camera) => string | undefined,
 ): AnnotatedTag[] => {
-  // A make spans multiple models, so sum counts per value
   const counts = new Map<string, number>();
   cameras.forEach(({ camera, count }) => {
     const value = getValue(camera);

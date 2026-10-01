@@ -127,7 +127,6 @@ const convertLensFieldForForm = (
   lenses: Lenses = [],
   getValue: (lens: Lens) => string | undefined,
 ): AnnotatedTag[] => {
-  // A make spans multiple models, so sum counts per value
   const counts = new Map<string, number>();
   lenses.forEach(({ lens, count }) => {
     const value = getValue(lens);
