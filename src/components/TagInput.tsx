@@ -128,9 +128,9 @@ export default function TagInput({
     ).concat(options
       .filter(({ value, label }) =>{
         // Include label when it exists so both are searchable.
+        const key = label ? `${value}-${label}` : value;
         // While raw text is showing, the committed value is stale until
         // blur, so keep that option searchable.
-        const key = label ? `${value}-${label}` : value;
         return (isRevealingRawText || !selectedOptions.includes(key)) && (
           !inputTextFormatted ||
           (shouldParameterize
