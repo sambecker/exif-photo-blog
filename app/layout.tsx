@@ -120,15 +120,15 @@ export default function RootLayout({
                   <SwrConfigClient>
                     <SharedHoverProvider>
                       <div className={clsx(
-                        'mx-3 mb-3',
-                        'lg:mx-6 lg:mb-6',
+                        'mx-3 pb-3',
+                        'lg:mx-6 lg:pb-6',
+                        'min-h-dvh flex flex-col',
                       )}>
                         <Nav />
-                        <main>
+                        <main className="grow">
                           <ShareModals />
                           <RecipeModal />
                           <div className={clsx(
-                            'min-h-[16rem] sm:min-h-[30rem]',
                             'mb-12',
                             'space-y-5',
                           )}>
