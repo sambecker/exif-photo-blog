@@ -10,7 +10,7 @@ import AdminPageHeader from './AdminPageHeader';
 import PhotoUploadWithStatus from '@/photo/PhotoUploadWithStatus';
 import { useAppText } from '@/i18n/state/client';
 import { useAppState } from '@/app/AppState';
-import AdminEmptyState from './AdminEmptyState';
+import EmptyState from '@/components/EmptyState';
 import IconUpload from '@/components/icons/IconUpload';
 
 export type UrlAddStatus = StorageListItem & {
@@ -71,7 +71,7 @@ export default function AdminUploadsClient({
       />
       {urlAddStatuses.length === 0
         ? !isUploading &&
-          <AdminEmptyState icon={<IconUpload />}>
+          <EmptyState icon={<IconUpload />}>
             <div className="max-w-xs text-center space-y-1">
               <div className="font-bold">
                 No uploads
@@ -81,7 +81,7 @@ export default function AdminUploadsClient({
                 will show up here
               </div>
             </div>
-          </AdminEmptyState>
+          </EmptyState>
         : <>
           {(urls.length > 1 || isAdding) &&
             <AdminBatchUploadActions {...{

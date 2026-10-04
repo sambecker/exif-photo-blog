@@ -1,4 +1,4 @@
-import AdminEmptyState from '@/admin/AdminEmptyState';
+import EmptyState from '@/components/EmptyState';
 import AdminPageHeader from '@/admin/AdminPageHeader';
 import AdminTagsTable from '@/admin/AdminTagsTable';
 import AppGrid from '@/components/AppGrid';
@@ -23,7 +23,7 @@ export default async function AdminTagsPage() {
               plural={appText.category.tagPlural}
             />
             {tags.length === 0
-              ? <AdminEmptyState icon={<IconTag />}>
+              ? <EmptyState icon={<IconTag />}>
                 <div className="max-w-xs text-center space-y-1">
                   <div className="font-bold">
                     No tags
@@ -32,7 +32,7 @@ export default async function AdminTagsPage() {
                     Tags can be created when uploading or editing a photo
                   </div>
                 </div>
-              </AdminEmptyState>
+              </EmptyState>
               : <AdminTagsTable {...{ tags }} />}
           </div>
         </div>}

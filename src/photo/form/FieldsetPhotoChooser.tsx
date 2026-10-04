@@ -23,7 +23,7 @@ import { BiChevronRight } from 'react-icons/bi';
 import SegmentMenu from '@/components/SegmentMenu';
 import IconFavs from '@/components/icons/IconFavs';
 import InfinitePhotoScroll from '../InfinitePhotoScroll';
-import AdminEmptyState from '@/admin/AdminEmptyState';
+import EmptyState from '@/components/EmptyState';
 import { TbPhotoSearch } from 'react-icons/tb';
 import { MdOutlineNoPhotography } from 'react-icons/md';
 
@@ -243,21 +243,21 @@ export default function FieldsetPhotoChooser({
                 </div>
               </div>
               {showQuery && resultsNotFound &&
-                <AdminEmptyState
+                <EmptyState
                   icon={<IoSearch className="text-dim" />}
                   className="translate-y-8"
                   includeContainer={false}
                 >
                   No photos found
-                </AdminEmptyState>}
+                </EmptyState>}
               {!showQuery && photosToShow.length === 0 &&
-                <AdminEmptyState
+                <EmptyState
                   icon={<TbPhotoSearch className="text-dim" />}
                   className="translate-y-16"
                   includeContainer={false}
                 >
                   No photos
-                </AdminEmptyState>}
+                </EmptyState>}
               <div className={CLASSNAME_GRID}>
                 {photosToShow.map(photo => renderPhotoButton(photo))}
               </div>

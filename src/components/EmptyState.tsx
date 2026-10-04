@@ -2,7 +2,7 @@ import clsx from 'clsx/lite';
 import { ReactNode } from 'react';
 import { IoInformationCircleOutline } from 'react-icons/io5';
 
-export default function AdminEmptyState({
+export default function EmptyState({
   icon,
   children,
   className,

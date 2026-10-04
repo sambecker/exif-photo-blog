@@ -33,7 +33,7 @@ import { LiaBroomSolid } from 'react-icons/lia';
 import { IoMdGrid } from 'react-icons/io';
 import { RiSpeedMiniLine } from 'react-icons/ri';
 import AdminLink from '../AdminLink';
-import AdminEmptyState from '../AdminEmptyState';
+import EmptyState from '@/components/EmptyState';
 import { pluralize } from '@/utility/string';
 import Tooltip from '@/components/Tooltip';
 import { useAppState } from '@/app/AppState';
@@ -522,12 +522,12 @@ export default function AdminAppInsightsClient({
               </>}
             />}
           </>
-          : <AdminEmptyState
+          : <EmptyState
             icon={<IoCheckmarkCircleOutline />}
             includeContainer={false}
           >
             No recommendations found
-          </AdminEmptyState>}
+          </EmptyState>}
       </ScoreCard>
       <ScoreCard title="Library Stats">
         {(photosNeedSync || debug) && <ScoreCardRow

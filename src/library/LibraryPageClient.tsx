@@ -22,7 +22,7 @@ import PhotoAvatar from '@/photo/PhotoAvatar';
 import Link from 'next/link';
 import { PATH_ADMIN_LIBRARY_EDIT } from '@/app/path';
 import { LuCirclePlus, LuUser } from 'react-icons/lu';
-import AdminEmptyState from '@/admin/AdminEmptyState';
+import EmptyState from '@/components/EmptyState';
 import { Place } from '@/place';
 import PlaceEntity from '@/place/PlaceEntity';
 import LibrarySection from './LibrarySection';
@@ -205,13 +205,13 @@ export default function LibraryPageClient({
                       'border border-dashed border-medium rounded-lg',
                     )}
                   >
-                    <AdminEmptyState
+                    <EmptyState
                       icon={<LuCirclePlus size={22} />}
                       includeContainer={false}
                       className="gap-3! p-6!"
                     >
                       Add optional description
-                    </AdminEmptyState>
+                    </EmptyState>
                   </Link>}
             <AnimateItems
               className={clsx(

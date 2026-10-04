@@ -1,5 +1,5 @@
 import AdminAlbumsTable from '@/admin/AdminAlbumsTable';
-import AdminEmptyState from '@/admin/AdminEmptyState';
+import EmptyState from '@/components/EmptyState';
 import AdminPageHeader from '@/admin/AdminPageHeader';
 import { getAlbumsWithMeta } from '@/album/query';
 import { PATH_ADMIN_ALBUM_NEW } from '@/app/path';
@@ -35,7 +35,7 @@ export default async function AdminTagsPage() {
               </Link>}
             />
             {albums.length === 0
-              ? <AdminEmptyState icon={<IconAlbum size={28} />}>
+              ? <EmptyState icon={<IconAlbum size={28} />}>
                 <div className="max-w-xs text-center space-y-1">
                   <div className="font-bold">
                     No albums
@@ -45,7 +45,7 @@ export default async function AdminTagsPage() {
                     like descriptions and locations
                   </div>
                 </div>
-              </AdminEmptyState>
+              </EmptyState>
               : <AdminAlbumsTable {...{ albums }} />}
           </div>
         </div>}
