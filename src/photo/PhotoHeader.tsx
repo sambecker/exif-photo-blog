@@ -79,9 +79,12 @@ export default function PhotoHeader({
 
   const renderDateRange =
     <span className="text-dim uppercase text-right">
-      {start === end
-        ? start
-        : <>{end}<br />&ndash; {start}</>}
+      {start || end
+        ? start === end
+          ? start
+          : <>{end}<br />&ndash; {start}</>
+        // Keep the two-line date slot when a set has no photos
+        : <>&nbsp;<br />&nbsp;</>}
     </span>;
 
   const renderContentA = entity

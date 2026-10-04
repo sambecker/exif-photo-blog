@@ -328,6 +328,8 @@ html {
   button.primary, .button.primary {
     @apply
       text-white dark:text-black
+      hover:text-white dark:hover:text-black
+      active:text-white dark:active:text-black
       bg-gray-900 dark:bg-gray-100
       disabled:text-dim
       disabled:bg-gray-100 dark:disabled:bg-gray-900

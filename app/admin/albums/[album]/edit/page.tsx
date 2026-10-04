@@ -33,8 +33,6 @@ export default async function AlbumPageEdit({
     getPhotosCached({ album, limit: MAX_PHOTO_TO_SHOW }),
   ]);
 
-  if (count === 0) { redirect(PATH_ADMIN); }
-
   return (
     <AdminChildPage
       backPath={PATH_ADMIN_ALBUMS}
