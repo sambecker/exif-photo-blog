@@ -104,6 +104,7 @@ export const TEXT: I18N = {
     recipeCopy: 'Salin Teks Resep',
     download: 'Unduh File Asli',
     sharePhoto: 'Bagikan Foto',
+    sharePhotos: 'Bagikan Foto',
     shareCopy: 'Salin Tautan',
     shareTo: 'Bagikan ...',
     shareX: 'Bagikan di X',

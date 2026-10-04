@@ -104,6 +104,7 @@ export const TEXT: I18N = {
     recipeCopy: 'Copy Recipe Text',
     download: 'Download Original File',
     sharePhoto: 'Share Photo',
+    sharePhotos: 'Share Photos',
     shareCopy: 'Copy Link',
     shareTo: 'Share ...',
     shareX: 'Share on X',

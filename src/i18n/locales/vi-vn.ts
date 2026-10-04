@@ -104,6 +104,7 @@ export const TEXT: I18N = {
     recipeCopy: 'Sao chép văn bản công thức',
     download: 'Tải xuống tệp gốc',
     sharePhoto: 'Chia sẻ ảnh',
+    sharePhotos: 'Chia sẻ các ảnh',
     shareCopy: 'Sao chép liên kết',
     shareTo: 'Chia sẻ...',
     shareX: 'Chia sẻ trên X',

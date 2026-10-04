@@ -16,6 +16,9 @@ export default function ShareButton({
   prefetch,
   className,
   tooltip,
+  photo,
+  photos,
+  count,
   ...rest
 }: {
   dim?: boolean
@@ -38,13 +41,23 @@ export default function ShareButton({
     }
   }, [prefetch, absoluteImagePath, router]);
 
-  const tooltipText = tooltip ?? appText.tooltip.sharePhoto;
+  const shareCount = photo ? 1 : count ?? photos?.length;
+  const tooltipText = tooltip ?? (
+    shareCount !== undefined && shareCount > 1
+      ? appText.tooltip.sharePhotos
+      : appText.tooltip.sharePhoto
+  );
 
   return (
     <LoaderButton
       tooltip={tooltipText}
       aria-label={tooltipText}
-      onClick={() => setShareModalProps?.({ ...rest })}
+      onClick={() => setShareModalProps?.({
+        photo,
+        photos,
+        count,
+        ...rest,
+      })}
       className={clsx(
         className,
         dim ? 'text-dim' : 'text-medium',
