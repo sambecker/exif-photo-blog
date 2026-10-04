@@ -58,9 +58,11 @@ export default async function ComponentsPage() {
     recipes,
     focalLengths,
   ] = await Promise.all([
-    getPhotosCached({ limit: INFINITE_SCROLL_GRID_INITIAL }),
+    getPhotosCached({ limit: INFINITE_SCROLL_GRID_INITIAL })
+      .catch(() => [] as Photo[]),
     getPhotosMetaCached()
-      .then(({ count }) => count),
+      .then(({ count }) => count)
+      .catch(() => 0),
     getPhotosCached({ tag: TAG_FAVS }),
     getUniqueTagsCached().catch(() => []),
     getUniqueCamerasCached().catch(() => []),
