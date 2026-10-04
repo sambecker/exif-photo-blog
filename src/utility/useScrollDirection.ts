@@ -3,18 +3,30 @@ import { useSyncExternalStore } from 'react';
 interface ScrollInfo {
   scrollDirection: 'up' | 'down'
   scrollY: number
+  // How far nav chrome has scrolled away, in px. Follows the scroll
+  // delta so headers slide with the gesture instead of tweening.
+  chromeHiddenPx: number
 }
 
 const INITIAL_SCROLL_INFO: ScrollInfo = {
   scrollDirection: 'down',
   scrollY: 0,
+  chromeHiddenPx: 0,
 };
 
 // Shared across subscribers so that multiple sticky elements
 // always respond to the exact same scroll state
 let scrollInfo = INITIAL_SCROLL_INFO;
+let chromeMaxPx = 0;
 let raf: number | undefined;
 const listeners = new Set<() => void>();
+
+export const setStickyChromeMax = (max: number) => {
+  chromeMaxPx = Math.max(0, max);
+  if (scrollInfo.chromeHiddenPx <= chromeMaxPx) { return; }
+  scrollInfo = { ...scrollInfo, chromeHiddenPx: chromeMaxPx };
+  listeners.forEach(listener => listener());
+};
 
 const handleScroll = () => {
   // Coalesce rapid-fire scroll events (e.g., mobile flick scrolling)
@@ -32,7 +44,12 @@ const handleScroll = () => {
       scrollY > scrollInfo.scrollY ||
       scrollInfo.scrollY > pageHeight
     ) ? 'down' : 'up';
-    scrollInfo = { scrollDirection, scrollY };
+    const chromeHiddenPx = Math.min(
+      chromeMaxPx,
+      scrollY,
+      Math.max(0, scrollInfo.chromeHiddenPx + scrollY - scrollInfo.scrollY),
+    );
+    scrollInfo = { scrollDirection, scrollY, chromeHiddenPx };
     listeners.forEach(listener => listener());
   });
 };

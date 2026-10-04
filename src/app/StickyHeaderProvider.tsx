@@ -12,6 +12,7 @@ export interface StickyHeaderLevel {
   id: string
   element: HTMLElement
   height: number
+  tracksNav: boolean
 }
 
 const StickyHeaderContext = createContext<{
@@ -42,7 +43,8 @@ export default function StickyHeaderProvider({
       const existing = current.find(({ id }) => id === level.id);
       if (
         existing?.element === level.element &&
-        existing.height === level.height
+        existing.height === level.height &&
+        existing.tracksNav === level.tracksNav
       ) {
         return current;
       }

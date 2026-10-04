@@ -1,7 +1,7 @@
 'use client';
 
 import LoaderButton from '@/components/primitives/LoaderButton';
-import AppGrid from '@/components/AppGrid';
+import StickyBanner from '@/components/StickyBanner';
 import { clsx } from 'clsx/lite';
 import { IoCloseSharp } from 'react-icons/io5';
 import { useEffect, useRef } from 'react';
@@ -314,49 +314,48 @@ export default function AdminBatchEditPanelClient({
   }, [isSelectingPhotos]);
 
   return shouldShowPanel
-    ? <AppGrid
-      className="sticky top-0 z-10 -mt-2 pt-2"
-      contentMain={
-        <div
-          ref={refNote}
-          color="gray"
-          className={clsx(
-            'flex flex-col gap-2',
-            'p-2 rounded-xl',
-            'backdrop-blur-lg',
-            'text-gray-900! dark:text-gray-100!',
-            'bg-gray-100/90! dark:bg-gray-900/70!',
-            'outline outline-medium',
-            'shadow-xl/5',
-          )}
-        >
-          <div className={clsx(
-            'flex gap-1 md:gap-2 min-h-11',
-            '[&>*:first-child]:grow [&>*:first-child]:min-w-0',
-            // Keep dropdowns above the row below without
-            // pushing that row behind the panel
-            'relative z-1',
-          )}>
-            {isInEditMode
-              ? <>
-                {renderEditField}
-                {renderEditActions}
-              </>
-              : <>
-                {renderPrimaryActions}
-                {renderStopSelectingButton}
-              </>}
+    ? <StickyBanner>
+      <div
+        ref={refNote}
+        color="gray"
+        className={clsx(
+          'flex flex-col gap-2',
+          'p-2 rounded-xl',
+          'backdrop-blur-lg',
+          'text-gray-900! dark:text-gray-100!',
+          'bg-gray-100/90! dark:bg-gray-900/70!',
+          'outline outline-medium',
+          'shadow-xl/5',
+        )}
+      >
+        <div className={clsx(
+          'flex gap-1 md:gap-2 min-h-11',
+          '[&>*:first-child]:grow [&>*:first-child]:min-w-0',
+          // Keep dropdowns above the row below without
+          // pushing that row behind the panel
+          'relative z-1',
+        )}>
+          {isInEditMode
+            ? <>
+              {renderEditField}
+              {renderEditActions}
+            </>
+            : <>
+              {renderPrimaryActions}
+              {renderStopSelectingButton}
+            </>}
+        </div>
+        <div className="flex items-center gap-2 px-1.5 pb-1">
+          <div className="grow flex items-center gap-2 min-w-0">
+            {tagErrorMessage
+              ? <span className="text-error truncate">
+                {tagErrorMessage}
+              </span>
+              : renderPhotoSelectionStatus}
           </div>
-          <div className="flex items-center gap-2 px-1.5 pb-1">
-            <div className="grow flex items-center gap-2 min-w-0">
-              {tagErrorMessage
-                ? <span className="text-error truncate">
-                  {tagErrorMessage}
-                </span>
-                : renderPhotoSelectionStatus}
-            </div>
-            {renderSelectAll}
-          </div>
-        </div>} />
+          {renderSelectAll}
+        </div>
+      </div>
+    </StickyBanner>
     : null;
 }
