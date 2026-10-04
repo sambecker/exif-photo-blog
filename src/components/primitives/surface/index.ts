@@ -3,7 +3,8 @@ import clsx from 'clsx/lite';
 import { ComponentProps } from 'react';
 
 export const MENU_SURFACE_STYLES = clsx(
-  'z-10',
+  // Above sticky headers (z-40) and page content; below tooltips (z-100)
+  'z-50',
   'min-w-[8rem]',
   'component-surface-frosted',
   'py-1',

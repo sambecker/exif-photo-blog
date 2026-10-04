@@ -9,7 +9,7 @@ import {
 } from 'react';
 import { useStickyHeaderContext } from './StickyHeaderProvider';
 
-// Above page content (up to z-20), below modals (z-50);
+// Above page content (up to z-20), below menus and modals (z-50);
 // lower levels slide beneath higher ones when hiding/showing
 const Z_INDEX_TOP_LEVEL = 40;
 
