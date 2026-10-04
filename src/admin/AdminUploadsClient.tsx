@@ -10,7 +10,6 @@ import AdminPageHeader from './AdminPageHeader';
 import PhotoUploadWithStatus from '@/photo/PhotoUploadWithStatus';
 import { useAppText } from '@/i18n/state/client';
 import { useAppState } from '@/app/AppState';
-import { clsx } from 'clsx/lite';
 import AdminEmptyState from './AdminEmptyState';
 import IconUpload from '@/components/icons/IconUpload';
 
@@ -65,10 +64,8 @@ export default function AdminUploadsClient({
           inputId="admin-uploads"
           shouldResize={shouldResize}
           onLastUpload={onLastUpload}
-          className={clsx(
-            'flex-row-reverse min-w-0',
-            isUploading && 'w-full',
-          )}
+          className="flex-row-reverse min-w-0"
+          expandStatus={isUploading}
           primary={urlAddStatuses.length === 0}
         />}
       />

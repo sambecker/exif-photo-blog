@@ -30,7 +30,7 @@ export default function AdminPageHeader({
       {accessory &&
         <div className={clsx(
           'flex items-center justify-end gap-2 min-w-0',
-          hideLabel && 'grow',
+          hideLabel && 'grow w-full',
         )}>
           {accessory}
         </div>}

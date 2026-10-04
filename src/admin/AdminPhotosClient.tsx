@@ -56,8 +56,9 @@ export default function AdminPhotosClient({
             count={photosCount}
             singular={appText.photo.photo}
             plural={appText.photo.photoPlural}
+            hideLabel={isUploading}
             accessory={<>
-              {debugColorData &&
+              {debugColorData && !isUploading &&
                 <SyncColorButton />}
               {photosCountNeedsSync > 0 && !isUploading &&
                 <PathLoaderButton
@@ -97,6 +98,7 @@ export default function AdminPhotosClient({
                 shouldResize={shouldResize}
                 onLastUpload={onLastUpload}
                 className="flex-row-reverse min-w-0"
+                expandStatus={isUploading}
               />
             </>}
           />
