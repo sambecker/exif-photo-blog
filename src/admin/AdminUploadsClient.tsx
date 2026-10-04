@@ -11,6 +11,8 @@ import PhotoUploadWithStatus from '@/photo/PhotoUploadWithStatus';
 import { useAppText } from '@/i18n/state/client';
 import { useAppState } from '@/app/AppState';
 import { clsx } from 'clsx/lite';
+import AdminEmptyState from './AdminEmptyState';
+import IconUpload from '@/components/icons/IconUpload';
 
 export type UrlAddStatus = StorageListItem & {
   status?: 'waiting' | 'adding' | 'added'
@@ -70,25 +72,40 @@ export default function AdminUploadsClient({
           primary={urlAddStatuses.length === 0}
         />}
       />
-      {(urls.length > 1 || isAdding) &&
-        <AdminBatchUploadActions {...{
-          uploadUrls,
-          uploadTitles,
-          uniqueAlbums,
-          uniqueTags,
-          isAdding,
-          setIsAdding,
-          setUrlAddStatuses,
-          isDeleting,
-          setIsDeleting,
-        }} />}
-      <AdminUploadsTable {...{
-        isAdding,
-        urlAddStatuses,
-        setUrlAddStatuses,
-        isDeleting,
-        setIsDeleting,
-      }} />
+      {urlAddStatuses.length === 0
+        ? !isUploading &&
+          <AdminEmptyState icon={<IconUpload />}>
+            <div className="max-w-xs text-center space-y-1">
+              <div className="font-bold">
+                No uploads
+              </div>
+              <div className="text-dim">
+                Uploaded files that haven&apos;t been added to your library
+                will show up here
+              </div>
+            </div>
+          </AdminEmptyState>
+        : <>
+          {(urls.length > 1 || isAdding) &&
+            <AdminBatchUploadActions {...{
+              uploadUrls,
+              uploadTitles,
+              uniqueAlbums,
+              uniqueTags,
+              isAdding,
+              setIsAdding,
+              setUrlAddStatuses,
+              isDeleting,
+              setIsDeleting,
+            }} />}
+          <AdminUploadsTable {...{
+            isAdding,
+            urlAddStatuses,
+            setUrlAddStatuses,
+            isDeleting,
+            setIsDeleting,
+          }} />
+        </>}
     </div>
   );
 }

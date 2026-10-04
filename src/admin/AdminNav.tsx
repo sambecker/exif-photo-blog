@@ -1,4 +1,3 @@
-import { getStorageUploadUrlsNoStore } from '@/platforms/storage/cache';
 import {
   getPhotosMetaCached,
   getPhotosMostRecentUpdateCached,
@@ -19,7 +18,6 @@ import { getAppText } from '@/i18n/state/server';
 export default async function AdminNav() {
   const [
     countPhotos,
-    countUploads,
     countAlbums,
     countTags,
     countRecipes,
@@ -28,12 +26,6 @@ export default async function AdminNav() {
     getPhotosMetaCached({ hidden: 'include' })
       .then(({ count }) => count)
       .catch(() => 0),
-    getStorageUploadUrlsNoStore()
-      .then(urls => urls.length)
-      .catch(e => {
-        console.error(`Error getting blob upload urls: ${e}`);
-        return 0;
-      }),
     getAlbumsWithMetaCached().then(albums => albums.length)
       .catch(() => 0),
     getUniqueTagsCached(true).then(tags => tags.length)
@@ -54,10 +46,10 @@ export default async function AdminNav() {
   }];
 
   // Uploads
-  if (countUploads > 0) { items.push({
+  items.push({
     label: appText.admin.uploadPlural,
     href: PATH_ADMIN_UPLOADS,
-  }); }
+  });
 
   // Albums
   if (countAlbums > 0) { items.push({
