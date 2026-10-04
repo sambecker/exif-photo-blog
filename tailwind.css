@@ -146,11 +146,12 @@ html {
   @apply
     text-amber-700 dark:text-amber-500
 }
-/* Rules */
+/* Linework: Text */
 @utility border-text {
   @apply
     border-gray-900 dark:border-gray-100
 }
+/* Linework: Main */
 @utility border-main {
   @apply
     border-gray-200 dark:border-gray-700
@@ -159,6 +160,7 @@ html {
   @apply
     divide-gray-400/25 dark:divide-gray-700
 }
+/* Linework: Medium */
 @utility border-medium {
   @apply
     border-gray-400/25 dark:border-gray-800
@@ -171,6 +173,7 @@ html {
   @apply
     divide-gray-400/25 dark:divide-gray-800
 }
+/* Linework: Dim */
 @utility border-dim {
   @apply
     border-gray-400 dark:border-gray-500

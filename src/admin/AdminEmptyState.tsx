@@ -22,7 +22,7 @@ export default function AdminEmptyState({
       <div className={clsx(
         'size-14 flex justify-center items-center',
         'text-[1.75rem] text-medium',
-        'border border-main rounded-xl shadow-xs',
+        'outline outline-medium rounded-xl shadow-sm',
       )}>
         {icon ?? <IoInformationCircleOutline />}
       </div>

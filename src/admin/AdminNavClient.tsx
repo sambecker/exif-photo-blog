@@ -74,7 +74,7 @@ export default function AdminNavClient({
           'border-b border-gray-200 dark:border-gray-800',
         )}>
           <MaskedScroll
-            className="grow -mx-1 flex gap-0.5 md:gap-1.5"
+            className="grow -mx-1 flex gap-1 md:gap-1.5"
             direction="horizontal"
           >
             {items.map(({ label, href }) =>
