@@ -17,6 +17,7 @@ import IconBroom from '@/components/icons/IconBroom';
 import ResponsiveText from '@/components/primitives/ResponsiveText';
 import { useAppText } from '@/i18n/state/client';
 import SyncColorButton from '@/photo/color/SyncColorButton';
+import AdminPageHeader from './AdminPageHeader';
 
 export default function AdminPhotosClient({
   photos,
@@ -51,51 +52,54 @@ export default function AdminPhotosClient({
     <AppGrid
       contentMain={
         <div className="space-y-4">
-          <div className="flex gap-4">
-            <div className="grow min-w-0">
+          <AdminPageHeader
+            count={photosCount}
+            singular={appText.photo.photo}
+            plural={appText.photo.photoPlural}
+            accessory={<>
+              {debugColorData &&
+                <SyncColorButton />}
+              {photosCountNeedsSync > 0 && !isUploading &&
+                <PathLoaderButton
+                  path={PATH_ADMIN_PHOTOS_UPDATES}
+                  icon={<IconBroom
+                    size={18}
+                    className="translate-x-[-1px]"
+                  />}
+                  tooltip={(
+                    pluralize(
+                      photosCountNeedsSync,
+                      appText.photo.photo,
+                      appText.photo.photoPlural.toLocaleLowerCase(),
+                    ) +
+                    ' missing data or AI-generated text'
+                  )}
+                  className={clsx(
+                    'text-blue-600 dark:text-blue-400',
+                    'border border-blue-200 dark:border-blue-800/60',
+                    'active:bg-blue-50 dark:active:bg-blue-950/50',
+                    'disabled:bg-blue-50 dark:disabled:bg-blue-950/50',
+                  )}
+                  spinnerColor="text"
+                  spinnerClassName="text-blue-200 dark:text-blue-600/40"
+                  hideText="never"
+                >
+                  <ResponsiveText shortText={photosCountNeedsSync}>
+                    {pluralize(
+                      photosCountNeedsSync,
+                      appText.admin.update,
+                      appText.admin.updatePlural,
+                    )}
+                  </ResponsiveText>
+                </PathLoaderButton>}
               <PhotoUploadWithStatus
                 inputId="admin-photos"
                 shouldResize={shouldResize}
                 onLastUpload={onLastUpload}
+                className="flex-row-reverse min-w-0"
               />
-            </div>
-            {debugColorData &&
-              <SyncColorButton />}
-            {photosCountNeedsSync > 0 &&
-              <PathLoaderButton
-                path={PATH_ADMIN_PHOTOS_UPDATES}
-                icon={<IconBroom
-                  size={18}
-                  className="translate-x-[-1px]"
-                />}
-                tooltip={(
-                  pluralize(
-                    photosCountNeedsSync,
-                    appText.photo.photo,
-                    appText.photo.photoPlural.toLocaleLowerCase(),
-                  ) +
-                  ' missing data or AI-generated text'
-                )}
-                className={clsx(
-                  'text-blue-600 dark:text-blue-400',
-                  'border border-blue-200 dark:border-blue-800/60',
-                  'active:bg-blue-50 dark:active:bg-blue-950/50',
-                  'disabled:bg-blue-50 dark:disabled:bg-blue-950/50',
-                  isUploading && 'hidden md:inline-flex',
-                )}
-                spinnerColor="text"
-                spinnerClassName="text-blue-200 dark:text-blue-600/40"
-                hideText="never"
-              >
-                <ResponsiveText shortText={photosCountNeedsSync}>
-                  {pluralize(
-                    photosCountNeedsSync,
-                    appText.admin.update,
-                    appText.admin.updatePlural,
-                  )}
-                </ResponsiveText>
-              </PathLoaderButton>}
-          </div>
+            </>}
+          />
           {blobPhotoUrls.length > 0 &&
             <div className={clsx(
               'border-b pb-6',

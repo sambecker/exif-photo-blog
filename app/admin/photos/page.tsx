@@ -50,7 +50,7 @@ export default async function AdminPhotosPage() {
       hasAiContentGeneration: AI_CONTENT_GENERATION_ENABLED,
       onLastUpload: async () => {
         'use server';
-        // Update upload count in admin nav
+        // Update upload visibility in admin nav
         revalidatePath('/admin', 'layout');
       },
       blobPhotoUrls,

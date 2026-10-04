@@ -37,7 +37,6 @@ export default function AdminNavClient({
   items: {
     label: string,
     href: string,
-    count: number,
   }[]
   mostRecentPhotoUpdateTime?: Date
   includeInsights?: boolean
@@ -78,20 +77,17 @@ export default function AdminNavClient({
             className="grow -mx-1 flex gap-0.5 md:gap-1.5"
             direction="horizontal"
           >
-            {items.map(({ label, href, count }) =>
+            {items.map(({ label, href }) =>
               <LinkWithLoaderBackground
                 key={label}
                 href={href}
                 className={clsx(
-                  'flex gap-0.5',
                   checkPathPrefix(pathname, href) ? 'font-bold' : 'text-dim',
                   'hover:text-main active:text-medium',
                 )}
                 prefetch={false}
               >
-                <span>{label}</span>
-                {count > 0 &&
-                  <span>({count})</span>}
+                {label}
               </LinkWithLoaderBackground>)}
           </MaskedScroll>
           <LinkWithIconLoader
