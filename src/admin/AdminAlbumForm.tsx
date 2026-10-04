@@ -2,7 +2,7 @@
 
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import Link from 'next/link';
-import { PARAM_REDIRECT, PATH_ADMIN_ALBUMS } from '@/app/path';
+import { PATH_ADMIN_ALBUMS } from '@/app/path';
 import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import { ReactNode, useCallback, useMemo, useState } from 'react';
 import { useAppState } from '@/app/AppState';
@@ -14,7 +14,7 @@ import clsx from 'clsx/lite';
 import PlaceInput from '@/place/PlaceInput';
 import { convertPlaceToAutocomplete, Place } from '@/place';
 import deepEqual from 'fast-deep-equal/es6/react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 export default function AdminAlbumForm({
   album = {
@@ -26,16 +26,17 @@ export default function AdminAlbumForm({
   children,
   mode = 'edit',
   onTitleChange,
+  redirectPath,
 }: {
   album?: Album
   hasLocationServices?: boolean
   children?: ReactNode
   mode?: 'edit' | 'create'
   onTitleChange?: (title: string) => void
+  redirectPath?: string
 }) {
   const { invalidateSwr } = useAppState();
   const router = useRouter();
-  const redirectParam = useSearchParams().get(PARAM_REDIRECT);
 
   const isCreating = mode === 'create';
 
@@ -60,7 +61,7 @@ export default function AdminAlbumForm({
 
   return (
     <form
-      action={data => {
+      action={async data => {
         const submit = isCreating ? createAlbumAction : updateAlbumAction;
         return submit(data)
           .then(result => {
@@ -68,7 +69,7 @@ export default function AdminAlbumForm({
               setFormError(result.error);
               return;
             }
-            router.push(redirectParam ?? PATH_ADMIN_ALBUMS);
+            router.push(redirectPath ?? PATH_ADMIN_ALBUMS);
           });
       }}
       className="max-w-[38rem] space-y-4"

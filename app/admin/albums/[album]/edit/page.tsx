@@ -1,7 +1,12 @@
 import AdminChildPage from '@/components/AdminChildPage';
 import { redirect } from 'next/navigation';
 import { getPhotosCached, getPhotosMetaCached } from '@/photo/cache';
-import { PATH_ADMIN, PATH_ADMIN_ALBUMS, pathForAlbum } from '@/app/path';
+import {
+  PARAM_REDIRECT,
+  PATH_ADMIN,
+  PATH_ADMIN_ALBUMS,
+  pathForAlbum,
+} from '@/app/path';
 import PhotoLightbox from '@/photo/PhotoLightbox';
 import { getAlbumFromSlug } from '@/album/query';
 import AdminAlbumBadge from '@/admin/AdminAlbumBadge';
@@ -12,12 +17,15 @@ const MAX_PHOTO_TO_SHOW = 6;
 
 interface Props {
   params: Promise<{ album: string }>
+  searchParams: Promise<Record<string, string | string[] | undefined>>
 }
 
 export default async function AlbumPageEdit({
   params,
+  searchParams,
 }: Props) {
   const { album: albumFromParams } = await params;
+  const redirectPath = (await searchParams)[PARAM_REDIRECT];
 
   const albumSlug = decodeURIComponent(albumFromParams);
 
@@ -42,6 +50,9 @@ export default async function AlbumPageEdit({
       <AdminAlbumForm {...{
         album,
         hasLocationServices: HAS_LOCATION_SERVICES,
+        redirectPath: typeof redirectPath === 'string'
+          ? redirectPath
+          : undefined,
       }}>
         {photos.length > 0 &&
           <PhotoLightbox
