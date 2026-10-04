@@ -112,7 +112,7 @@ export const cloudflareR2GetSignedUrl = (
   const client = cloudflareR2Client();
   const command = method === 'GET'
     ? new GetObjectCommand({ Bucket: CLOUDFLARE_R2_BUCKET, Key })
-    // eslint-disable-next-line max-len
+    // eslint-disable-next-line @stylistic/max-len
     : new PutObjectCommand({ Bucket: CLOUDFLARE_R2_BUCKET, Key, ACL: 'public-read' });
   return getSignedUrl(client, command, { expiresIn });
 };

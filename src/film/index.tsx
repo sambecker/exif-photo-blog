@@ -22,9 +22,9 @@ import PhotoFilmIcon from './PhotoFilmIcon';
 import { AppTextState } from '@/i18n/state';
 import { CategoryQueryMeta } from '@/category';
 
-export type FilmWithMeta = { film: string } & CategoryQueryMeta
+export type FilmWithMeta = { film: string } & CategoryQueryMeta;
 
-export type Films = FilmWithMeta[]
+export type Films = FilmWithMeta[];
 
 export const labelForFilm = (film: string) => {
   // Use Fujifilm simulation text when recognized

@@ -7,7 +7,7 @@ import { RiCollapseDiagonalLine, RiExpandDiagonalLine } from 'react-icons/ri';
 export type ZoomControlsRef = {
   open: () => void
   zoomTo: (zoomLevel?: number) => void
-}
+};
 
 export default function ZoomControls({
   ref,

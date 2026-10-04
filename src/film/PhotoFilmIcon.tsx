@@ -1,4 +1,4 @@
-/* eslint-disable max-len */
+/* eslint-disable @stylistic/max-len */
 import { CSSProperties } from 'react';
 import { labelForFilm } from '.';
 import { isMakeFujifilm } from '@/platforms/fujifilm';

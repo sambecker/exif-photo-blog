@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 export default function usePreventNavigation(
   enabled?: boolean,
-  // eslint-disable-next-line max-len
+  // eslint-disable-next-line @stylistic/max-len
   confirmation = 'Are you sure you want to leave this page? Any unsaved changes will be lost.',
   includeButtons?: boolean,
 ) {

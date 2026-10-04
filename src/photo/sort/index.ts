@@ -46,7 +46,7 @@ export const APP_DEFAULT_SORT_BY: SortBy = 'takenAt';
 export type SortParams = Promise<{
   sortType: string
   sortOrder: string
-}>
+}>;
 
 export interface SortProps {
   params: SortParams

@@ -664,7 +664,7 @@ export default function PhotoForm({
                   staticValue,
                 }]) => {
                   if (!isFieldHidden(key, hideIfEmpty, shouldHide)) {
-                    // eslint-disable-next-line max-len
+                    // eslint-disable-next-line @stylistic/max-len
                     const fieldProps: ComponentProps<typeof FieldsetWithStatus> = {
                       id: key,
                       label: label + (
@@ -796,7 +796,7 @@ export default function PhotoForm({
                           {...fieldProps}
                           noteComplex={<PhotoColors
                             classNameDot="size-[13px]!"
-                            // eslint-disable-next-line max-len
+                            // eslint-disable-next-line @stylistic/max-len
                             colorData={generateColorDataFromString(formData.colorData)}
                           />}
                           onChange={value => {

@@ -8,7 +8,7 @@ export type SelectMenuOptionType<T = string> = {
   accessoryStart?: ReactNode
   accessoryEnd?: ReactNode
   note?: ReactNode
-}
+};
 
 export default function SelectMenuOption<T = string>({
   label,

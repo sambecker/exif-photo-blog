@@ -17,7 +17,7 @@ const HOSTNAME_CLOUDFLARE_R2 =
 const HOSTNAME_AWS_S3 =
   process.env.NEXT_PUBLIC_AWS_S3_BUCKET &&
   process.env.NEXT_PUBLIC_AWS_S3_REGION
-    // eslint-disable-next-line max-len
+    // eslint-disable-next-line @stylistic/max-len
     ? `${process.env.NEXT_PUBLIC_AWS_S3_BUCKET}.s3.${process.env.NEXT_PUBLIC_AWS_S3_REGION}.amazonaws.com`
     : undefined;
 

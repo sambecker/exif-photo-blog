@@ -41,12 +41,12 @@ export type MoreMenuSubmenu = {
   | { items: ComponentProps<typeof MoreMenuItem>[], sections?: never }
   // Sections render as groups separated by a dividing line
   | { sections: MoreMenuSection[], items?: never }
-)
+);
 
 export type MoreMenuSection = {
   label?: string
   items: (ComponentProps<typeof MoreMenuItem> | MoreMenuSubmenu)[]
-}
+};
 
 const isSubmenu = (
   item: MoreMenuSection['items'][number],

@@ -25,7 +25,7 @@ type WeakStrong = 'off' | 'weak' | 'strong';
 export type FujifilmRecipe = {
   dynamicRange: {
     range: 'standard' | 'wide'
-    // eslint-disable-next-line max-len
+    // eslint-disable-next-line @stylistic/max-len
     setting: 'auto' | 'manual' | 'standard' | 'wide-1' | 'wide-2' | 'film-simulation'
     development: number
   }

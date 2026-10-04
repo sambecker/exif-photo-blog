@@ -82,7 +82,7 @@ export default function AdminEditTitlesPanel() {
           <LoaderButton
             className="min-h-[2.5rem]"
             icon={<FaCheck size={15} />}
-            // eslint-disable-next-line max-len
+            // eslint-disable-next-line @stylistic/max-len
             confirmText={`Are you sure you want to update titles for ${photosText}? This action cannot be undone.`}
             disabled={isFormDisabled}
             onClick={() => {

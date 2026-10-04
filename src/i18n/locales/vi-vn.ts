@@ -160,14 +160,14 @@ export const TEXT: I18N = {
     syncUpdateColor: 'Cập nhật màu',
     syncUpdateColorSuccess: 'Đã cập nhật màu:',
     syncOverwrite: 'Ghi đè',
-    // eslint-disable-next-line max-len
+    // eslint-disable-next-line @stylistic/max-len
     syncOverwriteConfirm: 'Bạn có chắc chắn muốn ghi đè tất cả các trường ảnh? Dữ liệu tùy chỉnh có thể bị mất.',
     reupload: 'Tải lên lại',
     delete: 'Xóa',
     deleteConfirm: 'Bạn có chắc chắn muốn xóa "{{photoTitle}}?"',
     setVisibility: 'Chế độ hiển thị',
     setVisibilityPlaceholder: 'Đặt chế độ hiển thị cho {{quantity}} ...',
-    // eslint-disable-next-line max-len
+    // eslint-disable-next-line @stylistic/max-len
     setVisibilityConfirm: 'Bạn có chắc chắn muốn đặt chế độ hiển thị thành "{{visibility}}" cho {{quantity}}?',
     setVisibilitySuccess: 'Đã cập nhật chế độ hiển thị cho {{quantity}}',
     visibilityDefault: 'Mặc định',
@@ -184,17 +184,17 @@ export const TEXT: I18N = {
     selectAll: 'Chọn tất cả',
     apply: 'Áp dụng',
     tagPlaceholder: 'Gắn thẻ {{quantity}} ...',
-    // eslint-disable-next-line max-len
+    // eslint-disable-next-line @stylistic/max-len
     tagConfirm: 'Bạn có chắc chắn muốn áp dụng thẻ cho {{quantity}}? Hành động này không thể hoàn tác.',
     tagSuccess: 'Đã gắn thẻ {{tags}} cho {{quantity}}',
     albumPlaceholder: 'Thêm {{quantity}} vào album ...',
-    // eslint-disable-next-line max-len
+    // eslint-disable-next-line @stylistic/max-len
     albumConfirm: 'Bạn có chắc chắn muốn thêm {{quantity}} vào các album này? Hành động này không thể hoàn tác.',
     albumSuccess: 'Đã thêm {{quantity}} vào {{albums}}',
     favoriteConfirm: 'Bạn có chắc chắn muốn yêu thích {{quantity}}?',
     favoriteSuccess: 'Đã yêu thích {{quantity}}',
     batchActionFailure: 'Đã xảy ra lỗi khi cập nhật {{quantity}}',
-    // eslint-disable-next-line max-len
+    // eslint-disable-next-line @stylistic/max-len
     deletePhotosConfirm: 'Bạn có chắc chắn muốn xóa {{quantity}}? Hành động này không thể hoàn tác.',
     deletePhotosSuccess: 'Đã xóa {{quantity}}',
     deletePhotosFailure: 'Đã xảy ra lỗi khi xóa {{quantity}}',
@@ -204,7 +204,7 @@ export const TEXT: I18N = {
     setupIncomplete: 'Hoàn tất cài đặt',
     setupSignIn: 'Đăng nhập để tải lên ảnh',
     setupFirstPhoto: 'Thêm ảnh đầu tiên của bạn',
-    // eslint-disable-next-line max-len
+    // eslint-disable-next-line @stylistic/max-len
     setupConfig: 'Thay đổi tên trang web và cấu hình khác bằng cách chỉnh sửa các biến môi trường được tham chiếu trong',
   },
   utility: {

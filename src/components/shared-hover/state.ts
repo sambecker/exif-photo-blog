@@ -15,7 +15,7 @@ export type SharedHoverProps = {
   offsetAbove: number
   offsetBelow: number
   color?: ComponentProps<typeof ComponentSurface>['color']
-}
+};
 
 export type SharedHoverState = {
   showHover?: (trigger: HTMLElement | null, hover: SharedHoverProps) => void
@@ -23,7 +23,7 @@ export type SharedHoverState = {
   renderHover?: (key: string, content: ReactNode) => void
   dismissHover?: (trigger: HTMLElement | null) => void
   isHoverBeingShown?: (key: string) => boolean
-}
+};
 
 export const SharedHoverContext = createContext<SharedHoverState>({});
 

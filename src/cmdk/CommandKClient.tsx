@@ -131,13 +131,13 @@ type CommandKItem = {
   annotationAria?: string
   path?: string
   action?: () => void | Promise<void | boolean>
-}
+};
 
 type CommandKSection = {
   heading: string
   accessory?: ReactNode
   items: CommandKItem[]
-}
+};
 
 const renderCheck = (isChecked?: boolean) =>
   isChecked

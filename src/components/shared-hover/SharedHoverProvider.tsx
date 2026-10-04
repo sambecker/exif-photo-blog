@@ -14,12 +14,12 @@ import { AnimatePresence, motion } from 'framer-motion';
 import ComponentSurface from '../primitives/surface/ComponentSurface';
 import clsx from 'clsx/lite';
 
-type RenderHover = (key: string, content: ReactNode) => void
+type RenderHover = (key: string, content: ReactNode) => void;
 
 type HoverContentUpdate = {
   key: string
   content: ReactNode
-}
+};
 
 const WINDOW_CHANGE_EVENTS = ['mouseup', 'mousewheel', 'resize'];
 

@@ -1,4 +1,4 @@
-/* eslint-disable max-len */
+/* eslint-disable @stylistic/max-len */
 import { query, sql } from '@/platforms/postgres';
 
 interface Migration {

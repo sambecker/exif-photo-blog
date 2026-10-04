@@ -1,4 +1,4 @@
-/* eslint-disable max-len */
+/* eslint-disable @stylistic/max-len */
 // Wordmarks from Simple Icons (CC0) and Wikimedia Commons.
 import type { CameraBrand } from './brand';
 

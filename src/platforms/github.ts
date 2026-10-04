@@ -74,7 +74,7 @@ export const getGitHubUrlCompare = ({
   repo,
   branch = DEFAULT_BRANCH,
 }: RepoParams = {}) =>
-  // eslint-disable-next-line max-len
+  // eslint-disable-next-line @stylistic/max-len
   `${getGitHubUrlRepo({ owner, repo })}/compare/${branch}...${TEMPLATE_REPO_OWNER}:${TEMPLATE_REPO_NAME}:${TEMPLATE_REPO_BRANCH}`;
 
 // API urls
@@ -99,7 +99,7 @@ const getGitHubApiCompareToRepoUrl = ({
   repo,
   branch = DEFAULT_BRANCH,
 }: RepoParams = {}) =>
-  // eslint-disable-next-line max-len
+  // eslint-disable-next-line @stylistic/max-len
   `${getGitHubApiRepoUrl()}/compare/${TEMPLATE_REPO_BRANCH}...${owner}:${repo}:${branch}`;
 
 const getGitHubApiCompareToCommitUrl = ({ commit }: RepoParams = {}) =>

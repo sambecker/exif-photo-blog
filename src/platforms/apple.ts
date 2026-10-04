@@ -26,7 +26,7 @@ export const formatAppleLensText = (
     side,
     focalLength,
     aperture,
-  // eslint-disable-next-line max-len
+  // eslint-disable-next-line @stylistic/max-len
   ] = (/iPhone ([0-9a-z]{1,3}(?: (?:Pro|Max|Plus|Mini))*).*?(back|front).*?([0-9\.]+)mm.*?f\/([0-9\.]+)/gi.exec(model) ?? []);
 
   const format = (lensName: string, includeFocalLength = true) => {

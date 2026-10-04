@@ -197,7 +197,7 @@ export default function AdminBatchUploadActions({
                 : <IconAddUpload />
               }
               onClick={async () => {
-                // eslint-disable-next-line max-len
+                // eslint-disable-next-line @stylistic/max-len
                 if (confirm(`Are you sure you want to add all ${uploadUrls.length} uploads?`)) {
                   setIsAdding(true);
                   setUrlAddStatuses(current => current.map((url, index) => ({

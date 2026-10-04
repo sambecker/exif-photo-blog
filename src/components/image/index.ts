@@ -14,4 +14,4 @@ export type CustomImageProps = Omit<
 > & {
   aspectRatio: number
   blurCompatibilityMode?: boolean
-}
+};

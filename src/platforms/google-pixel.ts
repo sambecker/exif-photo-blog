@@ -28,7 +28,7 @@ export const formatGoogleLensText = (
     lensVariantRemainder, // Expected: 'Camera'
     focalLength,
     _aperture,
-  // eslint-disable-next-line max-len
+  // eslint-disable-next-line @stylistic/max-len
   ] = (/^(Pixel (?:[0-9a-z])+(?: Pro)*)(?: (back|front))* (.+) ([0-9\.]+)mm.*?f\/([0-9\.]+)/gi.exec(model) ?? []);
 
   if (phoneName && lensVariant && focalLength) {

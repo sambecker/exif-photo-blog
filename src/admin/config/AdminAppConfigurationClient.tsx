@@ -315,7 +315,7 @@ export default function AdminAppConfigurationClient({
             {hasDatabase
               ? renderSubStatus(
                 'checked',
-                // eslint-disable-next-line max-len
+                // eslint-disable-next-line @stylistic/max-len
                 `Postgres: connected${!isPostgresSslEnabled ? ' (SSL disabled)' : ''}`,
               )
               : renderSubStatus('missing', <>
@@ -338,7 +338,7 @@ export default function AdminAppConfigurationClient({
                 : !hasStorageProvider
                   ? 'Setup storage (one of the following)'
                   : hasMultipleStorageProviders
-                  // eslint-disable-next-line max-len
+                  // eslint-disable-next-line @stylistic/max-len
                     ? `Setup storage (new uploads go to: ${labelForStorage(currentStorage)})`
                     : 'Setup storage'}
             status={hasStorageProvider}
@@ -369,7 +369,7 @@ export default function AdminAppConfigurationClient({
                   {labelForStorage('cloudflare-r2')}:
                   {' '}
                   <AdminLink
-                  // eslint-disable-next-line max-len
+                  // eslint-disable-next-line @stylistic/max-len
                     href="https://github.com/sambecker/exif-photo-blog#cloudflare-r2"
                     externalIcon
                   >
@@ -443,7 +443,7 @@ export default function AdminAppConfigurationClient({
             Check README for
             {' '}
             <AdminLink
-            // eslint-disable-next-line max-len
+            // eslint-disable-next-line @stylistic/max-len
               href="https://github.com/sambecker/exif-photo-blog?tab=readme-ov-file#supported-languages"
             >
               supported languages
@@ -689,7 +689,7 @@ export default function AdminAppConfigurationClient({
                 'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORIES',
               )}
               {renderSubStatusWithEnvVar(
-              // eslint-disable-next-line max-len
+              // eslint-disable-next-line @stylistic/max-len
                 arePhotoCategoryOgImagesStaticallyOptimized ? 'checked' : 'optional',
                 'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORY_OG_IMAGES',
               )}

@@ -32,7 +32,7 @@ export default async function AdminRecipeTable({
             <FormWithConfirm
               action={deletePhotoRecipeGloballyAction}
               confirmText={
-                // eslint-disable-next-line max-len
+                // eslint-disable-next-line @stylistic/max-len
                 `Are you sure you want to remove "${formatRecipe(recipe)}" from ${photoQuantityText(count, appText, false, false).toLowerCase()}?`}
             >
               <input type="hidden" name="recipe" value={recipe} />

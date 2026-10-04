@@ -110,9 +110,9 @@ export default function useMaskedScroll({
   }, []);
 
   const styleMask: CSSProperties = useMemo(() => {
-    // eslint-disable-next-line max-len
+    // eslint-disable-next-line @stylistic/max-len
     const gradientStart = `linear-gradient(to ${isVertical ? 'bottom' : 'right'}, var(${CSS_VAR_MASK_COLOR_START}), black ${fadeSize}px)`;
-    // eslint-disable-next-line max-len
+    // eslint-disable-next-line @stylistic/max-len
     const gradientEnd = `linear-gradient(to ${isVertical ? 'top' : 'left'}, var(${CSS_VAR_MASK_COLOR_END}), black ${fadeSize}px)`;
     const maskImage = [gradientStart, gradientEnd].join(', ');
     const transition = [

@@ -160,14 +160,14 @@ export const TEXT: I18N = {
     syncUpdateColor: 'Atualizar cor',
     syncUpdateColorSuccess: 'Cor atualizada:',
     syncOverwrite: 'Sobrescrever',
-    // eslint-disable-next-line max-len
+    // eslint-disable-next-line @stylistic/max-len
     syncOverwriteConfirm: 'Tens certeza de que queres sobrescrever todos os campos da fotografia? Dados personalizados podem ser perdidos.',
     reupload: 'Carregar novamente',
     delete: 'Excluir',
     deleteConfirm: 'Tens certeza de que deseja excluir "{{photoTitle}}"?',
     setVisibility: 'Visibilidade',
     setVisibilityPlaceholder: 'Definir visibilidade para {{quantity}} ...',
-    // eslint-disable-next-line max-len
+    // eslint-disable-next-line @stylistic/max-len
     setVisibilityConfirm: 'Tens certeza de que queres definir a visibilidade para "{{visibility}}" para {{quantity}}?',
     setVisibilitySuccess: 'Visibilidade atualizada para {{quantity}}',
     visibilityDefault: 'Predefinida',
@@ -184,18 +184,18 @@ export const TEXT: I18N = {
     selectAll: 'Selecionar tudo',
     apply: 'Aplicar',
     tagPlaceholder: 'Marcar {{quantity}} ...',
-    // eslint-disable-next-line max-len
+    // eslint-disable-next-line @stylistic/max-len
     tagConfirm: 'Tens certeza de que queres aplicar etiquetas a {{quantity}}? Esta ação não pode ser anulada.',
     tagSuccess: '{{quantity}} marcadas com {{tags}}',
     albumPlaceholder: 'Adicionar {{quantity}} a álbuns ...',
-    // eslint-disable-next-line max-len
+    // eslint-disable-next-line @stylistic/max-len
     albumConfirm: 'Tens certeza de que queres adicionar {{quantity}} a estes álbuns? Esta ação não pode ser anulada.',
     albumSuccess: '{{quantity}} adicionadas a {{albums}}',
-    // eslint-disable-next-line max-len
+    // eslint-disable-next-line @stylistic/max-len
     favoriteConfirm: 'Tens certeza de que queres marcar como favoritas {{quantity}}?',
     favoriteSuccess: '{{quantity}} marcadas como favoritas',
     batchActionFailure: 'Algo correu mal ao atualizar {{quantity}}',
-    // eslint-disable-next-line max-len
+    // eslint-disable-next-line @stylistic/max-len
     deletePhotosConfirm: 'Tens certeza de que deseja excluir {{quantity}}? Esta ação não pode ser desfeita.',
     deletePhotosSuccess: '{{quantity}} excluídas',
     deletePhotosFailure: 'Algo correu mal ao excluir {{quantity}}',
@@ -205,7 +205,7 @@ export const TEXT: I18N = {
     setupIncomplete: 'Finalizar configuração',
     setupSignIn: 'Entre para enviar fotografias',
     setupFirstPhoto: 'Adicione sua primeira fotografia',
-    // eslint-disable-next-line max-len
+    // eslint-disable-next-line @stylistic/max-len
     setupConfig: 'Altere o nome do sítio e outras configurações ao editar as variáveis de ambiente referenciadas em',
   },
   utility: {

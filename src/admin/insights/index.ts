@@ -48,7 +48,7 @@ export type AdminAppInsight =
   AdminAppInsightRecommendation |
   AdminAppInsightLibrary;
 
-export type AdminAppInsights = Record<AdminAppInsight, boolean>
+export type AdminAppInsights = Record<AdminAppInsight, boolean>;
 
 export type InsightsIndicatorStatus = 'blue' | 'yellow' | undefined;
 

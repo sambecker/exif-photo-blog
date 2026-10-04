@@ -450,7 +450,7 @@ export default function PhotoLarge({
                           </Link>}
                         {(
                           photo.focalLengthIn35MmFormatFormatted &&
-                          // eslint-disable-next-line max-len
+                          // eslint-disable-next-line @stylistic/max-len
                           photo.focalLengthIn35MmFormatFormatted !== photo.focalLengthFormatted
                         ) &&
                           <>

@@ -37,4 +37,4 @@ export type AiModelResult = {
   color?: Oklch
   error?: string
   durationInMs: number
-}
+};

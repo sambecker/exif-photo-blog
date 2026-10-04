@@ -39,7 +39,7 @@ import { Oklch } from '@/photo/color/client';
 type LoadingCell = {
   photoId: string
   column: number
-}
+};
 
 // Start stacks directly above the row buttons, so pin them to one width
 // rather than letting each size to its own icons

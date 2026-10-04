@@ -16,7 +16,7 @@ export interface Place {
 type Location = {
   latitude: number
   longitude: number
-}
+};
 
 export const convertPlaceToAutocomplete = (
   place?: Place,

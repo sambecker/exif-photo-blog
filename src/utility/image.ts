@@ -14,7 +14,7 @@ export const fetchBase64ImageFromUrl = async (
     .then(async response => {
       if (response.ok) {
         const blob = await response.arrayBuffer();
-        // eslint-disable-next-line max-len
+        // eslint-disable-next-line @stylistic/max-len
         return `data:${contentType};base64,${Buffer.from(blob).toString('base64')}`;
       } else {
         return undefined;

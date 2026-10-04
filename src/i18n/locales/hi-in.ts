@@ -160,15 +160,15 @@ export const TEXT: I18N = {
     syncUpdateColor: 'रंग अपडेट करें',
     syncUpdateColorSuccess: 'रंग अपडेट किया गया:',
     syncOverwrite: 'अधिलेखित करें',
-    // eslint-disable-next-line max-len
+    // eslint-disable-next-line @stylistic/max-len
     syncOverwriteConfirm: 'क्या आप सुनिश्चित हैं कि आप सभी फोटो फ़ील्ड को अधिलेखित करना चाहते हैं? अनुकूलित डेटा खो सकता है।',
     reupload: 'पुनः अपलोड करें',
     delete: 'हटाएं',
-    // eslint-disable-next-line max-len
+    // eslint-disable-next-line @stylistic/max-len
     deleteConfirm: 'क्या आप सुनिश्चित हैं कि "{{photoTitle}}" को हटाना चाहते हैं?',
     setVisibility: 'दृश्यता',
     setVisibilityPlaceholder: '{{quantity}} के लिए दृश्यता सेट करें ...',
-    // eslint-disable-next-line max-len
+    // eslint-disable-next-line @stylistic/max-len
     setVisibilityConfirm: 'क्या आप सुनिश्चित हैं कि आप {{quantity}} के लिए दृश्यता "{{visibility}}" पर सेट करना चाहते हैं?',
     setVisibilitySuccess: '{{quantity}} के लिए दृश्यता अपडेट की गई',
     visibilityDefault: 'डिफ़ॉल्ट',
@@ -185,18 +185,18 @@ export const TEXT: I18N = {
     selectAll: 'सभी चुनें',
     apply: 'लागू करें',
     tagPlaceholder: '{{quantity}} को टैग करें ...',
-    // eslint-disable-next-line max-len
+    // eslint-disable-next-line @stylistic/max-len
     tagConfirm: 'क्या आप सुनिश्चित हैं कि आप {{quantity}} पर टैग लागू करना चाहते हैं? यह क्रिया पूर्ववत नहीं की जा सकती।',
     tagSuccess: '{{quantity}} को {{tags}} टैग किया गया',
     albumPlaceholder: '{{quantity}} को एल्बम में जोड़ें ...',
-    // eslint-disable-next-line max-len
+    // eslint-disable-next-line @stylistic/max-len
     albumConfirm: 'क्या आप सुनिश्चित हैं कि आप {{quantity}} को इन एल्बम में जोड़ना चाहते हैं? यह क्रिया पूर्ववत नहीं की जा सकती।',
     albumSuccess: '{{quantity}} को {{albums}} में जोड़ा गया',
-    // eslint-disable-next-line max-len
+    // eslint-disable-next-line @stylistic/max-len
     favoriteConfirm: 'क्या आप सुनिश्चित हैं कि आप {{quantity}} को पसंदीदा बनाना चाहते हैं?',
     favoriteSuccess: '{{quantity}} को पसंदीदा बनाया गया',
     batchActionFailure: '{{quantity}} अपडेट करने में कुछ गड़बड़ हो गई',
-    // eslint-disable-next-line max-len
+    // eslint-disable-next-line @stylistic/max-len
     deletePhotosConfirm: 'क्या आप सुनिश्चित हैं कि {{quantity}} हटाना चाहते हैं? यह क्रिया पूर्ववत नहीं की जा सकती।',
     deletePhotosSuccess: '{{quantity}} हटाई गईं',
     deletePhotosFailure: '{{quantity}} हटाने में कुछ गड़बड़ हो गई',
@@ -206,7 +206,7 @@ export const TEXT: I18N = {
     setupIncomplete: 'सेटअप पूरा करें',
     setupSignIn: 'फोटो अपलोड करने के लिए साइन इन करें',
     setupFirstPhoto: 'अपनी पहली फोटो जोड़ें',
-    // eslint-disable-next-line max-len
+    // eslint-disable-next-line @stylistic/max-len
     setupConfig: 'साइट का नाम और अन्य कॉन्फ़िगरेशन बदलने के लिए पर्यावरण चर संपादित करें',
   },
   utility: {

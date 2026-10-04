@@ -34,7 +34,7 @@ type VirtualFields =
 
 export type FormFields = keyof PhotoDbInsert | VirtualFields;
 
-export type PhotoFormData = Record<FormFields, string>
+export type PhotoFormData = Record<FormFields, string>;
 
 export type FieldSetType =
   'text' |
@@ -453,7 +453,7 @@ export const isFormValid = (formData: Partial<PhotoFormData>) =>
     ([key, { required, validate, validateStringMaxLength }]) =>
       (!required || Boolean(formData[key])) &&
       (!validate?.(formData[key])) &&
-      // eslint-disable-next-line max-len
+      // eslint-disable-next-line @stylistic/max-len
       (!validateStringMaxLength || (formData[key]?.length ?? 0) <= validateStringMaxLength),
   );
 

@@ -105,7 +105,7 @@ export const getWheresFromOptions = (
     wheresValues.push(updatedBefore.toISOString());
   }
   if (query) {
-    // eslint-disable-next-line max-len
+    // eslint-disable-next-line @stylistic/max-len
     wheres.push(`CONCAT(title, ' ', caption, ' ', semantic_description) ILIKE $${valuesIndex++}`);
     wheresValues.push(`%${query.toLocaleLowerCase()}%`);
   }
@@ -115,10 +115,10 @@ export const getWheresFromOptions = (
   }
   if (recent) {
     // Newest upload must be within past 2 weeks
-    // eslint-disable-next-line max-len
+    // eslint-disable-next-line @stylistic/max-len
     wheres.push('(SELECT MAX(created_at) FROM photos) >= (now() - INTERVAL \'14 days\')');
     // Selects must be within 1 week of newest upload
-    // eslint-disable-next-line max-len
+    // eslint-disable-next-line @stylistic/max-len
     wheres.push('created_at >= (SELECT MAX(created_at) - INTERVAL \'7 days\' FROM photos)');
   }
   if (year) {

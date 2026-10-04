@@ -84,7 +84,7 @@ export default function AdminAlbumForm({
         <div className="space-y-4 w-full">
           <FieldsetWithStatus
             label="Location Display Name"
-            // eslint-disable-next-line max-len
+            // eslint-disable-next-line @stylistic/max-len
             value={albumForm.location?.nameFormatted ?? albumForm.location?.name ?? ''}
             onChange={value => setAlbumForm(form => ({
               ...form,
@@ -93,7 +93,7 @@ export default function AdminAlbumForm({
               },
             }))}
             isModified={
-              // eslint-disable-next-line max-len
+              // eslint-disable-next-line @stylistic/max-len
               (albumForm.location?.nameFormatted ?? albumForm.location?.name) !==
               (album.location?.nameFormatted ?? album.location?.name)
             }

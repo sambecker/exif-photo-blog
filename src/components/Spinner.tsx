@@ -41,7 +41,7 @@ export default function Spinner({
         className="animate-rotate-pulse"
       >
         <path
-          // eslint-disable-next-line max-len
+          // eslint-disable-next-line @stylistic/max-len
           d="M11 6C11 3.23858 8.76142 1 6 1C3.23858 1 1 3.23858 1 6C1 8.76142 3.23858 11 6 11"
         />
       </svg>

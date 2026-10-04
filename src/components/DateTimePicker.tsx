@@ -227,7 +227,7 @@ export default function DateTimePicker({
                     isCurrentMonth && !isSelected &&
                       'hover:bg-gray-100! dark:hover:bg-gray-800!',
                     isSelected &&
-                      // eslint-disable-next-line max-len
+                      // eslint-disable-next-line @stylistic/max-len
                       'bg-gray-900! dark:bg-gray-100! text-white! dark:text-black!',
                   )}
                 >

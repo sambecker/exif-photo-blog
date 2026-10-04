@@ -15,9 +15,9 @@ import { labelForFilm } from '@/film';
 import { AppTextState } from '@/i18n/state';
 import { CategoryQueryMeta } from '@/category';
 
-export type RecipeWithMeta = { recipe: string } & CategoryQueryMeta
+export type RecipeWithMeta = { recipe: string } & CategoryQueryMeta;
 
-export type Recipes = RecipeWithMeta[]
+export type Recipes = RecipeWithMeta[];
 
 export interface RecipeProps {
   title?: string
@@ -99,7 +99,7 @@ export const generateRecipeLines = (
     );
   }
   lines.push(...abbreviate
-    // eslint-disable-next-line max-len
+    // eslint-disable-next-line @stylistic/max-len
     ? [`COL${addSign(data.color)} SHARP${addSign(data.sharpness)} CLAR${addSign(data.clarity)}`]
     : [
       `COLOR: ${addSign(data.color)}`,
@@ -127,7 +127,7 @@ export const generateRecipeLines = (
   }
   if (data.bwAdjustment || data.bwMagentaGreen) {
     lines.push(...abbreviate
-      // eslint-disable-next-line max-len
+      // eslint-disable-next-line @stylistic/max-len
       ? [`BW ADJ${addSign(data.bwAdjustment)} M/G${addSign(data.bwMagentaGreen)}`]
       : [
         `BW ADJUSTMENT: ${addSign(data.bwAdjustment)}`,

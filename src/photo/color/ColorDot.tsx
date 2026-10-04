@@ -65,7 +65,7 @@ export default function ColorDot({
   const dot = (
     // ColorDot cannot be a button because it's used in a tooltip trigger,
     // which is also a button
-    // eslint-disable-next-line max-len
+    // eslint-disable-next-line @stylistic/max-len
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
     <div
       className={clsx(

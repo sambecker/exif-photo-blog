@@ -86,7 +86,7 @@ export type AppStateContextType = {
   setShouldDebugInsights?: Dispatch<SetStateAction<boolean>>
   shouldDebugRecipeOverlays?: boolean
   setShouldDebugRecipeOverlays?: Dispatch<SetStateAction<boolean>>
-} & Partial<AdminData>
+} & Partial<AdminData>;
 
 export const AppStateContext = createContext<AppStateContextType>({
   uploadState: INITIAL_UPLOAD_STATE,

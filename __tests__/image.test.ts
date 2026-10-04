@@ -60,7 +60,7 @@ describe('fetchImageBytes', () => {
     ).rejects.toThrow('Fetch failed with status 404');
   });
 
-  // eslint-disable-next-line max-len
+  // eslint-disable-next-line @stylistic/max-len
   it('rejects a body over the limit when content-length is absent', async () => {
     const response = new Response(streamFromChunks(
       new Uint8Array(MAX_BYTES),

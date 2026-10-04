@@ -319,7 +319,7 @@ export const addUploadsAction = async ({
           });
         };
       } catch (error: any) {
-        // eslint-disable-next-line max-len
+        // eslint-disable-next-line @stylistic/max-len
         stream.error(`${error.message} (${addedUploadUrls.length} of ${uploadUrls.length} photos successfully added)`);
       }
       stream.done();
