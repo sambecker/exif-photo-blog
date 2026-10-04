@@ -53,13 +53,13 @@ export default function PhotoGridSidebar({
   aboutTextHasBrParagraphBreaks?: boolean
   className?: string
 }) {
-  const categories = useMemo(() => HIDE_TAGS_WITH_ONE_PHOTO
-    ? {
-      ..._categories,
+  const categories = useMemo(() => ({
+    ..._categories,
+    albums: _categories.albums.filter(({ count }) => count > 0),
+    ...HIDE_TAGS_WITH_ONE_PHOTO && {
       tags: limitTagsByCount(_categories.tags, 2),
-    }
-    : _categories
-  , [_categories]);
+    },
+  }), [_categories]);
 
   const {
     recents,
