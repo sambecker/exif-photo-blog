@@ -1,7 +1,9 @@
 import AdminAlbumsTable from '@/admin/AdminAlbumsTable';
+import AdminEmptyState from '@/admin/AdminEmptyState';
 import AdminPageHeader from '@/admin/AdminPageHeader';
 import { getAlbumsWithMeta } from '@/album/query';
 import AppGrid from '@/components/AppGrid';
+import IconAlbum from '@/components/icons/IconAlbum';
 import { getAppText } from '@/i18n/state/server';
 
 export default async function AdminTagsPage() {
@@ -20,7 +22,19 @@ export default async function AdminTagsPage() {
               singular={appText.category.album}
               plural={appText.category.albumPlural}
             />
-            <AdminAlbumsTable {...{ albums }} />
+            {albums.length === 0
+              ? <AdminEmptyState icon={<IconAlbum size={28} />}>
+                <div className="max-w-xs text-center space-y-1">
+                  <div className="font-bold">
+                    No albums
+                  </div>
+                  <div className="text-dim">
+                    Albums are collections of photos with associated metadata
+                    like descriptions and locations
+                  </div>
+                </div>
+              </AdminEmptyState>
+              : <AdminAlbumsTable {...{ albums }} />}
           </div>
         </div>}
     />

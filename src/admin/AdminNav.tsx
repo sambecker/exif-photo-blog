@@ -2,9 +2,7 @@ import {
   getPhotosMetaCached,
   getPhotosMostRecentUpdateCached,
   getUniqueRecipesCached,
-  getUniqueTagsCached,
 } from '@/photo/cache';
-import { getAlbumsWithMetaCached } from '@/album/cache';
 import {
   PATH_ADMIN_ALBUMS,
   PATH_ADMIN_PHOTOS,
@@ -18,17 +16,11 @@ import { getAppText } from '@/i18n/state/server';
 export default async function AdminNav() {
   const [
     countPhotos,
-    countAlbums,
-    countTags,
     countRecipes,
     mostRecentPhotoUpdateTime,
   ] = await Promise.all([
     getPhotosMetaCached({ hidden: 'include' })
       .then(({ count }) => count)
-      .catch(() => 0),
-    getAlbumsWithMetaCached().then(albums => albums.length)
-      .catch(() => 0),
-    getUniqueTagsCached(true).then(tags => tags.length)
       .catch(() => 0),
     getUniqueRecipesCached().then(recipes => recipes.length)
       .catch(() => 0),
@@ -52,16 +44,16 @@ export default async function AdminNav() {
   });
 
   // Albums
-  if (countAlbums > 0) { items.push({
+  items.push({
     label: appText.category.albumPlural,
     href: PATH_ADMIN_ALBUMS,
-  }); }
+  });
 
   // Tags
-  if (countTags > 0) { items.push({
+  items.push({
     label: appText.category.tagPlural,
     href: PATH_ADMIN_TAGS,
-  }); }
+  });
 
   // Recipes
   if (countRecipes > 0) { items.push({
