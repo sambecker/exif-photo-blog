@@ -22,6 +22,7 @@ export default function PhotoUploadWithStatus({
   onLastUpload,
   showStatusText = true,
   showButton = true,
+  primary = true,
   className,
   debug,
 }: {
@@ -31,6 +32,7 @@ export default function PhotoUploadWithStatus({
   onLastUpload?: () => Promise<void>
   showStatusText?: boolean
   showButton?: boolean
+  primary?: boolean
   className?: string
   debug?: boolean
 }) {
@@ -161,6 +163,7 @@ export default function PhotoUploadWithStatus({
             }
           }}
           showButton={showButton}
+          primary={primary}
           debug={debug}
         />
         {showButton && showCancel &&

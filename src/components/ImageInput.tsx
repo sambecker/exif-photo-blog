@@ -25,6 +25,7 @@ export default function ImageInput({
   quality = 0.9,
   hidden,
   showButton,
+  primary,
   disabled: disabledProp,
   debug: _debug,
 }: {
@@ -46,6 +47,7 @@ export default function ImageInput({
   quality?: number
   hidden?: boolean
   showButton?: boolean
+  primary?: boolean
   disabled?: boolean
   debug?: boolean
 }) {
@@ -99,7 +101,7 @@ export default function ImageInput({
               aria-disabled={disabled}
               onClick={() => inputRef.current?.click()}
               hideText="never"
-              primary
+              primary={primary}
             >
               {isUploading
                 ? filesLength > 1

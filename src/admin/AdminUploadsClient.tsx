@@ -59,6 +59,7 @@ export default function AdminUploadsClient({
           shouldResize={shouldResize}
           onLastUpload={onLastUpload}
           className="flex-row-reverse min-w-0"
+          primary={urlAddStatuses.length === 0}
         />}
       />
       {(urls.length > 1 || isAdding) &&
