@@ -131,7 +131,7 @@ export default function RootLayout({
                             <ShareModals />
                             <RecipeModal />
                             <div className={clsx(
-                              'mb-12',
+                              'mb-5',
                               'space-y-5',
                             )}>
                               <AdminUploadPanel
