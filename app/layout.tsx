@@ -16,6 +16,7 @@ import {
   DEBUG_OUTPUTS_ENABLED,
 } from '@/app/config';
 import AppStateProvider from '@/app/AppStateProvider';
+import StickyHeaderProvider from '@/app/StickyHeaderProvider';
 import ToasterWithThemes from '@/toast/ToasterWithThemes';
 import PhotoEscapeHandler from '@/photo/PhotoEscapeHandler';
 import { Metadata } from 'next/types';
@@ -119,40 +120,42 @@ export default function RootLayout({
                 <ThemeProvider attribute="class" defaultTheme={DEFAULT_THEME}>
                   <SwrConfigClient>
                     <SharedHoverProvider>
-                      <div className={clsx(
-                        'mx-3 pb-3',
-                        'lg:mx-6 lg:pb-6',
-                        'min-h-dvh flex flex-col',
-                      )}>
-                        <Nav />
-                        <main className="grow">
-                          <ShareModals />
-                          <RecipeModal />
-                          <div className={clsx(
-                            'mb-12',
-                            'space-y-5',
-                          )}>
-                            <AdminUploadPanel
-                              shouldResize={!PRESERVE_ORIGINAL_UPLOADS}
-                              onLastUpload={async () => {
-                                'use server';
-                                // Update upload count in admin nav
-                                revalidatePath('/admin', 'layout');
-                              }}
-                            />
-                            <AdminBatchEditPanel
-                              onBatchActionComplete={async () => {
-                                'use server';
-                                // Update upload count in admin nav
-                                revalidatePath('/admin', 'layout');
-                              }}
-                            />
-                            <AdminEditTitlesPanel />
-                            {children}
-                          </div>
-                        </main>
-                        <Footer />
-                      </div>
+                      <StickyHeaderProvider>
+                        <div className={clsx(
+                          'mx-3 pb-3',
+                          'lg:mx-6 lg:pb-6',
+                          'min-h-dvh flex flex-col',
+                        )}>
+                          <Nav />
+                          <main className="grow">
+                            <ShareModals />
+                            <RecipeModal />
+                            <div className={clsx(
+                              'mb-12',
+                              'space-y-5',
+                            )}>
+                              <AdminUploadPanel
+                                shouldResize={!PRESERVE_ORIGINAL_UPLOADS}
+                                onLastUpload={async () => {
+                                  'use server';
+                                  // Update upload count in admin nav
+                                  revalidatePath('/admin', 'layout');
+                                }}
+                              />
+                              <AdminBatchEditPanel
+                                onBatchActionComplete={async () => {
+                                  'use server';
+                                  // Update upload count in admin nav
+                                  revalidatePath('/admin', 'layout');
+                                }}
+                              />
+                              <AdminEditTitlesPanel />
+                              {children}
+                            </div>
+                          </main>
+                          <Footer />
+                        </div>
+                      </StickyHeaderProvider>
                       <CommandK />
                     </SharedHoverProvider>
                   </SwrConfigClient>

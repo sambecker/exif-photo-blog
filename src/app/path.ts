@@ -500,6 +500,9 @@ export const isPathTopLevelAdmin = (pathname?: string) =>
 export const isPathAdminPhotos = (pathname?: string) =>
   checkPathPrefix(pathname, PATH_ADMIN_PHOTOS);
 
+export const isPathAdminPhotoEdit = (pathname = '') =>
+  new RegExp(`^${PATH_ADMIN_PHOTOS}/[^/]+/${EDIT}/?$`).test(pathname);
+
 export const isPathAdminInsights = (pathname?: string) =>
   checkPathPrefix(pathname, PATH_ADMIN_INSIGHTS);
 

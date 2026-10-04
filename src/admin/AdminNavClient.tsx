@@ -10,6 +10,7 @@ import {
   PATH_ADMIN_PHOTOS_UPDATES,
   checkPathPrefix,
   isPathAdminInfo,
+  isPathAdminPhotoEdit,
   isPathTopLevelAdmin,
 } from '@/app/path';
 import { useAppState } from '@/app/AppState';
@@ -22,6 +23,7 @@ import AdminAppInfoIcon from './AdminAppInfoIcon';
 import AdminInfoNav from './AdminInfoNav';
 import LinkWithLoaderBackground from '@/components/LinkWithLoaderBackground';
 import MaskedScroll from '@/components/MaskedScroll';
+import StickySubNav from '@/components/StickySubNav';
 
 // Updates from past 5 minutes considered recent
 const areTimesRecent = (dates: Date[]) => dates
@@ -66,56 +68,61 @@ export default function AdminNavClient({
     pathname !== PATH_ADMIN_PHOTOS_UPDATES;
 
   return (
-    <AppGrid
-      contentMain={
-        <div className="space-y-4">
-          <div className={clsx(
-            'flex gap-2 pb-3',
-            'border-b border-gray-200 dark:border-gray-800',
-          )}>
-            <MaskedScroll
-              className="grow -mx-1 flex gap-0.5 md:gap-1.5"
-              direction="horizontal"
-            >
-              {items.map(({ label, href, count }) =>
-                <LinkWithLoaderBackground
-                  key={label}
-                  href={href}
-                  className={clsx(
-                    'flex gap-0.5',
-                    checkPathPrefix(pathname, href) ? 'font-bold' : 'text-dim',
-                    'hover:text-main active:text-medium',
-                  )}
-                  prefetch={false}
-                >
-                  <span>{label}</span>
-                  {count > 0 &&
-                    <span>({count})</span>}
-                </LinkWithLoaderBackground>)}
-            </MaskedScroll>
-            <LinkWithIconLoader
-              href={includeInsights
-                ? PATH_ADMIN_INSIGHTS
-                : PATH_ADMIN_CONFIGURATION}
-              className={clsx(
-                isPathAdminInfo(pathname)
-                  ? 'font-bold'
-                  : 'text-dim',
-                'hover:text-main active:text-dim',
-              )}
-              icon={<AdminAppInfoIcon />}
-              loader={<Spinner className="translate-y-[-0.75px]" />}
-            />
-          </div>
-          {shouldShowBanner &&
-            <Note icon={<FaRegClock className="shrink-0" />}>
-              Photo updates detected—they may take several minutes to show up
-              for visitors
-            </Note>}
-          {isPathAdminInfo(pathname) &&
-            <AdminInfoNav {...{ includeInsights }} />}
+    <>
+      <StickySubNav isEnabled={!isPathAdminPhotoEdit(pathname)}>
+        <div className={clsx(
+          'flex gap-2 pb-3',
+          'border-b border-gray-200 dark:border-gray-800',
+        )}>
+          <MaskedScroll
+            className="grow -mx-1 flex gap-0.5 md:gap-1.5"
+            direction="horizontal"
+          >
+            {items.map(({ label, href, count }) =>
+              <LinkWithLoaderBackground
+                key={label}
+                href={href}
+                className={clsx(
+                  'flex gap-0.5',
+                  checkPathPrefix(pathname, href) ? 'font-bold' : 'text-dim',
+                  'hover:text-main active:text-medium',
+                )}
+                prefetch={false}
+              >
+                <span>{label}</span>
+                {count > 0 &&
+                  <span>({count})</span>}
+              </LinkWithLoaderBackground>)}
+          </MaskedScroll>
+          <LinkWithIconLoader
+            href={includeInsights
+              ? PATH_ADMIN_INSIGHTS
+              : PATH_ADMIN_CONFIGURATION}
+            className={clsx(
+              isPathAdminInfo(pathname)
+                ? 'font-bold'
+                : 'text-dim',
+              'hover:text-main active:text-dim',
+            )}
+            icon={<AdminAppInfoIcon />}
+            loader={<Spinner className="translate-y-[-0.75px]" />}
+          />
         </div>
-      }
-    />
+      </StickySubNav>
+      {(shouldShowBanner || isPathAdminInfo(pathname)) &&
+        <AppGrid
+          contentMain={
+            <div className="space-y-4">
+              {shouldShowBanner &&
+                <Note icon={<FaRegClock className="shrink-0" />}>
+                  Photo updates detected—they may take several minutes to show
+                  up for visitors
+                </Note>}
+              {isPathAdminInfo(pathname) &&
+                <AdminInfoNav {...{ includeInsights }} />}
+            </div>
+          }
+        />}
+    </>
   );
 }
