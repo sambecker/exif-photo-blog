@@ -59,12 +59,17 @@ export default function MoreMenuItem({
 }) {
   const [isLoading, setIsLoading] = useState(false);
 
+  // Stretch the label so a trailing annotation sits on the menu's right edge
+  const classNameContent = annotation
+    ? 'flex grow items-center'
+    : undefined;
+
   const buttonContent = <>
-    <span>
+    <span className={clsx(annotation && 'grow text-left')}>
       {labelComplex ?? label}
     </span>
     {annotation &&
-      <span className="text-dim ml-3">
+      <span className="text-dim ml-3 shrink-0">
         {annotation}
       </span>}
   </>;
@@ -127,6 +132,8 @@ export default function MoreMenuItem({
             '-m-2 p-2',
             keyCommand && 'sm:-mr-10',
           )}
+          classNameWrapper={annotation ? 'grow' : undefined}
+          classNameContent={classNameContent}
           onLoad={() => {
             action?.();
             dismissMenu?.();
@@ -140,8 +147,9 @@ export default function MoreMenuItem({
           isLoading={isLoading}
           hideText="never"
           styleAs="link-without-hover"
-          className="translate-y-[0.5px] text-sm grow"
+          className="translate-y-[0.5px] text-sm grow text-left"
           classNameIcon="translate-y-[-0.5px]!"
+          classNameContent={classNameContent}
         >
           {buttonContent}
         </LoaderButton>}

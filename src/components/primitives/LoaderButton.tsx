@@ -14,6 +14,7 @@ export default function LoaderButton({
   ref,
   children,
   classNameIcon,
+  classNameContent,
   isLoading,
   icon,
   spinnerColor,
@@ -35,6 +36,7 @@ export default function LoaderButton({
 }: {
   ref?: RefObject<HTMLButtonElement | null>
   classNameIcon?: string
+  classNameContent?: string
   isLoading?: boolean
   icon?: ReactNode
   spinnerColor?: SpinnerColor
@@ -105,6 +107,7 @@ export default function LoaderButton({
         styleAs !== 'button' && isLoading && 'text-dim',
         hideText === 'on-mobile' && icon !== undefined && 'max-sm:hidden',
         hideText === 'always' && 'hidden',
+        classNameContent,
       )}>
         {children}
       </span>}
