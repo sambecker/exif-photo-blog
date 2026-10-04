@@ -7,12 +7,14 @@ export default function AdminPageHeader({
   singular,
   plural,
   accessory,
+  hideLabel,
   className,
 }: {
   count: number
   singular: string
   plural: string
   accessory?: ReactNode
+  hideLabel?: boolean
   className?: string
 }) {
   return (
@@ -21,11 +23,15 @@ export default function AdminPageHeader({
       'flex items-center gap-4 min-h-9.5',
       className,
     )}>
-      <div className="grow shrink-0 font-bold">
-        {pluralize(count, singular, plural)}
-      </div>
+      {!hideLabel &&
+        <div className="grow shrink-0 font-bold">
+          {pluralize(count, singular, plural)}
+        </div>}
       {accessory &&
-        <div className="flex items-center justify-end gap-2 min-w-0">
+        <div className={clsx(
+          'flex items-center justify-end gap-2 min-w-0',
+          hideLabel && 'grow',
+        )}>
           {accessory}
         </div>}
     </div>

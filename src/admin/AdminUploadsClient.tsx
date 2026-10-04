@@ -9,6 +9,8 @@ import { Albums } from '@/album';
 import AdminPageHeader from './AdminPageHeader';
 import PhotoUploadWithStatus from '@/photo/PhotoUploadWithStatus';
 import { useAppText } from '@/i18n/state/client';
+import { useAppState } from '@/app/AppState';
+import { clsx } from 'clsx/lite';
 
 export type UrlAddStatus = StorageListItem & {
   status?: 'waiting' | 'adding' | 'added'
@@ -32,6 +34,8 @@ export default function AdminUploadsClient({
 }) {
   const appText = useAppText();
 
+  const { uploadState: { isUploading } } = useAppState();
+
   const [urlAddStatuses, setUrlAddStatuses] = useState<UrlAddStatus[]>(urls);
 
   useEffect(() => {
@@ -54,11 +58,15 @@ export default function AdminUploadsClient({
         count={urls.length}
         singular={appText.admin.upload}
         plural={appText.admin.uploadPlural}
+        hideLabel={isUploading}
         accessory={<PhotoUploadWithStatus
           inputId="admin-uploads"
           shouldResize={shouldResize}
           onLastUpload={onLastUpload}
-          className="flex-row-reverse min-w-0"
+          className={clsx(
+            'flex-row-reverse min-w-0',
+            isUploading && 'w-full',
+          )}
           primary={urlAddStatuses.length === 0}
         />}
       />
