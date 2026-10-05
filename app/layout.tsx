@@ -3,40 +3,29 @@ import { SpeedInsights } from '@vercel/speed-insights/react';
 import { clsx } from 'clsx/lite';
 import {
   BASE_URL,
-  DEFAULT_THEME,
   PRESERVE_ORIGINAL_UPLOADS,
   META_DESCRIPTION,
   META_TITLE,
   HTML_LANG,
   SITE_FEEDS_ENABLED,
-  ADMIN_DEBUG_TOOLS_ENABLED,
-  ADMIN_AI_MODEL_DEBUG_ENABLED,
   PAGE_SCRIPT_URLS,
   VERCEL_GIT_COMMIT_SHA_SHORT,
   DEBUG_OUTPUTS_ENABLED,
 } from '@/app/config';
-import AppStateProvider from '@/app/AppStateProvider';
-import StickyHeaderProvider from '@/app/StickyHeaderProvider';
+import StateProviders from '@/app/StateProviders';
 import ToasterWithThemes from '@/toast/ToasterWithThemes';
 import PhotoEscapeHandler from '@/photo/PhotoEscapeHandler';
 import { Metadata } from 'next/types';
-import { ThemeProvider } from 'next-themes';
 import Nav from '@/app/Nav';
 import Footer from '@/app/Footer';
 import CommandK from '@/cmdk/CommandK';
-import SwrConfigClient from '@/swr/SwrConfigClient';
 import ShareModals from '@/share/ShareModals';
 import AdminUploadPanel from '@/admin/upload/AdminUploadPanel';
 import { revalidatePath } from 'next/cache';
 import RecipeModal from '@/recipe/RecipeModal';
 import ThemeColors from '@/app/ThemeColors';
-import AppTextProvider from '@/i18n/state/AppTextProvider';
-import SharedHoverProvider from '@/components/shared-hover/SharedHoverProvider';
 import { PATH_FEED_JSON, PATH_RSS_XML } from '@/app/path';
-import SelectPhotosProvider from '@/admin/select/SelectPhotosProvider';
 import AdminBatchEditPanel from '@/admin/select/AdminBatchEditPanel';
-import EditTitlesProvider from '@/admin/edit-titles/EditTitlesProvider';
-import UploadStateProvider from '@/admin/upload/UploadStateProvider';
 import AdminEditTitlesPanel from '@/admin/edit-titles/AdminEditTitlesPanel';
 import Script from 'next/script';
 
@@ -110,62 +99,43 @@ export default function RootLayout({
         // Center on large screens
         '3xl:flex flex-col items-center',
       )}>
-        <AppStateProvider
-          areAdminDebugToolsEnabled={ADMIN_DEBUG_TOOLS_ENABLED}
-          isAdminAiModelDebugEnabled={ADMIN_AI_MODEL_DEBUG_ENABLED}
-        >
-          <UploadStateProvider>
-            <AppTextProvider>
-              <SelectPhotosProvider>
-                <EditTitlesProvider>
-                  <ThemeColors />
-                  <ThemeProvider attribute="class" defaultTheme={DEFAULT_THEME}>
-                    <SwrConfigClient>
-                      <SharedHoverProvider>
-                        <StickyHeaderProvider>
-                          <div className={clsx(
-                            'mx-3 pb-3',
-                            'lg:mx-6 lg:pb-6',
-                            'min-h-dvh flex flex-col',
-                          )}>
-                            <Nav />
-                            <main className="grow">
-                              <ShareModals />
-                              <RecipeModal />
-                              <div className={clsx(
-                                'mb-5',
-                                'space-y-5',
-                              )}>
-                                <AdminUploadPanel
-                                  shouldResize={!PRESERVE_ORIGINAL_UPLOADS}
-                                />
-                                <AdminBatchEditPanel
-                                  onBatchActionComplete={async () => {
-                                    'use server';
-                                    // Update upload count in admin nav
-                                    revalidatePath('/admin', 'layout');
-                                  }}
-                                />
-                                <AdminEditTitlesPanel />
-                                {children}
-                              </div>
-                            </main>
-                            <Footer />
-                          </div>
-                        </StickyHeaderProvider>
-                        <CommandK />
-                      </SharedHoverProvider>
-                    </SwrConfigClient>
-                    <Analytics debug={false} />
-                    <SpeedInsights debug={false} />
-                    <PhotoEscapeHandler />
-                    <ToasterWithThemes />
-                  </ThemeProvider>
-                </EditTitlesProvider>
-              </SelectPhotosProvider>
-            </AppTextProvider>
-          </UploadStateProvider>
-        </AppStateProvider>
+        <StateProviders>
+          <ThemeColors />
+          <div className={clsx(
+            'mx-3 pb-3',
+            'lg:mx-6 lg:pb-6',
+            'min-h-dvh flex flex-col',
+          )}>
+            <Nav />
+            <main className="grow">
+              <ShareModals />
+              <RecipeModal />
+              <div className={clsx(
+                'mb-5',
+                'space-y-5',
+              )}>
+                <AdminUploadPanel
+                  shouldResize={!PRESERVE_ORIGINAL_UPLOADS}
+                />
+                <AdminBatchEditPanel
+                  onBatchActionComplete={async () => {
+                    'use server';
+                    // Update upload count in admin nav
+                    revalidatePath('/admin', 'layout');
+                  }}
+                />
+                <AdminEditTitlesPanel />
+                {children}
+              </div>
+            </main>
+            <Footer />
+          </div>
+          <CommandK />
+          <Analytics debug={false} />
+          <SpeedInsights debug={false} />
+          <PhotoEscapeHandler />
+          <ToasterWithThemes />
+        </StateProviders>
         {PAGE_SCRIPT_URLS.map(url => <Script key={url} src={url} />)}
       </body>
     </html>
