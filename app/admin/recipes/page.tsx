@@ -5,10 +5,9 @@ import { getAppText } from '@/i18n/state/server';
 import { getUniqueRecipes } from '@/photo/query';
 
 export default async function AdminRecipesPage() {
-  const [recipes, appText] = await Promise.all([
-    getUniqueRecipes().catch(() => []),
-    getAppText(),
-  ]);
+  const recipes = await getUniqueRecipes().catch(() => []);
+  
+  const appText = await getAppText();
 
   return (
     <AppGrid

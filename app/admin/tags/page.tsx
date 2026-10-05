@@ -7,10 +7,9 @@ import { getAppText } from '@/i18n/state/server';
 import { getUniqueTags } from '@/photo/query';
 
 export default async function AdminTagsPage() {
-  const [tags, appText] = await Promise.all([
-    getUniqueTags(true).catch(() => []),
-    getAppText(),
-  ]);
+  const tags = await getUniqueTags(true).catch(() => []);
+  
+  const appText = await getAppText();
 
   return (
     <AppGrid

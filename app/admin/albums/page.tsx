@@ -9,10 +9,9 @@ import { getAppText } from '@/i18n/state/server';
 import Link from 'next/link';
 
 export default async function AdminTagsPage() {
-  const [albums, appText] = await Promise.all([
-    getAlbumsWithMeta(),
-    getAppText(),
-  ]);
+  const albums = await getAlbumsWithMeta().catch(() => []);
+  
+  const appText = await getAppText();
 
   return (
     <AppGrid
