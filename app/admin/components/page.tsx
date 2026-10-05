@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import AdminComponentPageClient from '@/admin/AdminComponentPageClient';
 import { formatCameraText } from '@/camera';
 import { sortCategoriesByCount } from '@/category';
