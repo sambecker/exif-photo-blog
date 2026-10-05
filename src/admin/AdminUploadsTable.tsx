@@ -18,6 +18,7 @@ export default function AdminUploadsTable({
   setIsDeleting?: Dispatch<SetStateAction<boolean>>
 }) {
   const isComplete = urlAddStatuses.every(({ status }) => status === 'added');
+  const isLastUpload = urlAddStatuses.length <= 1;
   return (
     <div className="space-y-4">
       {urlAddStatuses.map((status, index) =>
@@ -26,7 +27,8 @@ export default function AdminUploadsTable({
           {...{
             ...status,
             tabIndex: index + 1,
-            shouldRedirectAfterAction: urlAddStatuses.length <= 1,
+            shouldRedirectAfterAdd: isLastUpload,
+            shouldRefreshAfterDelete: isLastUpload,
             isAdding,
             isDeleting,
             isComplete,

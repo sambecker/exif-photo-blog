@@ -243,14 +243,12 @@ export default function AdminBatchUploadActions({
               onDelete={async didFail => {
                 if (!didFail) {
                   updateAdminData?.({ uploadsCount: 0 });
+                  setUrlAddStatuses([]);
                   await onBatchActionComplete?.();
-                  router.push(PATH_ADMIN_PHOTOS);
-                } else {
-                  setIsDeleting(false);
                 }
+                setIsDeleting(false);
               }}
               className="w-full flex justify-center"
-              shouldRedirectToAdminPhotos
               hideText="never"
               disabled={isAdding}
             >

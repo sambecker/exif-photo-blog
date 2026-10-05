@@ -67,18 +67,17 @@ export default function AdminUploadsClient({
         />}
       />
       {urlAddStatuses.length === 0
-        ? !isUploading &&
-          <EmptyState icon={<IconUpload />}>
-            <div className="max-w-xs text-center space-y-1">
-              <div className="font-bold">
-                No uploads
-              </div>
-              <div className="text-dim">
-                Uploaded files that haven&apos;t been added to your library
-                will show up here
-              </div>
+        ? <EmptyState icon={<IconUpload />}>
+          <div className="max-w-xs text-center space-y-1">
+            <div className="font-bold">
+              No uploads
             </div>
-          </EmptyState>
+            <div className="text-dim">
+              Uploaded files that haven&apos;t been added to your library
+              will show up here
+            </div>
+          </div>
+        </EmptyState>
         : <>
           {(urls.length > 1 || isAdding) &&
             <AdminBatchUploadActions {...{

@@ -12,6 +12,8 @@ import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import EditButton from './EditButton';
 import AddUploadButton from './AddUploadButton';
 import { getFileNamePartsFromStorageUrl } from '@/platforms/storage';
+import { useRouter } from 'next/navigation';
+import { useAppState } from '@/app/AppState';
 
 export default function AdminUploadsTableRow({
   url,
@@ -21,7 +23,8 @@ export default function AdminUploadsTableRow({
   uploadedAt,
   size,
   tabIndex,
-  shouldRedirectAfterAction,
+  shouldRedirectAfterAdd,
+  shouldRefreshAfterDelete,
   isAdding,
   isDeleting,
   isComplete,
@@ -29,7 +32,8 @@ export default function AdminUploadsTableRow({
   setUrlAddStatuses,
 }: UrlAddStatus & {
   tabIndex: number
-  shouldRedirectAfterAction: boolean
+  shouldRedirectAfterAdd: boolean
+  shouldRefreshAfterDelete: boolean
   isAdding?: boolean
   isDeleting?: boolean
   isComplete?: boolean
@@ -37,6 +41,10 @@ export default function AdminUploadsTableRow({
   setUrlAddStatuses?: Dispatch<SetStateAction<UrlAddStatus[]>>
 }) {
   const ref = useRef<HTMLDivElement>(null);
+
+  const router = useRouter();
+
+  const { updateAdminData } = useAppState();
 
   const {
     fileExtension,
@@ -139,7 +147,7 @@ export default function AdminUploadsTableRow({
                       statusMessage: 'Adding ...',
                     })}
                     onAddFinish={removeRow}
-                    shouldRedirectToAdminPhotos={shouldRedirectAfterAction}
+                    shouldRedirectToAdminPhotos={shouldRedirectAfterAdd}
                     disabled={isRowLoading}
                     tooltipSide="bottom"
                   />
@@ -152,11 +160,14 @@ export default function AdminUploadsTableRow({
                   />
                   <DeleteUploadButton
                     urls={[url]}
-                    shouldRedirectToAdminPhotos={shouldRedirectAfterAction}
                     onDeleteStart={() => setIsDeleting?.(true)}
-                    onDelete={() => {
+                    onDelete={didFail => {
                       setIsDeleting?.(false);
                       removeRow();
+                      if (!didFail && shouldRefreshAfterDelete) {
+                        updateAdminData?.({ uploadsCount: 0 });
+                        router.refresh();
+                      }
                     }}
                     disabled={isRowLoading}
                     tooltip="Delete upload"

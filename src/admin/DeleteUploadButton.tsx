@@ -2,14 +2,11 @@
 
 import { deleteUploadsAction } from '@/photo/actions';
 import DeleteButton from './DeleteButton';
-import { useRouter } from 'next/navigation';
-import { PATH_ADMIN_PHOTOS } from '@/app/path';
 import { ComponentProps, useState } from 'react';
 import LoaderButton from '@/components/primitives/LoaderButton';
 
 export default function DeleteUploadButton({
   urls,
-  shouldRedirectToAdminPhotos,
   onDeleteStart,
   onDelete,
   children,
@@ -17,12 +14,9 @@ export default function DeleteUploadButton({
   ...props
 }: {
   urls: string[]
-  shouldRedirectToAdminPhotos?: boolean
   onDeleteStart?: () => void
   onDelete?: (didFail?: boolean) => void
 } & ComponentProps<typeof LoaderButton>) {
-  const router = useRouter();
-
   const [isDeleting, setIsDeleting] = useState(false);
 
   return (
@@ -36,12 +30,8 @@ export default function DeleteUploadButton({
         setIsDeleting(true);
         deleteUploadsAction(urls)
           .then(() => {
+            setIsDeleting(false);
             onDelete?.();
-            if (shouldRedirectToAdminPhotos) {
-              router.push(PATH_ADMIN_PHOTOS);
-            } else {
-              setIsDeleting(false);
-            }
           })
           .catch(() => {
             setIsDeleting(false);
