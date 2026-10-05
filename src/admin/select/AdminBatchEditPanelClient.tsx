@@ -315,16 +315,18 @@ export default function AdminBatchEditPanelClient({
 
   return shouldShowPanel
     ? <StickyBanner>
-      <div
+      {isOutOfPosition => <div
         ref={refNote}
         color="gray"
         className={clsx(
           'flex flex-col gap-2',
-          'p-2 rounded-xl',
-          'backdrop-blur-lg',
+          'p-2',
+          'transition-[border-radius] duration-200',
+          'component-surface-frosted',
+          isOutOfPosition ? 'rounded-none' : 'rounded-xl',
+          isOutOfPosition ? 'outline-none' : 'translate-y-px',
           'text-gray-900! dark:text-gray-100!',
           'bg-gray-100/90! dark:bg-gray-900/70!',
-          'outline outline-medium',
           'shadow-xl/5',
         )}
       >
@@ -355,7 +357,7 @@ export default function AdminBatchEditPanelClient({
           </div>
           {renderSelectAll}
         </div>
-      </div>
+      </div>}
     </StickyBanner>
     : null;
 }

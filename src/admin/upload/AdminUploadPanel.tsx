@@ -36,13 +36,15 @@ export default function AdminUploadPanel({
       isEnabled={isVisible}
       className={!isVisible ? 'hidden' : undefined}
     >
-      <Container
+      {isOutOfPosition => <Container
         color="gray"
         padding="tight"
+        rounded={!isOutOfPosition}
         className={clsx(
           // Necessary for progress bar placement
           'relative overflow-hidden',
           'p-2! pl-4! text-main!',
+          'transition-[border-radius] duration-200',
         )}
       >
         <div className="flex w-full items-center gap-2">
@@ -67,7 +69,7 @@ export default function AdminUploadPanel({
               : resetUploadState}
           />
         </div>
-      </Container>
+      </Container>}
     </StickyBanner>
   );
 }

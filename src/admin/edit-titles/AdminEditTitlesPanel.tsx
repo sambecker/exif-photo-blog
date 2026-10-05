@@ -51,16 +51,18 @@ export default function AdminEditTitlesPanel() {
 
   return isEditingTitles
     ? <StickyBanner>
-      <div
+      {isOutOfPosition => <div
         ref={refNote}
         tabIndex={-1}
         className={clsx(
           'flex items-center gap-1 md:gap-2',
-          'p-2 rounded-xl',
-          'backdrop-blur-lg',
+          'p-2',
+          'transition-[border-radius] duration-200',
+          'component-surface-frosted',
+          isOutOfPosition ? 'rounded-none' : 'rounded-xl',
+          isOutOfPosition ? 'outline-none' : 'translate-y-px',
           'text-gray-900! dark:text-gray-100!',
           'bg-gray-100/90! dark:bg-gray-900/70!',
-          'outline outline-medium',
           'shadow-xl/5',
           '[&>*:first-child]:grow',
         )}
@@ -116,7 +118,7 @@ export default function AdminEditTitlesPanel() {
           onClick={stopEditingTitles}
           disabled={isPerformingUpdate}
         />
-      </div>
+      </div>}
     </StickyBanner>
     : null;
 }

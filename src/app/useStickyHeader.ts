@@ -81,6 +81,13 @@ export default function useStickyHeader(
     ? Math.min(scrollY, trackedHeightAbove)
     : 0;
   const shouldAnimateCollapse = scrollY > trackedHeightAbove;
+  // Persistent banners keep their resting shape until sticky
+  // positioning actually holds them away from that place
+  const stickyTop = offset - collapse;
+  const isOutOfPosition = !tracksNav && scrollY > Math.max(
+    0,
+    naturalTopRef.current - stickyTop,
+  );
 
   useLayoutEffect(() => {
     if (!isSticky && ref.current) {
@@ -112,5 +119,6 @@ export default function useStickyHeader(
     ),
     contentStyle,
     isVisible: tracksNav ? !isHidden : true,
+    isOutOfPosition,
   };
 };

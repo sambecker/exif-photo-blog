@@ -10,7 +10,7 @@ export default function StickyBanner({
   className,
   isEnabled,
 }: {
-  children: ReactNode
+  children: (isOutOfPosition: boolean) => ReactNode
   className?: string
   isEnabled?: boolean
 }) {
@@ -21,6 +21,7 @@ export default function StickyBanner({
     containerStyle,
     contentClassName,
     contentStyle,
+    isOutOfPosition,
   } = useStickyHeader(ref, isEnabled, false);
 
   return (
@@ -29,7 +30,8 @@ export default function StickyBanner({
       className={clsx(
         containerClassName,
         // Net 2px so the nav doesn't clip the card's top edge
-        '-mt-2 pt-2.5',
+        // '-mt-2 pt-2.5',
+        // 'pt-0.5',
         className,
       )}
       style={containerStyle}
@@ -38,7 +40,7 @@ export default function StickyBanner({
           className={contentClassName}
           style={contentStyle}
         >
-          {children}
+          {children(isOutOfPosition)}
         </div>
       }
     />
