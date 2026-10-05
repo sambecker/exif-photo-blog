@@ -1,6 +1,5 @@
 'use client';
 
-import Container from '@/components/Container';
 import LoaderButton from '@/components/primitives/LoaderButton';
 import StickyBanner from '@/components/StickyBanner';
 import PhotoUploadWithStatus from '@/photo/PhotoUploadWithStatus';
@@ -34,42 +33,33 @@ export default function AdminUploadPanel({
   return (
     <StickyBanner
       isEnabled={isVisible}
-      className={!isVisible ? 'hidden' : undefined}
+      className={clsx(
+        'flex items-center gap-2 pl-4',
+        // Necessary for progress bar placement
+        'relative overflow-hidden',
+      )}
     >
-      {isOutOfPosition => <Container
-        color="gray"
-        padding="tight"
-        rounded={!isOutOfPosition}
-        className={clsx(
-          // Necessary for progress bar placement
-          'relative overflow-hidden',
-          'p-2! pl-4! text-main!',
-          'transition-[border-radius] duration-200',
-        )}
-      >
-        <div className="flex w-full items-center gap-2">
-          <PhotoUploadWithStatus
-            className="overflow-hidden w-full"
-            inputId="admin-upload-panel"
-            inputRef={uploadInputRef}
-            shouldResize={shouldResize}
-            onLastUpload={onLastUpload}
-            showButton={false}
-          />
-          <LoaderButton 
-            icon={<IoCloseSharp
-              size={18}
-              className="translate-y-[0.5px]"
-            />}
-            tooltip={isUploading
-              ? appText.utility.cancel
-              : undefined}
-            onClick={isUploading
-              ? cancelUpload
-              : resetUploadState}
-          />
-        </div>
-      </Container>}
+      <PhotoUploadWithStatus
+        className="overflow-hidden w-full"
+        inputId="admin-upload-panel"
+        inputRef={uploadInputRef}
+        shouldResize={shouldResize}
+        onLastUpload={onLastUpload}
+        showButton={false}
+        showProgressBarBackground={false}
+      />
+      <LoaderButton 
+        icon={<IoCloseSharp
+          size={18}
+          className="translate-y-[0.5px]"
+        />}
+        tooltip={isUploading
+          ? appText.utility.cancel
+          : undefined}
+        onClick={isUploading
+          ? cancelUpload
+          : resetUploadState}
+      />
     </StickyBanner>
   );
 }

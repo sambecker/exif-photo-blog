@@ -24,6 +24,7 @@ export default function PhotoUploadWithStatus({
   showButton = true,
   primary = true,
   expandStatus = false,
+  showProgressBarBackground = true,
   className,
   debug,
 }: {
@@ -35,6 +36,7 @@ export default function PhotoUploadWithStatus({
   showButton?: boolean
   primary?: boolean
   expandStatus?: boolean
+  showProgressBarBackground?: boolean
   className?: string
   debug?: boolean
 }) {
@@ -226,7 +228,8 @@ export default function PhotoUploadWithStatus({
             progress={uploadProgress ?? 0}
             className={clsx(
               'absolute! top-0 left-0 w-full',
-              'h-[2px] bg-medium',
+              'h-[2px]',
+              showProgressBarBackground && 'bg-medium',
             )}
           />}
       </div>}

@@ -8,7 +8,6 @@ export default function Container({
   padding = 'normal',
   centered = true,
   spaceChildren = true,
-  rounded = true,
   ...props
 }: {
   ref?: RefObject<HTMLDivElement | null>
@@ -23,7 +22,6 @@ export default function Container({
     'tight-cta-right-left'
   centered?: boolean
   spaceChildren?: boolean
-  rounded?: boolean
 } & HTMLAttributes<HTMLDivElement>) {
   const getColorClasses = () => {
     switch (color) {
@@ -66,7 +64,7 @@ export default function Container({
       {...props}
       className={clsx(
         'flex flex-col items-center justify-center',
-        rounded && 'rounded-xl',
+        'rounded-xl',
         ...getColorClasses(),
         getPaddingClasses(),
         className,
