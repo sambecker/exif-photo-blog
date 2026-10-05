@@ -16,13 +16,18 @@ export default function EmptyState({
   return (
     <div className={clsx(
       'flex flex-col gap-4 justify-center items-center p-8',
-      includeContainer && 'component-surface shadow-xs',
+      includeContainer && clsx(
+        'min-h-72',
+        'component-surface shadow-xs',
+        'bg-extra-extra-dim',
+      ),
       className,
     )}>
       <div className={clsx(
         'size-14 flex justify-center items-center',
         'text-[1.75rem] text-medium',
         'outline outline-medium rounded-xl shadow-sm',
+        'bg-main dark:bg-extra-dim',
       )}>
         {icon ?? <IoInformationCircleOutline />}
       </div>

@@ -163,15 +163,15 @@ html {
 /* Linework: Medium */
 @utility border-medium {
   @apply
-    border-gray-400/25 dark:border-gray-800
+    border-gray-400/25 dark:border-gray-800/70
 }
 @utility outline-medium {
   @apply
-    outline outline-gray-400/25 dark:outline-gray-800
+    outline-gray-400/25 dark:outline-gray-800/70
 }
 @utility divide-medium {
   @apply
-    divide-gray-400/25 dark:divide-gray-800
+    divide-gray-400/25 dark:divide-gray-800/70
 }
 /* Linework: Dim */
 @utility border-dim {
@@ -194,6 +194,10 @@ html {
 @utility bg-extra-dim {
   @apply
     bg-gray-50 dark:bg-gray-900/60
+}
+@utility bg-extra-extra-dim {
+  @apply
+    bg-gray-50/75 dark:bg-gray-950/75
 }
 @utility bg-invert {
   @apply
@@ -386,7 +390,7 @@ html {
 @layer components {
   .component-surface {
     @apply
-      text-main bg-main outline-medium! rounded-xl
+      text-main bg-main outline! outline-medium! rounded-xl
   }
   .component-surface-light {
     @apply
@@ -400,7 +404,7 @@ html {
   .component-surface-frosted {
     @apply
       text-main
-      outline-medium! /* '!' necessary for radix controls */
+      outline! outline-medium! /* '!' necessary for radix controls */
       bg-white/90 dark:bg-black/80 backdrop-blur-sm
       rounded-xl
   }

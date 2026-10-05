@@ -149,7 +149,7 @@ export default function EntityHover({
               'flex items-center gap-2',
               'px-1.5 py-0.5 rounded-sm',
               'text-white/90 bg-black/40 backdrop-blur-lg',
-              'outline-medium shadow-sm',
+              'outline outline-medium shadow-sm',
               'uppercase text-[0.7rem]',
             )}>
               {caption}

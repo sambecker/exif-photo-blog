@@ -95,7 +95,7 @@ export default function Modal({
               // "-2px" accounts for transparent outline
               'w-[calc(100vw-1.5rem-2px)] sm:w-[min(540px,90vw)]',
               !noPadding && 'p-2',
-              'rounded-xl outline-medium',
+              'rounded-xl outline outline-medium',
               'bg-white dark:bg-black',
               'shadow-gray-900 shadow-2xl/15',
               'dark:shadow-black dark:shadow-2xl/100',

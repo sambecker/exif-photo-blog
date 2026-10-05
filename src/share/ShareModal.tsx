@@ -99,7 +99,7 @@ export default function ShareModal({
         ) : (
           <div className="flex flex-col items-center gap-4 p-4">
             <div className={clsx(
-              'p-3 bg-white rounded-2xl shadow-lg outline-medium',
+              'p-3 bg-white rounded-2xl shadow-lg outline outline-medium',
               'flex items-center justify-center',
             )}>
               <Image

@@ -14,7 +14,7 @@ export default function SwitcherItemMenu({
     <MoreMenu
       {...props}
       className={clsx(
-        'outline-medium',
+        'outline outline-medium',
         className,
       )}
       classNameButton={clsx(

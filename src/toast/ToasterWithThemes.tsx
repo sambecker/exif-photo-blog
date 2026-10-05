@@ -6,6 +6,7 @@ import { Toaster } from 'sonner';
 
 export default function ToasterWithThemes() {
   const { resolvedTheme } = useTheme();
+
   return (
     <Toaster
       theme={resolvedTheme as 'light' | 'dark'}
@@ -16,7 +17,7 @@ export default function ToasterWithThemes() {
             'font-mono text-sm',
             'bg-white dark:bg-black',
             'text-gray-900 dark:text-gray-100',
-            'outline-medium! outline-offset-[-1px] rounded-2xl!',
+            'outline! outline-medium! outline-offset-[-1px] rounded-2xl!',
           ),
         },
       }}

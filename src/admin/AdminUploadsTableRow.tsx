@@ -93,7 +93,7 @@ export default function AdminUploadsTableRow({
           alt={fileId}
           aspectRatio={3.0 / 2.0}
           className={clsx(
-            'bg-dim',
+            'bg-dim outline',
             'max-sm:m-2 max-sm:mr-0',
             'max-sm:outline-medium max-sm:shadow-sm',
             'max-sm:rounded-sm overflow-hidden',
