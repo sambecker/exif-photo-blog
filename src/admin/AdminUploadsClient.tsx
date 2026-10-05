@@ -54,7 +54,7 @@ export default function AdminUploadsClient({
   const [isDeleting, setIsDeleting] = useState(false);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-2">
       <AdminPageHeader
         count={urls.length}
         singular={appText.admin.upload}

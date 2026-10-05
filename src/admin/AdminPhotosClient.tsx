@@ -51,7 +51,7 @@ export default function AdminPhotosClient({
   return (
     <AppGrid
       contentMain={
-        <div className="space-y-4">
+        <div className="space-y-2">
           <AdminPageHeader
             count={photosCount}
             singular={appText.photo.photo}

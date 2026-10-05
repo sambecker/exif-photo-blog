@@ -13,7 +13,7 @@ export default async function AdminRecipesPage() {
     <AppGrid
       contentMain={
         <div className="space-y-6">
-          <div className="space-y-4">
+          <div className="space-y-2">
             <AdminPageHeader
               count={recipes.length}
               singular={appText.category.recipe}

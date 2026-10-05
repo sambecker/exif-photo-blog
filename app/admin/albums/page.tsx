@@ -17,7 +17,7 @@ export default async function AdminTagsPage() {
     <AppGrid
       contentMain={
         <div className="space-y-6">
-          <div className="space-y-4">
+          <div className="space-y-2">
             <AdminPageHeader
               count={albums.length}
               singular={appText.category.album}
