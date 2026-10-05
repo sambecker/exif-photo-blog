@@ -6,6 +6,7 @@ import {
   useId,
   useLayoutEffect,
   useRef,
+  useState,
 } from 'react';
 import { useStickyHeaderContext } from './StickyHeaderProvider';
 
@@ -81,13 +82,9 @@ export default function useStickyHeader(
     ? Math.min(scrollY, trackedHeightAbove)
     : 0;
   const shouldAnimateCollapse = scrollY > trackedHeightAbove;
-  // Persistent banners keep their resting shape until sticky
-  // positioning actually holds them away from that place
-  const stickyTop = offset - collapse;
-  const isOutOfPosition = !tracksNav && scrollY > Math.max(
-    0,
-    naturalTopRef.current - stickyTop,
-  );
+  // Persistent banners are always sticky, so measure whether they're
+  // pinned at their sticky top rather than resting in document flow
+  const [isOutOfPosition, setIsOutOfPosition] = useState(false);
 
   useLayoutEffect(() => {
     if (!isSticky && ref.current) {
@@ -95,6 +92,17 @@ export default function useStickyHeader(
         ref.current.getBoundingClientRect().top + window.scrollY;
     }
   });
+
+  useLayoutEffect(() => {
+    const element = ref.current;
+    if (tracksNav || !element) { return; }
+    const top = parseFloat(getComputedStyle(element).top);
+    const isPinned =
+      scrollY > 0 &&
+      !isNaN(top) &&
+      element.getBoundingClientRect().top <= top + 0.5;
+    setIsOutOfPosition(isPinned);
+  }, [ref, tracksNav, scrollY, collapse, offset, isEnabled]);
 
   const containerStyle: CSSProperties | undefined = isPositioned
     ? {
