@@ -33,6 +33,7 @@ import { FaArrowRight } from 'react-icons/fa6';
 import IconGrSync from '@/components/icons/IconGrSync';
 import { toastSuccess } from '@/toast';
 import ColorDot from '@/photo/color/ColorDot';
+import { getKeyColorFromPhoto } from '@/photo/color/client';
 import InsightsIndicatorDot from './insights/InsightsIndicatorDot';
 import IconFavs from '@/components/icons/IconFavs';
 import IconEdit from '@/components/icons/IconEdit';
@@ -153,6 +154,7 @@ export default function AdminPhotoMenu({
           }),
       })),
     });
+    const keyColor = getKeyColorFromPhoto(photo);
     items.push({
       label: appText.admin.sync,
       labelComplex: <span className="inline-flex items-center gap-2">
@@ -176,10 +178,17 @@ export default function AdminPhotoMenu({
           .then(() => revalidatePhoto?.(photo.id)),
       }, {
         label: appText.admin.syncUpdateColor,
-        icon: <IoMdColorFilter
-          size={16}
-          className="translate-x-[-1px]"
-        />,
+        icon: keyColor
+          ? <ColorDot
+            color={keyColor}
+            includeTooltip={false}
+            size="medium"
+            className="translate-x-[-1px] translate-y-[1px]"
+          />
+          : <IoMdColorFilter
+            size={16}
+            className="translate-x-[-1px]  translate-y-[1px]"
+          />,
         action: () => storeColorDataForPhotoAction(photo.id, { force: true })
           .then(result => {
             revalidatePhoto?.(photo.id);

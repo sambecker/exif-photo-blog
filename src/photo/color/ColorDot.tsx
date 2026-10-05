@@ -70,7 +70,7 @@ export default function ColorDot({
     <div
       className={clsx(
         'relative',
-        size === 'small' ? 'size-2.5' : 'size-4',
+        size === 'small' ? 'size-2.5' : 'size-3.5',
         canCopy && 'cursor-pointer',
         className,
       )}
