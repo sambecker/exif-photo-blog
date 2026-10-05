@@ -36,6 +36,7 @@ import { PATH_FEED_JSON, PATH_RSS_XML } from '@/app/path';
 import SelectPhotosProvider from '@/admin/select/SelectPhotosProvider';
 import AdminBatchEditPanel from '@/admin/select/AdminBatchEditPanel';
 import EditTitlesProvider from '@/admin/edit-titles/EditTitlesProvider';
+import UploadStateProvider from '@/admin/upload/UploadStateProvider';
 import AdminEditTitlesPanel from '@/admin/edit-titles/AdminEditTitlesPanel';
 import Script from 'next/script';
 
@@ -113,60 +114,57 @@ export default function RootLayout({
           areAdminDebugToolsEnabled={ADMIN_DEBUG_TOOLS_ENABLED}
           isAdminAiModelDebugEnabled={ADMIN_AI_MODEL_DEBUG_ENABLED}
         >
-          <AppTextProvider>
-            <SelectPhotosProvider>
-              <EditTitlesProvider>
-                <ThemeColors />
-                <ThemeProvider attribute="class" defaultTheme={DEFAULT_THEME}>
-                  <SwrConfigClient>
-                    <SharedHoverProvider>
-                      <StickyHeaderProvider>
-                        <div className={clsx(
-                          'mx-3 pb-3',
-                          'lg:mx-6 lg:pb-6',
-                          'min-h-dvh flex flex-col',
-                        )}>
-                          <Nav />
-                          <main className="grow">
-                            <ShareModals />
-                            <RecipeModal />
-                            <div className={clsx(
-                              'mb-5',
-                              'space-y-5',
-                            )}>
-                              <AdminUploadPanel
-                                shouldResize={!PRESERVE_ORIGINAL_UPLOADS}
-                                onLastUpload={async () => {
-                                  'use server';
-                                  // Update upload count in admin nav
-                                  revalidatePath('/admin', 'layout');
-                                }}
-                              />
-                              <AdminBatchEditPanel
-                                onBatchActionComplete={async () => {
-                                  'use server';
-                                  // Update upload count in admin nav
-                                  revalidatePath('/admin', 'layout');
-                                }}
-                              />
-                              <AdminEditTitlesPanel />
-                              {children}
-                            </div>
-                          </main>
-                          <Footer />
-                        </div>
-                      </StickyHeaderProvider>
-                      <CommandK />
-                    </SharedHoverProvider>
-                  </SwrConfigClient>
-                  <Analytics debug={false} />
-                  <SpeedInsights debug={false} />
-                  <PhotoEscapeHandler />
-                  <ToasterWithThemes />
-                </ThemeProvider>
-              </EditTitlesProvider>
-            </SelectPhotosProvider>
-          </AppTextProvider>
+          <UploadStateProvider>
+            <AppTextProvider>
+              <SelectPhotosProvider>
+                <EditTitlesProvider>
+                  <ThemeColors />
+                  <ThemeProvider attribute="class" defaultTheme={DEFAULT_THEME}>
+                    <SwrConfigClient>
+                      <SharedHoverProvider>
+                        <StickyHeaderProvider>
+                          <div className={clsx(
+                            'mx-3 pb-3',
+                            'lg:mx-6 lg:pb-6',
+                            'min-h-dvh flex flex-col',
+                          )}>
+                            <Nav />
+                            <main className="grow">
+                              <ShareModals />
+                              <RecipeModal />
+                              <div className={clsx(
+                                'mb-5',
+                                'space-y-5',
+                              )}>
+                                <AdminUploadPanel
+                                  shouldResize={!PRESERVE_ORIGINAL_UPLOADS}
+                                />
+                                <AdminBatchEditPanel
+                                  onBatchActionComplete={async () => {
+                                    'use server';
+                                    // Update upload count in admin nav
+                                    revalidatePath('/admin', 'layout');
+                                  }}
+                                />
+                                <AdminEditTitlesPanel />
+                                {children}
+                              </div>
+                            </main>
+                            <Footer />
+                          </div>
+                        </StickyHeaderProvider>
+                        <CommandK />
+                      </SharedHoverProvider>
+                    </SwrConfigClient>
+                    <Analytics debug={false} />
+                    <SpeedInsights debug={false} />
+                    <PhotoEscapeHandler />
+                    <ToasterWithThemes />
+                  </ThemeProvider>
+                </EditTitlesProvider>
+              </SelectPhotosProvider>
+            </AppTextProvider>
+          </UploadStateProvider>
         </AppStateProvider>
         {PAGE_SCRIPT_URLS.map(url => <Script key={url} src={url} />)}
       </body>

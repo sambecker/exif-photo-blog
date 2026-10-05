@@ -9,7 +9,7 @@ import { Albums } from '@/album';
 import AdminPageHeader from './AdminPageHeader';
 import PhotoUploadWithStatus from '@/photo/PhotoUploadWithStatus';
 import { useAppText } from '@/i18n/state/client';
-import { useAppState } from '@/app/AppState';
+import { useUploadState } from '@/admin/upload/UploadState';
 import EmptyState from '@/components/EmptyState';
 import IconUpload from '@/components/icons/IconUpload';
 
@@ -25,17 +25,15 @@ export default function AdminUploadsClient({
   uniqueTags,
   uniqueAlbums,
   shouldResize,
-  onLastUpload,
 }: {
   urls: StorageListResponse
   uniqueTags: Tags
   uniqueAlbums: Albums
   shouldResize: boolean
-  onLastUpload: () => Promise<void>
 }) {
   const appText = useAppText();
 
-  const { uploadState: { isUploading } } = useAppState();
+  const { uploadState: { isUploading } } = useUploadState();
 
   const [urlAddStatuses, setUrlAddStatuses] = useState<UrlAddStatus[]>(urls);
 
@@ -63,7 +61,6 @@ export default function AdminUploadsClient({
         accessory={<PhotoUploadWithStatus
           inputId="admin-uploads"
           shouldResize={shouldResize}
-          onLastUpload={onLastUpload}
           className="flex-row-reverse min-w-0"
           expandStatus={isUploading}
           primary={urlAddStatuses.length === 0}

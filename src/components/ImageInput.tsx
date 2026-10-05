@@ -8,9 +8,9 @@ import { FiUploadCloud } from 'react-icons/fi';
 import { MAX_IMAGE_SIZE } from '@/platforms/next-image';
 import ProgressButton from './primitives/ProgressButton';
 import ResponsiveText from './primitives/ResponsiveText';
-import { useAppState } from '@/app/AppState';
+import { useUploadState } from '@/admin/upload/UploadState';
 import { useAppText } from '@/i18n/state/client';
-import { getUploadProgress } from '@/admin/upload';
+import { getUploadProgress, UploadBlobArgs } from '@/admin/upload';
 import { isAbortError } from '@/utility/abort';
 
 export default function ImageInput({
@@ -33,14 +33,7 @@ export default function ImageInput({
   id?: string
   className?: string
   onStart?: () => void
-  onBlobReady?: (args: {
-    blob: Blob
-    extension?: string
-    hasMultipleUploads?: boolean
-    isLastBlob?: boolean
-    abortSignal?: AbortSignal
-    onProgress?: (loaded: number, total: number) => void
-  }) => Promise<any>
+  onBlobReady?: (args: UploadBlobArgs) => Promise<any>
   multiple?: boolean
   shouldResize?: boolean
   maxSize?: number
@@ -65,7 +58,7 @@ export default function ImageInput({
     setUploadState,
     resetUploadState,
     startUploadSession,
-  } = useAppState();
+  } = useUploadState();
   
   const appText = useAppText();
 

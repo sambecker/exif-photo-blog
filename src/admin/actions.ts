@@ -19,8 +19,15 @@ import {
   getUniqueTagsCached,
 } from '@/photo/cache';
 import { getAlbumsWithMetaCached } from '@/album/cache';
+import { revalidatePath } from 'next/cache';
 
 export type AdminData = Awaited<ReturnType<typeof getAdminDataAction>>;
+
+export const revalidateAdminAfterUploadAction = async () =>
+  runAuthenticatedAdminServerAction(async () => {
+    // Update upload count in admin nav
+    revalidatePath('/admin', 'layout');
+  });
 
 export const getAdminDataAction = async () =>
   runAuthenticatedAdminServerAction(async () => {

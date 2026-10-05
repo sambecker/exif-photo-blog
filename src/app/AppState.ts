@@ -5,12 +5,10 @@ import {
   SetStateAction,
   createContext,
   use,
-  RefObject,
 } from 'react';
 import { AnimationConfig } from '@/components/AnimateItems';
 import { ShareModalProps } from '@/share';
 import { InsightsIndicatorStatus } from '@/admin/insights';
-import { INITIAL_UPLOAD_STATE, UploadState } from '@/admin/upload';
 import { AdminData } from '@/admin/actions';
 import { RecipeProps } from '@/recipe';
 import { getCountsForCategoriesCachedAction } from '@/category/actions';
@@ -58,14 +56,6 @@ export type AppStateContextType = {
   refreshAdminData?: () => void
   updateAdminData?: (updatedData: Partial<AdminData>) => void
   insightsIndicatorStatus?: InsightsIndicatorStatus
-  // UPLOAD
-  startUpload?: () => Promise<boolean>
-  startUploadSession?: () => AbortSignal
-  cancelUpload?: () => void
-  uploadInputRef?: RefObject<HTMLInputElement | null>
-  uploadState: UploadState
-  setUploadState?: (uploadState: Partial<UploadState>) => void
-  resetUploadState?: () => void
   // VIEW
   isPhotoSetFull?: boolean
   setIsPhotoSetFull?: Dispatch<SetStateAction<boolean>>
@@ -88,8 +78,6 @@ export type AppStateContextType = {
   setShouldDebugRecipeOverlays?: Dispatch<SetStateAction<boolean>>
 } & Partial<AdminData>;
 
-export const AppStateContext = createContext<AppStateContextType>({
-  uploadState: INITIAL_UPLOAD_STATE,
-});
+export const AppStateContext = createContext<AppStateContextType>({});
 
 export const useAppState = () => use(AppStateContext);

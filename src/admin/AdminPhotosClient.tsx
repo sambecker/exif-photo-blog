@@ -10,7 +10,7 @@ import { Photo } from '@/photo';
 import { StorageListResponse } from '@/platforms/storage';
 import AdminUploadsTable from './AdminUploadsTable';
 import { Timezone } from '@/utility/timezone';
-import { useAppState } from '@/app/AppState';
+import { useUploadState } from '@/admin/upload/UploadState';
 import PhotoUploadWithStatus from '@/photo/PhotoUploadWithStatus';
 import { pluralize } from '@/utility/string';
 import IconBroom from '@/components/icons/IconBroom';
@@ -26,7 +26,6 @@ export default function AdminPhotosClient({
   blobPhotoUrls,
   shouldResize,
   hasAiContentGeneration,
-  onLastUpload,
   infiniteScrollInitial,
   infiniteScrollMultiple,
   timezone,
@@ -38,13 +37,12 @@ export default function AdminPhotosClient({
   blobPhotoUrls: StorageListResponse
   shouldResize: boolean
   hasAiContentGeneration: boolean
-  onLastUpload: () => Promise<void>
   infiniteScrollInitial: number
   infiniteScrollMultiple: number
   timezone: Timezone
   debugColorData?: boolean
 }) {
-  const { uploadState: { isUploading } } = useAppState();
+  const { uploadState: { isUploading } } = useUploadState();
 
   const appText = useAppText();
 
@@ -96,7 +94,6 @@ export default function AdminPhotosClient({
               <PhotoUploadWithStatus
                 inputId="admin-photos"
                 shouldResize={shouldResize}
-                onLastUpload={onLastUpload}
                 className="flex-row-reverse min-w-0"
                 expandStatus={isUploading}
               />

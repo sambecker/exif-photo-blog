@@ -2,7 +2,6 @@ import { getStoragePhotoUrlsNoStore } from '@/platforms/storage/cache';
 import { getPhotos, getPhotosInNeedOfUpdateCount } from '@/photo/query';
 import { getPhotosMetaCached } from '@/photo/cache';
 import AdminPhotosClient from '@/admin/AdminPhotosClient';
-import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { TIMEZONE_COOKIE_NAME } from '@/utility/timezone';
 import {
@@ -48,11 +47,6 @@ export default async function AdminPhotosPage() {
       photosCountNeedsSync,
       shouldResize: !PRESERVE_ORIGINAL_UPLOADS,
       hasAiContentGeneration: AI_CONTENT_GENERATION_ENABLED,
-      onLastUpload: async () => {
-        'use server';
-        // Update upload visibility in admin nav
-        revalidatePath('/admin', 'layout');
-      },
       blobPhotoUrls,
       infiniteScrollInitial: INFINITE_SCROLL_INITIAL_ADMIN_PHOTOS,
       infiniteScrollMultiple: INFINITE_SCROLL_MULTIPLE_ADMIN_PHOTOS,

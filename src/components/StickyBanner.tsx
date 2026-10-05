@@ -9,13 +9,13 @@ export default function StickyBanner({
   ref: surfaceRef,
   children,
   className,
-  isEnabled = true,
+  isVisible,
   ...props
 }: {
   ref?: RefObject<HTMLDivElement | null>
   children: ReactNode
   className?: string
-  isEnabled?: boolean
+  isVisible: boolean
 } & HTMLAttributes<HTMLDivElement>) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -25,17 +25,14 @@ export default function StickyBanner({
     contentClassName,
     contentStyle,
     isOutOfPosition,
-  } = useStickyHeader(ref, isEnabled, false);
+  } = useStickyHeader(ref, isVisible, false);
+
+  if (!isVisible) { return null; }
 
   return (
     <AppGrid
       containerRef={ref}
-      className={clsx(
-        containerClassName,
-        // Net 2px so the nav doesn't clip the card's top edge
-        // '-mt-2 pt-2.5',
-        !isEnabled && 'hidden',
-      )}
+      className={containerClassName}
       style={containerStyle}
       contentMain={
         <div
@@ -51,6 +48,7 @@ export default function StickyBanner({
               // Square off once stuck so the banner meets the content below
               'transition-[border-radius] duration-200',
               isOutOfPosition ? 'rounded-none' : 'rounded-xl',
+              // Move 1px so nav doesn't clip the card's top border
               isOutOfPosition ? 'outline-none!' : 'translate-y-px',
               'text-gray-900! dark:text-gray-100!',
               'bg-gray-100/90! dark:bg-gray-900/70!',

@@ -11,6 +11,7 @@ import {
   PATH_ADMIN_UPLOADS,
 } from '@/app/path';
 import { useAppState } from '@/app/AppState';
+import { useUploadState } from '@/admin/upload/UploadState';
 import { IoArrowDown, IoArrowUp } from 'react-icons/io5';
 import { clsx } from 'clsx/lite';
 import AdminAppInfoIcon from './AdminAppInfoIcon';
@@ -63,10 +64,11 @@ export default function AdminAppMenu({
     tagsCount = 0,
     recipesCount = 0,
     isLoadingAdminData,
-    startUpload,
     refreshAdminData,
     clearAuthStateAndRedirectIfNecessary,
   } = useAppState();
+
+  const { startUpload } = useUploadState();
 
   const {
     isSelectingPhotos,

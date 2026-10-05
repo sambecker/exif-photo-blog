@@ -49,8 +49,9 @@ export default function AdminEditTitlesPanel() {
     }
   }, [isEditingTitles]);
 
-  return isEditingTitles
-    ? <StickyBanner
+  return (
+    <StickyBanner
+      isVisible={Boolean(isEditingTitles)}
       ref={refNote}
       tabIndex={-1}
       className={clsx(
@@ -110,5 +111,5 @@ export default function AdminEditTitlesPanel() {
         disabled={isPerformingUpdate}
       />
     </StickyBanner>
-    : null;
+  );
 }

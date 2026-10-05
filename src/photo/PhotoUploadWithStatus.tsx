@@ -1,98 +1,56 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
-import { PATH_ADMIN_UPLOADS, pathForAdminUploadUrl } from '@/app/path';
 import ImageInput from '../components/ImageInput';
 import { clsx } from 'clsx/lite';
-import { useAppState } from '@/app/AppState';
-import { RefObject, useTransition, useRef, useEffect } from 'react';
-import Spinner from '@/components/Spinner';
-import ResponsiveText from '@/components/primitives/ResponsiveText';
+import { useUploadState } from '@/admin/upload/UploadState';
+import { RefObject, useEffect } from 'react';
 import { useAppText } from '@/i18n/state/client';
-import { uploadTempPhotoFromClient } from './storage';
-import { isAbortError } from '@/utility/abort';
-import ProgressBar from '@/components/primitives/ProgressBar';
 import LoaderButton from '@/components/primitives/LoaderButton';
 import { IoCloseSharp } from 'react-icons/io5';
+import PhotoUploadStatus from './PhotoUploadStatus';
 
 export default function PhotoUploadWithStatus({
   inputRef,
   inputId,
   shouldResize,
-  onLastUpload,
   showStatusText = true,
   showButton = true,
   primary = true,
   expandStatus = false,
   showProgressBarBackground = true,
   className,
-  debug,
 }: {
   inputRef?: RefObject<HTMLInputElement | null>
   inputId: string
   shouldResize: boolean
-  onLastUpload?: () => Promise<void>
   showStatusText?: boolean
   showButton?: boolean
   primary?: boolean
   expandStatus?: boolean
   showProgressBarBackground?: boolean
   className?: string
-  debug?: boolean
 }) {
   const {
     uploadState: {
       isUploading,
       uploadError,
-      fileUploadName,
-      fileUploadIndex,
-      filesLength,
-      uploadProgress,
-      debugDownload,
     },
-    setUploadState,
-    resetUploadState,
+    setHideUploadPanel,
     cancelUpload,
-  } = useAppState();
+    onUploadStart,
+    onUploadBlobReady,
+    isFinishingUpload,
+  } = useUploadState();
 
   const appText = useAppText();
-
-  const router = useRouter();
-
-  const pathname = usePathname();
 
   useEffect(() => {
     // Hide upload panel while button is shown
     if (showButton) {
-      setUploadState?.({ hideUploadPanel: true });
-      return () => { setUploadState?.({ hideUploadPanel: false }); };
+      setHideUploadPanel?.(true);
+      return () => { setHideUploadPanel?.(false); };
     }
-  }, [setUploadState, showButton]);
-
-  const shouldResetUploadStateAfterPending = useRef(false);
-  const [isPending, startTransition] = useTransition();
-  // Only reset upload state after route transition completes
-  useEffect(() => {
-    if (!isPending && shouldResetUploadStateAfterPending.current) {
-      resetUploadState?.();
-      shouldResetUploadStateAfterPending.current = false;
-    }
-  }, [isPending, resetUploadState]);
-  // Reset upload state when component unmounts
-  // when not reset during route transition
-  useEffect(() => {
-    return () => {
-      if (shouldResetUploadStateAfterPending.current) {
-        resetUploadState?.();
-      }
-    };
-  }, [resetUploadState]);
-
-  const isFinishing = isPending && shouldResetUploadStateAfterPending.current;
-
-  const uploadStatusText = filesLength > 1
-    ? appText.utility.paginate(fileUploadIndex + 1, filesLength)
-    : undefined;
+  }, [setHideUploadPanel, showButton]);
 
   const showCancel = isUploading && !uploadError;
 
@@ -111,71 +69,15 @@ export default function PhotoUploadWithStatus({
           ref={inputRef}
           id={inputId}
           shouldResize={shouldResize}
-          disabled={isPending}
-          onStart={() => {
-            setUploadState?.({
-              isUploading: true,
-              uploadError: '',
-              uploadProgress: 0,
-            });
-          }}
-          onBlobReady={async ({
-            blob,
-            extension, 
-            hasMultipleUploads,
-            isLastBlob,
-            abortSignal,
-            onProgress,
-          }) => {
-            if (debug) {
-              setUploadState?.({
-                isUploading: false,
-                uploadError: '',
-                debugDownload: {
-                  href: URL.createObjectURL(blob),
-                  fileName: `debug.${extension}`,
-                },
-              });
-            } else {
-              return uploadTempPhotoFromClient(
-                blob,
-                extension,
-                { abortSignal, onProgress },
-              )
-                .then(async url => {
-                  if (isLastBlob) {
-                    await onLastUpload?.();
-                    shouldResetUploadStateAfterPending.current = true;
-                    if (pathname === PATH_ADMIN_UPLOADS) {
-                      setUploadState?.({ isUploading: false });
-                      router.refresh();
-                    } else {
-                      startTransition(() => hasMultipleUploads
-                        ? router.push(PATH_ADMIN_UPLOADS)
-                        : router.push(pathForAdminUploadUrl(url)));
-                    }
-                  }
-                })
-                .catch(error => {
-                  if (isAbortError(error)) {
-                    throw error;
-                  }
-                  console.error(error);
-                  setUploadState?.({
-                    isUploading: false,
-                    uploadError: error.message,
-                  });
-                });
-            }
-          }}
+          onStart={onUploadStart}
+          onBlobReady={onUploadBlobReady}
           showButton={showButton}
           primary={primary}
-          debug={debug}
         />
         {showButton && showCancel &&
           <LoaderButton
-            className={isFinishing ? undefined : 'cursor-pointer'}
-            disabled={isFinishing}
+            className={isFinishingUpload ? undefined : 'cursor-pointer'}
+            disabled={isFinishingUpload}
             onClick={cancelUpload}
             icon={<IoCloseSharp
               size={18}
@@ -185,62 +87,12 @@ export default function PhotoUploadWithStatus({
             {appText.utility.cancel}
           </LoaderButton>}
       </div>
-      {showStatusText && <div className={clsx(
-        'flex flex-col gap-1.5 min-w-0 overflow-hidden',
-        !showButton && 'w-full',
-        expandStatus && 'grow text-left',
-      )}>
-        <div className="flex w-full items-center gap-4 overflow-hidden">
-          {isUploading && !showButton &&
-            <Spinner
-              className="text-dim translate-y-[1px]"
-              color="text"
-              size={14}
-            />}
-          {uploadError
-            ? <span className="text-error">
-              {uploadError}
-            </span>
-            : <span className="truncate">
-              {isUploading
-                ? isFinishing
-                  ? <>
-                    {appText.utility.finishing}
-                  </>
-                  : <>
-                    {!showButton && uploadStatusText
-                      ? <>
-                        <ResponsiveText shortText={uploadStatusText}>
-                          {appText.utility.uploading} {uploadStatusText}
-                        </ResponsiveText>
-                        {': '}
-                        {fileUploadName}
-                      </>
-                      : <ResponsiveText shortText={fileUploadName}>
-                        {appText.utility.uploading} {fileUploadName}
-                      </ResponsiveText>}
-                  </>
-                : !showButton && <>Initializing</>}
-            </span>}
-        </div>
-        {!showButton && isUploading && !isFinishing && !uploadError &&
-          <ProgressBar
-            progress={uploadProgress ?? 0}
-            className={clsx(
-              'absolute! top-0 left-0 w-full',
-              'h-[2px]',
-              showProgressBarBackground && 'bg-medium',
-            )}
-          />}
-      </div>}
-      {debug && debugDownload &&
-        <a
-          className="block"
-          href={debugDownload.href}
-          download={debugDownload.fileName}
-        >
-          Download
-        </a>}
+      {showStatusText &&
+        <PhotoUploadStatus
+          showButton={showButton}
+          expandStatus={expandStatus}
+          showProgressBarBackground={showProgressBarBackground}
+        />}
     </div>
   );
 };

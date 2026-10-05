@@ -302,9 +302,10 @@ export default function AdminBatchEditPanelClient({
       readOnly={isSelectingAllPhotos && selectAllCount === undefined}
     />;
 
-  const shouldShowPanel =
+  const shouldShowPanel = Boolean(
     isSelectingPhotos &&
-    canCurrentPageSelectPhotos;
+    canCurrentPageSelectPhotos,
+  );
 
   useEffect(() => {
     // Steal focus from Admin Menu to hide tooltip
@@ -313,8 +314,9 @@ export default function AdminBatchEditPanelClient({
     }
   }, [isSelectingPhotos]);
 
-  return shouldShowPanel
-    ? <StickyBanner
+  return (
+    <StickyBanner
+      isVisible={shouldShowPanel}
       ref={refNote}
       className="flex flex-col gap-2"
     >
@@ -346,5 +348,5 @@ export default function AdminBatchEditPanelClient({
         {renderSelectAll}
       </div>
     </StickyBanner>
-    : null;
+  );
 }

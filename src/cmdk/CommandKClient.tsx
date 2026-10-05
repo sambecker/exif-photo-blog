@@ -51,6 +51,7 @@ import { useTheme } from 'next-themes';
 import { BiDesktop, BiLockAlt, BiMoon, BiSun } from 'react-icons/bi';
 import { IoClose, IoInvertModeSharp } from 'react-icons/io5';
 import { useAppState } from '@/app/AppState';
+import { useUploadState } from '@/admin/upload/UploadState';
 import { RiToolsFill } from 'react-icons/ri';
 import { signOutAction } from '@/auth/actions';
 import {
@@ -179,7 +180,6 @@ export default function CommandKClient({
     clearAuthStateAndRedirectIfNecessary,
     isCommandKOpen: isOpen,
     nextCommandKQuery,
-    startUpload,
     invalidateSwr,
     photosCountTotal,
     photosCountHidden = 0,
@@ -207,6 +207,8 @@ export default function CommandKClient({
     setShouldDebugInsights,
     setShouldDebugRecipeOverlays,
   } = useAppState();
+
+  const { startUpload } = useUploadState();
 
   const {
     isSelectingPhotos,

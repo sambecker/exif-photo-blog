@@ -1,8 +1,15 @@
+export interface UploadBlobArgs {
+  blob: Blob
+  extension?: string
+  hasMultipleUploads?: boolean
+  isLastBlob?: boolean
+  abortSignal?: AbortSignal
+  onProgress?: (loaded: number, total: number) => void
+}
+
 export interface UploadState {
   isUploading: boolean
   uploadError: string
-  debugDownload?: { href: string, fileName: string }
-  hideUploadPanel?: boolean
   fileUploadName: string
   fileUploadIndex: number
   filesLength: number
@@ -12,7 +19,6 @@ export interface UploadState {
 export const INITIAL_UPLOAD_STATE: UploadState = {
   isUploading: false,
   uploadError: '',
-  hideUploadPanel: false,
   fileUploadName: '',
   fileUploadIndex: 0,
   filesLength: 0,

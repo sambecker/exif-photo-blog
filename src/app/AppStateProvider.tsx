@@ -5,7 +5,6 @@ import {
   useEffect,
   ReactNode,
   useCallback,
-  useRef,
 } from 'react';
 import { AppStateContext } from '../app/AppState';
 import { AnimationConfig } from '@/components/AnimateItems';
@@ -28,7 +27,6 @@ import {
 } from '@/auth';
 import { useRouter, usePathname } from 'next/navigation';
 import { isPathProtected, PATH_ROOT } from '@/app/path';
-import { INITIAL_UPLOAD_STATE, UploadState } from '@/admin/upload';
 import { RecipeProps } from '@/recipe';
 import { nanoid } from 'nanoid';
 import { toastSuccess } from '@/toast';
@@ -101,10 +99,6 @@ export default function AppStateProvider({
   // ADMIN
   const [adminUpdateTimes, setAdminUpdateTimes] =
     useState<Date[]>([]);
-  // UPLOAD
-  const uploadInputRef = useRef<HTMLInputElement>(null);
-  const uploadAbortRef = useRef<AbortController | null>(null);
-  const [uploadState, _setUploadState] = useState(INITIAL_UPLOAD_STATE);
   // VIEW
   const [isPhotoSetFull, setIsPhotoSetFull] = useState(false);
   // DEBUG
@@ -224,38 +218,6 @@ export default function AppStateProvider({
     }
   }, [router, pathname]);
 
-  // Returns false when upload is cancelled
-  const startUpload = useCallback(() =>
-    new Promise<boolean>(resolve => {
-      if (uploadInputRef.current) {
-        uploadInputRef.current.value = '';
-        uploadInputRef.current.click();
-        uploadInputRef.current.oninput = () => resolve(true);
-        uploadInputRef.current.oncancel = () => resolve(false);
-      } else {
-        resolve(false);
-      }
-    })
-  , []);
-  const setUploadState = useCallback((uploadState: Partial<UploadState>) => {
-    _setUploadState(prev => ({ ...prev, ...uploadState }));
-  }, []);
-  const resetUploadState = useCallback(() => {
-    _setUploadState(INITIAL_UPLOAD_STATE);
-  }, []);
-  const startUploadSession = useCallback(() => {
-    uploadAbortRef.current = new AbortController();
-    return uploadAbortRef.current.signal;
-  }, []);
-  const cancelUpload = useCallback(() => {
-    uploadAbortRef.current?.abort();
-    uploadAbortRef.current = null;
-    if (uploadInputRef.current) {
-      uploadInputRef.current.value = '';
-    }
-    _setUploadState(INITIAL_UPLOAD_STATE);
-  }, []);
-
   return (
     <AppStateContext.Provider
       value={{
@@ -297,14 +259,6 @@ export default function AppStateProvider({
         isLoadingAdminData,
         refreshAdminData,
         updateAdminData,
-        // UPLOAD
-        uploadInputRef,
-        startUpload,
-        startUploadSession,
-        cancelUpload,
-        uploadState,
-        setUploadState,
-        resetUploadState,
         // VIEW
         isPhotoSetFull,
         setIsPhotoSetFull,
