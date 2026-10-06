@@ -8,6 +8,12 @@ export const {
   signOut,
   auth,
 } = NextAuth({
+  // `next build` prerenders /sign-in with no request host, which makes
+  // Auth.js log UntrustedHost. Trust the host only for that build.
+  // Runtime checks are unchanged, and no session cookie is present.
+  ...process.env.NEXT_PHASE === 'phase-production-build' && {
+    trustHost: true,
+  },
   providers: [
     Credentials({
       async authorize({ email, password }) {

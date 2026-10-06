@@ -84,11 +84,20 @@ export const safelyQuery = async <T>(
         );
         throw e;
       }
+    } else if (
+      !process.env.POSTGRES_URL &&
+      isDatabaseConnectionRefused(e)
+    ) {
+      // Template installs have no database. Callers catch this
+      // and render empty states. Skip the connection stack trace.
+      throw e;
     } else {
       // Avoid re-logging common errors on initial installation
       if (/connect ECONNREFUSED/i.test(e.message)) {
         console.log('Database connection error');
-      } else if (e.message !== 'The server does not support SSL connections') {
+      } else if (
+        e.message !== 'The server does not support SSL connections'
+      ) {
         console.log(`SQL query error (${queryLabel}): ${e.message}`, {
           error: e,
         });
@@ -109,4 +118,19 @@ export const safelyQuery = async <T>(
   }
 
   return result;
+};
+
+// Node reports a refused localhost connect (IPv4 and IPv6) as an
+// AggregateError whose message is empty and whose code is ECONNREFUSED.
+const isDatabaseConnectionRefused = (error: unknown): boolean => {
+  if (!error || typeof error !== 'object') return false;
+  const candidate = error as {
+    message?: string
+    code?: string
+    errors?: unknown
+  };
+  if (candidate.code === 'ECONNREFUSED') return true;
+  if (/connect ECONNREFUSED/i.test(candidate.message ?? '')) return true;
+  return Array.isArray(candidate.errors) &&
+    candidate.errors.some(isDatabaseConnectionRefused);
 };
