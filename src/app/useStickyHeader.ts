@@ -18,7 +18,11 @@ const Z_INDEX_TOP_LEVEL = 40;
 // Nav-tracking levels hide/show together based on scroll direction.
 // Persistent levels stay visible, shifting up when levels above hide.
 // Apply container props to the element referenced by `ref`,
-// and content props to a child element that masks content beneath.
+// and content props to the child that masks content beneath.
+// The container is pointer-events-none so a header that has slid
+// away does not leave a stationary hit target. The moving child
+// opts back in; don't re-enable pointer events on a wrapper that
+// stays put (it will cover sticky banners underneath).
 export default function useStickyHeader(
   ref: RefObject<HTMLElement | null>,
   isEnabled = true,
@@ -112,7 +116,11 @@ export default function useStickyHeader(
     : undefined;
 
   const contentStyle: CSSProperties | undefined = isPositioned && tracksNav
-    ? { transform: `translateY(${isHidden ? -(height + offset) : 0}px)` }
+    ? {
+      transform: `translateY(${isHidden ? -(height + offset) : 0}px)`,
+      // No hit target once the layer has slid away
+      ...isHidden && { pointerEvents: 'none' },
+    }
     : undefined;
 
   return {
@@ -123,6 +131,7 @@ export default function useStickyHeader(
     ),
     containerStyle,
     contentClassName: clsx(
+      tracksNav && 'pointer-events-auto',
       tracksNav && shouldAnimate && 'transition-transform duration-200',
     ),
     contentStyle,

@@ -28,7 +28,8 @@ export default function StickySubNav({
       containerRef={ref}
       className={containerClassName}
       style={containerStyle}
-      classNameMain="pointer-events-auto"
+      // Stationary column would cover content after the nav slides away
+      classNameMain="pointer-events-none!"
       contentMain={
         <div
           className={clsx(

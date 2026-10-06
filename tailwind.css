@@ -340,6 +340,11 @@ html {
       disabled:border-gray-200 disabled:dark:border-gray-700
       border-gray-900 dark:border-gray-100
       hover:border-gray-900 dark:hover:border-gray-100
+      /* Keep the disabled colors on hover. Dark hover otherwise
+         paints black type on gray-900. */
+      disabled:hover:text-dim
+      disabled:hover:bg-gray-100 dark:disabled:hover:bg-gray-900
+      disabled:hover:border-gray-200 dark:disabled:hover:border-gray-700
       active:bg-gray-700 active:border-gray-700
       active:dark:bg-gray-300 active:dark:border-gray-300
       shadow-none
