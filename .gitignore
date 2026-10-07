@@ -44,3 +44,6 @@ OPTIMIZACION-IMAGENES.md
 
 # Agent workflow artifacts
 .agents/
+
+# Local git worktrees
+.worktrees/

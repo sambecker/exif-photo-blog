@@ -58,12 +58,12 @@ const loadEnvLocal = () => {
 
 loadEnvLocal();
 
-import { query } from '../src/platforms/postgres';
-// Reuse the Task-1 parameterized R2 put targeting the web bucket. We import
-// directly from the provider module (not the storage barrel) because the
-// barrel transitively pulls in React UI modules via `@/app/path`, which can't
-// run in a plain Node script.
-import { cloudflareR2Put } from '../src/platforms/storage/cloudflare-r2';
+// NOTE: `../src/platforms/postgres` and `../src/platforms/storage/cloudflare-r2`
+// are imported DYNAMICALLY inside `migrate()` (after `loadEnvLocal()` runs).
+// Static ESM imports are hoisted and evaluated before the top-level
+// `loadEnvLocal()` call, which would make `postgres.ts` build its connection
+// Pool while `process.env.POSTGRES_URL` is still empty (→ ECONNREFUSED on
+// 127.0.0.1:5432). Dynamic import defers that evaluation until env is loaded.
 
 interface PhotoRow {
   id: string
@@ -103,6 +103,12 @@ async function migrate() {
   console.log(
     `\nBlob → parker-web migration (${APPLY ? 'APPLY' : 'DRY-RUN'})\n`,
   );
+
+  // Dynamic imports AFTER loadEnvLocal() so env-dependent module init
+  // (e.g. the pg Pool in postgres.ts) sees the loaded variables.
+  const { query } = await import('../src/platforms/postgres');
+  const { cloudflareR2Put } =
+    await import('../src/platforms/storage/cloudflare-r2');
 
   if (!process.env.NEXT_PUBLIC_CLOUDFLARE_R2_WEB_BUCKET || !WEB_BASE_URL) {
     console.error(
