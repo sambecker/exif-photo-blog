@@ -6,7 +6,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { Tags } from '@/tag';
 import AdminUploadsTable from './AdminUploadsTable';
 import { Albums } from '@/album';
-import AdminPageHeader from './AdminPageHeader';
+import AdminPage from './AdminPage';
+import { pluralize } from '@/utility/string';
 import PhotoUploadWithStatus from '@/photo/PhotoUploadWithStatus';
 import { useAppText } from '@/i18n/state/client';
 import { useUploadState } from '@/admin/upload/UploadState';
@@ -52,20 +53,21 @@ export default function AdminUploadsClient({
   const [isDeleting, setIsDeleting] = useState(false);
 
   return (
-    <div className="space-y-2">
-      <AdminPageHeader
-        count={urls.length}
-        singular={appText.admin.upload}
-        plural={appText.admin.uploadPlural}
-        hideLabel={isUploading}
-        accessory={<PhotoUploadWithStatus
-          inputId="admin-uploads"
-          shouldResize={shouldResize}
-          className="flex-row-reverse min-w-0"
-          expandStatus={isUploading}
-          primary={urlAddStatuses.length === 0}
-        />}
-      />
+    <AdminPage
+      title={pluralize(
+        urls.length,
+        appText.admin.upload,
+        appText.admin.uploadPlural,
+      )}
+      hideTitle={isUploading}
+      accessory={<PhotoUploadWithStatus
+        inputId="admin-uploads"
+        shouldResize={shouldResize}
+        className="flex-row-reverse min-w-0"
+        expandStatus={isUploading}
+        primary={urlAddStatuses.length === 0}
+      />}
+    >
       {urlAddStatuses.length === 0
         ? <EmptyState icon={<IconUpload />}>
           <div className="max-w-xs text-center space-y-1">
@@ -78,7 +80,7 @@ export default function AdminUploadsClient({
             </div>
           </div>
         </EmptyState>
-        : <>
+        : <div className="space-y-2">
           {(urls.length > 1 || isAdding) &&
             <AdminBatchUploadActions {...{
               uploadUrls,
@@ -98,7 +100,7 @@ export default function AdminUploadsClient({
             isDeleting,
             setIsDeleting,
           }} />
-        </>}
-    </div>
+        </div>}
+    </AdminPage>
   );
 }

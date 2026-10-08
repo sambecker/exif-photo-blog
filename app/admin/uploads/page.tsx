@@ -1,5 +1,4 @@
 import { getStorageUploadUrlsNoStore } from '@/platforms/storage/cache';
-import AppGrid from '@/components/AppGrid';
 import { getUniqueTagsCached } from '@/photo/cache';
 import { getAlbumsWithMetaCached } from '@/album/cache';
 import AdminUploadsClient from '@/admin/AdminUploadsClient';
@@ -18,14 +17,11 @@ export default async function AdminUploadsPage() {
     : [[], []];
 
   return (
-    <AppGrid
-      contentMain={
-        <AdminUploadsClient {...{
-          urls,
-          uniqueAlbums,
-          uniqueTags,
-          shouldResize: !PRESERVE_ORIGINAL_UPLOADS,
-        }} />}
-    />
+    <AdminUploadsClient {...{
+      urls,
+      uniqueAlbums,
+      uniqueTags,
+      shouldResize: !PRESERVE_ORIGINAL_UPLOADS,
+    }} />
   );
 }

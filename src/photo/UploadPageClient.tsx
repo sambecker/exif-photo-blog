@@ -1,6 +1,6 @@
 'use client';
 
-import AdminChildPage from '@/components/AdminChildPage';
+import AdminPage from '@/admin/AdminPage';
 import { PATH_ADMIN_UPLOADS } from '@/app/path';
 import {
   PhotoFormData,
@@ -64,7 +64,7 @@ export default function UploadPageClient({
   }), [formDataFromExif]);
 
   return (
-    <AdminChildPage
+    <AdminPage
       backPath={PATH_ADMIN_UPLOADS}
       backLabel="Uploads"
       breadcrumb={pending && updatedTitle
@@ -94,6 +94,6 @@ export default function UploadPageClient({
         onFormStatusChange={setIsPending}
         onFormDataChange={setShouldConfirmAiTextGeneration}
       />
-    </AdminChildPage>
+    </AdminPage>
   );
 }

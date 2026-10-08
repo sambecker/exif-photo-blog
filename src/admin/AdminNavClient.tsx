@@ -20,7 +20,6 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { FaRegClock } from 'react-icons/fa';
 import AdminAppInfoIcon from './AdminAppInfoIcon';
-import AdminInfoNav from './AdminInfoNav';
 import LinkWithLoaderBackground from '@/components/LinkWithLoaderBackground';
 import MaskedScroll from '@/components/MaskedScroll';
 import StickySubNav from '@/components/StickySubNav';
@@ -105,18 +104,13 @@ export default function AdminNavClient({
           />
         </div>
       </StickySubNav>
-      {(shouldShowBanner || isPathAdminInfo(pathname)) &&
+      {shouldShowBanner &&
         <AppGrid
           contentMain={
-            <div className="space-y-4">
-              {shouldShowBanner &&
-                <Note icon={<FaRegClock className="shrink-0" />}>
-                  Photo updates detected—they may take several minutes to show
-                  up for visitors
-                </Note>}
-              {isPathAdminInfo(pathname) &&
-                <AdminInfoNav {...{ includeInsights }} />}
-            </div>
+            <Note icon={<FaRegClock className="shrink-0" />}>
+              Photo updates detected—they may take several minutes to show
+              up for visitors
+            </Note>
           }
         />}
     </>

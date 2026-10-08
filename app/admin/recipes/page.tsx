@@ -1,8 +1,8 @@
-import AdminPageHeader from '@/admin/AdminPageHeader';
+import AdminPage from '@/admin/AdminPage';
 import AdminRecipeTable from '@/admin/AdminRecipeTable';
-import AppGrid from '@/components/AppGrid';
 import { getAppText } from '@/i18n/state/server';
 import { getUniqueRecipes } from '@/photo/query';
+import { pluralize } from '@/utility/string';
 
 export default async function AdminRecipesPage() {
   const recipes = await getUniqueRecipes().catch(() => []);
@@ -10,18 +10,14 @@ export default async function AdminRecipesPage() {
   const appText = await getAppText();
 
   return (
-    <AppGrid
-      contentMain={
-        <div className="space-y-6">
-          <div className="space-y-2">
-            <AdminPageHeader
-              count={recipes.length}
-              singular={appText.category.recipe}
-              plural={appText.category.recipePlural}
-            />
-            <AdminRecipeTable {...{ recipes }} />
-          </div>
-        </div>}
-    />
+    <AdminPage
+      title={pluralize(
+        recipes.length,
+        appText.category.recipe,
+        appText.category.recipePlural,
+      )}
+    >
+      <AdminRecipeTable {...{ recipes }} />
+    </AdminPage>
   );
 }

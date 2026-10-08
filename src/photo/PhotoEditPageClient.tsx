@@ -1,6 +1,6 @@
 'use client';
 
-import AdminChildPage from '@/components/AdminChildPage';
+import AdminPage from '@/admin/AdminPage';
 import { Photo } from '.';
 import { PATH_ADMIN_PHOTOS } from '@/app/path';
 import {
@@ -68,7 +68,7 @@ export default function PhotoEditPageClient({
     useState<Partial<PhotoFormData>>();
 
   return (
-    <AdminChildPage
+    <AdminPage
       backPath={PATH_ADMIN_PHOTOS}
       backLabel="Photos"
       breadcrumb={pending && updatedTitle
@@ -109,6 +109,6 @@ export default function PhotoEditPageClient({
         onFormStatusChange={setIsPending}
         onFormDataChange={setShouldConfirmAiTextGeneration}
       />
-    </AdminChildPage>
+    </AdminPage>
   );
 };

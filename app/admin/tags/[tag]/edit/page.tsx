@@ -1,4 +1,4 @@
-import AdminChildPage from '@/components/AdminChildPage';
+import AdminPage from '@/admin/AdminPage';
 import { redirect } from 'next/navigation';
 import { getPhotosCached, getPhotosMetaCached } from '@/photo/cache';
 import AdminTagForm from '@/admin/AdminTagForm';
@@ -30,7 +30,7 @@ export default async function TagPageEdit({
   if (count === 0) { redirect(PATH_ADMIN); }
 
   return (
-    <AdminChildPage
+    <AdminPage
       backPath={PATH_ADMIN_TAGS}
       backLabel="Tags"
       breadcrumb={<AdminTagBadge {...{ tag, count, hideBadge: true }} />}
@@ -42,6 +42,6 @@ export default async function TagPageEdit({
           moreLink={pathForTag(tag)}
         />
       </AdminTagForm>
-    </AdminChildPage>
+    </AdminPage>
   );
 };

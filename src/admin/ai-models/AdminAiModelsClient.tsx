@@ -15,7 +15,7 @@ import { HiSparkles } from 'react-icons/hi';
 import { FiArrowDown, FiArrowLeft } from 'react-icons/fi';
 import { BiShuffle } from 'react-icons/bi';
 import { LuExpand } from 'react-icons/lu';
-import AppGrid from '@/components/AppGrid';
+import AdminPage from '@/admin/AdminPage';
 import LoaderButton from '@/components/primitives/LoaderButton';
 import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import Spinner from '@/components/Spinner';
@@ -30,6 +30,7 @@ import {
   AI_MODEL_ANNOTATIONS,
   AI_MODEL_COLUMNS_DEFAULT,
   AI_MODEL_OPTIONS,
+  AI_MODELS_PAGE_TITLE,
   AiModelResult,
 } from '.';
 import { generateAiTextForModelsAction } from './actions';
@@ -311,8 +312,8 @@ export default function AdminAiModelsClient({
   };
 
   return (
-    <AppGrid
-      contentMain={<div className="space-y-4">
+    <AdminPage title={AI_MODELS_PAGE_TITLE}>
+      <div className="space-y-4">
         {!hasOpenAiSecretKey &&
           <WarningNote>
             Comparisons address OpenAI directly, which requires
@@ -388,7 +389,7 @@ export default function AdminAiModelsClient({
             </Fragment>)}
           </div>
         </div>
-      </div>}
-    />
+      </div>
+    </AdminPage>
   );
 }

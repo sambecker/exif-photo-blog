@@ -8,6 +8,8 @@ import {
 
 export const AI_MODEL_COMPARISON_PHOTO_COUNT = 10;
 
+export const AI_MODELS_PAGE_TITLE = 'AI Models';
+
 // Reference points worth calling out wherever a model id is shown
 export const AI_MODEL_ANNOTATIONS: Record<string, string> = {
   [OPENAI_MODEL_COMPATIBLE as string]: 'compatibility',

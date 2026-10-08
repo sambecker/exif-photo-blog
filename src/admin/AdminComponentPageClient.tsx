@@ -6,7 +6,7 @@ import {
   type CameraBrand as CameraBrandName,
 } from '@/camera/brand';
 import FieldsetTag from '@/tag/FieldsetTag';
-import AppGrid from '@/components/AppGrid';
+import AdminPage from '@/admin/AdminPage';
 import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import IconHidden from '@/components/icons/IconHidden';
 import IconLock from '@/components/icons/IconLock';
@@ -72,8 +72,8 @@ export default function AdminComponentPageClient({
       className === 'text-base');
 
   return (
-    <AppGrid
-      contentMain={<div className="flex flex-col gap-4">
+    <AdminPage title="Components">
+      <div className="flex flex-col gap-4">
         <FieldsetWithStatus
           label="All text sizes"
           type="checkbox"
@@ -227,7 +227,7 @@ export default function AdminComponentPageClient({
             }]}
           />
         </div>
-      </div>}
-    />
+      </div>
+    </AdminPage>
   );
 }

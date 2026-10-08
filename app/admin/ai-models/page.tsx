@@ -1,6 +1,9 @@
-import AdminInfoPage from '@/admin/AdminInfoPage';
+import AdminPage from '@/admin/AdminPage';
 import AdminAiModelsClient from '@/admin/ai-models/AdminAiModelsClient';
-import { AI_MODEL_COMPARISON_PHOTO_COUNT } from '@/admin/ai-models';
+import {
+  AI_MODEL_COMPARISON_PHOTO_COUNT,
+  AI_MODELS_PAGE_TITLE,
+} from '@/admin/ai-models';
 import {
   ADMIN_AI_MODEL_DEBUG_ENABLED,
   OPENAI_SECRET_KEY,
@@ -27,7 +30,7 @@ const getRandomPhotos = async (count: number) => {
 
 export default async function AdminAiModelsPage() {
   if (!ADMIN_AI_MODEL_DEBUG_ENABLED) {
-    return <AdminInfoPage>
+    return <AdminPage title={AI_MODELS_PAGE_TITLE} contained>
       <div>
         Set
         {' '}
@@ -35,7 +38,7 @@ export default async function AdminAiModelsPage() {
         {' '}
         to {'"1"'} to enable AI model comparisons
       </div>
-    </AdminInfoPage>;
+    </AdminPage>;
   }
 
   const photos = await getRandomPhotos(AI_MODEL_COMPARISON_PHOTO_COUNT)

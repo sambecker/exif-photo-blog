@@ -5,7 +5,7 @@ import LinkWithStatus from '@/components/LinkWithStatus';
 import { useState } from 'react';
 import { Library, LibraryInsert, getLibraryMeta } from '.';
 import FieldsetWithStatus from '@/components/FieldsetWithStatus';
-import AdminChildPage from '@/components/AdminChildPage';
+import AdminPage from '@/admin/AdminPage';
 import { updateLibraryAction } from './actions';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import { Photo } from '@/photo';
@@ -38,7 +38,7 @@ export default function AdminLibraryEditPage({
   } = getLibraryMeta(appText);
 
   return (
-    <AdminChildPage
+    <AdminPage
       backPath={PATH_LIBRARY}
       backLabel="Library"
       breadcrumb="Edit Library Page"
@@ -97,6 +97,6 @@ export default function AdminLibraryEditPage({
           </SubmitButtonWithStatus>
         </div>
       </form>
-    </AdminChildPage>
+    </AdminPage>
   );
 }

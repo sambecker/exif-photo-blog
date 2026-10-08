@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import AdminAlbumForm from '@/admin/AdminAlbumForm';
 import { PATH_ADMIN_ALBUMS } from '@/app/path';
-import AdminChildPage from '@/components/AdminChildPage';
+import AdminPage from '@/admin/AdminPage';
 
 export default function AdminAlbumCreateClient({
   hasLocationServices,
@@ -13,7 +13,7 @@ export default function AdminAlbumCreateClient({
   const [title, setTitle] = useState('');
 
   return (
-    <AdminChildPage
+    <AdminPage
       backPath={PATH_ADMIN_ALBUMS}
       backLabel="Albums"
       breadcrumb={title.trim() ? title : 'Create Album'}
@@ -24,6 +24,6 @@ export default function AdminAlbumCreateClient({
         mode="create"
         onTitleChange={setTitle}
       />
-    </AdminChildPage>
+    </AdminPage>
   );
 }

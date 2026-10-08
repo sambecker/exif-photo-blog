@@ -1,4 +1,8 @@
-import { PARAM_UPLOAD_TITLE, PATH_ADMIN } from '@/app/path';
+import {
+  PARAM_UPLOAD_TITLE,
+  PATH_ADMIN,
+  PATH_ADMIN_UPLOADS,
+} from '@/app/path';
 import { extractImageDataFromBlobPath } from '@/photo/server';
 import { redirect } from 'next/navigation';
 import {
@@ -19,7 +23,7 @@ import ErrorNote from '@/components/ErrorNote';
 import { getRecipeTitleForData } from '@/photo/query';
 import { getAlbumsWithMeta } from '@/album/query';
 import { addAiTextToFormData } from '@/photo/ai/server';
-import AppGrid from '@/components/AppGrid';
+import AdminPage from '@/admin/AdminPage';
 
 export const maxDuration = 60;
 
@@ -112,10 +116,15 @@ export default async function UploadPage({ params, searchParams }: Params) {
         shouldStripGpsData,
         hasLocationServices: HAS_LOCATION_SERVICES,
       }} />
-      : <AppGrid contentMain={
+      : <AdminPage
+        backPath={PATH_ADMIN_UPLOADS}
+        backLabel="Uploads"
+        breadcrumb={uploadPath}
+        breadcrumbEllipsis
+      >
         <ErrorNote>
           {error ?? 'Unknown error'}
         </ErrorNote>
-      }/>
+      </AdminPage>
   );
 };

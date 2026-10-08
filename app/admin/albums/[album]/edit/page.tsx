@@ -1,4 +1,4 @@
-import AdminChildPage from '@/components/AdminChildPage';
+import AdminPage from '@/admin/AdminPage';
 import { redirect } from 'next/navigation';
 import { getPhotosCached, getPhotosMetaCached } from '@/photo/cache';
 import {
@@ -42,7 +42,7 @@ export default async function AlbumPageEdit({
   ]);
 
   return (
-    <AdminChildPage
+    <AdminPage
       backPath={PATH_ADMIN_ALBUMS}
       backLabel="Albums"
       breadcrumb={<AdminAlbumBadge {...{ album, count, hideBadge: true }} />}
@@ -61,6 +61,6 @@ export default async function AlbumPageEdit({
             moreLink={pathForAlbum(album)}
           />}
       </AdminAlbumForm>
-    </AdminChildPage>
+    </AdminPage>
   );
 };
