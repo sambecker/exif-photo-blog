@@ -16,7 +16,7 @@ export default function Switcher({
   return (
     <div className={clsx(
       'flex overflow-hidden',
-      'rounded-lg',
+      'rounded-[10px]',
       divide && 'divide-x divide-medium',
       type === 'regular' && CONTROL_OUTLINE_CLASSNAME,
       className,
