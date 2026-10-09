@@ -86,7 +86,7 @@ export default async function LibraryPage() {
         recipe={recipes[0]?.recipe}
         film={films[0]?.film}
         tag={tags.filter(({ tag }) => tag !== TAG_FAVS)[0]?.tag}
-        album={albums[0]?.album}
+        album={albums.find(({ count }) => count > 0)?.album}
         lastUpdated={lastModifiedSite}
         folderRows={folderRows}
       />
