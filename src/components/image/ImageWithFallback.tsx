@@ -52,6 +52,11 @@ export default function ImageWithFallback({
     }
   };
 
+  const showFallback = isLoading || didError || shouldDebugImageFallbacks;
+
+  // Fallback sits beneath the image so it remains visible
+  // until the image actually paints, then fades out
+  // (delayed) to clear any edges the image doesn't cover
   return (
     <div
       className={clsx(
@@ -59,13 +64,6 @@ export default function ImageWithFallback({
         className,
       )}
     >
-      <Image ref={refProp ?? ref} {...{
-        ...props,
-        priority,
-        className: classNameImage,
-        onLoad,
-        onError,
-      }} />
       <div
         className={clsx(
           '@container',
@@ -73,10 +71,9 @@ export default function ImageWithFallback({
           'overflow-hidden',
           fadeFallbackTransition &&
             'transition-opacity duration-300 ease-in',
+          fadeFallbackTransition && !showFallback && 'delay-300',
           !(BLUR_ENABLED && blurDataURL) && 'bg-main',
-          (isLoading || didError || shouldDebugImageFallbacks)
-            ? 'opacity-100'
-            : 'opacity-0',
+          showFallback ? 'opacity-100' : 'opacity-0',
         )}
       >
         {(BLUR_ENABLED && blurDataURL)
@@ -93,6 +90,19 @@ export default function ImageWithFallback({
             'bg-gray-100/50 dark:bg-gray-900/50',
           )} />}
       </div>
+      <Image ref={refProp ?? ref} {...{
+        ...props,
+        priority,
+        className: clsx(
+          classNameImage,
+          'relative',
+          fadeFallbackTransition &&
+            'transition-opacity duration-300 ease-in',
+          showFallback && 'opacity-0',
+        ),
+        onLoad,
+        onError,
+      }} />
     </div>
   );
 }
