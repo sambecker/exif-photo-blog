@@ -60,8 +60,12 @@ export default function NavClient({
       containerRef={ref}
       className={containerClassName}
       style={containerStyle}
-      // Stationary column would cover banners after the nav slides away
-      classNameMain="pointer-events-none!"
+      classNameMain={clsx(
+        // Stationary column would cover banners after the nav slides away
+        'pointer-events-none!',
+        // Don't clip next child content that uses outline
+        'mb-px',
+      )}
       contentMain={
         <AnimateItems
           animateOnFirstLoadOnly
