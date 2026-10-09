@@ -58,7 +58,7 @@ export default function PhotoRecipeOverlay({
   ) => (
     <div className={clsx(
       'flex flex-col items-center justify-center gap-0.5 min-w-0',
-      'rounded-md border',
+      'rounded-lg border',
       'border-neutral-200/40',
       'bg-neutral-100/30 hover:bg-neutral-100/50',
       label && 'p-1',
@@ -99,9 +99,9 @@ export default function PhotoRecipeOverlay({
       exit={{ opacity: 0, scale: 0.95 }}
       className={clsx(
         'z-10',
-        'w-[20rem] p-3 space-y-3',
+        'w-[20rem] p-2 space-y-3',
         'scroll-mt-8',
-        'rounded-[10px]',
+        'rounded-2xl',
         isOnPhoto
           ? 'shadow-2xl'
           // Soften shadow to mimic <Modal />
@@ -148,11 +148,12 @@ export default function PhotoRecipeOverlay({
         />
         <span>
           <LoaderButton
-            icon={<IoCloseCircle size={20} />}
+            icon={<IoCloseCircle size={22} />}
             onClick={onClose}
             className={clsx(
               'link p-0 m-0',
-              'text-black/40 active:text-black/75',
+              '-translate-y-px',
+              'text-black/30 active:text-black/50',
             )}
           />
         </span>
