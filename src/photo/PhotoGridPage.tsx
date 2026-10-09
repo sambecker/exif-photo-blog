@@ -12,8 +12,8 @@ export default function PhotoGridPage(
   const aboutTextSafelyParsedHtml = SIDEBAR_TEXT
     ? safelyParseFormattedHtml(SIDEBAR_TEXT)
     : undefined;
-  const aboutTextHasBrParagraphBreaks = SIDEBAR_TEXT
-    ? htmlHasBrParagraphBreaks(SIDEBAR_TEXT)
+  const aboutTextHasBrParagraphBreaks = aboutTextSafelyParsedHtml
+    ? htmlHasBrParagraphBreaks(aboutTextSafelyParsedHtml)
     : false;
 
   return <PhotoGridPageClient {...{

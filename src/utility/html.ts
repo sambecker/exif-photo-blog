@@ -2,8 +2,11 @@ import sanitizeHtml from 'sanitize-html';
 
 const ALLOWED_FORMATTING_TAGS = ['b', 'strong', 'i', 'em', 'u', 'br', 'a'];
 
+const replaceNewlinesWithBr = (text: string) =>
+  text.replace(/\r\n|\n|\r/g, '<br />');
+
 export const safelyParseFormattedHtml = (text: string) =>
-  sanitizeHtml(text, {
+  sanitizeHtml(replaceNewlinesWithBr(text), {
     allowedTags: ALLOWED_FORMATTING_TAGS,
     allowedSchemes: ['https'],
     transformTags: {
