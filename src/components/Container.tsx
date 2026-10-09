@@ -31,8 +31,9 @@ export default function Container({
       ];
       case 'gray-border': return [
         'text-medium',
-        'bg-extra-dim',
-        'border border-medium',
+        'bg-extra-extra-dim',
+        'outline outline-medium',
+        'shadow-xs',
       ];
       case 'blue': return [
         'text-blue-800 dark:text-blue-400',

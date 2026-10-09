@@ -71,16 +71,17 @@ export default function SignInForm({
       className={clsx(
         'w-[calc(100vw-1.5rem)] sm:w-[min(360px,90vw)]',
         'px-6 py-5',
+        'rounded-[18px]!',
         className,
       )}
     >
       {includeTitle &&
         <h1 className={clsx(
-          'flex gap-3 items-center justify-center',
+          'flex gap-2.5 items-center justify-center',
           'self-start text-2xl',
           'mb-6',
         )}>
-          <IconLock className="text-main translate-y-[0.5px]" />
+          <IconLock className="text-main text-xl translate-y-[0.5px]" />
           <span className="text-main">
             {appText.auth.signIn}
           </span>
