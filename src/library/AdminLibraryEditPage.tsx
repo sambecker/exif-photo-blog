@@ -44,7 +44,7 @@ export default function AdminLibraryEditPage({
       breadcrumb="Edit Library Page"
     >
       <form
-        className="space-y-12 mt-12"
+        className="space-y-12 mt-6"
         action={updateLibraryAction}
       >
         <div className="space-y-4">
@@ -76,6 +76,7 @@ export default function AdminLibraryEditPage({
           <FieldsetWithStatus
             label="Description"
             type="textarea"
+            className="[&_textarea]:h-36"
             value={libraryForm?.description ?? ''}
             placeholder={LIBRARY_DESCRIPTION_DEFAULT}
             onChange={description => setLibraryForm(form =>
