@@ -1,5 +1,6 @@
 import { getLibraryMeta } from '@/library';
 import LibraryPageClient from '@/library/LibraryPageClient';
+import LibraryDescription from '@/library/LibraryDescription';
 import { getLibraryDataCached, getLibraryFolderRows } from '@/library/data';
 import { LIBRARY_DESCRIPTION_DEFAULT } from '@/app/config';
 import { getDataForCategoriesCached } from '@/category/cache';
@@ -42,12 +43,7 @@ export default async function LibraryPage() {
   const description = library?.description || LIBRARY_DESCRIPTION_DEFAULT;
 
   const descriptionHtml = description
-    ? <div
-      className="text-medium [&>*>a]:underline"
-      dangerouslySetInnerHTML={{
-        __html: safelyParseFormattedHtml(description),
-      }}
-    />
+    ? <LibraryDescription html={safelyParseFormattedHtml(description)} />
     : undefined;
 
   const {

@@ -3,6 +3,8 @@
 import {
   ClipboardEvent,
   KeyboardEvent,
+  MouseEvent,
+  ReactNode,
   useCallback,
   useEffect,
   useLayoutEffect,
@@ -15,6 +17,9 @@ import MentionMenu from '@/mention/MentionMenu';
 import { Mention } from '@/mention';
 import { Albums } from '@/album';
 import { Tags } from '@/tag';
+import SegmentMenu from '@/components/SegmentMenu';
+import ResponsiveText from '@/components/primitives/ResponsiveText';
+import Spinner from '@/components/Spinner';
 import {
   createMentionElement,
   populateElementWithMarkup,
@@ -27,6 +32,16 @@ const MENTION_QUERY_REGEX = /(?:^|\s)@([^@\s][^@\n]{0,39}|)$/;
 const MENU_WIDTH = 320;
 
 const MENU_KEYS = ['ArrowDown', 'ArrowUp', 'Enter', 'Tab'];
+
+const TABS = ['write', 'preview'] as const;
+
+type Tab = typeof TABS[number];
+
+interface Preview {
+  markup: string
+  content?: ReactNode
+  error?: boolean
+}
 
 interface MentionQuery {
   node: Text
@@ -45,6 +60,7 @@ export default function RichTextEditor({
   onChange,
   mentionAlbums,
   mentionTags,
+  getPreview,
   className,
 }: {
   id: string
@@ -54,17 +70,21 @@ export default function RichTextEditor({
   onChange?: (value: string) => void
   mentionAlbums: Albums
   mentionTags: Tags
+  getPreview: (markup: string) => Promise<ReactNode>
   className?: string
 }) {
   const refContainer = useRef<HTMLDivElement>(null);
   const refEditor = useRef<HTMLDivElement>(null);
   const refMenu = useRef<HTMLDivElement>(null);
+  const refPreviewMarkup = useRef<string>(undefined);
   const refInitialValue = useRef(initialValue);
   // Escaped "@" positions shouldn't reopen until a new "@" is typed
   const refDismissed = useRef<Pick<MentionQuery, 'node' | 'start'>>(undefined);
 
   const [markup, setMarkup] = useState(initialValue);
   const [mentionQuery, setMentionQuery] = useState<MentionQuery>();
+  const [tab, setTab] = useState<Tab>('write');
+  const [preview, setPreview] = useState<Preview>();
 
   const { pending } = useFormStatus();
 
@@ -73,6 +93,42 @@ export default function RichTextEditor({
       populateElementWithMarkup(refEditor.current, refInitialValue.current);
     }
   }, []);
+
+  const isPreviewLoading =
+    tab === 'preview' &&
+    Boolean(markup) &&
+    preview?.markup !== markup;
+
+  // Open preview links elsewhere so unsaved edits aren't lost
+  const onPreviewClick = (e: MouseEvent<HTMLDivElement>) => {
+    const anchor = (e.target as Element).closest('a');
+    if (anchor?.href) {
+      e.preventDefault();
+      window.open(anchor.href, '_blank', 'noopener');
+    }
+  };
+
+  const onTabChange = (tab: Tab) => {
+    setTab(tab);
+    if (
+      tab === 'preview' &&
+      markup &&
+      (preview?.markup !== markup || preview.error)
+    ) {
+      const requestMarkup = markup;
+      setPreview(undefined);
+      refPreviewMarkup.current = requestMarkup;
+      getPreview(requestMarkup)
+        .then(content => ({ markup: requestMarkup, content }))
+        .catch(() => ({ markup: requestMarkup, error: true }))
+        .then(preview => {
+          // Ignore responses superseded by a newer request
+          if (refPreviewMarkup.current === requestMarkup) {
+            setPreview(preview);
+          }
+        });
+    }
+  };
 
   const emitChange = useCallback(() => {
     if (refEditor.current) {
@@ -211,7 +267,42 @@ export default function RichTextEditor({
       <label id={`${id}-label`}>
         {label}
       </label>
-      <div ref={refContainer} className="relative">
+      <div className="flex items-center justify-between gap-4 pb-1">
+        <SegmentMenu
+          items={TABS.map(value => ({ value }))}
+          selected={tab}
+          onChange={onTabChange}
+        />
+        <ResponsiveText
+          className="text-dim text-sm whitespace-nowrap"
+          shortText="@ to mention"
+        >
+          @ to reference photos, albums, tags
+        </ResponsiveText>
+      </div>
+      {tab === 'preview' &&
+        <div
+          aria-labelledby={`${id}-label`}
+          aria-busy={isPreviewLoading}
+          onClickCapture={onPreviewClick}
+          className={clsx(
+            'control w-full min-h-36',
+            'text-[1rem] wrap-break-word',
+            isPreviewLoading && 'flex items-center justify-center',
+          )}
+        >
+          {!markup
+            ? <span className="text-extra-dim">Nothing to preview</span>
+            : isPreviewLoading
+              ? <Spinner size={16} />
+              : preview?.error
+                ? <span className="text-error">Could not render preview</span>
+                : preview?.content}
+        </div>}
+      <div
+        ref={refContainer}
+        className={clsx('relative', tab === 'preview' && 'hidden')}
+      >
         <div
           ref={refEditor}
           id={id}

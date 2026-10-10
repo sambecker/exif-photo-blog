@@ -6,7 +6,11 @@ import { useState } from 'react';
 import { Library, LibraryInsert, getLibraryMeta } from '.';
 import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import AdminPage from '@/admin/AdminPage';
-import { updateLibraryAction } from './actions';
+import {
+  renderLibraryDescriptionPreviewAction,
+  updateLibraryAction,
+} from './actions';
+import LibraryDescription from './LibraryDescription';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import { Photo } from '@/photo';
 import { useAppText } from '@/i18n/state/client';
@@ -90,6 +94,9 @@ export default function AdminLibraryEditPage({
               ({ ...form, description }))}
             mentionAlbums={albums}
             mentionTags={tags}
+            getPreview={description =>
+              renderLibraryDescriptionPreviewAction(description)
+                .then(html => <LibraryDescription html={html} />)}
           />
         </div>
         <div className="flex gap-2">
