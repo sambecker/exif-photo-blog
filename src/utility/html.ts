@@ -1,9 +1,24 @@
 import sanitizeHtml from 'sanitize-html';
+import {
+  MENTION_TYPES,
+  MentionType,
+  parseMentionId,
+  pathForMention,
+} from '@/mention';
 
 const ALLOWED_FORMATTING_TAGS = ['b', 'strong', 'i', 'em', 'u', 'br', 'a'];
 
 const replaceNewlinesWithBr = (text: string) =>
   text.replace(/\r\n|\n|\r/g, '<br />');
+
+// Mentions without a valid id fall back to their plain text title
+const transformMention = (type: MentionType): sanitizeHtml.Transformer =>
+  (_tagName, attribs): sanitizeHtml.Tag => {
+    const id = parseMentionId(attribs.id);
+    return id
+      ? { tagName: 'a', attribs: { href: pathForMention({ type, id }) } }
+      : { tagName: 'span', attribs: {} };
+  };
 
 export const safelyParseFormattedHtml = (text: string) =>
   sanitizeHtml(replaceNewlinesWithBr(text), {
@@ -19,6 +34,8 @@ export const safelyParseFormattedHtml = (text: string) =>
           },
         };
       },
+      ...Object.fromEntries(MENTION_TYPES.map(type =>
+        [type, transformMention(type)])),
     },
   });
 
