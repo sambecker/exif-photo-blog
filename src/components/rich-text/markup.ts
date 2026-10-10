@@ -13,31 +13,64 @@ const DISCARDED_TAGS = ['script', 'style', 'template'];
 
 const ATTRIBUTE_MENTION_TYPE = 'data-mention-type';
 const ATTRIBUTE_MENTION_ID = 'data-mention-id';
+const ATTRIBUTE_MENTION_TOKEN = 'data-mention-token';
 
-export const CLASS_MENTION = [
-  'inline-block px-1 mx-px rounded-md',
-  'bg-gray-100 dark:bg-gray-800',
-  'text-main whitespace-nowrap select-all',
-].join(' ');
+const CLASS_MENTION = 'text-main';
 
+const CLASS_MENTION_TOKEN = 'text-dim';
+
+const createMentionTokenElement = (doc: Document, text: string) => {
+  const element = doc.createElement('span');
+  element.setAttribute('contenteditable', 'false');
+  element.setAttribute(ATTRIBUTE_MENTION_TOKEN, '');
+  element.className = CLASS_MENTION_TOKEN;
+  element.textContent = text;
+  return element;
+};
+
+const isMentionToken = (node: Node) =>
+  node.nodeType === Node.ELEMENT_NODE &&
+  (node as Element).hasAttribute(ATTRIBUTE_MENTION_TOKEN);
+
+// Opening/closing tags are locked to preserve links while titles stay editable
 export const createMentionElement = (
   doc: Document,
   { type, id, title }: Mention,
 ) => {
   const element = doc.createElement('span');
-  element.setAttribute('contenteditable', 'false');
   element.setAttribute(ATTRIBUTE_MENTION_TYPE, type);
   element.setAttribute(ATTRIBUTE_MENTION_ID, id);
   element.className = CLASS_MENTION;
-  element.textContent = title;
+  element.append(
+    createMentionTokenElement(doc, `<${type} id={${id}}>`),
+    doc.createTextNode(title),
+    createMentionTokenElement(doc, `</${type}>`),
+  );
   return element;
 };
 
+export const isNodeInsideMention = (node: Node) =>
+  Boolean(node.parentElement?.closest(`[${ATTRIBUTE_MENTION_TYPE}]`));
+
+const getMentionTitle = (element: Element) =>
+  Array.from(element.childNodes)
+    .filter(node => !isMentionToken(node))
+    .map(node => node.textContent ?? '')
+    .join('')
+    .replaceAll('\u00a0', ' ')
+    .replace(/\s*[\r\n]+\s*/g, ' ');
+
+// Deleting either tag token unlinks the mention, leaving its title as text
 const getMentionFromElement = (element: Element): Mention | undefined => {
   const type = element.getAttribute(ATTRIBUTE_MENTION_TYPE);
   const id = element.getAttribute(ATTRIBUTE_MENTION_ID);
-  return isMentionType(type) && id
-    ? { type, id, title: element.textContent ?? '' }
+  const hasTokens =
+    element.firstChild !== null &&
+    element.lastChild !== element.firstChild &&
+    isMentionToken(element.firstChild) &&
+    isMentionToken(element.lastChild!);
+  return isMentionType(type) && id && hasTokens
+    ? { type, id, title: getMentionTitle(element) }
     : undefined;
 };
 
@@ -108,6 +141,8 @@ const serializeNode = (node: Node, hasPreviousSibling: boolean): string => {
 
   const element = node as Element;
   const tag = element.localName;
+
+  if (isMentionToken(element)) { return ''; }
 
   const mention = getMentionFromElement(element);
   if (mention) { return markupForMention(mention); }

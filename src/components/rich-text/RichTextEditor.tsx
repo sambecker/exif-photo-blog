@@ -22,6 +22,7 @@ import ResponsiveText from '@/components/primitives/ResponsiveText';
 import Spinner from '@/components/Spinner';
 import {
   createMentionElement,
+  isNodeInsideMention,
   populateElementWithMarkup,
   serializeElementToMarkup,
 } from './markup';
@@ -150,7 +151,8 @@ export default function RichTextEditor({
       !container ||
       !range?.collapsed ||
       !(node instanceof Text) ||
-      !editor.contains(node)
+      !editor.contains(node) ||
+      isNodeInsideMention(node)
     ) {
       setMentionQuery(undefined);
       return;

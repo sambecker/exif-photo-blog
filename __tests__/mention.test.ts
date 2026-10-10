@@ -57,10 +57,36 @@ describe('Mention', () => {
     const element = document.createElement('div');
     populateElementWithMarkup(element, MARKUP);
     expect(element.querySelectorAll('[data-mention-type]').length).toBe(3);
-    expect(element.querySelector('[data-mention-type="photo"]')
-      ?.getAttribute('contenteditable')).toBe('false');
     expect(serializeElementToMarkup(element))
       .toBe(MARKUP.replace('&', '&amp;'));
+  });
+
+  it('shows full markup with editable titles', () => {
+    const element = document.createElement('div');
+    populateElementWithMarkup(element, '<photo id="abc123">Sunset</photo>');
+    const mention = element.querySelector('[data-mention-type="photo"]')!;
+    expect(mention.textContent).toBe('<photo id={abc123}>Sunset</photo>');
+    expect(mention.firstElementChild?.getAttribute('contenteditable'))
+      .toBe('false');
+    expect(mention.lastElementChild?.getAttribute('contenteditable'))
+      .toBe('false');
+    expect(mention.childNodes[1].nodeType).toBe(Node.TEXT_NODE);
+  });
+
+  it('preserves links when titles are overwritten', () => {
+    const element = document.createElement('div');
+    populateElementWithMarkup(element, '<photo id="abc123">Sunset</photo>');
+    const mention = element.querySelector('[data-mention-type="photo"]')!;
+    mention.childNodes[1].textContent = 'Golden <hour>';
+    expect(serializeElementToMarkup(element))
+      .toBe('<photo id="abc123">Golden &lt;hour&gt;</photo>');
+  });
+
+  it('unlinks mentions when a tag is deleted', () => {
+    const element = document.createElement('div');
+    populateElementWithMarkup(element, 'See <tag id="landscape">Hills</tag>');
+    element.querySelector('[data-mention-type] > :last-child')?.remove();
+    expect(serializeElementToMarkup(element)).toBe('See Hills');
   });
 
   it('strips disallowed markup in the editor', () => {
