@@ -7,6 +7,13 @@ import { redirect } from 'next/navigation';
 import { PATH_LIBRARY, PATH_ADMIN_LIBRARY_EDIT } from '@/app/path';
 import { convertFormDataToLibrary } from './form';
 import { revalidatePath } from 'next/cache';
+import { getMentionContent } from '@/mention/server';
+
+export const getLibraryDescriptionPreviewAction = async (
+  description: string,
+) =>
+  runAuthenticatedAdminServerAction(() =>
+    getMentionContent(description));
 
 export const updateLibraryAction = async (formData: FormData) =>
   runAuthenticatedAdminServerAction(async () => {

@@ -1,5 +1,6 @@
 import { getLibraryMeta } from '@/library';
 import LibraryPageClient from '@/library/LibraryPageClient';
+import LibraryDescription from '@/library/LibraryDescription';
 import { getLibraryDataCached, getLibraryFolderRows } from '@/library/data';
 import { LIBRARY_DESCRIPTION_DEFAULT } from '@/app/config';
 import { getDataForCategoriesCached } from '@/category/cache';
@@ -12,7 +13,7 @@ import { getPhotosMetaCached } from '@/photo/cache';
 import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { getAllPhotoIdsWithUpdatedAt } from '@/photo/query';
 import { TAG_FAVS } from '@/tag';
-import { safelyParseFormattedHtml } from '@/utility/html';
+import { getMentionContent } from '@/mention/server';
 import { max } from 'date-fns';
 
 export const dynamic = 'force-static';
@@ -42,12 +43,7 @@ export default async function LibraryPage() {
   const description = library?.description || LIBRARY_DESCRIPTION_DEFAULT;
 
   const descriptionHtml = description
-    ? <div
-      className="text-medium [&>*>a]:underline"
-      dangerouslySetInnerHTML={{
-        __html: safelyParseFormattedHtml(description),
-      }}
-    />
+    ? <LibraryDescription content={await getMentionContent(description)} />
     : undefined;
 
   const {

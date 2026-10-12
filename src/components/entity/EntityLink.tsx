@@ -24,7 +24,8 @@ import {
 
 export interface EntityLinkExternalProps {
   ref?: RefObject<HTMLSpanElement | null>
-  type?: LabeledIconType
+  // Naked -> Unadorned links which flow seamlessly into surrounding text
+  type?: LabeledIconType | 'naked'
   badged?: boolean
   badgeType?: ComponentProps<typeof Badge>['type']
   contrast?: ComponentProps<typeof Badge>['contrast']
@@ -154,7 +155,7 @@ export default function EntityLink({
           : iconWide,
         prefetch,
         title,
-        type: useForHover ? 'icon-first' : type,
+        type: useForHover || type === 'naked' ? 'icon-first' : type,
         uppercase,
         className: useForHover ? 'text-white' : undefined,
         classNameIcon: clsx(
@@ -195,6 +196,43 @@ export default function EntityLink({
       </LabeledIcon>
     </LinkWithStatus>;
 
+  const renderWithHover = (link: ReactNode, className?: string) =>
+    showHoverImage
+      ? <PhotosHover
+        hoverKey={path}
+        header={renderLink(true)}
+        description={hoverDescription}
+        photosCount={hoverCount}
+        maxPhotos={PHOTOS_TO_SHOW_PER_CATEGORY}
+        getPhotos={() =>
+          getPhotosCachedAction({
+            ...hoverQueryOptions,
+            ...PHOTO_PREVIEW_QUERY_OPTIONS,
+          })}
+        color={contrast === 'frosted' ? 'frosted-light' : undefined}
+        className={className}
+      >
+        {link}
+      </PhotosHover>
+      : link;
+
+  if (type === 'naked') {
+    return renderWithHover(
+      <LinkWithStatus
+        href={path}
+        className={className}
+        isLoading={isLoading}
+        setIsLoading={setIsLoading}
+        target={pathTarget}
+        onClick={onClick}
+        prefetch={prefetch}
+      >
+        {label}
+      </LinkWithStatus>,
+      'inline',
+    );
+  }
+
   return (
     <span
       ref={ref}
@@ -207,23 +245,7 @@ export default function EntityLink({
         className,
       )}
     >
-      {showHoverImage
-        ? <PhotosHover
-          hoverKey={path}
-          header={renderLink(true)}
-          description={hoverDescription}
-          photosCount={hoverCount}
-          maxPhotos={PHOTOS_TO_SHOW_PER_CATEGORY}
-          getPhotos={() =>
-            getPhotosCachedAction({
-              ...hoverQueryOptions,
-              ...PHOTO_PREVIEW_QUERY_OPTIONS,
-            })}
-          color={contrast === 'frosted' ? 'frosted-light' : undefined}
-        >
-          {renderLink()}
-        </PhotosHover>
-        : renderLink()}
+      {renderWithHover(renderLink())}
       {action &&
         <span className="action shrink-0">
           {action}

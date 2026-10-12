@@ -21,7 +21,8 @@ export default function useKeydownHandler({
     );
     const isTextEntry = (
       document.activeElement?.tagName === 'INPUT' ||
-      document.activeElement?.tagName === 'TEXTAREA'
+      document.activeElement?.tagName === 'TEXTAREA' ||
+      (document.activeElement as HTMLElement | null)?.isContentEditable
     );
     if (isKeyValid && !isTextEntry) {
       onKeyDownArg?.(e);

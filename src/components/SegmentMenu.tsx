@@ -26,6 +26,7 @@ export default function SegmentMenu<T extends string>({
       {items.map(({ value, icon, iconSelected, isLoading }) => (
         <button
           key={value}
+          type="button"
           onClick={() => onChange(value)}
           className={clsx(
             'link',
@@ -34,7 +35,7 @@ export default function SegmentMenu<T extends string>({
               ? 'bg-dim text-main'
               : 'bg-transparent text-medium',
             'flex items-center justify-center',
-            'h-7 min-w-14',
+            'h-7 min-w-14 px-4',
             'active:bg-extra-dim',
           )}
         >
