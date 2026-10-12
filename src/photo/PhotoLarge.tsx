@@ -361,9 +361,12 @@ export default function PhotoLarge({
                         photoEditOriginal,
                       )}
                       placeholder="Title"
-                      hideLabel
                       readOnly={isPerformingUpdate}
-                      className="[&_input]:font-bold"
+                      className={clsx(
+                        '[&_input]:font-bold',
+                        '[&_input]:outline-2',
+                      )}
+                      hideLabel
                     />
                     <FieldsetWithStatus
                       id={`edit-caption-${photo.id}`}
@@ -375,8 +378,9 @@ export default function PhotoLarge({
                         photoEditOriginal,
                       )}
                       placeholder="Caption"
-                      hideLabel
                       readOnly={isPerformingUpdate}
+                      className="[&_input]:outline-2"
+                      hideLabel
                     />
                   </div>
                   : hasTitle && (showTitleAsH1
