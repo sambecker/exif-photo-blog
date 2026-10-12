@@ -269,15 +269,16 @@ export default function RichTextEditor({
       <label id={`${id}-label`}>
         {label}
       </label>
-      <div className="flex items-center justify-between gap-4 pb-1">
+      <div className="flex items-center justify-between gap-2 pt-1 pb-2">
         <SegmentMenu
           items={TABS.map(value => ({ value }))}
           selected={tab}
           onChange={onTabChange}
+          className="-ml-0.5"
         />
         <ResponsiveText
           className="text-dim text-sm whitespace-nowrap"
-          shortText="@ to mention"
+          shortText="@ photos, albums, tags"
         >
           @ to reference photos, albums, tags
         </ResponsiveText>
