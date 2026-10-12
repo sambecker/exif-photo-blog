@@ -55,10 +55,15 @@ const subscribe = (listener: () => void) => {
   };
 };
 
-export default function useScrollDirection() {
+// Select primitive values derived from scroll state so that
+// subscribers only re-render when a selected value changes,
+// rather than on every frame of scrolling
+export default function useScrollInfo<T>(
+  selector: (scrollInfo: ScrollInfo) => T,
+) {
   return useSyncExternalStore(
     subscribe,
-    () => scrollInfo,
-    () => INITIAL_SCROLL_INFO,
+    () => selector(scrollInfo),
+    () => selector(INITIAL_SCROLL_INFO),
   );
 }

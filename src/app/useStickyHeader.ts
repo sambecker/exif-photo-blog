@@ -1,8 +1,9 @@
-import useScrollDirection from '@/utility/useScrollDirection';
+import useScrollInfo from '@/utility/useScrollInfo';
 import { clsx } from 'clsx/lite';
 import {
   CSSProperties,
   RefObject,
+  useEffect,
   useId,
   useLayoutEffect,
   useRef,
@@ -32,8 +33,6 @@ export default function useStickyHeader(
 
   const { levels, updateLevel, removeLevel } = useStickyHeaderContext();
 
-  const { scrollDirection, scrollY } = useScrollDirection();
-
   useLayoutEffect(() => {
     const element = ref.current;
     if (!element || !isEnabled) { return; }
@@ -60,10 +59,33 @@ export default function useStickyHeader(
     .reduce((total, level) => total + (level.tracksNav ? level.height : 0), 0);
   // Position in document when not stuck, measured after render
   const naturalTopRef = useRef(0);
-  const naturalBottom = naturalTopRef.current + height;
+
+  // Select only the thresholds each level type depends on,
+  // so scrolling doesn't re-render on every frame
+  const scrollDirection = useScrollInfo(info => info.scrollDirection);
+  const isPastNaturalBottom = useScrollInfo(({ scrollY }) =>
+    tracksNav &&
+    scrollY > naturalTopRef.current + height);
+  const isPastNaturalBottomByHeight = useScrollInfo(({ scrollY }) =>
+    tracksNav &&
+    scrollY > naturalTopRef.current + height * 2);
+  const isScrolled = useScrollInfo(({ scrollY }) =>
+    !tracksNav &&
+    scrollY > 0);
+  // Persistent banners move up into the space of tracking levels
+  // above them when those hide. Near the top of the page, tracking
+  // levels scroll away naturally, so follow the scroll there.
+  // Ignore negative scroll from Safari rubber-banding at the top.
+  const collapse = useScrollInfo(({ scrollDirection, scrollY }) =>
+    !tracksNav && scrollDirection === 'down'
+      ? Math.min(Math.max(scrollY, 0), trackedHeightAbove)
+      : 0);
+  const shouldAnimateCollapse = useScrollInfo(({ scrollY }) =>
+    !tracksNav &&
+    scrollY > trackedHeightAbove);
 
   const isSticky = isEnabled && (
-    scrollY > naturalBottom ||
+    isPastNaturalBottom ||
     scrollDirection === 'up'
   );
 
@@ -73,66 +95,66 @@ export default function useStickyHeader(
 
   const shouldAnimate =
     isSticky && (
-      scrollY > naturalBottom + height ||
+      isPastNaturalBottomByHeight ||
       scrollDirection === 'up'
     );
 
-  // Persistent banners stick as soon as they are shown, and move up
-  // into the space of tracking levels above them when those hide.
-  // Near the top of the page, tracking levels scroll away naturally,
-  // so follow the scroll instead of animating.
+  // Persistent banners stick as soon as they are shown
   const isPositioned = tracksNav ? isSticky : isEnabled;
-  const collapse = scrollDirection === 'down'
-    ? Math.min(scrollY, trackedHeightAbove)
-    : 0;
-  const shouldAnimateCollapse = scrollY > trackedHeightAbove;
-  // Persistent banners are always sticky, so measure whether they're
-  // pinned at their sticky top rather than resting in document flow
-  const [isOutOfPosition, setIsOutOfPosition] = useState(false);
 
   useLayoutEffect(() => {
-    if (!isSticky && ref.current) {
+    if (tracksNav && !isSticky && ref.current) {
       naturalTopRef.current =
         ref.current.getBoundingClientRect().top + window.scrollY;
     }
   });
 
-  useLayoutEffect(() => {
+  // Persistent banners are always sticky, so detect whether they're
+  // pinned at their sticky top rather than resting in document flow,
+  // without measuring layout while scrolling
+  const [isAtStickyTop, setIsAtStickyTop] = useState(false);
+
+  useEffect(() => {
     const element = ref.current;
-    if (tracksNav || !element) { return; }
-    const top = parseFloat(getComputedStyle(element).top);
-    const isPinned =
-      scrollY > 0 &&
-      !isNaN(top) &&
-      element.getBoundingClientRect().top <= top + 0.5;
-    setIsOutOfPosition(isPinned);
-  }, [ref, tracksNav, scrollY, collapse, offset, isEnabled]);
+    if (tracksNav || !isEnabled || !element) { return; }
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsAtStickyTop(
+        entry.boundingClientRect.top <= offset + 0.5,
+      ),
+      { rootMargin: `-${offset + 1}px 0px 0px 0px`, threshold: 1 },
+    );
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [ref, tracksNav, isEnabled, offset]);
+
+  const isOutOfPosition = isScrolled && isAtStickyTop;
 
   const containerStyle: CSSProperties | undefined = isPositioned
     ? {
-      top: tracksNav ? offset : offset - collapse,
+      top: offset,
       zIndex: Z_INDEX_TOP_LEVEL - index,
     }
     : undefined;
 
-  const contentStyle: CSSProperties | undefined = isPositioned && tracksNav
-    ? {
-      transform: `translateY(${isHidden ? -(height + offset) : 0}px)`,
-      // No hit target once the layer has slid away
-      ...isHidden && { pointerEvents: 'none' },
-    }
+  // Shift content with transforms rather than animating sticky `top`,
+  // which Safari can't composite and repositions a frame behind scroll
+  const contentStyle: CSSProperties | undefined = isPositioned
+    ? tracksNav
+      ? {
+        transform: `translateY(${isHidden ? -(height + offset) : 0}px)`,
+        // No hit target once the layer has slid away
+        ...isHidden && { pointerEvents: 'none' },
+      }
+      : { transform: `translateY(${-collapse}px)` }
     : undefined;
 
   return {
-    containerClassName: clsx(
-      isPositioned && 'sticky pointer-events-none',
-      isPositioned && !tracksNav && shouldAnimateCollapse &&
-        'transition-[top] duration-200',
-    ),
+    containerClassName: clsx(isPositioned && 'sticky pointer-events-none'),
     containerStyle,
     contentClassName: clsx(
-      tracksNav && 'pointer-events-auto',
-      tracksNav && shouldAnimate && 'transition-transform duration-200',
+      'pointer-events-auto',
+      (tracksNav ? shouldAnimate : shouldAnimateCollapse) &&
+        'transition-transform duration-200',
     ),
     contentStyle,
     isVisible: tracksNav ? !isHidden : true,

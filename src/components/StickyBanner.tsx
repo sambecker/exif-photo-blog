@@ -34,6 +34,8 @@ export default function StickyBanner({
       containerRef={ref}
       className={containerClassName}
       style={containerStyle}
+      // Stationary column would cover content after the banner shifts up
+      classNameMain="pointer-events-none!"
       contentMain={
         <div
           className={contentClassName}
