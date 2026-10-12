@@ -15,6 +15,7 @@ import {
 } from '@/app/path';
 import { formatCameraText } from '@/camera';
 import { CategoryKey, PhotoSetCategories, getCategoryTitle } from '@/category';
+import { getTopEntities } from '@/category/mobile';
 import { PhotoQueryOptions } from '@/db';
 import { labelForFilm } from '@/film';
 import { formatFocalLength } from '@/focal';
@@ -167,6 +168,142 @@ const getFolderQueriesForCategory = (
   }
 };
 
+const getPhotosForFolderQueries = async (
+  queries: FolderQuery[],
+): Promise<LibrarySetFolder[]> => {
+  const folderPhotos = await Promise.all(
+    queries.map(({ options }) =>
+      getPhotosCached({
+        ...options,
+        sortBy: 'random',
+        limit: PHOTO_FOLDER_MAX_PHOTOS + PHOTO_FOLDER_PEEK_PHOTOS,
+      }).catch(() => [] as Photo[])),
+  );
+
+  return queries.map((query, index) => ({
+    key: query.key,
+    caption: query.caption,
+    path: query.path,
+    count: query.count,
+    // Omit blurData so ISR stays under Vercel's 19MB page limit
+    photos: (folderPhotos[index] ?? [])
+      .map(({ blurData: _blurData, ...photo }) => photo),
+  }));
+};
+
+const getTopEntityFolderQueries = (
+  categories: PhotoSetCategories,
+  appText: AppTextState,
+): FolderQuery[] => {
+  const {
+    hasFavs,
+    albums,
+    tags,
+    camera,
+    lens,
+    recipe,
+    film,
+    focal,
+  } = getTopEntities(categories);
+
+  const queries: FolderQuery[] = [];
+
+  if (hasFavs) {
+    const fav = categories.tags.find(({ tag }) => tag === TAG_FAVS);
+    if (fav) {
+      queries.push({
+        key: TAG_FAVS,
+        options: { tag: TAG_FAVS },
+        caption: formatTag(TAG_FAVS),
+        path: pathForTag(TAG_FAVS),
+        count: fav.count,
+      });
+    }
+  }
+
+  albums.forEach(({ album, count }) => {
+    queries.push({
+      key: album.slug,
+      options: { album },
+      caption: album.title,
+      path: pathForAlbum(album),
+      count,
+    });
+  });
+
+  tags.forEach(({ tag, count }) => {
+    queries.push({
+      key: tag,
+      options: { tag },
+      caption: formatTag(tag),
+      path: pathForTag(tag),
+      count,
+    });
+  });
+
+  CATEGORY_VISIBILITY.forEach(category => {
+    switch (category) {
+      case 'cameras': {
+        if (camera) {
+          const query = getFolderQueriesForCategory(
+            'cameras',
+            categories,
+            appText,
+          )[0];
+          if (query) { queries.push(query); }
+        }
+        break;
+      }
+      case 'lenses': {
+        if (lens) {
+          const query = getFolderQueriesForCategory(
+            'lenses',
+            categories,
+            appText,
+          )[0];
+          if (query) { queries.push(query); }
+        }
+        break;
+      }
+      case 'recipes': {
+        if (recipe) {
+          const query = getFolderQueriesForCategory(
+            'recipes',
+            categories,
+            appText,
+          )[0];
+          if (query) { queries.push(query); }
+        }
+        break;
+      }
+      case 'films': {
+        if (film) {
+          const query = getFolderQueriesForCategory(
+            'films',
+            categories,
+            appText,
+          )[0];
+          if (query) { queries.push(query); }
+        }
+        break;
+      }
+      case 'focal-lengths': {
+        if (focal) {
+          const query = getFolderQueriesForCategory(
+            'focal-lengths',
+            categories,
+            appText,
+          )[0];
+          if (query) { queries.push(query); }
+        }
+        break;
+      }
+    }
+  });
+
+  return queries;
+};
+
 export const getLibraryFolderRows = async (
   categories: PhotoSetCategories,
   appText: AppTextState,
@@ -198,32 +335,27 @@ export const getLibraryFolderRows = async (
       key !== 'recents',
     );
 
-  const folderPhotos = await Promise.all(
-    rows.flatMap(row => row.queries).map(({ options }) =>
-      getPhotosCached({
-        ...options,
-        sortBy: 'random',
-        limit: PHOTO_FOLDER_MAX_PHOTOS + PHOTO_FOLDER_PEEK_PHOTOS,
-      }).catch(() => [] as Photo[])),
+  const folders = await getPhotosForFolderQueries(
+    rows.flatMap(row => row.queries),
   );
 
-  let photoIndex = 0;
+  let folderIndex = 0;
 
   return rows
     .map(row => ({
       key: row.key,
       title: row.title,
       folders: row.queries
-        .map(query => ({
-          key: query.key,
-          caption: query.caption,
-          path: query.path,
-          count: query.count,
-          // Omit blurData so /library ISR stays under Vercel's 19MB page limit
-          photos: (folderPhotos[photoIndex++] ?? [])
-            .map(({ blurData: _blurData, ...photo }) => photo),
-        }))
+        .map(() => folders[folderIndex++])
         .filter(folder => folder.photos.length > 0),
     }))
     .filter(row => row.folders.length > 0);
 };
+
+export const getTopEntityFolders = async (
+  categories: PhotoSetCategories,
+  appText: AppTextState,
+): Promise<LibrarySetFolder[]> =>
+  (await getPhotosForFolderQueries(
+    getTopEntityFolderQueries(categories, appText),
+  )).filter(folder => folder.photos.length > 0);
