@@ -47,6 +47,8 @@ export default function StickyBanner({
               'component-surface-frosted',
               // Square off once stuck so the banner meets the content below
               'transition-[border-radius] duration-200',
+              // Don't clip next child content that uses outline
+              !isOutOfPosition && 'mt-px',
               isOutOfPosition ? 'rounded-none' : 'rounded-xl',
               isOutOfPosition && 'outline-none!',
               'text-gray-900! dark:text-gray-100!',

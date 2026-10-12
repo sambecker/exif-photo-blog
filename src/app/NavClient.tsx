@@ -63,8 +63,6 @@ export default function NavClient({
       classNameMain={clsx(
         // Stationary column would cover banners after the nav slides away
         'pointer-events-none!',
-        // Don't clip next child content that uses outline
-        'mb-px',
       )}
       contentMain={
         <AnimateItems
