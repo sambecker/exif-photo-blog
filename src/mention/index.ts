@@ -1,4 +1,7 @@
 import { pathForAlbum, pathForPhoto, pathForTag } from '@/app/path';
+import type { Photo } from '@/photo';
+import type { Album } from '@/album';
+import type { FormattedHtmlNode } from '@/utility/html';
 
 export const MENTION_TYPES = ['photo', 'album', 'tag'] as const;
 
@@ -35,6 +38,32 @@ export const escapeHtmlText = (text: string) => text
 
 export const escapeHtmlAttribute = (text: string) =>
   escapeHtmlText(text).replaceAll('"', '&quot;');
+
+// Sanitized nodes plus the entities they mention, keyed by mention id
+export interface MentionContent {
+  nodes: FormattedHtmlNode[]
+  photos: Record<string, Photo>
+  albums: Record<string, Album>
+}
+
+export const getMentionIdsFromNodes = (
+  nodes: FormattedHtmlNode[],
+  ids: Record<MentionType, Set<string>> = {
+    photo: new Set(),
+    album: new Set(),
+    tag: new Set(),
+  },
+) => {
+  nodes.forEach(node => {
+    if (typeof node !== 'string') {
+      if (isMentionType(node.tag) && node.attributes.id) {
+        ids[node.tag].add(node.attributes.id);
+      }
+      getMentionIdsFromNodes(node.children, ids);
+    }
+  });
+  return ids;
+};
 
 export const markupForMention = ({ type, id, title }: Mention) =>
   `<${type} id="${escapeHtmlAttribute(id)}">${escapeHtmlText(title)}</${type}>`;

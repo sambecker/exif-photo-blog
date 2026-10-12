@@ -9,13 +9,16 @@ import IconTag from '@/components/icons/IconTag';
 import useCategoryCounts from '@/category/useCategoryCounts';
 import { useAppState } from '@/app/AppState';
 import AdminTagMenu from './AdminTagMenu';
+import { ReactNode } from 'react';
 
 export default function PhotoTag({
   tag,
+  label,
   showAdminMenu,
   ...props
 }: {
   tag: string
+  label?: ReactNode
   showAdminMenu?: boolean
 } & EntityLinkExternalProps) {
   const { getTagCount } = useCategoryCounts();
@@ -24,7 +27,7 @@ export default function PhotoTag({
   return (
     <EntityLink
       {...props}
-      label={formatTag(tag)}
+      label={label ?? formatTag(tag)}
       path={pathForTag(tag)}
       hoverQueryOptions={{ tag }}
       icon={<IconTag size={14} className="translate-x-[0.5px]" />}

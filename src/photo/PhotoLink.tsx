@@ -22,6 +22,7 @@ export default function PhotoLink({
   children: _children,
   loaderType = 'spinner',
   showHover,
+  classNameHover = 'inline-flex max-w-full',
   ...categories
 }: {
   ref?: RefObject<HTMLAnchorElement | null>
@@ -33,6 +34,7 @@ export default function PhotoLink({
   children?: ReactNode
   loaderType?: 'spinner' | 'badge'
   showHover?: boolean
+  classNameHover?: string
 } & PhotoSetCategory) {
   const { setNextPhotoAnimation } = useAppState();
 
@@ -79,7 +81,7 @@ export default function PhotoLink({
     </span>;
 
   return photo && showHover
-    ? <PhotoHover photo={photo} className="inline-flex max-w-full">
+    ? <PhotoHover photo={photo} className={classNameHover}>
       {link}
     </PhotoHover>
     : link;

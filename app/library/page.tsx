@@ -13,7 +13,7 @@ import { getPhotosMetaCached } from '@/photo/cache';
 import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { getAllPhotoIdsWithUpdatedAt } from '@/photo/query';
 import { TAG_FAVS } from '@/tag';
-import { safelyParseFormattedHtml } from '@/utility/html';
+import { getMentionContent } from '@/mention/server';
 import { max } from 'date-fns';
 
 export const dynamic = 'force-static';
@@ -43,7 +43,7 @@ export default async function LibraryPage() {
   const description = library?.description || LIBRARY_DESCRIPTION_DEFAULT;
 
   const descriptionHtml = description
-    ? <LibraryDescription html={safelyParseFormattedHtml(description)} />
+    ? <LibraryDescription content={await getMentionContent(description)} />
     : undefined;
 
   const {

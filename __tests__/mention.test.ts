@@ -1,5 +1,12 @@
-import { markupForMention, parseMentionId } from '@/mention';
-import { safelyParseFormattedHtml } from '@/utility/html';
+import {
+  getMentionIdsFromNodes,
+  markupForMention,
+  parseMentionId,
+} from '@/mention';
+import {
+  safelyParseFormattedHtml,
+  safelyParseFormattedHtmlNodes,
+} from '@/utility/html';
 import {
   populateElementWithMarkup,
   serializeElementToMarkup,
@@ -51,6 +58,36 @@ describe('Mention', () => {
 
   it('renders mentions without ids as plain text', () => {
     expect(safelyParseFormattedHtml('<photo>Sunset</photo>')).toBe('Sunset');
+  });
+
+  it('parses sanitized nodes with mentions preserved', () => {
+    const nodes = safelyParseFormattedHtmlNodes([
+      'A & <b>bold <photo id={abc123}>Sunset</photo></b>',
+      '<album>No id</album><script>x</script>',
+      '<a href="https://example.com" onclick="x">Link</a>',
+    ].join('\n'));
+    expect(nodes).toEqual([
+      'A & ',
+      { tag: 'b', attributes: {}, children: [
+        'bold ',
+        { tag: 'photo', attributes: { id: 'abc123' }, children: ['Sunset'] },
+      ] },
+      { tag: 'br', attributes: {}, children: [] },
+      'No id',
+      { tag: 'br', attributes: {}, children: [] },
+      {
+        tag: 'a',
+        attributes: { href: 'https://example.com', target: '_blank' },
+        children: ['Link'],
+      },
+    ]);
+  });
+
+  it('collects mention ids from nodes', () => {
+    const ids = getMentionIdsFromNodes(safelyParseFormattedHtmlNodes(MARKUP));
+    expect(Array.from(ids.photo)).toEqual(['abc123']);
+    expect(Array.from(ids.album)).toEqual(['summer-trip']);
+    expect(Array.from(ids.tag)).toEqual(['landscape']);
   });
 
   it('round trips through the editor', () => {

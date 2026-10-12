@@ -7,7 +7,7 @@ import { Library, LibraryInsert, getLibraryMeta } from '.';
 import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import AdminPage from '@/admin/AdminPage';
 import {
-  renderLibraryDescriptionPreviewAction,
+  getLibraryDescriptionPreviewAction,
   updateLibraryAction,
 } from './actions';
 import LibraryDescription from './LibraryDescription';
@@ -95,8 +95,8 @@ export default function AdminLibraryEditPage({
             mentionAlbums={albums}
             mentionTags={tags}
             getPreview={description =>
-              renderLibraryDescriptionPreviewAction(description)
-                .then(html => <LibraryDescription html={html} />)}
+              getLibraryDescriptionPreviewAction(description)
+                .then(content => <LibraryDescription content={content} />)}
           />
         </div>
         <div className="flex gap-2">
