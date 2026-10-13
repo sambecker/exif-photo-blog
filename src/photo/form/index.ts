@@ -223,6 +223,36 @@ export const FIELDS_TO_NOT_OVERWRITE_WITH_NULL_DATA_ON_SYNC =
     .filter(([_, meta]) => meta.shouldNotOverwriteWithNullDataOnSync)
     .map(([key]) => key as keyof PhotoFormData);
 
+// Fields on the interactive edit path that should keep their stored value
+// when the resubmitted form leaves them empty, rather than being nulled by
+// the full-column update. Extends the sync-path list with caption and tags.
+export const FIELDS_TO_NOT_OVERWRITE_ON_EDIT: (keyof PhotoDbInsert)[] = [
+  ...FIELDS_TO_NOT_OVERWRITE_WITH_NULL_DATA_ON_SYNC as (keyof PhotoDbInsert)[],
+  'caption',
+  'tags',
+];
+
+// Restore protected fields from the existing row when the incoming edit
+// leaves them undefined (or, for `tags`, an empty array). Pure: returns a
+// new object and does not mutate its inputs.
+export const restoreProtectedFields = (
+  incoming: PhotoDbInsert,
+  existing: PhotoDbInsert,
+): PhotoDbInsert => {
+  const restored: PhotoDbInsert = { ...incoming };
+  FIELDS_TO_NOT_OVERWRITE_ON_EDIT.forEach(key => {
+    const incomingValue = restored[key];
+    const isEmptyTags =
+      key === 'tags' &&
+      Array.isArray(incomingValue) &&
+      incomingValue.length === 0;
+    if (incomingValue === undefined || isEmptyTags) {
+      (restored as any)[key] = existing[key];
+    }
+  });
+  return restored;
+};
+
 export const FORM_METADATA_ENTRIES = (
   ...args: Parameters<typeof FORM_METADATA>
 ) =>

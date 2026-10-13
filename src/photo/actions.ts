@@ -22,6 +22,7 @@ import {
   FIELDS_TO_NOT_OVERWRITE_WITH_NULL_DATA_ON_SYNC,
   PhotoFormData,
   convertPhotoToFormData,
+  restoreProtectedFields,
 } from './form';
 import { redirect } from 'next/navigation';
 import { deleteFile } from '@/platforms/storage';
@@ -293,8 +294,15 @@ export const addUploadsAction = async ({
 
 export const updatePhotoAction = async (formData: FormData) =>
   runAuthenticatedAdminServerAction(async () => {
-    const photo =
+    let photo =
       await convertFormDataToPhotoDbInsertAndLookupRecipeTitle(formData);
+
+    // Restore protected fields from the existing row when the resubmitted
+    // edit left them empty, so the full-column update doesn't null them
+    const existing = await getPhoto(photo.id);
+    if (existing) {
+      photo = restoreProtectedFields(photo, convertPhotoToPhotoDbInsert(existing));
+    }
 
     let urlToDelete: string | undefined;
     if (photo.hidden && photo.url.includes(photo.id)) {
