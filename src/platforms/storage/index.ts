@@ -230,6 +230,7 @@ export const copyFile = (
         getFileNameFromStorageUrl(originUrl),
         destinationFileName,
         false,
+        isUrlFromCloudflareR2Web(originUrl) ? 'web' : 'private',
       );
     case 'aws-s3':
       return awsS3Copy(
@@ -245,7 +246,10 @@ export const deleteFile = (url: string) => {
     case 'vercel-blob':
       return vercelBlobDelete(url);
     case 'cloudflare-r2':
-      return cloudflareR2Delete(getFileNameFromStorageUrl(url));
+      return cloudflareR2Delete(
+        getFileNameFromStorageUrl(url),
+        isUrlFromCloudflareR2Web(url) ? 'web' : 'private',
+      );
     case 'aws-s3':
       return awsS3Delete(getFileNameFromStorageUrl(url));
   }
