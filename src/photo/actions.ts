@@ -301,7 +301,10 @@ export const updatePhotoAction = async (formData: FormData) =>
     // edit left them empty, so the full-column update doesn't null them
     const existing = await getPhoto(photo.id);
     if (existing) {
-      photo = restoreProtectedFields(photo, convertPhotoToPhotoDbInsert(existing));
+      photo = restoreProtectedFields(
+        photo,
+        convertPhotoToPhotoDbInsert(existing),
+      );
     }
 
     let urlToDelete: string | undefined;
