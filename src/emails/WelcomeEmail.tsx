@@ -15,7 +15,7 @@ import {
 } from '@react-email/components';
 import * as React from 'react';
 
-import { BASE_URL } from '@/app/config';
+import { BASE_URL, EMAIL_HEADER_URL } from '@/app/config';
 
 export default function WelcomeEmail() {
   return (
@@ -27,7 +27,7 @@ export default function WelcomeEmail() {
           <Container className="border border-solid border-[#eaeaea] rounded my-[40px] mx-auto p-[20px] w-[465px]">
             <Section className="mt-[32px]">
               <Img
-                src={`${BASE_URL}/email-header.jpg`} // Assuming the user moves this to public/
+                src={EMAIL_HEADER_URL}
                 width="100%"
                 height="auto"
                 alt="Proyecto Polifonía Visual Header"

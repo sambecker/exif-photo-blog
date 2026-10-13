@@ -46,6 +46,7 @@ export default function SelectionEmail({ photos = [] }: SelectionEmailProps) {
                 <div key={photo.id} className="mb-6 p-4 border rounded-lg border-gray-200">
                   <Row>
                     <Column className="w-[80px]">
+                      {/* Renders the stored CDN url; any rows reverted to r2.dev will display from r2.dev until the owner repairs the data. */}
                       <Img
                         src={photo.url}
                         width="80"

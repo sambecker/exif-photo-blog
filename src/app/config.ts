@@ -100,6 +100,13 @@ export const BASE_URL_SHARE =
 export const getBaseUrl = (share?: boolean) =>
   (share && BASE_URL_SHARE) ? BASE_URL_SHARE : BASE_URL;
 
+// Stable absolute URL for the welcome-email header image. BASE_URL resolves
+// unreliably in the email runtime (empty/wrong host or deployment-protected
+// preview), so emails use this CDN-backed URL instead.
+export const EMAIL_HEADER_URL =
+  process.env.NEXT_PUBLIC_EMAIL_HEADER_URL ||
+  'https://cdn.pusadolfo.com/email-header.jpg';
+
 const SITE_DOMAIN_SHORT = shortenUrl(SITE_DOMAIN);
 
 // SITE META
