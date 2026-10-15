@@ -171,14 +171,17 @@ export default function PhotoFloating({
     hasMetaContent;
 
   const renderPhotoLink =
-    <PhotoLink
-      photo={photo}
-      className={clsx(
-        'font-bold grow',
-        UPPERCASE_TITLES && 'uppercase',
-      )}
-      prefetch={prefetch}
-    />;
+    <div className="mb-3 md:mb-5">
+      <PhotoLink
+        photo={photo}
+        className={clsx(
+          // Instrument Serif only ships weight 400
+          'font-serif font-normal text-[1.5rem] leading-snug',
+          UPPERCASE_TITLES && 'uppercase',
+        )}
+        prefetch={prefetch}
+      />
+    </div>;
 
   // Match PhotoLarge matte sizing so portraits occupy ~same space as landscapes
   const matteContentWidthForAspectRatio =
@@ -261,14 +264,14 @@ export default function PhotoFloating({
         'grid grid-cols-2 md:grid-cols-1',
         'gap-x-0.5 sm:gap-x-1 gap-y-baseline',
       )}>
-        <div className={clsx(
-          'pr-3 md:pr-0',
-          metaSide === 'left' && 'md:flex md:flex-col md:items-end',
-        )}>
+        <div className="pr-3 md:pr-0">
           {!isEditingTitles &&
             <div className={clsx(
-              'float-end hidden md:block',
-              metaSide === 'left' && 'float-start',
+              // Mirror corners:
+              // top-right when meta is right, top-left when left
+              // (avoid flex on this parent — it disables float)
+              'hidden md:block',
+              metaSide === 'left' ? 'float-start' : 'float-end',
             )}>
               {renderAdminMenu}
             </div>}
@@ -447,7 +450,10 @@ export default function PhotoFloating({
               photo={photo}
               className={clsx(
                 'text-medium',
-                !hasNonDateContent && isUserSignedIn && 'md:pr-7',
+                // Clear space for floated admin menu
+                !hasNonDateContent && isUserSignedIn && (
+                  metaSide === 'left' ? 'md:pl-7' : 'md:pr-7'
+                ),
               )}
               timezone={null}
               hideTime={!SHOW_TAKEN_AT_TIME}
