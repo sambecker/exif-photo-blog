@@ -22,7 +22,8 @@ export default function SortMenu({
       {...{ isOpen, setIsOpen }}
       icon={<IconSortNav
         sort={sortConfig.isAscending ? 'asc' : 'desc'}
-        // className="shrink-0 translate-x-[0.5px] translate-y-[1px]"
+        chromatic={sortConfig.isColor}
+        className="translate-x-[-0.5px]"
       />}
       sections={[{
         items: itemsSortOrder,

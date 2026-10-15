@@ -96,6 +96,7 @@ export default function AppViewMenuCompact({
       label: appText.sort.sort,
       icon: <IconSortNav
         sort={sortConfig.isAscending ? 'asc' : 'desc'}
+        chromatic={sortConfig.isColor}
         className={clsx(VIEW_ICON_CLASS, 'w-[30px]! -ml-2!')} 
       />,
       // Sort types are only offered where the nav exposes a full sort menu

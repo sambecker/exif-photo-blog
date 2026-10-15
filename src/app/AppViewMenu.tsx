@@ -45,6 +45,7 @@ export default function AppViewMenu({
   const {
     isSortedByDefault,
     isAscending,
+    isColor,
     pathSortToggle,
   } = sortConfig;
 
@@ -120,6 +121,7 @@ export default function AppViewMenu({
           href={pathSortToggle}
           icon={<IconSortNav
             sort={isAscending ? 'asc' : 'desc'}
+            chromatic={isColor}
           />}
           tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
             content: isAscending
