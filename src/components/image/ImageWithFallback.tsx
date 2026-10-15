@@ -5,7 +5,15 @@ import { BLUR_ENABLED } from '@/app/config';
 import { useAppState } from '@/app/AppState';
 import { clsx}  from 'clsx/lite';
 import Image, { ImageProps } from 'next/image';
-import { RefObject, useCallback, useEffect, useRef, useState } from 'react';
+import {
+  RefObject,
+  SyntheticEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
+import useDocumentVisibility from '@/utility/useDocumentVisibility';
 
 export default function ImageWithFallback({
   ref: refProp,
@@ -30,7 +38,26 @@ export default function ImageWithFallback({
   const [fadeFallbackTransition, setFadeFallbackTransition] =
     useState(!hasLoadedWithAnimations);
 
-  const onLoad = useCallback(() => setIsLoading(false), []);
+  const {
+    hasDocumentBeenHidden,
+    whenDocumentVisible,
+  } = useDocumentVisibility(isLoading);
+
+  // Chrome skips/discards decoding in background tabs,
+  // so re-decode once visible before revealing
+  const onLoad = useCallback((event: SyntheticEvent<HTMLImageElement>) => {
+    const image = event.currentTarget;
+    if (!hasDocumentBeenHidden()) {
+      setIsLoading(false);
+    } else {
+      whenDocumentVisible()
+        // Skip decoding images unmounted while the tab was hidden
+        .then(() => image.isConnected ? image.decode() : undefined)
+        .catch(() => {})
+        .finally(() => setIsLoading(false));
+    }
+  }, [hasDocumentBeenHidden, whenDocumentVisible]);
+
   const onError = useCallback(() => setDidError(true), []);
 
   useEffect(() => {
