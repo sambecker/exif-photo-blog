@@ -9,6 +9,7 @@ import {
   PATH_ROOT,
   isPathAdmin,
   isPathAdminPhotoEdit,
+  isPathFloating,
   isPathSignIn,
 } from '@/app/path';
 import AnimateItems from '../components/AnimateItems';
@@ -34,6 +35,7 @@ export default function NavClient({
 
   const pathname = usePathname();
   const showNav = !isPathSignIn(pathname);
+  const isFloating = isPathFloating(pathname);
 
   const {
     hasLoadedWithAnimations,
@@ -54,6 +56,74 @@ export default function NavClient({
     typeof linkOrAction === 'string'
       ? <Link href={linkOrAction}>{text}</Link>
       : <button onClick={linkOrAction} type="button">{text}</button>;
+
+  const navInner = (
+    <>
+      <AppToolbar
+        animate={hasLoadedWithAnimations && isVisible}
+        isInEmptyState={isInEmptyState}
+      />
+      <div className={clsx(
+        'grow text-right min-w-0',
+        'translate-y-[-1px]',
+      )}>
+        <div className="truncate overflow-hidden select-none">
+          {renderLink(navTitle, PATH_ROOT)}
+        </div>
+        {navCaption &&
+          <div className={clsx(
+            'hidden sm:block truncate overflow-hidden',
+            'leading-tight text-dim',
+          )}>
+            {navCaption}
+          </div>}
+      </div>
+    </>
+  );
+
+  // Full-bleed sticky bar; content stays main-column width and centered.
+  // Avoid w-screen/100vw full-bleed — horizontal overflow breaks position:sticky
+  // (and thus scroll hide/show). box-shadow + clip-path paints edge-to-edge
+  // without creating a scroll container.
+  if (isFloating) {
+    return (
+      <div
+        ref={ref}
+        className={clsx('w-full', containerClassName)}
+        style={containerStyle}
+      >
+        <div
+          className={clsx(
+            'bg-main',
+            'shadow-[0_0_0_100vmax_white] dark:shadow-[0_0_0_100vmax_black]',
+            '[clip-path:inset(0_-100vmax)]',
+            contentClassName,
+          )}
+          style={contentStyle}
+        >
+          <AnimateItems
+            className="mx-auto w-full max-w-[956px]"
+            animateOnFirstLoadOnly
+            type={!isInEmptyState && !isPathAdmin(pathname)
+              ? 'bottom'
+              : 'none'}
+            distanceOffset={10}
+            items={showNav
+              ? [<nav
+                key="nav"
+                className={clsx(
+                  'w-full flex items-center gap-1.5 sm:gap-2',
+                  NAV_HEIGHT_CLASS,
+                )}
+              >
+                {navInner}
+              </nav>]
+              : []}
+          />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <AppGrid
@@ -80,25 +150,7 @@ export default function NavClient({
                 contentClassName,
               )}
               style={contentStyle}>
-              <AppToolbar
-                animate={hasLoadedWithAnimations && isVisible}
-                isInEmptyState={isInEmptyState}
-              />
-              <div className={clsx(
-                'grow text-right min-w-0',
-                'translate-y-[-1px]',
-              )}>
-                <div className="truncate overflow-hidden select-none">
-                  {renderLink(navTitle, PATH_ROOT)}
-                </div>
-                {navCaption &&
-                  <div className={clsx(
-                    'hidden sm:block truncate overflow-hidden',
-                    'leading-tight text-dim',
-                  )}>
-                    {navCaption}
-                  </div>}
-              </div>
+              {navInner}
             </nav>]
             : []}
         />

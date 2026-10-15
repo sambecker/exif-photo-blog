@@ -6,6 +6,7 @@ import { FiChevronDown } from 'react-icons/fi';
 import MoreMenu, { MoreMenuSection } from '@/components/more/MoreMenu';
 import { renderMenuItemCheck } from '@/components/more/MoreMenuItem';
 import IconFull from '@/components/icons/IconFull';
+import IconFloating from '@/components/icons/IconFloating';
 import IconGrid from '@/components/icons/IconGrid';
 import IconGridMasonry from '@/components/icons/IconGridMasonry';
 import Spinner from '@/components/Spinner';
@@ -29,10 +30,12 @@ const VIEW_ICON_CLASS = 'w-[24px] -ml-[4px] translate-x-[1px]';
 
 export default function AppViewMenuCompact({
   isViewFull,
+  isViewFloating,
   isMasonry,
   // Home views switch by navigating, sets by toggling state
   hrefGrid,
   hrefFull,
+  hrefFloating,
   onSelectView,
   isLoading,
   showSortItems,
@@ -42,9 +45,11 @@ export default function AppViewMenuCompact({
   className,
 }: {
   isViewFull?: boolean
+  isViewFloating?: boolean
   isMasonry?: boolean
   hrefGrid?: string
   hrefFull?: string
+  hrefFloating?: string
   onSelectView?: (isFull: boolean) => void
   isLoading?: boolean
   showSortItems?: boolean
@@ -54,6 +59,8 @@ export default function AppViewMenuCompact({
   className?: string
 }) {
   const appText = useAppText();
+
+  const isViewGrid = !isViewFull && !isViewFloating;
 
   const renderIconGrid = (forMenu?: boolean) => isMasonry
     ? <IconGridMasonry className={forMenu ? VIEW_ICON_CLASS : ''} />
@@ -66,7 +73,7 @@ export default function AppViewMenuCompact({
 
   const itemGrid = {
     label: appText.nav.grid,
-    icon: renderViewIcon(renderIconGrid(true), !isViewFull),
+    icon: renderViewIcon(renderIconGrid(true), isViewGrid),
     ...hrefGrid
       ? { href: hrefGrid }
       : { action: () => onSelectView?.(false) },
@@ -85,9 +92,23 @@ export default function AppViewMenuCompact({
     ...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && { keyCommand: KEY_COMMANDS.full },
   };
 
+  const itemFloating = hrefFloating
+    ? {
+      label: appText.nav.floating,
+      icon: renderViewIcon(
+        <IconFloating className={VIEW_ICON_CLASS} />,
+        Boolean(isViewFloating),
+      ),
+      href: hrefFloating,
+      ...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
+        keyCommand: KEY_COMMANDS.floating,
+      },
+    }
+    : undefined;
+
   const items: MoreMenuSection['items'] = GRID_HOMEPAGE_ENABLED
-    ? [itemGrid, itemFull]
-    : [itemFull, itemGrid];
+    ? [itemGrid, itemFull, ...itemFloating ? [itemFloating] : []]
+    : [itemFull, itemGrid, ...itemFloating ? [itemFloating] : []];
 
   if (showSortItems) {
     const { itemsSortOrder, itemsSortType } =
@@ -130,9 +151,11 @@ export default function AppViewMenuCompact({
             <span className="flex items-center justify-center">
               {isLoading
                 ? <Spinner />
-                : isViewFull
-                  ? <IconFull />
-                  : renderIconGrid()}
+                : isViewFloating
+                  ? <IconFloating />
+                  : isViewFull
+                    ? <IconFull />
+                    : renderIconGrid()}
             </span>
             <FiChevronDown
               size={13}

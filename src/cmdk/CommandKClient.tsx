@@ -25,6 +25,7 @@ import {
   PATH_ADMIN_TAGS,
   PATH_ADMIN_UPLOADS,
   PATH_FULL_INFERRED,
+  PATH_FLOATING,
   PATH_GRID_INFERRED,
   PATH_SIGN_IN,
   pathForAlbum,
@@ -39,6 +40,7 @@ import {
   pathForYear,
   PREFIX_RECENTS,
   isPathFull,
+  isPathFloating,
   isPathGrid,
   isPathLibrary,
   isPathRoot,
@@ -641,6 +643,12 @@ export default function CommandKClient({
       : isPathRoot(pathname)),
   };
 
+  const pageFloating: CommandKItem = {
+    label: appText.nav.floating,
+    path: PATH_FLOATING,
+    annotation: renderCheck(isPathFloating(pathname)),
+  };
+
   const pageGrid: CommandKItem = {
     label: GRID_HOMEPAGE_ENABLED
       ? `${appText.nav.grid} (${appText.nav.home})`
@@ -652,8 +660,8 @@ export default function CommandKClient({
   };
 
   const pageItems: CommandKItem[] = GRID_HOMEPAGE_ENABLED
-    ? [pageGrid, pageFull]
-    : [pageFull, pageGrid];
+    ? [pageGrid, pageFull, pageFloating]
+    : [pageFull, pageGrid, pageFloating];
 
   pageItems.push({
     label: appText.nav.library,

@@ -2,6 +2,7 @@
 
 import SwitcherItem from '@/components/switcher/SwitcherItem';
 import IconFull from '@/components/icons/IconFull';
+import IconFloating from '@/components/icons/IconFloating';
 import IconGrid from '@/components/icons/IconGrid';
 import IconGridMasonry from '@/components/icons/IconGridMasonry';
 import SortMenu from '@/photo/sort/SortMenu';
@@ -18,10 +19,12 @@ import IconSortNav from '@/components/icons/IconSortNav';
 
 export default function AppViewMenu({
   isViewFull,
+  isViewFloating,
   isMasonry,
   // Home views switch by navigating, sets by toggling state
   hrefGrid,
   hrefFull,
+  hrefFloating,
   onSelectView,
   showSortControl,
   sortConfig,
@@ -30,9 +33,11 @@ export default function AppViewMenu({
   className,
 }: {
   isViewFull?: boolean
+  isViewFloating?: boolean
   isMasonry?: boolean
   hrefGrid?: string
   hrefFull?: string
+  hrefFloating?: string
   onSelectView?: (isFull: boolean) => void
   showSortControl?: boolean
   sortConfig: ReturnType<typeof getSortStateFromPath>
@@ -49,6 +54,8 @@ export default function AppViewMenu({
     pathSortToggle,
   } = sortConfig;
 
+  const isViewGrid = !isViewFull && !isViewFloating;
+
   const switcherItemGrid = <SwitcherItem
     key="grid"
     icon={isMasonry
@@ -58,7 +65,7 @@ export default function AppViewMenu({
     onClick={hrefGrid
       ? undefined
       : () => onSelectView?.(false)}
-    active={!isViewFull}
+    active={isViewGrid}
     tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
       content: appText.nav.grid,
       keyCommand: KEY_COMMANDS.grid,
@@ -74,7 +81,7 @@ export default function AppViewMenu({
     onClick={hrefFull
       ? undefined
       : () => onSelectView?.(true)}
-    active={isViewFull}
+    active={Boolean(isViewFull)}
     tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
       content: appText.nav.full,
       keyCommand: KEY_COMMANDS.full,
@@ -82,6 +89,25 @@ export default function AppViewMenu({
     width="narrow"
     noPadding
   />;
+
+  const switcherItemFloating = hrefFloating
+    ? <SwitcherItem
+      key="floating"
+      icon={<IconFloating />}
+      href={hrefFloating}
+      active={Boolean(isViewFloating)}
+      tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
+        content: appText.nav.floating,
+        keyCommand: KEY_COMMANDS.floating,
+      }}}
+      width="narrow"
+      noPadding
+    />
+    : null;
+
+  const viewItems = GRID_HOMEPAGE_ENABLED
+    ? [switcherItemGrid, switcherItemFull, switcherItemFloating]
+    : [switcherItemFull, switcherItemGrid, switcherItemFloating];
 
   return (
     <div
@@ -91,9 +117,7 @@ export default function AppViewMenu({
         '*:rounded-lg *:overflow-hidden',
       )}
     >
-      {GRID_HOMEPAGE_ENABLED
-        ? [switcherItemGrid, switcherItemFull]
-        : [switcherItemFull, switcherItemGrid]}
+      {viewItems}
       {showSortControl && (NAV_SORT_CONTROL === 'menu'
         ? <SwitcherItem
           className={clsx(
