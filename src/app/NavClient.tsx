@@ -82,7 +82,7 @@ export default function NavClient({
   );
 
   // Full-bleed sticky bar; content stays main-column width and centered.
-  // Avoid w-screen/100vw full-bleed — horizontal overflow breaks position:sticky
+  // Avoid w-screen/100vw full-bleed, horizontal overflow breaks position:sticky
   // (and thus scroll hide/show). box-shadow + clip-path paints edge-to-edge
   // without creating a scroll container.
   if (isFloating) {
