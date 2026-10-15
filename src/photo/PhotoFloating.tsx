@@ -503,8 +503,8 @@ export default function PhotoFloating({
     >
       <div className={clsx(
         'w-full max-w-[1400px]',
-        'flex flex-col items-center gap-4',
-        'md:flex-row md:justify-center md:gap-8 lg:gap-12',
+        'flex flex-col items-center',
+        'md:flex-row md:justify-center',
         // Meta left of photo:
         // Reverse row so photo stays first in DOM for mobile
         metaSide === 'left' && 'md:flex-row-reverse',

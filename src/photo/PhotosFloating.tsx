@@ -32,7 +32,7 @@ export default function PhotosFloating({
         <PhotoFloating
           key={photo.id}
           photo={photo}
-          metaSide={(indexOffset + index) % 2 === 0 ? 'left' : 'right'}
+          metaSide={(indexOffset + index) % 2 === 0 ? 'right' : 'left'}
           priority={index <= 1}
           prefetchRelatedLinks={prefetchFirstPhotoLinks && index === 0}
           revalidatePhoto={revalidatePhoto}
