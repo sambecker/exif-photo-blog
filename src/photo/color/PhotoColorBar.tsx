@@ -26,8 +26,7 @@ export default function PhotoColorBar({
       className={clsx(
         // w-fit: hug swatches without stretching; parent items-end can still
         // right-align when meta is on the left
-        'relative inline-flex w-fit',
-        'h-2.5 overflow-hidden rounded-[4px]',
+        'inline-flex w-fit h-[4px] overflow-hidden',
         className,
       )}
     >
@@ -43,14 +42,6 @@ export default function PhotoColorBar({
           style={{ backgroundColor: convertOklchToCss(color) }}
           title={`Color ${index + 1}`}
         />)}
-      {/* Inner stroke — matches ColorDot light/dark definition */}
-      <div
-        className={clsx(
-          'absolute inset-px rounded-[4px]',
-          'outline outline-black/10 dark:outline-white/20',
-          'pointer-events-none',
-        )}
-      />
     </div>
   );
 }
