@@ -53,7 +53,7 @@ export default function AppViewMenu({
     pathSortToggle,
   } = sortConfig;
 
-  // On home, the full-frame icon represents floating (no separate floating icon)
+  // Home: full-frame icon represents floating (no separate icon)
   const usesFloatingAsFull = Boolean(hrefFloating);
   const hrefFullOrFloating = hrefFloating ?? hrefFull;
   const isFullOrFloatingActive = usesFloatingAsFull

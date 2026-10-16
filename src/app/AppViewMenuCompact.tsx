@@ -76,7 +76,7 @@ export default function AppViewMenuCompact({
     ...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && { keyCommand: KEY_COMMANDS.grid },
   };
 
-  // On home, the full-frame icon represents floating (no separate floating icon)
+  // Home: full-frame icon represents floating (no separate icon)
   const usesFloatingAsFull = Boolean(hrefFloating);
   const itemFull = {
     label: usesFloatingAsFull
