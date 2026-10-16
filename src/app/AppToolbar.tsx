@@ -4,7 +4,7 @@ import SwitcherItem from '@/components/switcher/SwitcherItem';
 import {
   PATH_LIBRARY,
   PATH_FULL_INFERRED,
-  PATH_FLOATING,
+  PATH_FLOATING_INFERRED,
   PATH_GRID_INFERRED,
   PATH_HOME_INFERRED,
   isPathLibrary,
@@ -121,7 +121,10 @@ export default function AppToolbar({
         case KEY_COMMANDS.full:
           if (isPhotoSet) {
             setIsPhotoSetFull?.(true);
-          } else if (pathname !== PATH_FLOATING && !isPathFloating(pathname)) {
+          } else if (
+            pathname !== PATH_FLOATING_INFERRED &&
+            !isPathFloating(pathname)
+          ) {
             // Home: full-frame icon / F opens floating layout
             navigateHomeView('floating');
           }
@@ -156,7 +159,7 @@ export default function AppToolbar({
 
   const showViewMenu = isHome || isPhotoSet;
   const isViewFloating = isHome && (
-    pathname === PATH_FLOATING || isPathFloating(pathname)
+    pathname === PATH_FLOATING_INFERRED || isPathFloating(pathname)
   );
   const isViewFull = isHome
     ? !isViewFloating && (

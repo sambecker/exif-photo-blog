@@ -6,7 +6,7 @@ import {
 import PhotosFloating from './PhotosFloating';
 import PhotosFloatingInfinite from './PhotosFloatingInfinite';
 import { SortBy } from './sort';
-import { PATH_FLOATING } from '@/app/path';
+import { PATH_FLOATING_INFERRED } from '@/app/path';
 
 export default function PhotoFloatingPage({
   photos,
@@ -25,7 +25,7 @@ export default function PhotoFloatingPage({
       <PhotosFloating {...{ photos, showStorageCheck }} />
       {photosCount > photos.length &&
         <PhotosFloatingInfinite
-          cacheKey={`page-${PATH_FLOATING}`}
+          cacheKey={`page-${PATH_FLOATING_INFERRED}`}
           initialOffset={photos.length}
           itemsPerPage={INFINITE_SCROLL_FULL_MULTIPLE}
           sortBy={sortBy}

@@ -23,13 +23,14 @@ export const PATH_OG                    = '/og';
 export const PATH_GRID_INFERRED = GRID_HOMEPAGE_ENABLED
   ? PATH_ROOT
   : PATH_GRID;
-export const PATH_FULL_INFERRED = GRID_HOMEPAGE_ENABLED
-  ? PATH_FULL
+// Floating replaces traditional full as the default large-photo layout
+export const PATH_FLOATING_INFERRED = GRID_HOMEPAGE_ENABLED
+  ? PATH_FLOATING
   : PATH_ROOT;
-// Prefer floating over traditional full when full would be the homepage
+export const PATH_FULL_INFERRED = PATH_FLOATING_INFERRED;
 export const PATH_HOME_INFERRED = GRID_HOMEPAGE_ENABLED
   ? PATH_ROOT
-  : PATH_FLOATING;
+  : PATH_FLOATING_INFERRED;
 
 // Modifiers
 const EDIT = 'edit';
@@ -291,10 +292,10 @@ export const ABSOLUTE_PATH_GRID =
   `${getBaseUrl()}${PATH_GRID}`;
 
 export const ABSOLUTE_PATH_FULL =
-  `${getBaseUrl()}${PATH_FULL}`;
+  `${getBaseUrl()}${PATH_FULL_INFERRED}`;
 
 export const ABSOLUTE_PATH_FLOATING =
-  `${getBaseUrl()}${PATH_FLOATING}`;
+  `${getBaseUrl()}${PATH_FLOATING_INFERRED}`;
 
 export const ABSOLUTE_PATH_FEED_JSON =
   `${getBaseUrl()}${PATH_FEED_JSON}`;
