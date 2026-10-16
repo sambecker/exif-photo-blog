@@ -2,7 +2,6 @@
 
 import SwitcherItem from '@/components/switcher/SwitcherItem';
 import IconFull from '@/components/icons/IconFull';
-import IconFloating from '@/components/icons/IconFloating';
 import IconGrid from '@/components/icons/IconGrid';
 import IconGridMasonry from '@/components/icons/IconGridMasonry';
 import SortMenu from '@/photo/sort/SortMenu';
@@ -54,6 +53,12 @@ export default function AppViewMenu({
     pathSortToggle,
   } = sortConfig;
 
+  // On home, the full-frame icon represents floating (no separate floating icon)
+  const usesFloatingAsFull = Boolean(hrefFloating);
+  const hrefFullOrFloating = hrefFloating ?? hrefFull;
+  const isFullOrFloatingActive = usesFloatingAsFull
+    ? Boolean(isViewFloating)
+    : Boolean(isViewFull);
   const isViewGrid = !isViewFull && !isViewFloating;
 
   const switcherItemGrid = <SwitcherItem
@@ -66,6 +71,7 @@ export default function AppViewMenu({
       ? undefined
       : () => onSelectView?.(false)}
     active={isViewGrid}
+    naked
     tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
       content: appText.nav.grid,
       keyCommand: KEY_COMMANDS.grid,
@@ -77,84 +83,75 @@ export default function AppViewMenu({
   const switcherItemFull = <SwitcherItem
     key="full"
     icon={<IconFull />}
-    href={hrefFull}
-    onClick={hrefFull
+    href={hrefFullOrFloating}
+    onClick={hrefFullOrFloating
       ? undefined
       : () => onSelectView?.(true)}
-    active={Boolean(isViewFull)}
+    active={isFullOrFloatingActive}
+    naked
     tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
-      content: appText.nav.full,
+      content: usesFloatingAsFull
+        ? appText.nav.floating
+        : appText.nav.full,
       keyCommand: KEY_COMMANDS.full,
     }}}
     width="narrow"
     noPadding
   />;
 
-  const switcherItemFloating = hrefFloating
-    ? <SwitcherItem
-      key="floating"
-      icon={<IconFloating />}
-      href={hrefFloating}
-      active={Boolean(isViewFloating)}
-      tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
-        content: appText.nav.floating,
-        keyCommand: KEY_COMMANDS.floating,
-      }}}
-      width="narrow"
-      noPadding
-    />
-    : null;
-
   const viewItems = GRID_HOMEPAGE_ENABLED
-    ? [switcherItemGrid, switcherItemFull, switcherItemFloating]
-    : [switcherItemFull, switcherItemGrid, switcherItemFloating];
+    ? [switcherItemGrid, switcherItemFull]
+    : [switcherItemFull, switcherItemGrid];
+
+  const sortItem = showSortControl
+    ? (NAV_SORT_CONTROL === 'menu'
+      ? <SwitcherItem
+        key="sort"
+        icon={<SortMenu
+          {...sortConfig}
+          isOpen={isSortMenuOpen}
+          setIsOpen={setIsSortMenuOpen}
+        />}
+        iconIsFocusable
+        active={!isSortedByDefault}
+        naked
+        tooltip={{
+          ...!isSortMenuOpen && SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
+            content: appText.sort.sort,
+          },
+        }}
+        width="narrow"
+        noPadding
+      />
+      : <SwitcherItem
+        key="sort"
+        href={pathSortToggle}
+        icon={<IconSortNav
+          sort={isAscending ? 'asc' : 'desc'}
+          chromatic={isColor}
+        />}
+        active={!isSortedByDefault}
+        naked
+        tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
+          content: isAscending
+            ? appText.sort.viewNewest
+            : appText.sort.viewOldest,
+        }}}
+        width="narrow"
+        noPadding
+      />)
+    : null;
 
   return (
     <div
       className={clsx(
         className,
         'flex items-center',
-        '*:rounded-lg *:overflow-hidden',
       )}
     >
+      {/* Sort first to match nav sketch: sort, views, library, search */}
+      {sortItem}
       {viewItems}
-      {showSortControl && (NAV_SORT_CONTROL === 'menu'
-        ? <SwitcherItem
-          className={clsx(
-            !isSortedByDefault && '*:bg-dim *:text-main!',
-          )}
-          icon={<SortMenu
-            {...sortConfig}
-            isOpen={isSortMenuOpen}
-            setIsOpen={setIsSortMenuOpen}
-          />}
-          iconIsFocusable
-          tooltip={{
-            ...!isSortMenuOpen && SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
-              content: appText.sort.sort,
-            },
-          }}
-          width="narrow"
-          noPadding
-        />
-        : <SwitcherItem
-          className={clsx(
-            '*:w-full *:h-full *:flex *:items-center *:justify-center',
-            !isSortedByDefault && '*:bg-dim *:text-main!',
-          )}
-          href={pathSortToggle}
-          icon={<IconSortNav
-            sort={isAscending ? 'asc' : 'desc'}
-            chromatic={isColor}
-          />}
-          tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
-            content: isAscending
-              ? appText.sort.viewNewest
-              : appText.sort.viewOldest,
-          }}}
-          width="narrow"
-          noPadding
-        />)}
     </div>
   );
 }

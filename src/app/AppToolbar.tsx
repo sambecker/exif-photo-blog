@@ -1,13 +1,12 @@
 'use client';
 
-import Switcher from '@/components/switcher/Switcher';
 import SwitcherItem from '@/components/switcher/SwitcherItem';
 import {
   PATH_LIBRARY,
   PATH_FULL_INFERRED,
   PATH_FLOATING,
   PATH_GRID_INFERRED,
-  PATH_ROOT,
+  PATH_HOME_INFERRED,
   isPathLibrary,
   isPathFull,
   isPathFloating,
@@ -40,7 +39,6 @@ import { useAppText } from '@/i18n/state/client';
 import { getSortStateFromPath } from '@/photo/sort/path';
 import { motion } from 'framer-motion';
 import IconLibrary from '@/components/icons/IconLibrary';
-import { BiHomeAlt as HomeIcon } from 'react-icons/bi';
 import AppViewMenu from './AppViewMenu';
 import AppViewMenuCompact from './AppViewMenuCompact';
 
@@ -97,7 +95,6 @@ export default function AppToolbar({
   const [isViewSwitchLoading, setIsViewSwitchLoading] = useState(false);
   useDelayedLoading(isPending, setIsViewSwitchLoading);
 
-  const refHrefHome = useRef<HTMLAnchorElement>(null);
   const refHrefLibrary = useRef<HTMLAnchorElement>(null);
 
   const [isAdminMenuOpen, setIsAdminMenuOpen] = useState(false);
@@ -124,14 +121,8 @@ export default function AppToolbar({
         case KEY_COMMANDS.full:
           if (isPhotoSet) {
             setIsPhotoSetFull?.(true);
-          } else if (pathname !== PATH_FULL_INFERRED && !isPathFull(pathname)) {
-            navigateHomeView('full');
-          }
-          break;
-        case KEY_COMMANDS.floating:
-          if (!isPhotoSet && pathname !== PATH_FLOATING &&
-            !isPathFloating(pathname)
-          ) {
+          } else if (pathname !== PATH_FLOATING && !isPathFloating(pathname)) {
+            // Home: full-frame icon / F opens floating layout
             navigateHomeView('floating');
           }
           break;
@@ -143,7 +134,9 @@ export default function AppToolbar({
           }
           break;
         case KEY_COMMANDS.home:
-          if (pathname !== PATH_ROOT) { refHrefHome.current?.click(); }
+          if (pathname !== PATH_HOME_INFERRED) {
+            startTransition(() => router.push(PATH_HOME_INFERRED));
+          }
           break;
         case KEY_COMMANDS.library:
           if (pathname !== PATH_LIBRARY) { refHrefLibrary.current?.click(); }
@@ -154,6 +147,7 @@ export default function AppToolbar({
     isPhotoSet,
     pathname,
     navigateHomeView,
+    router,
     setIsPhotoSetFull,
   ]);
   useKeydownHandler({ onKeyDown });
@@ -173,80 +167,16 @@ export default function AppToolbar({
   return (
     <div className={clsx(
       className,
-      'flex',
-      'gap-1.5 sm:gap-4',
+      'flex items-center shrink-0',
     )}>
-      <Switcher>
-        <SwitcherItem
-          icon={<HomeIcon size={17} />}
-          href={PATH_ROOT}
-          hrefRef={refHrefHome}
-          active={isHome}
-          tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
-            content: appText.nav.home,
-            keyCommand: KEY_COMMANDS.home,
-          }}}
-        />
-        <SwitcherItem
-          icon={<IconLibrary />}
-          href={PATH_LIBRARY}
-          hrefRef={refHrefLibrary}
-          active={isPathLibrary(pathname)}
-          tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
-            content: appText.nav.library,
-            keyCommand: KEY_COMMANDS.library,
-          }}}
-          noPadding
-        />
-        <SwitcherItem
-          icon={<IconSearch />}
-          onClick={() => setIsCommandKOpen?.(true)}
-          tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
-            content: appText.nav.search,
-            keyCommandModifier: KEY_COMMANDS.search[0],
-            keyCommand: KEY_COMMANDS.search[1],
-          }}}
-          noPadding
-        />
-        {/* Show spinner if admin is suspected to be logged in */}
-        {(isUserSignedInEager && !isUserSignedIn) &&
-          <SwitcherItem
-            icon={<Spinner />}
-            isInteractive={false}
-            noPadding
-            tooltip={{
-              ...!isAdminMenuOpen && SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
-                content: appText.nav.admin,
-              },
-            }}
-          />}
-        {isUserSignedIn &&
-          <SwitcherItem
-            icon={<AdminAppMenu
-              isOpen={isAdminMenuOpen}
-              setIsOpen={isOpen => {
-                setIsAdminMenuOpen(isOpen);
-                if (isOpen) {
-                  setIsSortMenuOpen(false);
-                  setIsViewMenuOpen(false);
-                }
-              }}
-            />}
-            iconIsFocusable
-            tooltip={{
-              ...!isAdminMenuOpen && SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
-                content: appText.nav.admin,
-              },
-            }}
-            noPadding
-          />}
-      </Switcher>
       {!isInEmptyState &&
         <motion.div
-          initial={animate ? { opacity: 0, width: 0 } : false}
+          className="flex items-center overflow-hidden"
+          initial={animate ? { opacity: 0, width: 0, x: -8 } : false}
           animate={{
             opacity: showViewMenu ? 1 : 0,
             width: showViewMenu ? 'auto' : 0,
+            x: showViewMenu ? 0 : -8,
           }}
           transition={{ duration: 0.2, ease: 'easeInOut' }}
         >
@@ -293,6 +223,67 @@ export default function AppToolbar({
             }}
           />
         </motion.div>}
+      <SwitcherItem
+        icon={<IconLibrary />}
+        href={PATH_LIBRARY}
+        hrefRef={refHrefLibrary}
+        active={isPathLibrary(pathname)}
+        naked
+        width="narrow"
+        noPadding
+        tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
+          content: appText.nav.library,
+          keyCommand: KEY_COMMANDS.library,
+        }}}
+      />
+      <SwitcherItem
+        icon={<IconSearch />}
+        onClick={() => setIsCommandKOpen?.(true)}
+        naked
+        width="narrow"
+        noPadding
+        tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
+          content: appText.nav.search,
+          keyCommandModifier: KEY_COMMANDS.search[0],
+          keyCommand: KEY_COMMANDS.search[1],
+        }}}
+      />
+      {/* Show spinner if admin is suspected to be logged in */}
+      {(isUserSignedInEager && !isUserSignedIn) &&
+        <SwitcherItem
+          icon={<Spinner />}
+          isInteractive={false}
+          naked
+          width="narrow"
+          noPadding
+          tooltip={{
+            ...!isAdminMenuOpen && SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
+              content: appText.nav.admin,
+            },
+          }}
+        />}
+      {isUserSignedIn &&
+        <SwitcherItem
+          icon={<AdminAppMenu
+            isOpen={isAdminMenuOpen}
+            setIsOpen={isOpen => {
+              setIsAdminMenuOpen(isOpen);
+              if (isOpen) {
+                setIsSortMenuOpen(false);
+                setIsViewMenuOpen(false);
+              }
+            }}
+          />}
+          iconIsFocusable
+          naked
+          width="narrow"
+          noPadding
+          tooltip={{
+            ...!isAdminMenuOpen && SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
+              content: appText.nav.admin,
+            },
+          }}
+        />}
     </div>
   );
 }

@@ -26,6 +26,10 @@ export const PATH_GRID_INFERRED = GRID_HOMEPAGE_ENABLED
 export const PATH_FULL_INFERRED = GRID_HOMEPAGE_ENABLED
   ? PATH_FULL
   : PATH_ROOT;
+// Prefer floating over traditional full when full would be the homepage
+export const PATH_HOME_INFERRED = GRID_HOMEPAGE_ENABLED
+  ? PATH_ROOT
+  : PATH_FLOATING;
 
 // Modifiers
 const EDIT = 'edit';

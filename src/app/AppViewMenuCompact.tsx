@@ -6,15 +6,11 @@ import { FiChevronDown } from 'react-icons/fi';
 import MoreMenu, { MoreMenuSection } from '@/components/more/MoreMenu';
 import { renderMenuItemCheck } from '@/components/more/MoreMenuItem';
 import IconFull from '@/components/icons/IconFull';
-import IconFloating from '@/components/icons/IconFloating';
 import IconGrid from '@/components/icons/IconGrid';
 import IconGridMasonry from '@/components/icons/IconGridMasonry';
 import Spinner from '@/components/Spinner';
 import Tooltip from '@/components/Tooltip';
-import {
-  HEIGHT_CLASS,
-  SWITCHER_ITEM_INTERACTIVE_BG,
-} from '@/components/switcher/SwitcherItem';
+import { HEIGHT_CLASS } from '@/components/switcher/SwitcherItem';
 import { useAppText } from '@/i18n/state/client';
 import { KEY_COMMANDS } from '@/photo/key-commands';
 import { getSortStateFromPath } from '@/photo/sort/path';
@@ -80,35 +76,29 @@ export default function AppViewMenuCompact({
     ...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && { keyCommand: KEY_COMMANDS.grid },
   };
 
+  // On home, the full-frame icon represents floating (no separate floating icon)
+  const usesFloatingAsFull = Boolean(hrefFloating);
   const itemFull = {
-    label: appText.nav.full,
+    label: usesFloatingAsFull
+      ? appText.nav.floating
+      : appText.nav.full,
     icon: renderViewIcon(
       <IconFull className={VIEW_ICON_CLASS} />,
-      Boolean(isViewFull),
+      usesFloatingAsFull
+        ? Boolean(isViewFloating)
+        : Boolean(isViewFull),
     ),
-    ...hrefFull
-      ? { href: hrefFull }
+    ...(hrefFloating ?? hrefFull)
+      ? { href: hrefFloating ?? hrefFull }
       : { action: () => onSelectView?.(true) },
     ...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && { keyCommand: KEY_COMMANDS.full },
   };
 
-  const itemFloating = hrefFloating
-    ? {
-      label: appText.nav.floating,
-      icon: renderViewIcon(
-        <IconFloating className={VIEW_ICON_CLASS} />,
-        Boolean(isViewFloating),
-      ),
-      href: hrefFloating,
-      ...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
-        keyCommand: KEY_COMMANDS.floating,
-      },
-    }
-    : undefined;
+  const viewItems: MoreMenuSection['items'] = GRID_HOMEPAGE_ENABLED
+    ? [itemGrid, itemFull]
+    : [itemFull, itemGrid];
 
-  const items: MoreMenuSection['items'] = GRID_HOMEPAGE_ENABLED
-    ? [itemGrid, itemFull, ...itemFloating ? [itemFloating] : []]
-    : [itemFull, itemGrid, ...itemFloating ? [itemFloating] : []];
+  const items: MoreMenuSection['items'] = [];
 
   if (showSortItems) {
     const { itemsSortOrder, itemsSortType } =
@@ -127,6 +117,8 @@ export default function AppViewMenuCompact({
     });
   }
 
+  items.push(...viewItems);
+
   return (
     <Tooltip
       classNameTrigger={className}
@@ -144,18 +136,16 @@ export default function AppViewMenuCompact({
           {...{ isOpen, setIsOpen }}
           sections={[{ items }]}
           ariaLabel="View Menu"
-          align="start"
+          align="end"
           sideOffset={10}
-          alignOffset={-4}
+          alignOffset={4}
           icon={<>
             <span className="flex items-center justify-center">
               {isLoading
                 ? <Spinner />
-                : isViewFloating
-                  ? <IconFloating />
-                  : isViewFull
-                    ? <IconFull />
-                    : renderIconGrid()}
+                : (isViewFloating || isViewFull)
+                  ? <IconFull />
+                  : renderIconGrid()}
             </span>
             <FiChevronDown
               size={13}
@@ -165,12 +155,9 @@ export default function AppViewMenuCompact({
           classNameButton={clsx(
             'inline-flex items-center',
             'h-[28px]',
-            'rounded-full',
             'text-main!',
-            SWITCHER_ITEM_INTERACTIVE_BG,
             'cursor-pointer',
           )}
-          classNameButtonOpen="bg-dim!"
         />
       </div>
     </Tooltip>
