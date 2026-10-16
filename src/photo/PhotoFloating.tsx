@@ -54,6 +54,7 @@ import { useEditTitlesState } from '@/admin/edit-titles/EditTitlesState';
 import { DATA_KEY_PHOTO_LARGE } from '@/admin/edit-titles/EditTitlesProvider';
 import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import PlaceEntity from '@/place/PlaceEntity';
+import PhotoColorBar from './color/PhotoColorBar';
 
 export default function PhotoFloating({
   photo,
@@ -457,6 +458,10 @@ export default function PhotoFloating({
               )}
               timezone={null}
               hideTime={!SHOW_TAKEN_AT_TIME}
+            />
+            <PhotoColorBar
+              className="-translate-y-0.5"
+              colorData={photo.colorData}
             />
             <div className={clsx(
               'flex gap-1 translate-y-[0.5px]',
