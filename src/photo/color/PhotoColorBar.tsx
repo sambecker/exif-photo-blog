@@ -24,24 +24,25 @@ export default function PhotoColorBar({
   return (
     <div
       className={clsx(
-        // w-fit: hug swatches without stretching; parent items-end can still
-        // right-align when meta is on the left
-        'inline-flex w-fit h-[4px] overflow-hidden',
+        // Occupy a baseline row so vertical rhythm matches adjacent EXIF lines
+        'inline-flex items-center w-fit h-baseline',
         className,
       )}
     >
-      <div
-        className="w-[50px] shrink-0 h-full"
-        style={{ backgroundColor: convertOklchToCss(main) }}
-        title="Main"
-      />
-      {swatches.map((color, index) =>
+      <div className="inline-flex h-[4px] overflow-hidden">
         <div
-          key={index}
-          className="w-[6px] shrink-0 h-full"
-          style={{ backgroundColor: convertOklchToCss(color) }}
-          title={`Color ${index + 1}`}
-        />)}
+          className="w-[50px] shrink-0 h-full"
+          style={{ backgroundColor: convertOklchToCss(main) }}
+          title="Main"
+        />
+        {swatches.map((color, index) =>
+          <div
+            key={index}
+            className="w-[6px] shrink-0 h-full"
+            style={{ backgroundColor: convertOklchToCss(color) }}
+            title={`Color ${index + 1}`}
+          />)}
+      </div>
     </div>
   );
 }

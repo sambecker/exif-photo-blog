@@ -15,8 +15,6 @@ import { clsx } from 'clsx/lite';
 import Link from 'next/link';
 import { pathForFocalLength, pathForPhoto } from '@/app/path';
 import PhotoTags from '@/tag/PhotoTags';
-import ShareButton from '@/share/ShareButton';
-import DownloadButton from '@/components/DownloadButton';
 import PhotoCamera from '../camera/PhotoCamera';
 import { cameraFromPhoto } from '@/camera';
 import PhotoFilm from '@/film/PhotoFilm';
@@ -25,7 +23,6 @@ import DivDebugBaselineGrid from '@/components/DivDebugBaselineGrid';
 import PhotoLink from './PhotoLink';
 import {
   SHOULD_PREFETCH_ALL_LINKS,
-  ALLOW_PUBLIC_DOWNLOADS,
   SHOW_TAKEN_AT_TIME,
   ALWAYS_SHOW_EXPOSURE_COMP,
   UPPERCASE_TITLES,
@@ -37,8 +34,6 @@ import { useCallback, useMemo, useRef } from 'react';
 import useVisibility from '@/utility/useVisibility';
 import PhotoDate from './PhotoDate';
 import { useAppState } from '@/app/AppState';
-import { LuExpand } from 'react-icons/lu';
-import LoaderButton from '@/components/primitives/LoaderButton';
 import Tooltip from '@/components/Tooltip';
 import ZoomControls, { ZoomControlsRef }
   from '@/components/image/zoom/ZoomControls';
@@ -66,7 +61,6 @@ export default function PhotoFloating({
   revalidatePhoto,
   showZoomControls: _showZoomControls = true,
   shouldZoomOnFKeydown = true,
-  shouldShare = true,
   includeFavoriteInAdminMenu,
   onVisible,
   showAdminKeyCommands,
@@ -81,7 +75,6 @@ export default function PhotoFloating({
   revalidatePhoto?: RevalidatePhoto
   showZoomControls?: boolean
   shouldZoomOnFKeydown?: boolean
-  shouldShare?: boolean
   includeFavoriteInAdminMenu?: boolean
   onVisible?: () => void
   showAdminKeyCommands?: boolean
@@ -254,12 +247,17 @@ export default function PhotoFloating({
       </div>
     </div>;
 
-  const renderAdminMenu =
+  const renderAdminMenu = (placement?: 'down-right') =>
     <AdminPhotoMenu {...{
       photo,
       revalidatePhoto,
       includeFavorite: includeFavoriteInAdminMenu,
       showKeyCommands: showAdminKeyCommands,
+      // Meta on left: drop below the trigger and extend toward the photo
+      ...placement === 'down-right' && {
+        side: 'bottom',
+        align: 'start',
+      },
     }} />;
 
   const photoContainerClassName = clsx(
@@ -290,7 +288,7 @@ export default function PhotoFloating({
               'hidden md:block',
               metaSide === 'left' ? 'float-start' : 'float-end',
             )}>
-              {renderAdminMenu}
+              {renderAdminMenu(metaSide === 'left' ? 'down-right' : undefined)}
             </div>}
           {isEditingTitles
             ? <div className={clsx(
@@ -389,12 +387,15 @@ export default function PhotoFloating({
         </div>
         <div className={clsx(
           'space-y-baseline',
+          // Match left-meta flex rhythm on the right
+          // (avoids tighter block margins)
+          'md:flex md:flex-col',
+          metaSide === 'left' ? 'md:items-end' : 'md:items-start',
           !hasTitleContent && !hasMetaContent && 'md:-mt-baseline',
-          metaSide === 'left' && 'md:flex md:flex-col md:items-end',
         )}>
           {!isEditingTitles &&
             <div className="float-end md:hidden">
-              {renderAdminMenu}
+              {renderAdminMenu()}
             </div>}
           {showExifContent &&
             <>
@@ -454,58 +455,21 @@ export default function PhotoFloating({
                   />
                 </div>}
             </>}
-          <div className={clsx(
-            'flex gap-x-3 gap-y-baseline',
-            'md:flex-col flex-wrap',
-            'md:justify-normal',
-            metaSide === 'left' && 'md:items-end',
-          )}>
-            <PhotoDate
-              photo={photo}
-              className={clsx(
-                'text-medium',
-                // Clear space for floated admin menu
-                !hasNonDateContent && isUserSignedIn && (
-                  metaSide === 'left' ? 'md:pl-7' : 'md:pr-7'
-                ),
-              )}
-              timezone={null}
-              hideTime={!SHOW_TAKEN_AT_TIME}
-            />
-            <PhotoColorBar
-              className="-translate-y-0.5"
-              colorData={photo.colorData}
-            />
-            <div className={clsx(
-              'flex gap-1 translate-y-[0.5px]',
-              'translate-x-[-2.5px]',
-              metaSide === 'left' && 'md:translate-x-[2.5px]',
-            )}>
-              {showZoomControls &&
-                <LoaderButton
-                  tooltip={appText.tooltip.zoom}
-                  aria-label={appText.tooltip.zoom}
-                  icon={<LuExpand size={15} />}
-                  onClick={() => refZoomControls.current?.open()}
-                  styleAs="link"
-                  className="text-medium translate-y-[0.25px]"
-                  hideFocusOutline
-                />}
-              {shouldShare &&
-                <ShareButton
-                  tooltip={appText.tooltip.sharePhoto}
-                  photo={photo}
-                  prefetch={prefetchRelatedLinks}
-                />}
-              {ALLOW_PUBLIC_DOWNLOADS &&
-                <DownloadButton
-                  className="translate-y-[0.5px] md:translate-y-0"
-                  photo={photo}
-                />}
-            </div>
-            {showStorageCheck &&
-              <AdminPhotoStorageCheck photo={photo} />}
-          </div>
+          <PhotoDate
+            photo={photo}
+            className={clsx(
+              'text-medium',
+              // Clear space for floated admin menu
+              !hasNonDateContent && isUserSignedIn && (
+                metaSide === 'left' ? 'md:pl-7' : 'md:pr-7'
+              ),
+            )}
+            timezone={null}
+            hideTime={!SHOW_TAKEN_AT_TIME}
+          />
+          <PhotoColorBar colorData={photo.colorData} />
+          {showStorageCheck &&
+            <AdminPhotoStorageCheck photo={photo} />}
         </div>
       </div>
     </DivDebugBaselineGrid>;
