@@ -130,7 +130,6 @@ export default function PhotoFloating({
   ], []);
   const {
     isShowingRecipeOverlay,
-    toggleRecipeOverlay,
     hideRecipeOverlay,
   } = useRecipeOverlay({
     ref: refRecipe,
@@ -151,6 +150,23 @@ export default function PhotoFloating({
   const showPlaceContent =
     Boolean(photo.location) &&
     !GEO_PRIVACY_ENABLED;
+  const has35mmEquivalent =
+    Boolean(photo.focalLengthIn35MmFormatFormatted) &&
+    photo.focalLengthIn35MmFormatFormatted !== photo.focalLengthFormatted;
+  const focalLengthLink = photo.focalLength
+    ? <Link
+      href={pathForFocalLength(photo.focalLength)}
+      className={clsx(
+        'hover:text-main active:text-medium',
+        has35mmEquivalent && clsx(
+          'decoration-dotted underline-offset-[3px]',
+          'hover:underline',
+        ),
+      )}
+    >
+      {photo.focalLengthFormatted}
+    </Link>
+    : null;
 
   useVisibility({ ref, onVisible });
 
@@ -342,12 +358,14 @@ export default function PhotoFloating({
                     {showCameraContent &&
                       <PhotoCamera
                         camera={camera}
+                        type="text-only"
                         contrast="medium"
                         prefetch={prefetchRelatedLinks}
                       />}
                     {showLensContent &&
                       <PhotoLens
                         lens={lens}
+                        type="text-only"
                         contrast="medium"
                         prefetch={prefetchRelatedLinks}
                       />}
@@ -356,10 +374,9 @@ export default function PhotoFloating({
                   <PhotoRecipe
                     ref={refPhotoRecipe}
                     recipe={recipeTitle}
+                    type="text-only"
                     contrast="medium"
                     prefetch={prefetchRelatedLinks}
-                    toggleRecipeOverlay={toggleRecipeOverlay}
-                    isShowingRecipeOverlay={isShowingRecipeOverlay}
                   />}
                 {showTagsContent &&
                   <PhotoTags
@@ -382,44 +399,44 @@ export default function PhotoFloating({
           {showExifContent &&
             <>
               <ul className="text-medium">
-                <li>
-                  {photo.focalLength &&
-                    <Link
-                      href={pathForFocalLength(photo.focalLength)}
-                      className="hover:text-main active:text-medium"
-                    >
-                      {photo.focalLengthFormatted}
-                    </Link>}
-                  {(
-                    photo.focalLengthIn35MmFormatFormatted &&
-                    // eslint-disable-next-line @stylistic/max-len
-                    photo.focalLengthIn35MmFormatFormatted !== photo.focalLengthFormatted
-                  ) &&
-                    <>
-                      {' '}
-                      <Tooltip
-                        content={appText.tooltip['35mm']}
+                {(photo.focalLength || photo.isoFormatted) &&
+                  <li className={clsx(
+                    'flex gap-x-3',
+                    metaSide === 'left' && 'md:justify-end',
+                  )}>
+                    {focalLengthLink && (has35mmEquivalent
+                      ? <Tooltip
+                        content={`${appText.tooltip['35mm']}: ${
+                          photo.focalLengthIn35MmFormatFormatted
+                        }`}
                         sideOffset={3}
                         supportMobile
+                        triggerIsFocusable
                       >
-                        <span
-                          className={clsx(
-                            'text-extra-dim',
-                            'decoration-dotted underline-offset-[3px]',
-                            'hover:underline',
-                          )}
-                        >
-                          {photo.focalLengthIn35MmFormatFormatted}
-                        </span>
+                        {focalLengthLink}
                       </Tooltip>
-                    </>}
-                </li>
-                <li>{photo.fNumberFormatted}</li>
-                <li>{photo.exposureTimeFormatted}</li>
-                <li>{photo.isoFormatted}</li>
-                {photo.exposureCompensationFormatted
-                  ? <li>{photo.exposureCompensationFormatted}</li>
-                  : ALWAYS_SHOW_EXPOSURE_COMP && <li>0ev</li>}
+                      : focalLengthLink)}
+                    {photo.isoFormatted &&
+                      <span>{photo.isoFormatted}</span>}
+                  </li>}
+                {(
+                  photo.fNumberFormatted ||
+                  photo.exposureTimeFormatted ||
+                  photo.exposureCompensationFormatted ||
+                  ALWAYS_SHOW_EXPOSURE_COMP
+                ) &&
+                  <li className={clsx(
+                    'flex gap-x-3',
+                    metaSide === 'left' && 'md:justify-end',
+                  )}>
+                    {photo.fNumberFormatted &&
+                      <span>{photo.fNumberFormatted}</span>}
+                    {photo.exposureTimeFormatted &&
+                      <span>{photo.exposureTimeFormatted}</span>}
+                    {photo.exposureCompensationFormatted
+                      ? <span>{photo.exposureCompensationFormatted}</span>
+                      : ALWAYS_SHOW_EXPOSURE_COMP && <span>0ev</span>}
+                  </li>}
               </ul>
               {showFilmContent && photo.film &&
                 <PhotoFilm
@@ -427,10 +444,6 @@ export default function PhotoFloating({
                   film={photo.film}
                   make={photo.make}
                   prefetch={prefetchRelatedLinks}
-                  {...photo.recipeData && !photo.recipeTitle && {
-                    toggleRecipeOverlay,
-                    isShowingRecipeOverlay,
-                  }}
                 />}
               {showPlaceContent && photo.location &&
                 <div>
