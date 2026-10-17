@@ -177,7 +177,7 @@ export default function PhotoFloating({
         photo={photo}
         className={clsx(
           // Instrument Serif only ships weight 400
-          'font-serif font-normal text-[1.5rem] leading-snug',
+          'font-serif font-normal text-[1.25rem] sm:text-[1.5rem] leading-snug',
           UPPERCASE_TITLES && 'uppercase',
         )}
         prefetch={prefetch}
