@@ -7,9 +7,11 @@ import { HTMLAttributes, ReactNode, RefObject } from 'react';
   Sidebar: 308px +
   Gap: 16px =
   Total: 1280px
-  -
+    -
   Column offset: (308px + 16px) / 2 = 162px
 */
+
+export const APP_GRID_WIDTH_MAIN = 956;
 
 // Offsets sidebar width when centering on large screens.
 // Applied to columns, not the container, so that consumer-supplied

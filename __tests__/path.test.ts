@@ -15,6 +15,7 @@ import {
   PATH_ADMIN,
   PATH_ADMIN_LIBRARY_EDIT,
   PATH_ADMIN_PHOTOS,
+  PATH_FLOATING,
   PATH_FULL,
   PATH_GRID,
   PATH_OG,
@@ -198,6 +199,7 @@ describe('Paths', () => {
     expect(getEscapePath(PATH_ROOT)).toEqual(undefined);
     expect(getEscapePath(PATH_GRID)).toEqual(undefined);
     expect(getEscapePath(PATH_FULL)).toEqual(undefined);
+    expect(getEscapePath(PATH_FLOATING)).toEqual(undefined);
     expect(getEscapePath(PATH_ADMIN)).toEqual(undefined);
     // Photo
     expect(getEscapePath(PATH_PHOTO)).toEqual(PATH_ROOT);

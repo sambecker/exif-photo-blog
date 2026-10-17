@@ -34,10 +34,7 @@ import { useSelectPhotosState } from './select/SelectPhotosState';
 import { useEditTitlesState } from './edit-titles/EditTitlesState';
 import IconAlbum from '@/components/icons/IconAlbum';
 import IconEdit from '@/components/icons/IconEdit';
-import {
-  HEIGHT_CLASS,
-  SWITCHER_ITEM_WIDTH,
-} from '@/components/switcher/SwitcherItem';
+import { HEIGHT_CLASS } from '@/components/switcher/SwitcherItem';
 import { TbSquareRoundedCheck, TbSquareRoundedX } from 'react-icons/tb';
 
 const labelWithTrailingEllipsis = (text: string) => {
@@ -267,9 +264,8 @@ export default function AdminAppMenu({
           <IoArrowUp size={16} className="shrink-0" />
         </div>
       </div>}
-      align="start"
+      align="end"
       sideOffset={10}
-      alignOffset={-(SWITCHER_ITEM_WIDTH * 3)}
       onOpen={refreshAdminData}
       sections={sections}
       ariaLabel="Admin Menu"

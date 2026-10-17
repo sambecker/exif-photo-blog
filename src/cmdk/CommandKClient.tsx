@@ -38,7 +38,7 @@ import {
   pathForTag,
   pathForYear,
   PREFIX_RECENTS,
-  isPathFull,
+  isPathFloating,
   isPathGrid,
   isPathLibrary,
   isPathRoot,
@@ -636,9 +636,9 @@ export default function CommandKClient({
       ? appText.nav.full
       : `${appText.nav.full} (${appText.nav.home})`,
     path: PATH_FULL_INFERRED,
-    annotation: renderCheck(GRID_HOMEPAGE_ENABLED
-      ? isPathFull(pathname)
-      : isPathRoot(pathname)),
+    annotation: renderCheck(
+      pathname === PATH_FULL_INFERRED || isPathFloating(pathname),
+    ),
   };
 
   const pageGrid: CommandKItem = {

@@ -26,6 +26,7 @@ export default function SwitcherItem({
   active,
   isInteractive = true,
   noPadding,
+  naked,
   prefetch = SHOULD_PREFETCH_ALL_LINKS,
   tooltip,
   width = 'normal',
@@ -40,6 +41,8 @@ export default function SwitcherItem({
   active?: boolean
   isInteractive?: boolean
   noPadding?: boolean
+  // Icon-only control with no background/container chrome
+  naked?: boolean
   prefetch?: boolean
   tooltip?: ComponentProps<typeof Tooltip>
   width?: 'narrow' | 'normal'
@@ -57,7 +60,7 @@ export default function SwitcherItem({
     'flex items-center justify-center',
     `${widthClass} ${HEIGHT_CLASS}`,
     isInteractive && 'cursor-pointer',
-    isInteractive && SWITCHER_ITEM_INTERACTIVE_BG,
+    isInteractive && !naked && SWITCHER_ITEM_INTERACTIVE_BG,
     active
       ? 'text-black dark:text-white'
       : 'text-gray-400 dark:text-gray-600',

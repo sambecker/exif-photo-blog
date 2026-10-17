@@ -47,6 +47,7 @@ export const config = {
   // - /favicon.ico + /favicons/*
   // - /grid
   // - /full
+  // - /floating
   // - /library
   // - / (root)
   // - /home-image
@@ -54,5 +55,5 @@ export const config = {
   // - /template-image-tight
   // - /template-url
   // eslint-disable-next-line @stylistic/max-len
-  matcher: ['/((?!api$|api/auth|_next/static|_next/image|favicon.ico$|favicons/|grid$|full$|library$|home-image$|template-image$|template-image-tight$|template-url$|$).*)'],
+  matcher: ['/((?!api$|api/auth|_next/static|_next/image|favicon.ico$|favicons/|grid$|full$|floating$|library$|home-image$|template-image$|template-image-tight$|template-url$|$).*)'],
 };

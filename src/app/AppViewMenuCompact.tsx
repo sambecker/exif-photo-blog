@@ -10,10 +10,7 @@ import IconGrid from '@/components/icons/IconGrid';
 import IconGridMasonry from '@/components/icons/IconGridMasonry';
 import Spinner from '@/components/Spinner';
 import Tooltip from '@/components/Tooltip';
-import {
-  HEIGHT_CLASS,
-  SWITCHER_ITEM_INTERACTIVE_BG,
-} from '@/components/switcher/SwitcherItem';
+import { HEIGHT_CLASS } from '@/components/switcher/SwitcherItem';
 import { useAppText } from '@/i18n/state/client';
 import { KEY_COMMANDS } from '@/photo/key-commands';
 import { getSortStateFromPath } from '@/photo/sort/path';
@@ -29,10 +26,12 @@ const VIEW_ICON_CLASS = 'w-[24px] -ml-[4px] translate-x-[1px]';
 
 export default function AppViewMenuCompact({
   isViewFull,
+  isViewFloating,
   isMasonry,
   // Home views switch by navigating, sets by toggling state
   hrefGrid,
   hrefFull,
+  hrefFloating,
   onSelectView,
   isLoading,
   showSortItems,
@@ -42,9 +41,11 @@ export default function AppViewMenuCompact({
   className,
 }: {
   isViewFull?: boolean
+  isViewFloating?: boolean
   isMasonry?: boolean
   hrefGrid?: string
   hrefFull?: string
+  hrefFloating?: string
   onSelectView?: (isFull: boolean) => void
   isLoading?: boolean
   showSortItems?: boolean
@@ -54,6 +55,8 @@ export default function AppViewMenuCompact({
   className?: string
 }) {
   const appText = useAppText();
+
+  const isViewGrid = !isViewFull && !isViewFloating;
 
   const renderIconGrid = (forMenu?: boolean) => isMasonry
     ? <IconGridMasonry className={forMenu ? VIEW_ICON_CLASS : ''} />
@@ -66,28 +69,36 @@ export default function AppViewMenuCompact({
 
   const itemGrid = {
     label: appText.nav.grid,
-    icon: renderViewIcon(renderIconGrid(true), !isViewFull),
+    icon: renderViewIcon(renderIconGrid(true), isViewGrid),
     ...hrefGrid
       ? { href: hrefGrid }
       : { action: () => onSelectView?.(false) },
     ...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && { keyCommand: KEY_COMMANDS.grid },
   };
 
+  // Home: full-frame icon represents floating (no separate icon)
+  const usesFloatingAsFull = Boolean(hrefFloating);
   const itemFull = {
-    label: appText.nav.full,
+    label: usesFloatingAsFull
+      ? appText.nav.floating
+      : appText.nav.full,
     icon: renderViewIcon(
       <IconFull className={VIEW_ICON_CLASS} />,
-      Boolean(isViewFull),
+      usesFloatingAsFull
+        ? Boolean(isViewFloating)
+        : Boolean(isViewFull),
     ),
-    ...hrefFull
-      ? { href: hrefFull }
+    ...(hrefFloating ?? hrefFull)
+      ? { href: hrefFloating ?? hrefFull }
       : { action: () => onSelectView?.(true) },
     ...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && { keyCommand: KEY_COMMANDS.full },
   };
 
-  const items: MoreMenuSection['items'] = GRID_HOMEPAGE_ENABLED
+  const viewItems: MoreMenuSection['items'] = GRID_HOMEPAGE_ENABLED
     ? [itemGrid, itemFull]
     : [itemFull, itemGrid];
+
+  const items: MoreMenuSection['items'] = [];
 
   if (showSortItems) {
     const { itemsSortOrder, itemsSortType } =
@@ -106,6 +117,8 @@ export default function AppViewMenuCompact({
     });
   }
 
+  items.push(...viewItems);
+
   return (
     <Tooltip
       classNameTrigger={className}
@@ -123,14 +136,14 @@ export default function AppViewMenuCompact({
           {...{ isOpen, setIsOpen }}
           sections={[{ items }]}
           ariaLabel="View Menu"
-          align="start"
+          align="end"
           sideOffset={10}
-          alignOffset={-4}
+          alignOffset={4}
           icon={<>
             <span className="flex items-center justify-center">
               {isLoading
                 ? <Spinner />
-                : isViewFull
+                : (isViewFloating || isViewFull)
                   ? <IconFull />
                   : renderIconGrid()}
             </span>
@@ -142,12 +155,9 @@ export default function AppViewMenuCompact({
           classNameButton={clsx(
             'inline-flex items-center',
             'h-[28px]',
-            'rounded-full',
             'text-main!',
-            SWITCHER_ITEM_INTERACTIVE_BG,
             'cursor-pointer',
           )}
-          classNameButtonOpen="bg-dim!"
         />
       </div>
     </Tooltip>
