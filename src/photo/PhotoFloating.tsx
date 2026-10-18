@@ -181,7 +181,7 @@ export default function PhotoFloating({
     hasMetaContent;
 
   const renderPhotoLink =
-    <div className="mb-3 md:mb-5">
+    <div className="mb-1.5 md:mb-5">
       <PhotoLink
         photo={photo}
         className={clsx(
@@ -193,19 +193,19 @@ export default function PhotoFloating({
       />
     </div>;
 
-  // Match PhotoLarge matte sizing so portraits occupy ~same space as landscapes
+  // Desktop matte inset (md+); mobile stays full-width like unmatted PhotoLarge
   const matteContentWidthForAspectRatio =
     photo.aspectRatio > 3 / 2 + 0.1
-      ? 'w-[90%]'
+      ? 'md:w-[90%]'
       : photo.aspectRatio >= 1
-        ? 'w-[80%]'
+        ? 'md:w-[80%]'
         : undefined;
 
   const renderLargePhoto =
     <div className={clsx(
       'relative',
-      'flex items-center justify-center',
-      'h-[90%]',
+      'md:flex md:items-center md:justify-center',
+      'md:h-[90%]',
       matteContentWidthForAspectRatio,
     )}>
       <ZoomControls
@@ -214,8 +214,8 @@ export default function PhotoFloating({
         {...{ isEnabled: showZoomControls, shouldZoomOnFKeydown }}
       >
         <ImageLarge
-          className="h-full"
-          classNameImage="object-contain w-full h-full"
+          className="w-full md:h-full"
+          classNameImage="w-full md:object-contain md:h-full"
           alt={altTextForPhoto(photo)}
           src={photo.url}
           aspectRatio={photo.aspectRatio}
@@ -261,7 +261,9 @@ export default function PhotoFloating({
     }} />;
 
   const photoContainerClassName = clsx(
-    'flex items-center justify-center aspect-3/2 w-full',
+    // Mobile: full-width within site margins (PhotoLarge); md+: matted 3:2
+    'w-full',
+    'md:flex md:items-center md:justify-center md:aspect-3/2',
   );
 
   const metaAlignClass = metaSide === 'left'
@@ -270,14 +272,15 @@ export default function PhotoFloating({
 
   const renderMeta =
     <DivDebugBaselineGrid className={clsx(
-      'flex flex-col gap-y-baseline',
+      'flex flex-col gap-y-2 md:gap-y-baseline',
       'w-full md:w-48 lg:w-56 shrink-0',
       metaAlignClass,
     )}>
       <div className={clsx(
         'w-full',
         'grid grid-cols-2 md:grid-cols-1',
-        'gap-x-0.5 sm:gap-x-1 gap-y-baseline',
+        'gap-x-0.5 sm:gap-x-1',
+        'gap-y-2 md:gap-y-baseline',
       )}>
         <div className="pr-3 md:pr-0">
           {!isEditingTitles &&
@@ -329,7 +332,7 @@ export default function PhotoFloating({
             </div>
             : hasTitle && renderPhotoLink}
           <div className={clsx(
-            'space-y-baseline',
+            'space-y-1.5 md:space-y-baseline',
             metaSide === 'left' && 'md:flex md:flex-col md:items-end',
           )}>
             {!isEditingTitles && photo.caption &&
@@ -386,15 +389,17 @@ export default function PhotoFloating({
           </div>
         </div>
         <div className={clsx(
-          'space-y-baseline',
-          // Match left-meta flex rhythm on the right
-          // (avoids tighter block margins)
-          'md:flex md:flex-col',
+          'relative',
+          'space-y-1.5 md:space-y-baseline',
+          // Mobile: left-align with date in column 2; md+ follows meta side
+          'flex flex-col items-start',
           metaSide === 'left' ? 'md:items-end' : 'md:items-start',
           !hasTitleContent && !hasMetaContent && 'md:-mt-baseline',
+          // Room for absolutely positioned ••• (float is ignored inside flex)
+          isUserSignedIn && !isEditingTitles && 'max-md:pr-7',
         )}>
           {!isEditingTitles &&
-            <div className="float-end md:hidden">
+            <div className="absolute top-0 right-0 z-10 md:hidden">
               {renderAdminMenu()}
             </div>}
           {showExifContent &&
@@ -455,6 +460,7 @@ export default function PhotoFloating({
                   />
                 </div>}
             </>}
+          <PhotoColorBar colorData={photo.colorData} />
           <PhotoDate
             photo={photo}
             className={clsx(
@@ -467,7 +473,6 @@ export default function PhotoFloating({
             timezone={null}
             hideTime={!SHOW_TAKEN_AT_TIME}
           />
-          <PhotoColorBar colorData={photo.colorData} />
           {showStorageCheck &&
             <AdminPhotoStorageCheck photo={photo} />}
         </div>
@@ -486,6 +491,7 @@ export default function PhotoFloating({
       <div className={clsx(
         'w-full max-w-[1400px]',
         'flex flex-col items-center',
+        'gap-2 md:gap-6',
         'md:flex-row md:justify-center',
         // Meta left of photo:
         // Reverse row so photo stays first in DOM for mobile
