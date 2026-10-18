@@ -25,7 +25,8 @@ html {
   --font-serif: "Instrument Serif", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
 
   --breakpoint-xs: 24.5rem;
-  --breakpoint-3xl: 102rem;
+  /* Sized for AppGrid sidebar (1172px + 108px offset); ~160px before prior 102rem */
+  --breakpoint-3xl: 92rem;
 
   --text-xs: 0.75rem;
   --text-xs--line-height: 1rem;

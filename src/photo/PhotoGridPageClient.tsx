@@ -50,7 +50,8 @@ export default function PhotoGridPageClient({
           items={[
             <div key="mobile-sidebar" className={clsx(
               'flex gap-x-2',
-              'md:hidden',
+              // Match AppGrid: sidebar sits beside only at 3xl+
+              '3xl:hidden',
               'mb-4',
             )}>
               <TopPhotoEntities

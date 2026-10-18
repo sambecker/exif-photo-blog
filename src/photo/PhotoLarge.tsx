@@ -339,24 +339,25 @@ export default function PhotoLarge({
       classNameSide="relative"
       sideHiddenOnMobile={false}
       contentSide={
-        <div className="md:absolute inset-0 -mt-1">
+        <div className="3xl:absolute inset-0 -mt-1">
           <MaskedScroll className="sticky top-4 self-start">
             <DivDebugBaselineGrid className={clsx(
-              'grid grid-cols-2 md:grid-cols-1',
+              // 2-col when stacked below photo; 1-col in 3xl+ sidebar
+              'grid grid-cols-2 3xl:grid-cols-1',
               'gap-x-0.5 sm:gap-x-1 gap-y-baseline',
-              'mb-6 md:mb-4',
+              'mb-6 3xl:mb-4',
             )}>
               {/* Meta */}
-              <div className="pr-3 md:pr-0">
+              <div className="pr-3 3xl:pr-0">
                 {!isEditingTitles &&
-                  <div className="float-end hidden md:block">
+                  <div className="float-end hidden 3xl:block">
                     {renderAdminMenu}
                   </div>}
                 {isEditingTitles
                   ? <div className={clsx(
                     'space-y-2 mb-2',
                     // Keep text large for iOS forms
-                    'md:[&_input]:text-sm',
+                    '3xl:[&_input]:text-sm',
                   )}>
                     <FieldsetWithStatus
                       id={`edit-title-${photo.id}`}
@@ -442,10 +443,10 @@ export default function PhotoLarge({
               {/* EXIF Data */}
               <div className={clsx(
                 'space-y-baseline',
-                !hasTitleContent && !hasMetaContent && 'md:-mt-baseline',
+                !hasTitleContent && !hasMetaContent && '3xl:-mt-baseline',
               )}>
                 {!isEditingTitles &&
-                  <div className="float-end md:hidden">
+                  <div className="float-end 3xl:hidden">
                     {renderAdminMenu}
                   </div>}
                 {showExifContent &&
@@ -512,15 +513,15 @@ export default function PhotoLarge({
                   </>}
                 <div className={clsx(
                   'flex gap-x-3 gap-y-baseline',
-                  'md:flex-col flex-wrap',
-                  'md:justify-normal',
+                  '3xl:flex-col flex-wrap',
+                  '3xl:justify-normal',
                 )}>
                   <PhotoDate
                     photo={photo}
                     className={clsx(
                       'text-medium',
                       // Prevent collision with admin button
-                      !hasNonDateContent && isUserSignedIn && 'md:pr-7',
+                      !hasNonDateContent && isUserSignedIn && '3xl:pr-7',
                     )}
                     // 'createdAt' is a naive datetime which does not require
                     // a timezone and will not cause server/client mismatch
@@ -579,7 +580,7 @@ export default function PhotoLarge({
                       />}
                     {ALLOW_PUBLIC_DOWNLOADS && 
                       <DownloadButton 
-                        className="translate-y-[0.5px] md:translate-y-0"
+                        className="translate-y-[0.5px] 3xl:translate-y-0"
                         photo={photo} 
                       />}
                   </div>
