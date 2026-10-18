@@ -190,7 +190,10 @@ export default function PhotoFloating({
         className={clsx(
           PHOTO_TITLE_SERIF
             // Instrument Serif only ships weight 400
-            ? 'font-serif font-normal text-[1.25rem] sm:text-[1.5rem] leading-snug'
+            ? clsx(
+              'font-serif font-normal leading-snug',
+              'text-[1.25rem] sm:text-[1.5rem]',
+            )
             : 'font-bold grow',
           UPPERCASE_TITLES && 'uppercase',
         )}

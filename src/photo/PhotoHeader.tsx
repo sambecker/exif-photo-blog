@@ -102,7 +102,10 @@ export default function PhotoHeader({
           className={clsx(
             PHOTO_TITLE_SERIF
               // Instrument Serif only ships weight 400
-              ? 'font-serif font-normal text-[1.25rem] sm:text-[1.5rem] leading-tight truncate'
+              ? clsx(
+                'font-serif font-normal leading-tight truncate',
+                'text-[1.25rem] sm:text-[1.5rem]',
+              )
               : 'font-bold truncate',
             UPPERCASE_TITLES && 'uppercase',
           )}
