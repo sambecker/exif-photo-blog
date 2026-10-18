@@ -50,7 +50,8 @@ import {
   altTextForPhoto,
   doesPhotoNeedBlurCompatibility,
 } from '@/photo';
-import ImageSmall from '@/components/image/ImageSmall';
+import PhotoColorBar from '@/photo/color/PhotoColorBar';
+import ImageMedium from '@/components/image/ImageMedium';
 
 export default function AdminAppConfigurationClient({
   // Storage
@@ -141,6 +142,7 @@ export default function AdminAppConfigurationClient({
   defaultTheme,
   arePhotoTitlesUppercase,
   arePhotoTitlesSerif,
+  arePhotoColorBarsShown,
   arePhotosMatted,
   arePhotoMatteColorsConfigured,
   matteColor,
@@ -974,8 +976,10 @@ export default function AdminAppConfigurationClient({
       case 'Design':
         return <>
           <ChecklistRow
-            title="Photo title type style"
-            status={arePhotoTitlesUppercase || arePhotoTitlesSerif}
+            title="Photo title design"
+            status={arePhotoTitlesUppercase ||
+              arePhotoTitlesSerif ||
+              arePhotoColorBarsShown}
             optional
           >
             <div className="flex items-center gap-3 my-4 translate-x-px">
@@ -986,12 +990,12 @@ export default function AdminAppConfigurationClient({
                 'rounded-[14px]',
               )}>
                 <div className={clsx(
-                  'relative size-16 overflow-clip',
+                  'relative size-20 overflow-clip',
                   'rounded-[10px]',
                   'bg-extra-dim',
                 )}>
                   {samplePhotoTitlePhoto
-                    ? <ImageSmall
+                    ? <ImageMedium
                       className="w-full h-full"
                       classNameImage="object-cover w-full h-full"
                       alt={altTextForPhoto(samplePhotoTitlePhoto)}
@@ -1013,22 +1017,29 @@ export default function AdminAppConfigurationClient({
                   )} />
                 </div>
               </div>
-              <div className={clsx(
-                'max-w-[150px] leading-tight',
-                arePhotoTitlesSerif
-                  ? 'font-serif font-normal text-[1.25rem]'
-                  : 'font-bold',
-                arePhotoTitlesUppercase && 'uppercase',
-              )}>
-                Example photo title treatment
+              <div className="flex flex-col max-w-[150px]">
+                <div className={clsx(
+                  'leading-tight',
+                  arePhotoTitlesSerif
+                    ? 'font-serif font-normal text-[1.25rem]'
+                    : 'font-bold',
+                  arePhotoTitlesUppercase && 'uppercase',
+                )}>
+                  Example photo title treatment
+                </div>
+                {arePhotoColorBarsShown &&
+                  <PhotoColorBar
+                    colorData={samplePhotoTitlePhoto?.colorData}
+                  />}
               </div>
             </div>
-            Titles default to uppercase and serif.
+            Titles default to uppercase and serif; color bars show by default.
             {' '}
-            Set either variable to {'"1"'} to disable that treatment.
+            Set a variable to {'"1"'} to disable that treatment.
             <div className="pt-1 flex flex-col gap-1">
               <EnvVar variable="NEXT_PUBLIC_DISABLE_UPPERCASE_TITLES" />
               <EnvVar variable="NEXT_PUBLIC_DISABLE_SERIF_TITLES" />
+              <EnvVar variable="NEXT_PUBLIC_DISABLE_COLOR_BAR" />
             </div>
           </ChecklistRow>
           <ChecklistRow

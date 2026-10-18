@@ -417,6 +417,8 @@ export const UPPERCASE_TITLES =
   process.env.NEXT_PUBLIC_DISABLE_UPPERCASE_TITLES !== '1';
 export const PHOTO_TITLE_SERIF =
   process.env.NEXT_PUBLIC_DISABLE_SERIF_TITLES !== '1';
+export const PHOTO_COLOR_BAR =
+  process.env.NEXT_PUBLIC_DISABLE_COLOR_BAR !== '1';
 export const MATTE_PHOTOS =
   process.env.NEXT_PUBLIC_MATTE_PHOTOS === '1';
 export const MATTE_COLOR =
@@ -590,6 +592,7 @@ export const APP_CONFIGURATION = {
   matteColorDark: MATTE_COLOR_DARK,
   arePhotoTitlesUppercase: UPPERCASE_TITLES,
   arePhotoTitlesSerif: PHOTO_TITLE_SERIF,
+  arePhotoColorBarsShown: PHOTO_COLOR_BAR,
   areFoldersTinted: TINT_FOLDERS,
   hasHighDensityPreviews: HIGH_DENSITY_PREVIEWS,
   isOgTextBottomAligned: OG_TEXT_BOTTOM_ALIGNMENT,

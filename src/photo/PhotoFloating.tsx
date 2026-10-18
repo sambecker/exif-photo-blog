@@ -27,6 +27,7 @@ import {
   ALWAYS_SHOW_EXPOSURE_COMP,
   UPPERCASE_TITLES,
   PHOTO_TITLE_SERIF,
+  PHOTO_COLOR_BAR,
   GEO_PRIVACY_ENABLED,
 } from '@/app/config';
 import AdminPhotoMenu from '@/admin/AdminPhotoMenu';
@@ -468,7 +469,7 @@ export default function PhotoFloating({
                   />
                 </div>}
             </>}
-          {photo.colorData &&
+          {PHOTO_COLOR_BAR && photo.colorData &&
             <PhotoColorBar colorData={photo.colorData} />}
           <PhotoDate
             photo={photo}
