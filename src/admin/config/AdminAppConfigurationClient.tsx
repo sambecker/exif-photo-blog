@@ -990,7 +990,7 @@ export default function AdminAppConfigurationClient({
                 'rounded-[14px]',
               )}>
                 <div className={clsx(
-                  'relative size-20 overflow-clip',
+                  'relative w-20 h-16 overflow-clip',
                   'rounded-[10px]',
                   'bg-extra-dim',
                 )}>
@@ -1017,7 +1017,10 @@ export default function AdminAppConfigurationClient({
                   )} />
                 </div>
               </div>
-              <div className="flex flex-col max-w-[150px]">
+              <div className={clsx(
+                'flex flex-col -space-y-0.5 max-w-[150px]',
+                'translate-y-0.5',
+              )}>
                 <div className={clsx(
                   'leading-tight',
                   arePhotoTitlesSerif
