@@ -416,7 +416,7 @@ export const DEFAULT_THEME =
 export const UPPERCASE_TITLES =
   process.env.NEXT_PUBLIC_DISABLE_UPPERCASE_TITLES !== '1';
 export const PHOTO_TITLE_SERIF =
-  process.env.NEXT_PUBLIC_DISABLE_SERIF !== '1';
+  process.env.NEXT_PUBLIC_DISABLE_SERIF_TITLES !== '1';
 export const MATTE_PHOTOS =
   process.env.NEXT_PUBLIC_MATTE_PHOTOS === '1';
 export const MATTE_COLOR =

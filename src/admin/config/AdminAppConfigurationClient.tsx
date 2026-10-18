@@ -1023,12 +1023,12 @@ export default function AdminAppConfigurationClient({
                 Example photo title treatment
               </div>
             </div>
-            Titles default to uppercase; floating titles also use serif.
+            Titles default to uppercase and serif.
             {' '}
             Set either variable to {'"1"'} to disable that treatment.
             <div className="pt-1 flex flex-col gap-1">
               <EnvVar variable="NEXT_PUBLIC_DISABLE_UPPERCASE_TITLES" />
-              <EnvVar variable="NEXT_PUBLIC_DISABLE_SERIF" />
+              <EnvVar variable="NEXT_PUBLIC_DISABLE_SERIF_TITLES" />
             </div>
           </ChecklistRow>
           <ChecklistRow

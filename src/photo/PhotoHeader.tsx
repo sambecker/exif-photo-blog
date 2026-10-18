@@ -18,7 +18,7 @@ import ResponsiveText from '@/components/primitives/ResponsiveText';
 import { useAppState } from '@/app/AppState';
 import { GRID_GAP_CLASSNAME } from '@/components';
 import { useAppText } from '@/i18n/state/client';
-import { UPPERCASE_TITLES } from '@/app/config';
+import { PHOTO_TITLE_SERIF, UPPERCASE_TITLES } from '@/app/config';
 
 export default function PhotoHeader({
   photos,
@@ -100,7 +100,10 @@ export default function PhotoHeader({
         <PhotoLink
           photo={selectedPhoto}
           className={clsx(
-            'font-bold truncate',
+            PHOTO_TITLE_SERIF
+              // Instrument Serif only ships weight 400
+              ? 'font-serif font-normal text-[1.25rem] sm:text-[1.5rem] leading-tight truncate'
+              : 'font-bold truncate',
             UPPERCASE_TITLES && 'uppercase',
           )}
         >
