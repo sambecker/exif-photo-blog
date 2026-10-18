@@ -468,7 +468,8 @@ export default function PhotoFloating({
                   />
                 </div>}
             </>}
-          <PhotoColorBar colorData={photo.colorData} />
+          {photo.colorData &&
+            <PhotoColorBar colorData={photo.colorData} />}
           <PhotoDate
             photo={photo}
             className={clsx(

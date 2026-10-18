@@ -29,7 +29,7 @@ export default function PhotoColorBar({
         className,
       )}
     >
-      <div className="inline-flex h-[4px] overflow-hidden">
+      <div className="inline-flex h-[5px] overflow-hidden">
         <div
           className="w-[50px] shrink-0 h-full"
           style={{ backgroundColor: convertOklchToCss(main) }}
