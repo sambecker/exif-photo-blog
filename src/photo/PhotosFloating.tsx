@@ -1,7 +1,6 @@
 import AnimateItems from '@/components/AnimateItems';
 import { Photo } from '.';
 import PhotoFloating from './PhotoFloating';
-import FloatingParallax from './FloatingParallax';
 import { RevalidatePhoto } from './InfinitePhotoScroll';
 
 export default function PhotosFloating({
@@ -23,8 +22,7 @@ export default function PhotosFloating({
 }) {
   return (
     <AnimateItems
-      // Negative gap: rows start overlapped; parallax opens/closes further
-      className="-space-y-4 md:-space-y-6"
+      className="space-y-12 md:space-y-16"
       type={animate ? 'scale' : 'none'}
       duration={0.7}
       staggerDelay={0.15}
@@ -33,23 +31,19 @@ export default function PhotosFloating({
       items={photos.map((photo, index) => {
         const absoluteIndex = indexOffset + index;
         return (
-          <FloatingParallax
+          <PhotoFloating
             key={photo.id}
-            index={absoluteIndex}
-          >
-            <PhotoFloating
-              photo={photo}
-              metaSide={absoluteIndex % 2 === 0 ? 'right' : 'left'}
-              priority={index <= 1}
-              prefetchRelatedLinks={prefetchFirstPhotoLinks && index === 0}
-              revalidatePhoto={revalidatePhoto}
-              shouldZoomOnFKeydown={false}
-              onVisible={index === photos.length - 1
-                ? onLastPhotoVisible
-                : undefined}
-              showStorageCheck={showStorageCheck}
-            />
-          </FloatingParallax>
+            photo={photo}
+            metaSide={absoluteIndex % 2 === 0 ? 'right' : 'left'}
+            priority={index <= 1}
+            prefetchRelatedLinks={prefetchFirstPhotoLinks && index === 0}
+            revalidatePhoto={revalidatePhoto}
+            shouldZoomOnFKeydown={false}
+            onVisible={index === photos.length - 1
+              ? onLastPhotoVisible
+              : undefined}
+            showStorageCheck={showStorageCheck}
+          />
         );
       })}
       itemKeys={photos.map(photo => photo.id)}
