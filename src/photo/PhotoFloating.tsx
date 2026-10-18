@@ -26,6 +26,7 @@ import {
   SHOW_TAKEN_AT_TIME,
   ALWAYS_SHOW_EXPOSURE_COMP,
   UPPERCASE_TITLES,
+  PHOTO_TITLE_SERIF,
   GEO_PRIVACY_ENABLED,
 } from '@/app/config';
 import AdminPhotoMenu from '@/admin/AdminPhotoMenu';
@@ -181,12 +182,16 @@ export default function PhotoFloating({
     hasMetaContent;
 
   const renderPhotoLink =
-    <div className="mb-1.5 md:mb-5">
+    <div className={clsx(
+      PHOTO_TITLE_SERIF && 'mb-1.5 md:mb-5',
+    )}>
       <PhotoLink
         photo={photo}
         className={clsx(
-          // Instrument Serif only ships weight 400
-          'font-serif font-normal text-[1.25rem] sm:text-[1.5rem] leading-snug',
+          PHOTO_TITLE_SERIF
+            // Instrument Serif only ships weight 400
+            ? 'font-serif font-normal text-[1.25rem] sm:text-[1.5rem] leading-snug'
+            : 'font-bold grow',
           UPPERCASE_TITLES && 'uppercase',
         )}
         prefetch={prefetch}

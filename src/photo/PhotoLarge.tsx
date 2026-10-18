@@ -32,6 +32,7 @@ import {
   MATTE_COLOR_DARK,
   ALWAYS_SHOW_EXPOSURE_COMP,
   UPPERCASE_TITLES,
+  PHOTO_TITLE_SERIF,
   GEO_PRIVACY_ENABLED,
 } from '@/app/config';
 import AdminPhotoMenu from '@/admin/AdminPhotoMenu';
@@ -228,7 +229,10 @@ export default function PhotoLarge({
     <PhotoLink
       photo={photo}
       className={clsx(
-        'font-bold grow',
+        PHOTO_TITLE_SERIF
+          // Instrument Serif only ships weight 400
+          ? 'font-serif font-normal text-[1.25rem] sm:text-[1.5rem] leading-snug grow'
+          : 'font-bold grow',
         UPPERCASE_TITLES && 'uppercase',
       )}
       prefetch={prefetch}
