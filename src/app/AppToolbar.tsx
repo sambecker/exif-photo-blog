@@ -148,11 +148,14 @@ export default function AppToolbar({
           }
           break;
         case KEY_COMMANDS.library:
-          if (pathname !== PATH_LIBRARY) { refHrefLibrary.current?.click(); }
+          if (!isInEmptyState && pathname !== PATH_LIBRARY) {
+            refHrefLibrary.current?.click();
+          }
           break;
       }
     }
   }, [
+    isInEmptyState,
     isPhotoSet,
     isPhotoSetFull,
     isOnFullPath,
@@ -220,19 +223,20 @@ export default function AppToolbar({
             }}
           />
         </motion.div>}
-      <SwitcherItem
-        icon={<IconLibrary />}
-        href={PATH_LIBRARY}
-        hrefRef={refHrefLibrary}
-        active={isPathLibrary(pathname)}
-        naked
-        width="narrow"
-        noPadding
-        tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
-          content: appText.nav.library,
-          keyCommand: KEY_COMMANDS.library,
-        }}}
-      />
+      {!isInEmptyState &&
+        <SwitcherItem
+          icon={<IconLibrary />}
+          href={PATH_LIBRARY}
+          hrefRef={refHrefLibrary}
+          active={isPathLibrary(pathname)}
+          naked
+          width="narrow"
+          noPadding
+          tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
+            content: appText.nav.library,
+            keyCommand: KEY_COMMANDS.library,
+          }}}
+        />}
       <SwitcherItem
         icon={<IconSearch />}
         onClick={() => setIsCommandKOpen?.(true)}
