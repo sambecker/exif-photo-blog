@@ -88,7 +88,8 @@ export default function AppViewMenuCompact({
     ? [itemGrid, itemFull]
     : [itemFull, itemGrid];
 
-  const items: MoreMenuSection['items'] = [];
+  // Views first, sort last (toolbar on large screens keeps sort first)
+  const items: MoreMenuSection['items'] = [...viewItems];
 
   if (showSortItems) {
     const { itemsSortOrder, itemsSortType } =
@@ -106,8 +107,6 @@ export default function AppViewMenuCompact({
         : [{ items: itemsSortOrder }],
     });
   }
-
-  items.push(...viewItems);
 
   return (
     <Tooltip
