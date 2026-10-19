@@ -29,7 +29,7 @@ export default function Spinner({
         color === 'semi-transparent' &&
           'text-black/20 dark:text-white/20',
         color === 'frosted' &&
-          'text-white/40',
+          'text-gray-100/40',
         className,
       )}
       style={{
