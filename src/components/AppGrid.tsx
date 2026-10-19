@@ -11,12 +11,12 @@ import { HTMLAttributes, ReactNode, RefObject } from 'react';
   Column offset: (200px + 16px) / 2 = 108px
   (keeps main optically centered with nav)
 
-  Below 3xl (92rem / 1472px): main-width column only (956px) —
+  Below 3xl (87rem / 1392px): main-width column only (956px) —
   full width until centered, matching site nav (never left-aligned).
   3xl+ with sidebar: centered 1172px layout; columns offset so main
   aligns with nav. Without sidebar: stay at main width (956px).
 
-  3xl is set ~160px earlier than the prior 102rem / 1632px threshold,
+  3xl is set ~240px earlier than the prior 102rem / 1632px threshold,
   which was sized for a 1280px / 162px-offset grid.
 */
 
