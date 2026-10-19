@@ -23,7 +23,9 @@ import {
   isFormValid,
   formDataWithUpdatedColorData,
   formDataWithUpdatedKeyColor,
+  formDataWithSyncedTakenAt,
 } from '.';
+import { getTakenAtOffsetMs } from '@/utility/date';
 import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import {
   createPhotoAction,
@@ -149,6 +151,13 @@ export default function PhotoForm({
   const [formErrors, setFormErrors] =
     useState(getFormErrors(initialPhotoForm));
   const [formActionErrorMessage, setFormActionErrorMessage] = useState('');
+
+  // Last known timezone offset between taken-at fields,
+  // remembered so partially typed dates still sync once valid
+  const takenAtOffsetMsRef = useRef(getTakenAtOffsetMs(
+    initialPhotoForm.takenAt,
+    initialPhotoForm.takenAtNaive,
+  ));
 
   const [detectedFilm, setDetectedFilm] =
     useState(initialPhotoForm.film);
@@ -681,12 +690,32 @@ export default function PhotoForm({
                         changedFormKeys.includes(key)
                       ),
                       onChange: value => {
-                        const formUpdated = { ...formData, [key]: value };
+                        let formUpdated = { ...formData, [key]: value };
+                        let syncedErrors: Partial<typeof formErrors> = {};
+                        if (key === 'takenAt' || key === 'takenAtNaive') {
+                          takenAtOffsetMsRef.current = getTakenAtOffsetMs(
+                            formData.takenAt,
+                            formData.takenAtNaive,
+                          ) ?? takenAtOffsetMsRef.current;
+                          formUpdated = formDataWithSyncedTakenAt(
+                            formData,
+                            key,
+                            value,
+                            takenAtOffsetMsRef.current,
+                          );
+                          const keySynced = key === 'takenAt'
+                            ? 'takenAtNaive'
+                            : 'takenAt';
+                          if (formUpdated[keySynced] !== formData[keySynced]) {
+                            syncedErrors = { [keySynced]: undefined };
+                          }
+                        }
                         setFormData(formUpdated);
                         if (validate) {
                           setFormErrors({
-                            ...formErrors, [key]:
-                            validate(value),
+                            ...formErrors,
+                            ...syncedErrors,
+                            [key]: validate(value),
                           });
                         } else if (validateStringMaxLength !== undefined) {
                           setFormErrors({
