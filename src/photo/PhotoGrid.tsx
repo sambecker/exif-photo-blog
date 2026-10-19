@@ -17,7 +17,7 @@ import {
 } from '@/app/config';
 import { useAppState } from '@/app/AppState';
 import SelectTileOverlay from '@/components/SelectTileOverlay';
-import { ReactNode, useRef } from 'react';
+import { CSSProperties, ReactNode, useRef } from 'react';
 import { GRID_GAP_CLASSNAME } from '@/components';
 import { useSelectPhotosState } from '@/admin/select/SelectPhotosState';
 import { DATA_KEY_PHOTO_GRID } from '@/admin/select/SelectPhotosProvider';
@@ -29,11 +29,13 @@ import LinkWithStatus from '@/components/LinkWithStatus';
 import Spinner from '@/components/Spinner';
 import useVisibility from '@/utility/useVisibility';
 
-function matteWidthForAspectRatio(aspectRatio: number) {
+// md+ floating: size the photo box by aspect ratio so it matches the
+// rendered image (menu/overlay anchor to the photo, not the square matte).
+function floatingPhotoBoxClass(aspectRatio: number) {
   // Tighter than PhotoLarge matte so the grid stays dense
   if (aspectRatio > 3 / 2 + 0.1) { return 'md:w-[96%]'; }
   if (aspectRatio >= 1) { return 'md:w-[90%]'; }
-  return undefined;
+  return 'md:h-[96%]';
 }
 
 function PhotoGridFloatingTile({
@@ -63,7 +65,7 @@ function PhotoGridFloatingTile({
   return (
     <div
       className={clsx(
-        'flex relative group',
+        'flex',
         // Below md: match standard grid tile
         'overflow-hidden',
         // md+: floating square matte (! overrides inline aspect below)
@@ -77,90 +79,91 @@ function PhotoGridFloatingTile({
         } : {},
       }}
     >
-      <LinkWithStatus
-        ref={ref}
-        href={pathForPhoto({ photo, ...categories })}
+      <div
         className={clsx(
-          'relative',
-          'flex items-center justify-center',
+          'relative group',
           // Below md: fill cell like PhotoMedium
           'max-md:w-full max-md:h-full',
-          // md+: floating matte (width inset = horizontal breathing room)
-          'md:h-[96%]',
-          matteWidthForAspectRatio(photo.aspectRatio),
-          'active:brightness-75',
-          selected && 'brightness-50',
-          isSelectingPhotos && 'pointer-events-none',
-          classNamePhoto,
+          // md+: box = photo silhouette inside the square
+          'md:aspect-[var(--photo-ar)]',
+          floatingPhotoBoxClass(photo.aspectRatio),
         )}
-        prefetch={SHOULD_PREFETCH_ALL_LINKS}
+        style={{
+          '--photo-ar': String(photo.aspectRatio),
+        } as CSSProperties}
       >
-        {({ isLoading }) =>
-          <>
-            {isLoading &&
-              <div className={clsx(
-                'absolute inset-0 flex items-center justify-center',
-                'text-dim',
-                'max-md:text-white max-md:bg-black/25 max-md:backdrop-blur-xs',
-                'animate-fade-in',
-                'z-10',
-              )}>
-                <Spinner size={20} color="text" />
-              </div>}
-            <ImageMedium
-              src={photo.url}
-              alt={altTextForPhoto(photo)}
-              aspectRatio={photo.aspectRatio}
-              blurDataURL={photo.blurData}
-              blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}
-              className={clsx(
-                'max-md:flex max-md:w-full max-md:h-full max-md:object-cover',
-                'md:h-full',
+        <LinkWithStatus
+          ref={ref}
+          href={pathForPhoto({ photo, ...categories })}
+          className={clsx(
+            'relative block',
+            'w-full h-full',
+            'active:brightness-75',
+            selected && 'brightness-50',
+            isSelectingPhotos && 'pointer-events-none',
+            classNamePhoto,
+          )}
+          prefetch={SHOULD_PREFETCH_ALL_LINKS}
+        >
+          {({ isLoading }) =>
+            <>
+              {isLoading &&
+                <div className={clsx(
+                  'absolute inset-0 flex items-center justify-center',
+                  'text-white bg-black/25 backdrop-blur-xs',
+                  'animate-fade-in',
+                  'z-10',
+                )}>
+                  <Spinner size={20} color="text" />
+                </div>}
+              <ImageMedium
+                src={photo.url}
+                alt={altTextForPhoto(photo)}
+                aspectRatio={photo.aspectRatio}
+                blurDataURL={photo.blurData}
+                blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}
+                className="flex object-cover w-full h-full"
+                classNameImage="object-cover w-full h-full"
+                priority={priority}
+              />
+            </>}
+        </LinkWithStatus>
+        {isUserSignedIn && !isSelectingPhotos &&
+          <div className={clsx(
+            'absolute top-0 right-0 z-10 p-1',
+            'opacity-0 pointer-events-none',
+            'group-hover:opacity-100',
+            'group-hover:pointer-events-auto',
+            'has-[[data-state=open]]:opacity-100',
+            'has-[[data-state=open]]:pointer-events-auto',
+            'focus-within:opacity-100',
+            'focus-within:pointer-events-auto',
+            'transition-opacity',
+          )}>
+            <AdminPhotoMenu
+              photo={photo}
+              revalidatePhoto={revalidatePhoto}
+              classNameButton={clsx(
+                'text-white!',
+                'bg-black/40!',
+                'hover:bg-black/60!',
+                'active:bg-black/75!',
+                'dark:hover:bg-black/60!',
+                'dark:active:bg-black/75!',
+                'backdrop-blur-xs',
+                'border-transparent',
+                'shadow-none',
               )}
-              classNameImage={clsx(
-                'w-full h-full',
-                'max-md:object-cover',
-                'md:object-contain',
-              )}
-              priority={priority}
+              classNameButtonOpen="bg-black/60!"
+              alignOffset={-4}
             />
-          </>}
-      </LinkWithStatus>
-      {isUserSignedIn && !isSelectingPhotos &&
-        <div className={clsx(
-          'absolute top-0 right-0 z-10 p-1',
-          'opacity-0 pointer-events-none',
-          'group-hover:opacity-100',
-          'group-hover:pointer-events-auto',
-          'has-[[data-state=open]]:opacity-100',
-          'has-[[data-state=open]]:pointer-events-auto',
-          'focus-within:opacity-100',
-          'focus-within:pointer-events-auto',
-          'transition-opacity',
-        )}>
-          <AdminPhotoMenu
-            photo={photo}
-            revalidatePhoto={revalidatePhoto}
-            classNameButton={clsx(
-              'text-white!',
-              'bg-black/40!',
-              'hover:bg-black/60!',
-              'active:bg-black/75!',
-              'dark:hover:bg-black/60!',
-              'dark:active:bg-black/75!',
-              'backdrop-blur-xs',
-              'border-transparent',
-              'shadow-none',
-            )}
-            classNameButtonOpen="bg-black/60!"
-            alignOffset={-4}
-          />
-        </div>}
-      {isSelectingPhotos &&
-        <SelectTileOverlay
-          isSelected={Boolean(selected)}
-          onSelectChange={() => onSelectChange?.()}
-        />}
+          </div>}
+        {isSelectingPhotos &&
+          <SelectTileOverlay
+            isSelected={Boolean(selected)}
+            onSelectChange={() => onSelectChange?.()}
+          />}
+      </div>
     </div>
   );
 }
