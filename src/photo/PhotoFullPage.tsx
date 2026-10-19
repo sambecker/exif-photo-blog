@@ -3,7 +3,7 @@ import {
   INFINITE_SCROLL_FULL_MULTIPLE,
   Photo,
 } from '.';
-import PhotosFull from './PhotosFull';
+import PhotosFull, { PHOTOS_FULL_SPACING } from './PhotosFull';
 import PhotosFullInfinite from './PhotosFullInfinite';
 import { SortBy } from './sort';
 import { PATH_FULL_INFERRED } from '@/app/path';
@@ -21,7 +21,7 @@ export default function PhotoFullPage({
 }) {
   const showStorageCheck = ADMIN_STORAGE_DEBUG_ENABLED;
   return (
-    <div className="space-y-12 md:space-y-16">
+    <div className={PHOTOS_FULL_SPACING}>
       <PhotosFull {...{ photos, showStorageCheck }} />
       {photosCount > photos.length &&
         <PhotosFullInfinite

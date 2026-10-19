@@ -3,6 +3,8 @@ import { Photo } from '.';
 import PhotoFull from './PhotoFull';
 import { RevalidatePhoto } from './InfinitePhotoScroll';
 
+export const PHOTOS_FULL_SPACING = 'max-md:space-y-12';
+
 export default function PhotosFull({
   photos,
   animate = true,
@@ -22,7 +24,7 @@ export default function PhotosFull({
 }) {
   return (
     <AnimateItems
-      className="space-y-12 md:space-y-16"
+      className={PHOTOS_FULL_SPACING}
       type={animate ? 'scale' : 'none'}
       duration={0.7}
       staggerDelay={0.15}
