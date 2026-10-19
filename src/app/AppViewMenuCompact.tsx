@@ -91,6 +91,9 @@ export default function AppViewMenuCompact({
     ? [itemGrid, itemFull]
     : [itemFull, itemGrid];
 
+  // Dim on non-home pages (e.g. /library); full when a view is active or menu open
+  const isViewActive = Boolean(isViewFull || isViewGrid);
+
   // Views first, sort last (toolbar on large screens keeps sort first)
   const items: MoreMenuSection['items'] = [...viewItems];
 
@@ -148,11 +151,15 @@ export default function AppViewMenuCompact({
             'inline-flex items-center',
             'h-[28px]',
             'rounded-md',
-            'text-main!',
+            isViewActive || isOpen
+              ? 'text-main!'
+              : 'text-gray-400! dark:text-gray-600!',
+            !isViewActive && !isOpen &&
+              'hover:text-gray-700! dark:hover:text-gray-400!',
             NAV_ITEM_INTERACTIVE_BG,
             'cursor-pointer',
           )}
-          classNameButtonOpen="bg-dim!"
+          classNameButtonOpen="bg-dim! text-main!"
         />
       </div>
     </Tooltip>
