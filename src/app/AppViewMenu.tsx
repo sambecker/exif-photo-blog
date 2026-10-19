@@ -101,7 +101,8 @@ export default function AppViewMenu({
           setIsOpen={setIsSortMenuOpen}
         />}
         iconIsFocusable
-        active={!isSortedByDefault}
+        active={!isSortedByDefault || Boolean(isSortMenuOpen)}
+        persistHover={!isSortedByDefault || Boolean(isSortMenuOpen)}
         naked
         tooltip={{
           ...!isSortMenuOpen && SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
@@ -119,6 +120,7 @@ export default function AppViewMenu({
           chromatic={isColor}
         />}
         active={!isSortedByDefault}
+        persistHover={!isSortedByDefault}
         naked
         tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
           content: isAscending

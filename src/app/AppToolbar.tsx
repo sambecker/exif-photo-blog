@@ -276,6 +276,8 @@ export default function AppToolbar({
             }}
           />}
           iconIsFocusable
+          active={isAdminMenuOpen}
+          persistHover={isAdminMenuOpen}
           naked
           width="narrow"
           noPadding

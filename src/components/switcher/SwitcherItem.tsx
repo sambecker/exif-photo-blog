@@ -11,9 +11,21 @@ export const WIDTH_CLASS         = 'w-[46px]';
 export const WIDTH_CLASS_NARROW  = 'w-[36px]';
 export const HEIGHT_CLASS        = 'h-[32px]';
 
+// Segmented Switcher controls (e.g. theme switch)
 export const SWITCHER_ITEM_INTERACTIVE_BG = clsx(
   'hover:bg-gray-100/60 active:bg-gray-100',
   'dark:hover:bg-gray-900/75 dark:active:bg-gray-900',
+);
+
+// Flat nav toolbar icons — matches compact view trigger / MoreMenu
+export const NAV_ITEM_INTERACTIVE_BG = clsx(
+  'hover:bg-gray-100 active:bg-gray-200/75',
+  'dark:hover:bg-gray-800/75 dark:active:bg-gray-900',
+);
+
+// Persistent "hovered" chrome (e.g. non-default sort)
+export const NAV_ITEM_INTERACTIVE_BG_PERSIST = clsx(
+  'bg-gray-100 dark:bg-gray-800/75',
 );
 
 export default function SwitcherItem({
@@ -27,6 +39,7 @@ export default function SwitcherItem({
   isInteractive = true,
   noPadding,
   naked,
+  persistHover,
   prefetch = SHOULD_PREFETCH_ALL_LINKS,
   tooltip,
   width = 'normal',
@@ -41,8 +54,10 @@ export default function SwitcherItem({
   active?: boolean
   isInteractive?: boolean
   noPadding?: boolean
-  // Icon-only control with no background/container chrome
+  // Icon-only nav control (hover chrome, no permanent container)
   naked?: boolean
+  // Keep hover background applied (e.g. non-default sort)
+  persistHover?: boolean
   prefetch?: boolean
   tooltip?: ComponentProps<typeof Tooltip>
   width?: 'narrow' | 'normal'
@@ -58,9 +73,13 @@ export default function SwitcherItem({
   const className = clsx(
     'link',
     'flex items-center justify-center',
+    naked && 'rounded-md',
     `${widthClass} ${HEIGHT_CLASS}`,
     isInteractive && 'cursor-pointer',
-    isInteractive && !naked && SWITCHER_ITEM_INTERACTIVE_BG,
+    isInteractive && (naked
+      ? NAV_ITEM_INTERACTIVE_BG
+      : SWITCHER_ITEM_INTERACTIVE_BG),
+    persistHover && NAV_ITEM_INTERACTIVE_BG_PERSIST,
     active
       ? 'text-black dark:text-white'
       : 'text-gray-400 dark:text-gray-600',

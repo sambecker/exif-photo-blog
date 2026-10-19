@@ -10,7 +10,10 @@ import IconGrid from '@/components/icons/IconGrid';
 import IconGridMasonry from '@/components/icons/IconGridMasonry';
 import Spinner from '@/components/Spinner';
 import Tooltip from '@/components/Tooltip';
-import { HEIGHT_CLASS } from '@/components/switcher/SwitcherItem';
+import {
+  HEIGHT_CLASS,
+  NAV_ITEM_INTERACTIVE_BG,
+} from '@/components/switcher/SwitcherItem';
 import { useAppText } from '@/i18n/state/client';
 import { KEY_COMMANDS } from '@/photo/key-commands';
 import { getSortStateFromPath } from '@/photo/sort/path';
@@ -144,9 +147,12 @@ export default function AppViewMenuCompact({
           classNameButton={clsx(
             'inline-flex items-center',
             'h-[28px]',
+            'rounded-md',
             'text-main!',
+            NAV_ITEM_INTERACTIVE_BG,
             'cursor-pointer',
           )}
+          classNameButtonOpen="bg-dim!"
         />
       </div>
     </Tooltip>
