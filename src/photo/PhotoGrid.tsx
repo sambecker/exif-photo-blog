@@ -29,13 +29,14 @@ import LinkWithStatus from '@/components/LinkWithStatus';
 import Spinner from '@/components/Spinner';
 import useVisibility from '@/utility/useVisibility';
 
-// md+: size the photo box by aspect ratio so it matches the
-// rendered image (menu/overlay anchor to the photo, not the square cell).
+// Size the photo box by aspect ratio so it matches the rendered image
+// (menu/overlay anchor to the photo, not the square cell).
 function mattedPhotoBoxClass(aspectRatio: number) {
-  // Tighter than PhotoLarge matte so the grid stays dense
-  if (aspectRatio > 3 / 2 + 0.1) { return 'md:w-[96%]'; }
-  if (aspectRatio >= 1) { return 'md:w-[90%]'; }
-  return 'md:h-[96%]';
+  // Small screens: tighter matte (photos fill more of the cell).
+  // md+: keep the airier floating inset.
+  if (aspectRatio > 3 / 2 + 0.1) { return 'w-[98%] md:w-[96%]'; }
+  if (aspectRatio >= 1) { return 'w-[96%] md:w-[90%]'; }
+  return 'h-[98%] md:h-[96%]';
 }
 
 function PhotoGridMattedTile({
@@ -65,27 +66,16 @@ function PhotoGridMattedTile({
   return (
     <div
       className={clsx(
-        'flex',
-        // Below md: match standard grid tile
-        'overflow-hidden',
-        // md+: square cell (! overrides inline aspect below)
-        'md:!aspect-square',
-        'md:items-center md:justify-center',
-        'md:overflow-visible',
+        'flex aspect-square',
+        'items-center justify-center',
+        'overflow-visible',
       )}
-      style={{
-        ...(GRID_ASPECT_RATIO !== 0) ? {
-          aspectRatio: GRID_ASPECT_RATIO,
-        } : {},
-      }}
     >
       <div
         className={clsx(
           'relative group',
-          // Below md: fill cell like PhotoMedium
-          'max-md:w-full max-md:h-full',
-          // md+: box = photo silhouette inside the square
-          'md:aspect-[var(--photo-ar)]',
+          // Photo silhouette inside the square cell
+          'aspect-[var(--photo-ar)]',
           mattedPhotoBoxClass(photo.aspectRatio),
         )}
         style={{
@@ -114,7 +104,7 @@ function PhotoGridMattedTile({
                   'animate-fade-in',
                   'z-10',
                 )}>
-                  <Spinner size={20} color="text" />
+                  <Spinner size={20} color="frosted" />
                 </div>}
               <ImageMedium
                 src={photo.url}
@@ -180,7 +170,7 @@ export default function PhotoGrid({
   additionalTile,
   small,
   selectable = true,
-  // Home / grid feed: matted tile layout from md (768px) up.
+  // Home / grid feed: always-floating matted tile layout.
   // Under a featured photo (and other embeds): leave unset.
   matted,
   onLastPhotoVisible,
@@ -346,13 +336,11 @@ export default function PhotoGrid({
   const gridClassName = matted
     ? clsx(
       'grid',
-      GRID_GAP_CLASSNAME,
-      // Below md: same as standard grid; md+: matted column counts (3 → 4)
+      // No gap — matte inset already spaces photos inside square cells
+      // Floating column counts at all sizes (2 → 3 → 4)
       small
         ? 'grid-cols-3 xs:grid-cols-6'
-        : isGridHighDensity
-          ? 'grid-cols-2 xs:grid-cols-4 md:grid-cols-3 lg:grid-cols-4'
-          : 'grid-cols-2 sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-4',
+        : 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4',
       'items-center',
     )
     : clsx(

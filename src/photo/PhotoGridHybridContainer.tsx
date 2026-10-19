@@ -94,7 +94,7 @@ export default function PhotoGridHybridContainer({
       className,
     )}>
       {renderHeader}
-      <div className={GRID_SPACE_CLASSNAME}>
+      <div className={matted ? undefined : GRID_SPACE_CLASSNAME}>
         {(!MASONRY_GRID_ENABLED || count <= photos.length) && (
           <PhotoGrid {...{
             photos,
