@@ -48,7 +48,6 @@ export const TEXT: I18N = {
   nav: {
     home: 'Beranda',
     full: 'Lengkap',
-    floating: 'Mengambang',
     grid: 'Grid',
     viewOptions: 'Opsi tampilan',
     library: 'Pustaka',

@@ -38,7 +38,7 @@ import {
   pathForTag,
   pathForYear,
   PREFIX_RECENTS,
-  isPathFloating,
+  isPathFull,
   isPathGrid,
   isPathLibrary,
   isPathRoot,
@@ -637,7 +637,7 @@ export default function CommandKClient({
       : `${appText.nav.full} (${appText.nav.home})`,
     path: PATH_FULL_INFERRED,
     annotation: renderCheck(
-      pathname === PATH_FULL_INFERRED || isPathFloating(pathname),
+      pathname === PATH_FULL_INFERRED || isPathFull(pathname),
     ),
   };
 

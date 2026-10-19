@@ -8,7 +8,6 @@ import {
   PARAM_SORT_TYPE_COLOR,
   PARAM_SORT_TYPE_TAKEN_AT,
   PARAM_SORT_TYPE_UPLOADED_AT,
-  PATH_FLOATING_INFERRED,
   PATH_FULL_INFERRED,
   PATH_GRID_INFERRED,
 } from '@/app/path';
@@ -109,7 +108,7 @@ const getPathSortComponents = (pathname: string) => {
   return {
     gridOrFull: gridOrFull || (GRID_HOMEPAGE_ENABLED
       ? 'grid'
-      : 'floating'
+      : 'full'
     ),
     sortType: sortType || DEFAULT_SORT_TYPE,
     sortOrder: sortOrder || DEFAULT_SORT_ORDER,
@@ -160,7 +159,6 @@ export const getSortStateFromPath = (
     if (sortBy === USER_DEFAULT_SORT_BY) {
       switch (gridOrFull) {
         case 'grid': return PATH_GRID_INFERRED;
-        case 'floating': return PATH_FLOATING_INFERRED;
         default: return PATH_FULL_INFERRED;
       }
     } else {
@@ -176,10 +174,6 @@ export const getSortStateFromPath = (
   const pathFull = _gridOrFull === 'full' && sortBy !== USER_DEFAULT_SORT_BY
     ? PATH_FULL_INFERRED
     : getPath({ gridOrFull: 'full', sortType, sortOrder });
-  const pathFloating =
-    _gridOrFull === 'floating' && sortBy !== USER_DEFAULT_SORT_BY
-      ? PATH_FLOATING_INFERRED
-      : getPath({ gridOrFull: 'floating', sortType, sortOrder });
 
   // Sort toggle path
   const pathSortToggle =
@@ -200,9 +194,7 @@ export const getSortStateFromPath = (
   // Sort clear
   const pathClearSort = _gridOrFull === 'grid'
     ? PATH_GRID_INFERRED
-    : _gridOrFull === 'floating'
-      ? PATH_FLOATING_INFERRED
-      : PATH_FULL_INFERRED;
+    : PATH_FULL_INFERRED;
 
   return {
     sortBy,
@@ -216,7 +208,6 @@ export const getSortStateFromPath = (
     ascendingLabel,
     pathGrid,
     pathFull,
-    pathFloating,
     pathDescending,
     pathAscending,
     pathTakenAt,

@@ -12,7 +12,6 @@ import { AlbumOrAlbumSlug } from '@/album';
 export const PATH_ROOT                  = '/';
 export const PATH_GRID                  = '/grid';
 export const PATH_FULL                  = '/full';
-export const PATH_FLOATING              = '/floating';
 export const PATH_LIBRARY               = '/library';
 export const PATH_ADMIN                 = '/admin';
 export const PATH_API                   = '/api';
@@ -23,14 +22,12 @@ export const PATH_OG                    = '/og';
 export const PATH_GRID_INFERRED = GRID_HOMEPAGE_ENABLED
   ? PATH_ROOT
   : PATH_GRID;
-// Floating replaces traditional full as the default large-photo layout
-export const PATH_FLOATING_INFERRED = GRID_HOMEPAGE_ENABLED
-  ? PATH_FLOATING
+export const PATH_FULL_INFERRED = GRID_HOMEPAGE_ENABLED
+  ? PATH_FULL
   : PATH_ROOT;
-export const PATH_FULL_INFERRED = PATH_FLOATING_INFERRED;
 export const PATH_HOME_INFERRED = GRID_HOMEPAGE_ENABLED
   ? PATH_ROOT
-  : PATH_FLOATING_INFERRED;
+  : PATH_FULL_INFERRED;
 
 // Modifiers
 const EDIT = 'edit';
@@ -45,8 +42,7 @@ export const PARAM_SORT_ORDER_ASCENDING   = 'ascending';
 export const doesPathOfferSort = (pathname: string) =>
   pathname === PATH_ROOT ||
   pathname.startsWith(PATH_GRID) ||
-  pathname.startsWith(PATH_FULL) ||
-  pathname.startsWith(PATH_FLOATING);
+  pathname.startsWith(PATH_FULL);
 
 // Feeds
 export const PATH_SITEMAP               = '/sitemap.xml';
@@ -132,7 +128,6 @@ export const PATHS_TO_CACHE = [
   PATH_ROOT,
   PATH_GRID,
   PATH_FULL,
-  PATH_FLOATING,
   PATH_LIBRARY,
   PATH_OG,
   PATH_PHOTO_DYNAMIC,
@@ -293,9 +288,6 @@ export const ABSOLUTE_PATH_GRID =
 
 export const ABSOLUTE_PATH_FULL =
   `${getBaseUrl()}${PATH_FULL_INFERRED}`;
-
-export const ABSOLUTE_PATH_FLOATING =
-  `${getBaseUrl()}${PATH_FLOATING_INFERRED}`;
 
 export const ABSOLUTE_PATH_FEED_JSON =
   `${getBaseUrl()}${PATH_FEED_JSON}`;
@@ -474,9 +466,6 @@ export const isPathGrid = (pathname?: string) =>
 export const isPathFull = (pathname?: string) =>
   checkPathPrefix(pathname, PATH_FULL);
 
-export const isPathFloating = (pathname?: string) =>
-  checkPathPrefix(pathname, PATH_FLOATING);
-
 export const isPathLibrary = (pathname?: string) =>
   checkPathPrefix(pathname, PATH_LIBRARY);
 
@@ -493,12 +482,11 @@ export const isPathPhotoSet = (pathname?: string) =>
   isPathFilm(pathname) ||
   isPathFocalLength(pathname);
 
-// Home screen paths, including sort variants of grid/full/floating
+// Home screen paths, including sort variants of grid/full
 export const isPathHome = (pathname?: string) =>
   isPathRoot(pathname) ||
   isPathGrid(pathname) ||
-  isPathFull(pathname) ||
-  isPathFloating(pathname);
+  isPathFull(pathname);
 
 export const isPathTopLevel = (pathname?: string) =>
   isPathHome(pathname) ||

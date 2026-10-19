@@ -26,12 +26,10 @@ const VIEW_ICON_CLASS = 'w-[24px] -ml-[4px] translate-x-[1px]';
 
 export default function AppViewMenuCompact({
   isViewFull,
-  isViewFloating,
   isMasonry,
   // Home views switch by navigating, sets by toggling state
   hrefGrid,
   hrefFull,
-  hrefFloating,
   onSelectView,
   isLoading,
   showSortItems,
@@ -41,11 +39,9 @@ export default function AppViewMenuCompact({
   className,
 }: {
   isViewFull?: boolean
-  isViewFloating?: boolean
   isMasonry?: boolean
   hrefGrid?: string
   hrefFull?: string
-  hrefFloating?: string
   onSelectView?: (isFull: boolean) => void
   isLoading?: boolean
   showSortItems?: boolean
@@ -56,7 +52,7 @@ export default function AppViewMenuCompact({
 }) {
   const appText = useAppText();
 
-  const isViewGrid = !isViewFull && !isViewFloating;
+  const isViewGrid = !isViewFull;
 
   const renderIconGrid = (forMenu?: boolean) => isMasonry
     ? <IconGridMasonry className={forMenu ? VIEW_ICON_CLASS : ''} />
@@ -76,20 +72,14 @@ export default function AppViewMenuCompact({
     ...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && { keyCommand: KEY_COMMANDS.grid },
   };
 
-  // Home: full-frame icon represents floating (no separate icon)
-  const usesFloatingAsFull = Boolean(hrefFloating);
   const itemFull = {
-    label: usesFloatingAsFull
-      ? appText.nav.floating
-      : appText.nav.full,
+    label: appText.nav.full,
     icon: renderViewIcon(
       <IconFull className={VIEW_ICON_CLASS} />,
-      usesFloatingAsFull
-        ? Boolean(isViewFloating)
-        : Boolean(isViewFull),
+      Boolean(isViewFull),
     ),
-    ...(hrefFloating ?? hrefFull)
-      ? { href: hrefFloating ?? hrefFull }
+    ...hrefFull
+      ? { href: hrefFull }
       : { action: () => onSelectView?.(true) },
     ...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && { keyCommand: KEY_COMMANDS.full },
   };
@@ -143,7 +133,7 @@ export default function AppViewMenuCompact({
             <span className="flex items-center justify-center">
               {isLoading
                 ? <Spinner />
-                : (isViewFloating || isViewFull)
+                : isViewFull
                   ? <IconFull />
                   : renderIconGrid()}
             </span>

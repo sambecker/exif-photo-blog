@@ -25,7 +25,6 @@ import { createCameraKey } from '@/camera';
 import {
   PATH_ADMIN,
   PATH_FULL,
-  PATH_FLOATING,
   PATH_GRID,
   PATH_ROOT,
   PREFIX_CAMERA,
@@ -122,7 +121,6 @@ export const revalidatePhoto = (photoId: string) => {
   revalidatePath(PATH_ROOT, 'layout');
   revalidatePath(PATH_GRID, 'layout');
   revalidatePath(PATH_FULL, 'layout');
-  revalidatePath(PATH_FLOATING, 'layout');
   revalidatePath(PREFIX_CAMERA, 'layout');
   revalidatePath(PREFIX_LENS, 'layout');
   revalidatePath(PREFIX_ALBUM, 'layout');

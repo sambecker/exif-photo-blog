@@ -1,9 +1,9 @@
 import AnimateItems from '@/components/AnimateItems';
 import { Photo } from '.';
-import PhotoFloating from './PhotoFloating';
+import PhotoFull from './PhotoFull';
 import { RevalidatePhoto } from './InfinitePhotoScroll';
 
-export default function PhotosFloating({
+export default function PhotosFull({
   photos,
   animate = true,
   prefetchFirstPhotoLinks,
@@ -31,7 +31,7 @@ export default function PhotosFloating({
       items={photos.map((photo, index) => {
         const absoluteIndex = indexOffset + index;
         return (
-          <PhotoFloating
+          <PhotoFull
             key={photo.id}
             photo={photo}
             metaSide={absoluteIndex % 2 === 0 ? 'right' : 'left'}

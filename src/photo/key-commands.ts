@@ -1,7 +1,6 @@
 export const KEY_COMMANDS = {
   home: 'H',
   full: 'F',
-  floating: 'O',
   grid: 'G',
   library: 'L',
   prev: ['ARROWLEFT'],

@@ -4,12 +4,10 @@ import SwitcherItem from '@/components/switcher/SwitcherItem';
 import {
   PATH_LIBRARY,
   PATH_FULL_INFERRED,
-  PATH_FLOATING_INFERRED,
   PATH_GRID_INFERRED,
   PATH_HOME_INFERRED,
   isPathLibrary,
   isPathFull,
-  isPathFloating,
   isPathHome,
   isPathPhotoSet,
 } from '@/app/path';
@@ -74,7 +72,6 @@ export default function AppToolbar({
     doesPathOfferSort,
     pathGrid,
     pathFull,
-    pathFloating,
   } = sortConfig;
 
   const showSortControl =
@@ -105,15 +102,11 @@ export default function AppToolbar({
   const isPhotoSet = isPathPhotoSet(pathname);
 
   const navigateHomeView = useCallback((
-    view: 'grid' | 'full' | 'floating',
+    view: 'grid' | 'full',
   ) => {
-    const path = view === 'grid'
-      ? pathGrid
-      : view === 'floating'
-        ? pathFloating
-        : pathFull;
+    const path = view === 'grid' ? pathGrid : pathFull;
     startTransition(() => router.push(path));
-  }, [pathFloating, pathFull, pathGrid, router]);
+  }, [pathFull, pathGrid, router]);
 
   const onKeyDown = useCallback((e: KeyboardEvent) => {
     if (!e.metaKey) {
@@ -122,11 +115,10 @@ export default function AppToolbar({
           if (isPhotoSet) {
             setIsPhotoSetFull?.(true);
           } else if (
-            pathname !== PATH_FLOATING_INFERRED &&
-            !isPathFloating(pathname)
+            pathname !== PATH_FULL_INFERRED &&
+            !isPathFull(pathname)
           ) {
-            // Home: full-frame icon / F opens floating layout
-            navigateHomeView('floating');
+            navigateHomeView('full');
           }
           break;
         case KEY_COMMANDS.grid:
@@ -158,13 +150,8 @@ export default function AppToolbar({
   const [isSortMenuOpen, setIsSortMenuOpen] = useState(false);
 
   const showViewMenu = isHome || isPhotoSet;
-  const isViewFloating = isHome && (
-    pathname === PATH_FLOATING_INFERRED || isPathFloating(pathname)
-  );
   const isViewFull = isHome
-    ? !isViewFloating && (
-      pathname === PATH_FULL_INFERRED || isPathFull(pathname)
-    )
+    ? pathname === PATH_FULL_INFERRED || isPathFull(pathname)
     : isPhotoSetFull;
 
   return (
@@ -186,12 +173,10 @@ export default function AppToolbar({
           <AppViewMenuCompact
             className="sm:hidden"
             isViewFull={isViewFull}
-            isViewFloating={isViewFloating}
             isMasonry={MASONRY_GRID_ENABLED && isHome}
             // Sort-aware paths retain the active sort while switching views
             hrefGrid={isHome ? pathGrid : undefined}
             hrefFull={isHome ? pathFull : undefined}
-            hrefFloating={isHome ? pathFloating : undefined}
             onSelectView={setIsPhotoSetFull}
             isLoading={isViewSwitchLoading}
             showSortItems={showSortControl}
@@ -208,11 +193,9 @@ export default function AppToolbar({
           <AppViewMenu
             className="max-sm:hidden"
             isViewFull={isViewFull}
-            isViewFloating={isViewFloating}
             isMasonry={MASONRY_GRID_ENABLED && isHome}
             hrefGrid={isHome ? pathGrid : undefined}
             hrefFull={isHome ? pathFull : undefined}
-            hrefFloating={isHome ? pathFloating : undefined}
             onSelectView={setIsPhotoSetFull}
             showSortControl={showSortControl}
             sortConfig={sortConfig}

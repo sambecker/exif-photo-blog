@@ -29,16 +29,16 @@ import LinkWithStatus from '@/components/LinkWithStatus';
 import Spinner from '@/components/Spinner';
 import useVisibility from '@/utility/useVisibility';
 
-// md+ floating: size the photo box by aspect ratio so it matches the
-// rendered image (menu/overlay anchor to the photo, not the square matte).
-function floatingPhotoBoxClass(aspectRatio: number) {
+// md+: size the photo box by aspect ratio so it matches the
+// rendered image (menu/overlay anchor to the photo, not the square cell).
+function mattedPhotoBoxClass(aspectRatio: number) {
   // Tighter than PhotoLarge matte so the grid stays dense
   if (aspectRatio > 3 / 2 + 0.1) { return 'md:w-[96%]'; }
   if (aspectRatio >= 1) { return 'md:w-[90%]'; }
   return 'md:h-[96%]';
 }
 
-function PhotoGridFloatingTile({
+function PhotoGridMattedTile({
   photo,
   priority,
   selected,
@@ -68,7 +68,7 @@ function PhotoGridFloatingTile({
         'flex',
         // Below md: match standard grid tile
         'overflow-hidden',
-        // md+: floating square matte (! overrides inline aspect below)
+        // md+: square cell (! overrides inline aspect below)
         'md:!aspect-square',
         'md:items-center md:justify-center',
         'md:overflow-visible',
@@ -86,7 +86,7 @@ function PhotoGridFloatingTile({
           'max-md:w-full max-md:h-full',
           // md+: box = photo silhouette inside the square
           'md:aspect-[var(--photo-ar)]',
-          floatingPhotoBoxClass(photo.aspectRatio),
+          mattedPhotoBoxClass(photo.aspectRatio),
         )}
         style={{
           '--photo-ar': String(photo.aspectRatio),
@@ -180,9 +180,9 @@ export default function PhotoGrid({
   additionalTile,
   small,
   selectable = true,
-  // Home / feed: floating matte layout from md (768px) up.
+  // Home / grid feed: matted tile layout from md (768px) up.
   // Under a featured photo (and other embeds): leave unset.
-  floating,
+  matted,
   onLastPhotoVisible,
   onAnimationComplete,
   revalidatePhoto,
@@ -199,7 +199,7 @@ export default function PhotoGrid({
   additionalTile?: ReactNode
   small?: boolean
   selectable?: boolean
-  floating?: boolean
+  matted?: boolean
   onLastPhotoVisible?: () => void
   onAnimationComplete?: () => void
   revalidatePhoto?: RevalidatePhoto
@@ -209,9 +209,9 @@ export default function PhotoGrid({
     isUserSignedIn,
   } = useAppState();
 
-  // Grid root (floating): re-animate + stagger on every visit.
+  // Grid root (matted): re-animate + stagger on every visit.
   // Embedded grids: stagger only on first load by default.
-  const staggerOnFirstLoadOnlyResolved = staggerOnFirstLoadOnly ?? !floating;
+  const staggerOnFirstLoadOnlyResolved = staggerOnFirstLoadOnly ?? !matted;
 
   const {
     isSelectingPhotos,
@@ -226,9 +226,9 @@ export default function PhotoGrid({
       isSelectingAllPhotos
     ) ?? false;
 
-    if (floating) {
+    if (matted) {
       return (
-        <PhotoGridFloatingTile
+        <PhotoGridMattedTile
           key={photo.id}
           photo={photo}
           priority={prioritizeInitialPhotos ? index < 6 : undefined}
@@ -323,8 +323,8 @@ export default function PhotoGrid({
     additionalTile ? [<div key="more">{additionalTile}</div>] : [],
   );
 
-  // Floating layout owns its own tile geometry — skip masonry
-  if (MASONRY_GRID_ENABLED && !floating) {
+  // Matted layout owns its own tile geometry — skip masonry
+  if (MASONRY_GRID_ENABLED && !matted) {
     return (
       <PhotoGridMasonry
         photos={photos}
@@ -343,11 +343,11 @@ export default function PhotoGrid({
     );
   }
 
-  const gridClassName = floating
+  const gridClassName = matted
     ? clsx(
       'grid',
       GRID_GAP_CLASSNAME,
-      // Below md: same as standard grid; md+: floating column counts
+      // Below md: same as standard grid; md+: matted column counts (3 → 4)
       small
         ? 'grid-cols-3 xs:grid-cols-6'
         : isGridHighDensity

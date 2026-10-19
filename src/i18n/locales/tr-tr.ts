@@ -48,7 +48,6 @@ export const TEXT: I18N = {
   nav: {
     home: 'Anasayfa',
     full: 'Tam',
-    floating: 'Yüzen',
     grid: 'Izgara',
     viewOptions: 'Görünüm seçenekleri',
     library: 'Kütüphane',

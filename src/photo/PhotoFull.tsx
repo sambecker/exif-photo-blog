@@ -53,7 +53,7 @@ import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import PlaceEntity from '@/place/PlaceEntity';
 import PhotoColorBar from './color/PhotoColorBar';
 
-export default function PhotoFloating({
+export default function PhotoFull({
   photo,
   className,
   metaSide = 'left',

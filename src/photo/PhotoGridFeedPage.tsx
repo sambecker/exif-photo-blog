@@ -9,7 +9,7 @@ import { GRID_SPACE_CLASSNAME } from '@/components';
 import { SortBy } from './sort';
 import { clsx } from 'clsx/lite';
 
-export default function PhotoGridFloatingPage({
+export default function PhotoGridFeedPage({
   photos,
   photosCount,
   sortBy,
@@ -33,18 +33,18 @@ export default function PhotoGridFloatingPage({
       <div className={clsx(GRID_SPACE_CLASSNAME)}>
         <PhotoGrid
           photos={photos}
-          floating
+          matted
           prioritizeInitialPhotos
           onAnimationComplete={onAnimationComplete}
         />
         {photosCount > photos.length &&
           <PhotoGridInfinite
-            cacheKey={`page-${PATH_GRID}-floating`}
+            cacheKey={`page-${PATH_GRID}`}
             initialOffset={photos.length}
             sortBy={sortBy}
             sortWithPriority={sortWithPriority}
             excludeFromFeeds
-            floating
+            matted
             canStart={shouldAnimateDynamicItems}
           />}
       </div>

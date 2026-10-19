@@ -3,7 +3,7 @@ import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { Metadata } from 'next/types';
 import { getPhotos } from '@/photo/query';
 import { cache } from 'react';
-import PhotoGridFloatingPage from '@/photo/PhotoGridFloatingPage';
+import PhotoGridFeedPage from '@/photo/PhotoGridFeedPage';
 import { getPhotosMetaCached } from '@/photo/cache';
 import { SortProps } from '@/photo/sort';
 import { getSortOptionsFromParams } from '@/photo/sort/path';
@@ -42,7 +42,7 @@ export default async function GridPage({ params }: SortProps) {
 
   return (
     photos.length > 0
-      ? <PhotoGridFloatingPage
+      ? <PhotoGridFeedPage
         {...{
           photos,
           photosCount,

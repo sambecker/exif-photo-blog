@@ -18,12 +18,10 @@ import IconSortNav from '@/components/icons/IconSortNav';
 
 export default function AppViewMenu({
   isViewFull,
-  isViewFloating,
   isMasonry,
   // Home views switch by navigating, sets by toggling state
   hrefGrid,
   hrefFull,
-  hrefFloating,
   onSelectView,
   showSortControl,
   sortConfig,
@@ -32,11 +30,9 @@ export default function AppViewMenu({
   className,
 }: {
   isViewFull?: boolean
-  isViewFloating?: boolean
   isMasonry?: boolean
   hrefGrid?: string
   hrefFull?: string
-  hrefFloating?: string
   onSelectView?: (isFull: boolean) => void
   showSortControl?: boolean
   sortConfig: ReturnType<typeof getSortStateFromPath>
@@ -53,13 +49,7 @@ export default function AppViewMenu({
     pathSortToggle,
   } = sortConfig;
 
-  // Home: full-frame icon represents floating (no separate icon)
-  const usesFloatingAsFull = Boolean(hrefFloating);
-  const hrefFullOrFloating = hrefFloating ?? hrefFull;
-  const isFullOrFloatingActive = usesFloatingAsFull
-    ? Boolean(isViewFloating)
-    : Boolean(isViewFull);
-  const isViewGrid = !isViewFull && !isViewFloating;
+  const isViewGrid = !isViewFull;
 
   const switcherItemGrid = <SwitcherItem
     key="grid"
@@ -83,16 +73,14 @@ export default function AppViewMenu({
   const switcherItemFull = <SwitcherItem
     key="full"
     icon={<IconFull />}
-    href={hrefFullOrFloating}
-    onClick={hrefFullOrFloating
+    href={hrefFull}
+    onClick={hrefFull
       ? undefined
       : () => onSelectView?.(true)}
-    active={isFullOrFloatingActive}
+    active={Boolean(isViewFull)}
     naked
     tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
-      content: usesFloatingAsFull
-        ? appText.nav.floating
-        : appText.nav.full,
+      content: appText.nav.full,
       keyCommand: KEY_COMMANDS.full,
     }}}
     width="narrow"

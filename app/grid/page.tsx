@@ -3,7 +3,7 @@ import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { Metadata } from 'next/types';
 import { getPhotos } from '@/photo/query';
 import { cache } from 'react';
-import PhotoGridFloatingPage from '@/photo/PhotoGridFloatingPage';
+import PhotoGridFeedPage from '@/photo/PhotoGridFeedPage';
 import { getPhotosMetaCached } from '@/photo/cache';
 import { USER_DEFAULT_SORT_OPTIONS } from '@/app/config';
 import { FEED_META_QUERY_OPTIONS, feedQueryOptions } from '@/feed';
@@ -35,7 +35,7 @@ export default async function GridPage() {
 
   return (
     photos.length > 0
-      ? <PhotoGridFloatingPage
+      ? <PhotoGridFeedPage
         {...{
           photos,
           photosCount,

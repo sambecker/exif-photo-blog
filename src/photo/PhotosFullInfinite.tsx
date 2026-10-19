@@ -1,10 +1,10 @@
 'use client';
 
 import InfinitePhotoScroll from './InfinitePhotoScroll';
-import PhotosFloating from './PhotosFloating';
+import PhotosFull from './PhotosFull';
 import { SortBy } from './sort';
 
-export default function PhotosFloatingInfinite({
+export default function PhotosFullInfinite({
   cacheKey,
   initialOffset,
   itemsPerPage,
@@ -33,7 +33,7 @@ export default function PhotosFloatingInfinite({
       excludeFromFeeds={excludeFromFeeds}
     >
       {({ key, photos, onLastPhotoVisible, revalidatePhoto }) =>
-        <PhotosFloating
+        <PhotosFull
           key={key}
           {...{
             photos,

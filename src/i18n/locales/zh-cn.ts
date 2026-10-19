@@ -48,7 +48,6 @@ export const TEXT: I18N = {
   nav: {
     home: '首页',
     full: '完整',
-    floating: '浮动',
     grid: '网格',
     viewOptions: '视图选项',
     library: '图库',
