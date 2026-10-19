@@ -1,7 +1,6 @@
 import { ComponentProps } from 'react';
 import MoreMenuItem, {
   renderMenuItemCheck,
-  renderMenuItemLabel,
 } from '@/components/more/MoreMenuItem';
 import { COLOR_SORT_ENABLED } from '@/app/config';
 import { AppTextState } from '@/i18n/state';
@@ -26,28 +25,28 @@ export const getSortMenuItems = ({
   itemsSortType: SortMenuItem[]
 } => {
   const itemsSortOrder: SortMenuItem[] = [{
-    ...renderMenuItemLabel(descendingLabel, !isAscending),
+    label: descendingLabel,
     icon: renderMenuItemCheck(!isAscending),
     href: pathDescending,
   }, {
-    ...renderMenuItemLabel(ascendingLabel, isAscending),
+    label: ascendingLabel,
     icon: renderMenuItemCheck(isAscending),
     href: pathAscending,
   }];
 
   const itemsSortType: SortMenuItem[] = [{
-    ...renderMenuItemLabel(appText.sort.takenAt, isTakenAt),
+    label: appText.sort.takenAt,
     icon: renderMenuItemCheck(isTakenAt),
     href: pathTakenAt,
   }, {
-    ...renderMenuItemLabel(appText.sort.uploadedAtShort, isUploadedAt),
+    label: appText.sort.uploadedAtShort,
     icon: renderMenuItemCheck(isUploadedAt),
     href: pathUploadedAt,
   }];
 
   if (COLOR_SORT_ENABLED) {
     itemsSortType.push({
-      ...renderMenuItemLabel(appText.sort.color, isColor),
+      label: appText.sort.color,
       icon: renderMenuItemCheck(isColor),
       href: pathColor,
     });

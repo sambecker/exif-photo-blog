@@ -19,13 +19,6 @@ export const renderMenuItemCheck = (isChecked: boolean) => isChecked
   ? <IconCheck size={13} />
   : <span />;
 
-export const renderMenuItemLabel = (label: string, isSelected: boolean) => ({
-  label,
-  labelComplex: <span className={clsx(!isSelected && 'text-dim')}>
-    {label}
-  </span>,
-});
-
 export default function MoreMenuItem({
   label,
   labelComplex,
