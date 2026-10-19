@@ -26,8 +26,9 @@ const VIEW_ICON_CLASS = 'w-[24px] -ml-[4px] translate-x-[1px]';
 
 export default function AppViewMenuCompact({
   isViewFull,
+  isViewGrid,
   isMasonry,
-  // Home views switch by navigating, sets by toggling state
+  // Sets toggle via onSelectView; elsewhere navigate via hrefs
   hrefGrid,
   hrefFull,
   onSelectView,
@@ -39,6 +40,7 @@ export default function AppViewMenuCompact({
   className,
 }: {
   isViewFull?: boolean
+  isViewGrid?: boolean
   isMasonry?: boolean
   hrefGrid?: string
   hrefFull?: string
@@ -52,8 +54,6 @@ export default function AppViewMenuCompact({
 }) {
   const appText = useAppText();
 
-  const isViewGrid = !isViewFull;
-
   const renderIconGrid = (forMenu?: boolean) => isMasonry
     ? <IconGridMasonry className={forMenu ? VIEW_ICON_CLASS : ''} />
     : <IconGrid className={forMenu ? VIEW_ICON_CLASS : ''} />;
@@ -65,7 +65,7 @@ export default function AppViewMenuCompact({
 
   const itemGrid = {
     label: appText.nav.grid,
-    icon: renderViewIcon(renderIconGrid(true), isViewGrid),
+    icon: renderViewIcon(renderIconGrid(true), Boolean(isViewGrid)),
     ...hrefGrid
       ? { href: hrefGrid }
       : { action: () => onSelectView?.(false) },

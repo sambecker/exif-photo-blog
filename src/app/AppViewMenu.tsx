@@ -18,8 +18,9 @@ import IconSortNav from '@/components/icons/IconSortNav';
 
 export default function AppViewMenu({
   isViewFull,
+  isViewGrid,
   isMasonry,
-  // Home views switch by navigating, sets by toggling state
+  // Sets toggle via onSelectView; elsewhere navigate via hrefs
   hrefGrid,
   hrefFull,
   onSelectView,
@@ -30,6 +31,7 @@ export default function AppViewMenu({
   className,
 }: {
   isViewFull?: boolean
+  isViewGrid?: boolean
   isMasonry?: boolean
   hrefGrid?: string
   hrefFull?: string
@@ -49,8 +51,6 @@ export default function AppViewMenu({
     pathSortToggle,
   } = sortConfig;
 
-  const isViewGrid = !isViewFull;
-
   const switcherItemGrid = <SwitcherItem
     key="grid"
     icon={isMasonry
@@ -60,7 +60,7 @@ export default function AppViewMenu({
     onClick={hrefGrid
       ? undefined
       : () => onSelectView?.(false)}
-    active={isViewGrid}
+    active={Boolean(isViewGrid)}
     naked
     tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
       content: appText.nav.grid,

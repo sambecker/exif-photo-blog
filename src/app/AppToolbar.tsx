@@ -8,7 +8,7 @@ import {
   PATH_HOME_INFERRED,
   isPathLibrary,
   isPathFull,
-  isPathHome,
+  isPathGrid,
   isPathPhotoSet,
 } from '@/app/path';
 import IconSearch from '../components/icons/IconSearch';
@@ -97,9 +97,12 @@ export default function AppToolbar({
   const [isAdminMenuOpen, setIsAdminMenuOpen] = useState(false);
   const [isViewMenuOpen, setIsViewMenuOpen] = useState(false);
   
-  // Home screens switch views by navigating, sets by toggling state
-  const isHome = isPathHome(pathname);
+  // Sets toggle local full/grid state; everywhere else navigates home views
   const isPhotoSet = isPathPhotoSet(pathname);
+  const isOnFullPath =
+    pathname === PATH_FULL_INFERRED || isPathFull(pathname);
+  const isOnGridPath =
+    pathname === PATH_GRID_INFERRED || isPathGrid(pathname);
 
   const navigateHomeView = useCallback((
     view: 'grid' | 'full',
@@ -108,23 +111,40 @@ export default function AppToolbar({
     startTransition(() => router.push(path));
   }, [pathFull, pathGrid, router]);
 
+  const isViewFull = isPhotoSet ? Boolean(isPhotoSetFull) : isOnFullPath;
+  const isViewGrid = isPhotoSet ? !isPhotoSetFull : isOnGridPath;
+
+  // On sets: inactive control toggles set view; active control goes to that
+  // view’s root homepage. Elsewhere: always navigate via sort-aware paths.
+  const hrefGrid = isPhotoSet
+    ? (isViewGrid ? PATH_GRID_INFERRED : undefined)
+    : pathGrid;
+  const hrefFull = isPhotoSet
+    ? (isViewFull ? PATH_FULL_INFERRED : undefined)
+    : pathFull;
+
   const onKeyDown = useCallback((e: KeyboardEvent) => {
     if (!e.metaKey) {
       switch (e.key.toLocaleUpperCase()) {
         case KEY_COMMANDS.full:
           if (isPhotoSet) {
-            setIsPhotoSetFull?.(true);
-          } else if (
-            pathname !== PATH_FULL_INFERRED &&
-            !isPathFull(pathname)
-          ) {
+            if (isPhotoSetFull) {
+              startTransition(() => router.push(PATH_FULL_INFERRED));
+            } else {
+              setIsPhotoSetFull?.(true);
+            }
+          } else if (!isOnFullPath) {
             navigateHomeView('full');
           }
           break;
         case KEY_COMMANDS.grid:
           if (isPhotoSet) {
-            setIsPhotoSetFull?.(false);
-          } else if (pathname !== PATH_GRID_INFERRED) {
+            if (!isPhotoSetFull) {
+              startTransition(() => router.push(PATH_GRID_INFERRED));
+            } else {
+              setIsPhotoSetFull?.(false);
+            }
+          } else if (!isOnGridPath) {
             navigateHomeView('grid');
           }
           break;
@@ -140,6 +160,9 @@ export default function AppToolbar({
     }
   }, [
     isPhotoSet,
+    isPhotoSetFull,
+    isOnFullPath,
+    isOnGridPath,
     pathname,
     navigateHomeView,
     router,
@@ -149,11 +172,6 @@ export default function AppToolbar({
 
   const [isSortMenuOpen, setIsSortMenuOpen] = useState(false);
 
-  const showViewMenu = isHome || isPhotoSet;
-  const isViewFull = isHome
-    ? pathname === PATH_FULL_INFERRED || isPathFull(pathname)
-    : isPhotoSetFull;
-
   return (
     <div className={clsx(
       className,
@@ -161,23 +179,19 @@ export default function AppToolbar({
     )}>
       {!isInEmptyState &&
         <motion.div
-          className="flex items-center overflow-hidden"
-          initial={animate ? { opacity: 0, width: 0, x: -8 } : false}
-          animate={{
-            opacity: showViewMenu ? 1 : 0,
-            width: showViewMenu ? 'auto' : 0,
-            x: showViewMenu ? 0 : -8,
-          }}
+          className="flex items-center"
+          initial={animate ? { opacity: 0, x: -8 } : false}
+          animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.2, ease: 'easeInOut' }}
         >
           <AppViewMenuCompact
             className="sm:hidden"
             isViewFull={isViewFull}
-            isMasonry={MASONRY_GRID_ENABLED && isHome}
-            // Sort-aware paths retain the active sort while switching views
-            hrefGrid={isHome ? pathGrid : undefined}
-            hrefFull={isHome ? pathFull : undefined}
-            onSelectView={setIsPhotoSetFull}
+            isViewGrid={isViewGrid}
+            isMasonry={MASONRY_GRID_ENABLED}
+            hrefGrid={hrefGrid}
+            hrefFull={hrefFull}
+            onSelectView={isPhotoSet ? setIsPhotoSetFull : undefined}
             isLoading={isViewSwitchLoading}
             showSortItems={showSortControl}
             sortConfig={sortConfig}
@@ -193,10 +207,11 @@ export default function AppToolbar({
           <AppViewMenu
             className="max-sm:hidden"
             isViewFull={isViewFull}
-            isMasonry={MASONRY_GRID_ENABLED && isHome}
-            hrefGrid={isHome ? pathGrid : undefined}
-            hrefFull={isHome ? pathFull : undefined}
-            onSelectView={setIsPhotoSetFull}
+            isViewGrid={isViewGrid}
+            isMasonry={MASONRY_GRID_ENABLED}
+            hrefGrid={hrefGrid}
+            hrefFull={hrefFull}
+            onSelectView={isPhotoSet ? setIsPhotoSetFull : undefined}
             showSortControl={showSortControl}
             sortConfig={sortConfig}
             isSortMenuOpen={isSortMenuOpen}
