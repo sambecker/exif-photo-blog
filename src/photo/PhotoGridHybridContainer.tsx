@@ -12,6 +12,7 @@ import { GRID_SPACE_CLASSNAME } from '@/components';
 import { SortBy } from './sort';
 import { MASONRY_GRID_ENABLED } from '@/app/config';
 import { useAppState } from '@/app/AppState';
+import { LAYOUT_CLASS_FEED } from '@/app/layout-metrics';
 import {
   INFINITE_SCROLL_FULL_INITIAL,
   INFINITE_SCROLL_FULL_MULTIPLE,
@@ -30,6 +31,7 @@ export default function PhotoGridHybridContainer({
   header,
   sidebar,
   className,
+  matted,
   ...categories
 }: {
   cacheKey: string
@@ -64,54 +66,75 @@ export default function PhotoGridHybridContainer({
     ? photos.slice(0, INFINITE_SCROLL_FULL_INITIAL)
     : undefined;
 
-  return photosFull
-    ? <div className={className}>
-      <AppGrid className="mt-1.5 mb-6" contentMain={renderHeader} />
-      <div className="space-y-1">
-        <PhotosLarge {...{ photos: photosFull, ...categories }} />
-        {count > photosFull.length &&
-          <PhotosLargeInfinite {...{
-            // Keep grid and full frame caches separate
-            cacheKey: `${cacheKey}-full`,
-            initialOffset: photosFull.length,
-            itemsPerPage: INFINITE_SCROLL_FULL_MULTIPLE,
-            sortBy,
-            sortWithPriority,
-            excludeFromFeeds,
-            ...categories,
-          }} />}
-      </div>
-    </div>
-    : <AppGrid
-      contentMain={<div className={clsx(
-        header && 'space-y-8 mt-1.5',
-        className,
-      )}>
-        {renderHeader}
-        <div className={GRID_SPACE_CLASSNAME}>
-          {(!MASONRY_GRID_ENABLED || count <= photos.length) && (
-            <PhotoGrid {...{
-              photos,
-              ...categories,
-              animateOnFirstLoadOnly,
-              onAnimationComplete,
-            }} />
-          )}
-          {count > photos.length &&
-            <PhotoGridInfinite {...{
+  if (photosFull) {
+    return (
+      <div className={className}>
+        <AppGrid className="mt-1.5 mb-6" contentMain={renderHeader} />
+        <div className="space-y-1">
+          <PhotosLarge {...{ photos: photosFull, ...categories }} />
+          {count > photosFull.length &&
+            <PhotosLargeInfinite {...{
               // Keep grid and full frame caches separate
-              cacheKey: `${cacheKey}-grid`,
-              initialPhotos: MASONRY_GRID_ENABLED ? photos : undefined,
-              initialOffset: photos.length,
+              cacheKey: `${cacheKey}-full`,
+              initialOffset: photosFull.length,
+              itemsPerPage: INFINITE_SCROLL_FULL_MULTIPLE,
               sortBy,
               sortWithPriority,
               excludeFromFeeds,
               ...categories,
-              canStart: shouldAnimateDynamicItems,
-              animateOnFirstLoadOnly,
             }} />}
         </div>
-      </div>}
+      </div>
+    );
+  }
+
+  const gridBody = (
+    <div className={clsx(
+      header && 'space-y-8 mt-1.5',
+      className,
+    )}>
+      {renderHeader}
+      <div className={GRID_SPACE_CLASSNAME}>
+        {(!MASONRY_GRID_ENABLED || count <= photos.length) && (
+          <PhotoGrid {...{
+            photos,
+            matted,
+            ...categories,
+            animateOnFirstLoadOnly,
+            onAnimationComplete,
+          }} />
+        )}
+        {count > photos.length &&
+          <PhotoGridInfinite {...{
+            // Keep grid and full frame caches separate
+            cacheKey: `${cacheKey}-grid`,
+            initialPhotos: MASONRY_GRID_ENABLED ? photos : undefined,
+            initialOffset: photos.length,
+            sortBy,
+            sortWithPriority,
+            excludeFromFeeds,
+            matted,
+            ...categories,
+            canStart: shouldAnimateDynamicItems,
+            animateOnFirstLoadOnly,
+          }} />}
+      </div>
+    </div>
+  );
+
+  // Matted /grid feed (no sidebar): wider than nav, like /full
+  if (matted && !sidebar) {
+    return (
+      <div className={clsx('mx-auto w-full', LAYOUT_CLASS_FEED)}>
+        {gridBody}
+      </div>
+    );
+  }
+
+  return (
+    <AppGrid
+      contentMain={gridBody}
       contentSide={sidebar}
-    />;
+    />
+  );
 }

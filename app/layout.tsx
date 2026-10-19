@@ -102,6 +102,9 @@ export default function RootLayout({
         <StateProviders>
           <ThemeColors />
           <div className={clsx(
+            // Stretch when body becomes 3xl:flex items-center, otherwise
+            // the page shrink-wraps to content max-width
+            'self-stretch',
             'mx-3 pb-3',
             'lg:mx-6 lg:pb-6',
             'min-h-dvh flex flex-col',

@@ -3,13 +3,8 @@
 import SwitcherItem from '@/components/switcher/SwitcherItem';
 import {
   PATH_LIBRARY,
-  PATH_FULL_INFERRED,
-  PATH_GRID_INFERRED,
   PATH_HOME_INFERRED,
   isPathLibrary,
-  isPathFull,
-  isPathGrid,
-  isPathPhotoSet,
 } from '@/app/path';
 import IconSearch from '../components/icons/IconSearch';
 import { useAppState } from '@/app/AppState';
@@ -39,6 +34,7 @@ import { motion } from 'framer-motion';
 import IconLibrary from '@/components/icons/IconLibrary';
 import AppViewMenu from './AppViewMenu';
 import AppViewMenuCompact from './AppViewMenuCompact';
+import getHomeViewNavState from './getHomeViewNavState';
 
 export default function AppToolbar({
   className,
@@ -96,13 +92,23 @@ export default function AppToolbar({
 
   const [isAdminMenuOpen, setIsAdminMenuOpen] = useState(false);
   const [isViewMenuOpen, setIsViewMenuOpen] = useState(false);
-  
-  // Sets toggle local full/grid state; everywhere else navigates home views
-  const isPhotoSet = isPathPhotoSet(pathname);
-  const isOnFullPath =
-    pathname === PATH_FULL_INFERRED || isPathFull(pathname);
-  const isOnGridPath =
-    pathname === PATH_GRID_INFERRED || isPathGrid(pathname);
+
+  const {
+    isPhotoSet,
+    isOnFullPath,
+    isOnGridPath,
+    isViewFull,
+    isViewGrid,
+    hrefGrid,
+    hrefFull,
+    pathGridRoot,
+    pathFullRoot,
+  } = useMemo(() => getHomeViewNavState({
+    pathname,
+    isPhotoSetFull,
+    pathGrid,
+    pathFull,
+  }), [pathname, isPhotoSetFull, pathGrid, pathFull]);
 
   const navigateHomeView = useCallback((
     view: 'grid' | 'full',
@@ -111,25 +117,13 @@ export default function AppToolbar({
     startTransition(() => router.push(path));
   }, [pathFull, pathGrid, router]);
 
-  const isViewFull = isPhotoSet ? Boolean(isPhotoSetFull) : isOnFullPath;
-  const isViewGrid = isPhotoSet ? !isPhotoSetFull : isOnGridPath;
-
-  // On sets: inactive control toggles set view; active control goes to that
-  // view’s root homepage. Elsewhere: always navigate via sort-aware paths.
-  const hrefGrid = isPhotoSet
-    ? (isViewGrid ? PATH_GRID_INFERRED : undefined)
-    : pathGrid;
-  const hrefFull = isPhotoSet
-    ? (isViewFull ? PATH_FULL_INFERRED : undefined)
-    : pathFull;
-
   const onKeyDown = useCallback((e: KeyboardEvent) => {
     if (!e.metaKey) {
       switch (e.key.toLocaleUpperCase()) {
         case KEY_COMMANDS.full:
           if (isPhotoSet) {
             if (isPhotoSetFull) {
-              startTransition(() => router.push(PATH_FULL_INFERRED));
+              startTransition(() => router.push(pathFullRoot));
             } else {
               setIsPhotoSetFull?.(true);
             }
@@ -140,7 +134,7 @@ export default function AppToolbar({
         case KEY_COMMANDS.grid:
           if (isPhotoSet) {
             if (!isPhotoSetFull) {
-              startTransition(() => router.push(PATH_GRID_INFERRED));
+              startTransition(() => router.push(pathGridRoot));
             } else {
               setIsPhotoSetFull?.(false);
             }
@@ -163,6 +157,8 @@ export default function AppToolbar({
     isPhotoSetFull,
     isOnFullPath,
     isOnGridPath,
+    pathFullRoot,
+    pathGridRoot,
     pathname,
     navigateHomeView,
     router,

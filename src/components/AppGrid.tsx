@@ -1,31 +1,20 @@
 import { clsx } from 'clsx/lite';
 import { HTMLAttributes, ReactNode, RefObject } from 'react';
+import {
+  LAYOUT_CLASS_COLS_WITH_SIDE_3XL,
+  LAYOUT_CLASS_MAIN,
+  LAYOUT_CLASS_SIDE_3XL,
+  LAYOUT_CLASS_SIDE_OFFSET_3XL,
+  LAYOUT_CLASS_WITH_SIDE_3XL,
+  LAYOUT_MAIN,
+} from '@/app/layout-metrics';
 
-/*
-  MAX WIDTHS
-  Main: 956px +
-  Sidebar: 200px +
-  Gap: 16px =
-  Total: 1172px
-    -
-  Column offset: (200px + 16px) / 2 = 108px
-  (keeps main optically centered with nav)
-
-  Below 3xl (87rem / 1392px): main-width column only (956px) —
-  full width until centered, matching site nav (never left-aligned).
-  3xl+ with sidebar: centered 1172px layout; columns offset so main
-  aligns with nav. Without sidebar: stay at main width (956px).
-
-  3xl is set ~240px earlier than the prior 102rem / 1632px threshold,
-  which was sized for a 1280px / 162px-offset grid.
-*/
-
-export const APP_GRID_WIDTH_MAIN = 956;
+export const APP_GRID_WIDTH_MAIN = LAYOUT_MAIN;
 
 // Offsets sidebar width when centering on large screens.
 // Applied to columns, not the container, so that consumer-supplied
 // positioning ('sticky') isn't overridden at large widths.
-const CLASS_COLUMN_OFFSET = '3xl:relative 3xl:left-[108px]';
+const CLASS_COLUMN_OFFSET = LAYOUT_CLASS_SIDE_OFFSET_3XL;
 
 export default function AppGrid({
   containerRef,
@@ -57,10 +46,11 @@ export default function AppGrid({
       ref={containerRef}
       className={clsx(
         'grid grid-cols-1',
-        // Match nav: main width until 3xl sidebar layout expands
-        'w-full mx-auto max-w-[956px]',
-        hasSide && '3xl:max-w-[1172px] 3xl:w-[1172px]',
-        hasSide && '3xl:grid-cols-[minmax(0,956px)_200px] 3xl:gap-4',
+        // Match nav width; expand only when sidebar sits beside at 3xl
+        'w-full mx-auto',
+        LAYOUT_CLASS_MAIN,
+        hasSide && LAYOUT_CLASS_WITH_SIDE_3XL,
+        hasSide && LAYOUT_CLASS_COLS_WITH_SIDE_3XL,
         'gap-3',
         // Don't block fields beneath side column when not present
         'pointer-events-none',
@@ -68,8 +58,9 @@ export default function AppGrid({
       )}
     >
       <div className={clsx(
-        // Always cap main at nav width (956px), including inside 3xl sidebar grid
-        'col-span-1 w-full max-w-[956px]',
+        // Cap main at nav width, including inside 3xl sidebar grid
+        'col-span-1 w-full',
+        LAYOUT_CLASS_MAIN,
         hasSide && CLASS_COLUMN_OFFSET,
         sideFirstOnMobile && hasSide && 'order-2 3xl:order-none',
         // Reenable pointer events
@@ -80,7 +71,8 @@ export default function AppGrid({
       </div>
       {contentSide &&
         <div className={clsx(
-          'col-span-1 w-full 3xl:max-w-[200px]',
+          'col-span-1 w-full',
+          LAYOUT_CLASS_SIDE_3XL,
           CLASS_COLUMN_OFFSET,
           sideFirstOnMobile && 'order-1 3xl:order-none',
           sideHiddenOnMobile && 'max-3xl:hidden',

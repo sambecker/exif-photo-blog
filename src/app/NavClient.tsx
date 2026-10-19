@@ -12,6 +12,7 @@ import {
 } from '@/app/path';
 import AnimateItems from '../components/AnimateItems';
 import { NAV_CAPTION } from './config';
+import { LAYOUT_CLASS_MAIN } from './layout-metrics';
 import { useRef } from 'react';
 import useStickyHeader from './useStickyHeader';
 import { useAppState } from '@/app/AppState';
@@ -71,8 +72,7 @@ export default function NavClient({
         style={contentStyle}
       >
         <AnimateItems
-          // max-w matches APP_GRID_WIDTH_MAIN / AppGrid main column
-          className="mx-auto w-full max-w-[956px]"
+          className={clsx('mx-auto w-full', LAYOUT_CLASS_MAIN)}
           animateOnFirstLoadOnly
           type={!isInEmptyState && !isPathAdmin(pathname) ? 'bottom' : 'none'}
           distanceOffset={10}

@@ -362,7 +362,7 @@ export default function PhotoGrid({
         ? 'grid-cols-3 xs:grid-cols-6'
         : isGridHighDensity
           ? 'grid-cols-2 xs:grid-cols-4 lg:grid-cols-6'
-          : 'grid-cols-2 sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-4',
+          : 'grid-cols-2 sm:grid-cols-4',
       'items-center',
     );
 

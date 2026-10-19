@@ -3,10 +3,11 @@ import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { Metadata } from 'next/types';
 import { getPhotos } from '@/photo/query';
 import { cache } from 'react';
-import PhotoGridFeedPage from '@/photo/PhotoGridFeedPage';
+import PhotoGridHybridContainer from '@/photo/PhotoGridHybridContainer';
 import { getPhotosMetaCached } from '@/photo/cache';
 import { USER_DEFAULT_SORT_OPTIONS } from '@/app/config';
 import { FEED_META_QUERY_OPTIONS, feedQueryOptions } from '@/feed';
+import { PATH_GRID } from '@/app/path';
 
 export const dynamic = 'force-static';
 export const maxDuration = 60;
@@ -35,12 +36,14 @@ export default async function GridPage() {
 
   return (
     photos.length > 0
-      ? <PhotoGridFeedPage
-        {...{
-          photos,
-          photosCount,
-          ...USER_DEFAULT_SORT_OPTIONS,
-        }}
+      ? <PhotoGridHybridContainer
+        cacheKey={`page-${PATH_GRID}`}
+        photos={photos}
+        count={photosCount}
+        excludeFromFeeds
+        prioritizeInitialPhotos
+        matted
+        {...USER_DEFAULT_SORT_OPTIONS}
       />
       : <PhotosEmptyState />
   );
