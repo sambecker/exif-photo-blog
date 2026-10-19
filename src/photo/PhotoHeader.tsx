@@ -103,15 +103,16 @@ export default function PhotoHeader({
             PHOTO_TITLE_SERIF
               // Instrument Serif only ships weight 400
               ? clsx(
-                'font-serif font-normal leading-tight truncate',
+                'font-serif leading-tight',
                 'text-[1.25rem] sm:text-[1.5rem]',
               )
-              : 'font-bold truncate',
+              : 'font-bold',
             UPPERCASE_TITLES && 'uppercase',
           )}
         >
           {titleForPhoto(selectedPhoto, true)}
-        </PhotoLink>);
+        </PhotoLink>
+    );
 
   const renderBlock = (content: ReactNode) =>
     <DivDebugBaselineGrid
@@ -209,8 +210,11 @@ export default function PhotoHeader({
               ? 'hidden sm:flex'
               : 'flex',
             'justify-end',
-            // Make full height for prev/next symbols
-            'max-sm:h-full',
+            !entity && selectedPhoto !== undefined && PHOTO_TITLE_SERIF
+              // Center vertically with serif photo titles
+              ? 'h-full items-center -translate-y-0.5'
+              // Make full height for prev/next symbols
+              : 'max-sm:h-full',
           )}>
             {selectedPhoto
               ? renderPrevNext

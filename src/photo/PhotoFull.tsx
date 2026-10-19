@@ -23,6 +23,7 @@ import DivDebugBaselineGrid from '@/components/DivDebugBaselineGrid';
 import PhotoLink from './PhotoLink';
 import {
   SHOULD_PREFETCH_ALL_LINKS,
+  ALLOW_PUBLIC_DOWNLOADS,
   SHOW_TAKEN_AT_TIME,
   ALWAYS_SHOW_EXPOSURE_COMP,
   UPPERCASE_TITLES,
@@ -36,6 +37,8 @@ import { useCallback, useMemo, useRef } from 'react';
 import useVisibility from '@/utility/useVisibility';
 import PhotoDate from './PhotoDate';
 import { useAppState } from '@/app/AppState';
+import { LuExpand } from 'react-icons/lu';
+import LoaderButton from '@/components/primitives/LoaderButton';
 import Tooltip from '@/components/Tooltip';
 import ZoomControls, { ZoomControlsRef }
   from '@/components/image/zoom/ZoomControls';
@@ -52,6 +55,8 @@ import { DATA_KEY_PHOTO_LARGE } from '@/admin/edit-titles/EditTitlesProvider';
 import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import PlaceEntity from '@/place/PlaceEntity';
 import PhotoColorBar from './color/PhotoColorBar';
+import ShareButton from '@/share/ShareButton';
+import DownloadButton from '@/components/DownloadButton';
 
 export default function PhotoFull({
   photo,
@@ -63,6 +68,7 @@ export default function PhotoFull({
   revalidatePhoto,
   showZoomControls: _showZoomControls = true,
   shouldZoomOnFKeydown = true,
+  shouldShare = true,
   includeFavoriteInAdminMenu,
   onVisible,
   showAdminKeyCommands,
@@ -77,6 +83,7 @@ export default function PhotoFull({
   revalidatePhoto?: RevalidatePhoto
   showZoomControls?: boolean
   shouldZoomOnFKeydown?: boolean
+  shouldShare?: boolean
   includeFavoriteInAdminMenu?: boolean
   onVisible?: () => void
   showAdminKeyCommands?: boolean
@@ -469,8 +476,6 @@ export default function PhotoFull({
                   />
                 </div>}
             </>}
-          {PHOTO_COLOR_BAR && photo.colorData &&
-            <PhotoColorBar colorData={photo.colorData} />}
           <PhotoDate
             photo={photo}
             className={clsx(
@@ -483,6 +488,35 @@ export default function PhotoFull({
             timezone={null}
             hideTime={!SHOW_TAKEN_AT_TIME}
           />
+          {PHOTO_COLOR_BAR && photo.colorData &&
+            <PhotoColorBar colorData={photo.colorData} />}
+          <div className={clsx(
+            'flex gap-1 translate-y-[0.5px]',
+            'translate-x-[-2.5px]',
+            metaSide === 'left' && 'md:translate-x-[2.5px]',
+          )}>
+            {showZoomControls &&
+              <LoaderButton
+                tooltip={appText.tooltip.zoom}
+                aria-label={appText.tooltip.zoom}
+                icon={<LuExpand size={15} />}
+                onClick={() => refZoomControls.current?.open()}
+                styleAs="link"
+                className="text-medium translate-y-[0.25px]"
+                hideFocusOutline
+              />}
+            {shouldShare &&
+              <ShareButton
+                tooltip={appText.tooltip.sharePhoto}
+                photo={photo}
+                prefetch={prefetchRelatedLinks}
+              />}
+            {ALLOW_PUBLIC_DOWNLOADS &&
+              <DownloadButton
+                className="translate-y-[0.5px]"
+                photo={photo}
+              />}
+          </div>
           {showStorageCheck &&
             <AdminPhotoStorageCheck photo={photo} />}
         </div>
