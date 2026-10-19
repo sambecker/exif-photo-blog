@@ -35,7 +35,6 @@ export default function PhotoGridFloatingPage({
           photos={photos}
           floating
           prioritizeInitialPhotos
-          animateOnFirstLoadOnly
           onAnimationComplete={onAnimationComplete}
         />
         {photosCount > photos.length &&
@@ -47,7 +46,6 @@ export default function PhotoGridFloatingPage({
             excludeFromFeeds
             floating
             canStart={shouldAnimateDynamicItems}
-            animateOnFirstLoadOnly
           />}
       </div>
     </div>

@@ -173,7 +173,7 @@ export default function PhotoGrid({
   animate = true,
   canStart,
   animateOnFirstLoadOnly,
-  staggerOnFirstLoadOnly = true,
+  staggerOnFirstLoadOnly,
   additionalTile,
   small,
   selectable = true,
@@ -205,6 +205,10 @@ export default function PhotoGrid({
     isGridHighDensity,
     isUserSignedIn,
   } = useAppState();
+
+  // Grid root (floating): re-animate + stagger on every visit.
+  // Embedded grids: stagger only on first load by default.
+  const staggerOnFirstLoadOnlyResolved = staggerOnFirstLoadOnly ?? !floating;
 
   const {
     isSelectingPhotos,
@@ -330,7 +334,7 @@ export default function PhotoGrid({
         animate={animate}
         canStart={canStart}
         animateOnFirstLoadOnly={animateOnFirstLoadOnly}
-        staggerOnFirstLoadOnly={staggerOnFirstLoadOnly}
+        staggerOnFirstLoadOnly={staggerOnFirstLoadOnlyResolved}
         onAnimationCompleteAction={onAnimationComplete}
       />
     );
@@ -371,7 +375,7 @@ export default function PhotoGrid({
         staggerDelay={0.04}
         distanceOffset={40}
         animateOnFirstLoadOnly={animateOnFirstLoadOnly}
-        staggerOnFirstLoadOnly={staggerOnFirstLoadOnly}
+        staggerOnFirstLoadOnly={staggerOnFirstLoadOnlyResolved}
         onAnimationComplete={onAnimationComplete}
         items={allItems}
         itemKeys={photos.map(photo => photo.id)
