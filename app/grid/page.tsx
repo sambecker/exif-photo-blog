@@ -5,7 +5,10 @@ import { getPhotos } from '@/photo/query';
 import { cache } from 'react';
 import PhotoGridHybridContainer from '@/photo/PhotoGridHybridContainer';
 import { getPhotosMetaCached } from '@/photo/cache';
-import { USER_DEFAULT_SORT_OPTIONS } from '@/app/config';
+import {
+  MASONRY_GRID_ENABLED,
+  USER_DEFAULT_SORT_OPTIONS,
+} from '@/app/config';
 import { FEED_META_QUERY_OPTIONS, feedQueryOptions } from '@/feed';
 import { PATH_GRID } from '@/app/path';
 
@@ -42,7 +45,7 @@ export default async function GridPage() {
         count={photosCount}
         excludeFromFeeds
         prioritizeInitialPhotos
-        matted
+        matted={!MASONRY_GRID_ENABLED}
         {...USER_DEFAULT_SORT_OPTIONS}
       />
       : <PhotosEmptyState />

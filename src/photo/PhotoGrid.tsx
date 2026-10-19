@@ -172,6 +172,7 @@ export default function PhotoGrid({
   selectable = true,
   // Home / grid feed: always-floating matted tile layout.
   // Under a featured photo (and other embeds): leave unset.
+  // Ignored when masonry is enabled (masonry keeps native aspect ratios).
   matted,
   onLastPhotoVisible,
   onAnimationComplete,
@@ -199,9 +200,12 @@ export default function PhotoGrid({
     isUserSignedIn,
   } = useAppState();
 
+  // Masonry takes precedence over floating matted tiles
+  const useMatted = Boolean(matted) && !MASONRY_GRID_ENABLED;
+
   // Grid root (matted): re-animate + stagger on every visit.
   // Embedded grids: stagger only on first load by default.
-  const staggerOnFirstLoadOnlyResolved = staggerOnFirstLoadOnly ?? !matted;
+  const staggerOnFirstLoadOnlyResolved = staggerOnFirstLoadOnly ?? !useMatted;
 
   const {
     isSelectingPhotos,
@@ -216,7 +220,7 @@ export default function PhotoGrid({
       isSelectingAllPhotos
     ) ?? false;
 
-    if (matted) {
+    if (useMatted) {
       return (
         <PhotoGridMattedTile
           key={photo.id}
@@ -313,8 +317,7 @@ export default function PhotoGrid({
     additionalTile ? [<div key="more">{additionalTile}</div>] : [],
   );
 
-  // Matted layout owns its own tile geometry — skip masonry
-  if (MASONRY_GRID_ENABLED && !matted) {
+  if (MASONRY_GRID_ENABLED) {
     return (
       <PhotoGridMasonry
         photos={photos}
@@ -333,7 +336,7 @@ export default function PhotoGrid({
     );
   }
 
-  const gridClassName = matted
+  const gridClassName = useMatted
     ? clsx(
       'grid',
       // No gap — matte inset already spaces photos inside square cells

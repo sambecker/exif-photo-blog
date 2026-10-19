@@ -10,6 +10,7 @@ import { getSortOptionsFromParams } from '@/photo/sort/path';
 import { FEED_META_QUERY_OPTIONS, feedQueryOptions } from '@/feed';
 import { PhotoQueryOptions } from '@/db';
 import { PATH_GRID } from '@/app/path';
+import { MASONRY_GRID_ENABLED } from '@/app/config';
 
 export const maxDuration = 60;
 
@@ -49,7 +50,7 @@ export default async function GridPage({ params }: SortProps) {
         count={photosCount}
         excludeFromFeeds
         prioritizeInitialPhotos
-        matted
+        matted={!MASONRY_GRID_ENABLED}
         {...sortOptions}
       />
       : <PhotosEmptyState />

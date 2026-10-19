@@ -7,7 +7,11 @@ import PhotoGridHybridContainer from './PhotoGridHybridContainer';
 import { ComponentProps, useMemo, useRef } from 'react';
 import clsx from 'clsx/lite';
 import MaskedScroll from '@/components/MaskedScroll';
-import { IS_RECENTS_FIRST, SHOW_CATEGORIES_ON_MOBILE } from '@/app/config';
+import {
+  IS_RECENTS_FIRST,
+  MASONRY_GRID_ENABLED,
+  SHOW_CATEGORIES_ON_MOBILE,
+} from '@/app/config';
 import { SortBy } from './sort';
 import useViewportHeight from '@/utility/useViewportHeight';
 import TopPhotoEntities from './TopPhotoEntities';
@@ -68,7 +72,8 @@ export default function PhotoGridPageClient({
         sortWithPriority={sortWithPriority}
         excludeFromFeeds
         prioritizeInitialPhotos
-        matted
+        // Floating matted grid; masonry (when enabled) replaces it
+        matted={!MASONRY_GRID_ENABLED}
         sidebar={
           <MaskedScroll
             ref={ref}

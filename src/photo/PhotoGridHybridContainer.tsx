@@ -94,7 +94,10 @@ export default function PhotoGridHybridContainer({
       className,
     )}>
       {renderHeader}
-      <div className={matted ? undefined : GRID_SPACE_CLASSNAME}>
+      <div className={matted && !MASONRY_GRID_ENABLED
+        ? undefined
+        : GRID_SPACE_CLASSNAME}
+      >
         {(!MASONRY_GRID_ENABLED || count <= photos.length) && (
           <PhotoGrid {...{
             photos,
@@ -123,7 +126,8 @@ export default function PhotoGridHybridContainer({
   );
 
   // Matted /grid feed (no sidebar): wider than nav, like /full
-  if (matted && !sidebar) {
+  // Masonry uses standard AppGrid width instead
+  if (matted && !MASONRY_GRID_ENABLED && !sidebar) {
     return (
       <div className={clsx('mx-auto w-full', LAYOUT_CLASS_FEED)}>
         {gridBody}
