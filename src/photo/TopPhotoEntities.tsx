@@ -11,13 +11,13 @@ import PhotoFilm from '@/film/PhotoFilm';
 import PhotoFocalLength from '@/focal/PhotoFocalLength';
 import PhotoLens from '@/lens/PhotoLens';
 import PhotoRecipe from '@/recipe/PhotoRecipe';
-import LoaderButton from '@/components/primitives/LoaderButton';
-import { useAppState } from '@/app/AppState';
 import { ComponentProps, useMemo } from 'react';
 import EntityLink from '@/components/entity/EntityLink';
 import { useAppText } from '@/i18n/state/client';
 import { getTopEntities } from '@/category/mobile';
 import { BiExpandVertical } from 'react-icons/bi';
+import LoaderLink from '@/components/LoaderLink';
+import { PATH_LIBRARY } from '@/app/path';
 
 const ENTITY_LINK_PROPS: Partial<ComponentProps<typeof EntityLink>> = {
   badged: true,
@@ -32,8 +32,6 @@ export default function TopPhotoEntities({
 }: PhotoSetCategories & {
   className?: string
 }) {
-  const { setIsCommandKOpen } = useAppState();
-
   const { utility } = useAppText();
 
   const {
@@ -53,7 +51,7 @@ export default function TopPhotoEntities({
       direction="horizontal"
       className={clsx(
         'flex whitespace-nowrap gap-x-3',
-        // Prevent shadow clipping
+        // Prevent shadow clipping of last button
         'py-1',
         className,
       )}
@@ -118,19 +116,18 @@ export default function TopPhotoEntities({
               />;
           }
         })}
-      <LoaderButton
+      <LoaderLink
+        href={PATH_LIBRARY}
         icon={<BiExpandVertical
           className="text-medium translate-y-[0.75px] text-[0.9rem]"
         />}
-        onClick={() => setIsCommandKOpen?.(true)}
-        hideText="never"
         className={clsx(
-          'h-auto pt-[5px] pb-1.5 pl-1 pr-2.5',
-          'gap-x-[3px] uppercase tracking-wide',
+          'button pt-[1px] pb-[2px] pl-1 pr-2.5',
+          '*:gap-x-[3px] uppercase tracking-wide',
         )}
       >
         {utility.more}
-      </LoaderButton>
+      </LoaderLink>
     </MaskedScroll>
   );
 }

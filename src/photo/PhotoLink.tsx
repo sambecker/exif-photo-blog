@@ -54,7 +54,7 @@ export default function PhotoLink({
       : undefined;
 
   const children = photo
-    ? (_children ?? titleForPhoto(photo))
+    ? (_children ?? titleForPhoto(photo))// + '2 and more text goes here'
     : _children;
 
   const link = photo && linkProps

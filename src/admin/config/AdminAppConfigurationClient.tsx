@@ -138,6 +138,7 @@ export default function AdminAppConfigurationClient({
   hasHighGridDensity,
   hasGridDensityPreference,
   // Design
+  isExpressiveLayoutEnabled,
   hasDefaultTheme,
   defaultTheme,
   arePhotoTitlesUppercase,
@@ -975,6 +976,15 @@ export default function AdminAppConfigurationClient({
         </>;
       case 'Design':
         return <>
+          <ChecklistRow
+            title="Expressive layouts"
+            status={isExpressiveLayoutEnabled}
+            optional
+          >
+            Set environment variable to {'"1"'} to enable floating
+            home page layouts, harmonized for vertical and horizontal photos
+            {renderEnvVars(['NEXT_PUBLIC_EXPRESSIVE_LAYOUT'])}
+          </ChecklistRow>
           <ChecklistRow
             title="Photo title design"
             status={arePhotoTitlesUppercase ||

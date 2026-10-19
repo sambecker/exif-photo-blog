@@ -230,10 +230,11 @@ export default function PhotoLarge({
       photo={photo}
       className={clsx(
         PHOTO_TITLE_SERIF
-          // Instrument Serif only ships weight 400
           ? clsx(
-            'font-serif font-normal leading-snug grow',
-            'text-[1.25rem] sm:text-[1.5rem]',
+            'font-serif',
+            'text-[1.25rem] sm:text-[1.5rem] leading-tight',
+            // Keep serif/sans text in phase
+            'inline-flex mb-[13px] sm:mb-[8px] grow',
           )
           : 'font-bold grow',
         UPPERCASE_TITLES && 'uppercase',

@@ -91,7 +91,8 @@ export default function AppViewMenuCompact({
     ? [itemGrid, itemFull]
     : [itemFull, itemGrid];
 
-  // Dim on non-home pages (e.g. /library); full when a view is active or menu open
+  // Dim on non-home pages (e.g. /library); 
+  // full when a view is active or menu open
   const isViewActive = Boolean(isViewFull || isViewGrid);
 
   // Views first, sort last (toolbar on large screens keeps sort first)

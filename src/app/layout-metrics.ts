@@ -5,11 +5,11 @@
  * 2. Sidebar beside only at 3xl (87rem / 1392px in tailwind.css); offset keeps
  *    main optically centered with the nav
  * 3. Body is `3xl:flex items-center` with shell `self-stretch` (app/layout.tsx)
- * 4. Matted /grid feed (no sidebar) may exceed nav width (LAYOUT_FEED),
- *    like /full
+ * 4. With EXPRESSIVE_LAYOUT: matted /grid feed (no sidebar) may exceed nav
+ *    width (LAYOUT_FEED), like expressive /full
  * 5. Home grid with sidebar stays on LAYOUT_MAIN / WITH_SIDE; set/detail grids
- *    are not matted. Full feed = PhotoFull*;
- *    set full = PhotoLarge / PhotosLarge
+ *    are not matted. Expressive full feed = PhotoFull*; otherwise / default
+ *    full = PhotoLarge / PhotosLarge. Set full always = PhotoLarge
  *
  * Math (px):
  *   Main + gap + side = LAYOUT_WITH_SIDE

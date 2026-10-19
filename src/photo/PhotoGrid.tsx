@@ -170,7 +170,7 @@ export default function PhotoGrid({
   additionalTile,
   small,
   selectable = true,
-  // Home / grid feed: always-floating matted tile layout.
+  // Expressive home/grid feed: floating matted tiles.
   // Under a featured photo (and other embeds): leave unset.
   // Ignored when masonry is enabled (masonry keeps native aspect ratios).
   matted,

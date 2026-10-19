@@ -407,6 +407,10 @@ export const HIGH_DENSITY_GRID =
 
 // DESIGN
 
+// Floating home page layouts, harmonized for vertical/horizontal photos.
+// Off by default (classic PhotoLarge + standard grid).
+export const EXPRESSIVE_LAYOUT_ENABLED =
+  process.env.NEXT_PUBLIC_EXPRESSIVE_LAYOUT === '1';
 export const DEFAULT_THEME =
   process.env.NEXT_PUBLIC_DEFAULT_THEME === 'dark'
     ? 'dark'
@@ -582,6 +586,7 @@ export const APP_CONFIGURATION = {
   hasGridDensityPreference:
     Boolean(process.env.NEXT_PUBLIC_SHOW_LARGE_THUMBNAILS),
   // Design
+  isExpressiveLayoutEnabled: EXPRESSIVE_LAYOUT_ENABLED,
   hasDefaultTheme: Boolean(process.env.NEXT_PUBLIC_DEFAULT_THEME),
   defaultTheme: DEFAULT_THEME,
   arePhotosMatted: MATTE_PHOTOS,
