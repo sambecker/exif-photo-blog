@@ -38,6 +38,16 @@ import exifr from 'exifr';
 import { getCompatibleExifValue } from '@/utility/exif';
 import { fetchUrlWithByteLimit } from '@/utility/fetch';
 import { getPlaceFromCoordinates } from '@/platforms/google-places';
+import {
+  isOmSystemPen,
+  OM_RECIPE_VERSION,
+  OmRecipe,
+  parseOmRecipe,
+} from '@/platforms/om-system/recipe';
+import {
+  createOmRecipeKey,
+  getOmRecipeFromMakerNote,
+} from '@/platforms/om-system/server';
 
 const IMAGE_WIDTH_BLUR = 200;
 const IMAGE_WIDTH_DEFAULT = 200;
@@ -81,6 +91,8 @@ export const extractImageDataFromBlobPath = async (
   let dataExifr: any | undefined;
   let film: FujifilmSimulation | NikonPictureControl | undefined;
   let recipe: FujifilmRecipe | undefined;
+  let omRecipe: OmRecipe | undefined;
+  let omRecipeCheckedVersion: number | undefined;
   let blurData: string | undefined;
   let imageResizedBase64: string | undefined;
   let shouldStripGpsData = false;
@@ -104,7 +116,8 @@ export const extractImageDataFromBlobPath = async (
       dataExifr = await exifr.parse(fileBytes, { xmp: true });
 
       // Capture film simulation for Fujifilm or Picture Control for Nikon
-      if (isExifForFujifilm(dataExif) || isExifForNikon(dataExif)) {
+      const isPen = isOmSystemPen(dataExif.tags?.Make, dataExif.tags?.Model);
+      if (isExifForFujifilm(dataExif) || isExifForNikon(dataExif) || isPen) {
         // Parse exif data again with binary fields
         // in order to access MakerNote tag
         parser.enableBinaryFields(true);
@@ -116,8 +129,11 @@ export const extractImageDataFromBlobPath = async (
             recipe = getFujifilmRecipeFromMakerNote(makerNote);
           } else if (isExifForNikon(dataExif)) {
             film = getNikonPictureControlFromMakerNote(makerNote);
+          } else if (isPen) {
+            omRecipe = getOmRecipeFromMakerNote(makerNote);
           }
         }
+        if (isPen) { omRecipeCheckedVersion = OM_RECIPE_VERSION; }
       }
 
       if (generateBlurData) {
@@ -153,6 +169,11 @@ export const extractImageDataFromBlobPath = async (
       },
       ...generateBlurData && { blurData },
       ...convertExifToFormData(dataExif, dataExifr, film, recipe),
+      ...omRecipeCheckedVersion && {
+        omRecipeCheckedVersion: String(omRecipeCheckedVersion),
+        omRecipeData: omRecipe ? JSON.stringify(omRecipe) : '',
+        omRecipeKey: omRecipe ? createOmRecipeKey(omRecipe) : '',
+      },
       ...colorFields,
     } satisfies Partial<PhotoFormData>
     : undefined;
@@ -304,6 +325,15 @@ export const convertFormDataToPhotoDbInsertAndLookupRecipeTitle =
   async (...args: Parameters<typeof convertFormDataToPhotoDbInsert>):
   Promise<ReturnType<typeof convertFormDataToPhotoDbInsert>> => {
     const photo = convertFormDataToPhotoDbInsert(...args);
+
+    // Derive identity on the server rather than trusting a submitted key.
+    const omRecipe = isOmSystemPen(photo.make, photo.model)
+      ? parseOmRecipe(photo.omRecipeData) : undefined;
+    photo.omRecipeData = omRecipe ? JSON.stringify(omRecipe) : undefined;
+    photo.omRecipeKey = omRecipe ? createOmRecipeKey(omRecipe) : undefined;
+    photo.omRecipeCheckedVersion = isOmSystemPen(photo.make, photo.model) &&
+      photo.omRecipeCheckedVersion === OM_RECIPE_VERSION
+      ? OM_RECIPE_VERSION : undefined;
 
     if (photo.recipeData && !photo.recipeTitle && photo.film) {
       const recipeTitle = await getRecipeTitleForData(

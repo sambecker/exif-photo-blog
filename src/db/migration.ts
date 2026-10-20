@@ -126,6 +126,17 @@ export const MIGRATIONS: Migration[] = [{
     ALTER TABLE photos
     ADD COLUMN IF NOT EXISTS location JSONB
   `,
+}, {
+  label: '12: OM System PEN Recipes',
+  fields: ['om_recipe_data', 'om_recipe_key', 'om_recipe_checked_version'],
+  run: () => query(`
+    ALTER TABLE photos
+    ADD COLUMN IF NOT EXISTS om_recipe_data JSONB,
+    ADD COLUMN IF NOT EXISTS om_recipe_key VARCHAR(90),
+    ADD COLUMN IF NOT EXISTS om_recipe_checked_version SMALLINT;
+    CREATE INDEX IF NOT EXISTS photos_om_recipe_key_idx
+    ON photos (om_recipe_key) WHERE om_recipe_key IS NOT NULL;
+  `),
 }];
 
 export const migrateAboutTableToLibrary = () =>

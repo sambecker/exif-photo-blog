@@ -5,7 +5,9 @@ export const fetchUrlWithByteLimit = async (
   const response = await fetch(url, { cache: 'no-store' });
 
   if (!response.ok) {
-    await response.body?.cancel().catch(() => undefined);
+    // A cloned response can delay cancellation until its other branch drains.
+    // Cleanup must not block reporting an HTTP error or a size-limit failure.
+    void response.body?.cancel().catch(() => undefined);
     throw new Error(`Fetch failed with status ${response.status}`);
   }
 
@@ -14,7 +16,7 @@ export const fetchUrlWithByteLimit = async (
   // below is what enforces the cap when the header is missing or too small.
   const contentLength = Number(response.headers.get('content-length'));
   if (Number.isFinite(contentLength) && contentLength > maxBytes) {
-    await response.body?.cancel().catch(() => undefined);
+    void response.body?.cancel().catch(() => undefined);
     throw new Error(`Image is too large (${contentLength} bytes)`);
   }
 
@@ -45,6 +47,6 @@ export const fetchUrlWithByteLimit = async (
     }
     return bytes.buffer;
   } finally {
-    await reader.cancel().catch(() => undefined);
+    void reader.cancel().catch(() => undefined);
   }
 };

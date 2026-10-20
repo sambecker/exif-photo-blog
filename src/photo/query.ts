@@ -72,6 +72,9 @@ export const createPhotosTable = () =>
       film VARCHAR(255),
       recipe_title VARCHAR(255),
       recipe_data JSONB,
+      om_recipe_data JSONB,
+      om_recipe_key VARCHAR(90),
+      om_recipe_checked_version SMALLINT,
       color_data JSONB,
       color_sort SMALLINT,
       priority_order REAL,
@@ -81,7 +84,9 @@ export const createPhotosTable = () =>
       hidden BOOLEAN DEFAULT FALSE,
       updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
       created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-    )
+    );
+    CREATE INDEX IF NOT EXISTS photos_om_recipe_key_idx
+    ON photos (om_recipe_key) WHERE om_recipe_key IS NOT NULL
   `;
 
 // Must provide id as 8-character nanoid
@@ -116,6 +121,9 @@ export const insertPhoto = (photo: PhotoDbInsert) =>
       film,
       recipe_title,
       recipe_data,
+      om_recipe_data,
+      om_recipe_key,
+      om_recipe_checked_version,
       color_data,
       color_sort,
       priority_order,
@@ -154,6 +162,9 @@ export const insertPhoto = (photo: PhotoDbInsert) =>
       ${photo.film},
       ${photo.recipeTitle},
       ${photo.recipeData},
+      ${photo.omRecipeData},
+      ${photo.omRecipeKey},
+      ${photo.omRecipeCheckedVersion},
       ${photo.colorData},
       ${photo.colorSort},
       ${photo.priorityOrder},
@@ -196,6 +207,9 @@ export const updatePhoto = (photo: PhotoDbInsert) =>
       film=${photo.film},
       recipe_title=${photo.recipeTitle},
       recipe_data=${photo.recipeData},
+      om_recipe_data=${photo.omRecipeData},
+      om_recipe_key=${photo.omRecipeKey},
+      om_recipe_checked_version=${photo.omRecipeCheckedVersion},
       color_data=${photo.colorData},
       color_sort=${photo.colorSort},
       priority_order=${photo.priorityOrder || null},

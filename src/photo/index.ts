@@ -24,6 +24,7 @@ import { PhotoUpdateStatus, generatePhotoUpdateStatus } from './update';
 import { AppTextState } from '@/i18n/state';
 import { PhotoColorData } from './color/client';
 import { Place } from '@/place';
+import { OmRecipe, parseOmRecipe } from '@/platforms/om-system/recipe';
 
 // INFINITE SCROLL: FULL
 export const INFINITE_SCROLL_FULL_INITIAL =
@@ -69,6 +70,9 @@ export interface PhotoExif {
   longitude?: number
   film?: string
   recipeData?: string
+  omRecipeData?: string
+  omRecipeKey?: string
+  omRecipeCheckedVersion?: number
   takenAt?: string
   takenAtNaive?: string
   // Photo meta potentially located in EXIF/XMP data
@@ -108,7 +112,8 @@ export interface PhotoDb extends
 }
 
 // Parsed db response
-export interface Photo extends Omit<PhotoDb, 'recipeData' | 'colorData'> {
+export interface Photo extends Omit<PhotoDb,
+  'recipeData' | 'colorData' | 'omRecipeData'> {
   focalLengthFormatted?: string
   focalLengthIn35MmFormatFormatted?: string
   fNumberFormatted?: string
@@ -118,6 +123,7 @@ export interface Photo extends Omit<PhotoDb, 'recipeData' | 'colorData'> {
   takenAtNaiveFormatted: string
   tags: string[]
   recipeData?: FujifilmRecipe
+  omRecipeData?: OmRecipe
   colorData?: PhotoColorData
   updateStatus?: PhotoUpdateStatus
 }
@@ -153,6 +159,7 @@ export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {
         ? JSON.parse(photoDb.recipeData)
         : photoDb.recipeData
       : undefined,
+    omRecipeData: parseOmRecipe(photoDb.omRecipeData),
     colorData: photoDb.colorData
       ? photoDb.colorData
       : undefined,
@@ -176,6 +183,7 @@ export const convertPhotoToPhotoDbInsert = (
   ...photo,
   takenAt: photo.takenAt.toISOString(),
   recipeData: JSON.stringify(photo.recipeData),
+  omRecipeData: JSON.stringify(photo.omRecipeData),
   colorData: JSON.stringify(photo.colorData),
 });
 
@@ -347,7 +355,7 @@ const photoHasLensData = (photo: Photo) =>
   Boolean(photo.lensModel);
 
 const photoHasRecipeData = (photo: Photo) =>
-  Boolean(photo.recipeData);
+  Boolean(photo.recipeData || (photo.omRecipeData && photo.omRecipeKey));
 
 const photoHasExifData = (photo: Photo) =>
   Boolean(photo.focalLength) ||

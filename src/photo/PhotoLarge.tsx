@@ -59,6 +59,7 @@ import { useEditTitlesState } from '@/admin/edit-titles/EditTitlesState';
 import { DATA_KEY_PHOTO_LARGE } from '@/admin/edit-titles/EditTitlesProvider';
 import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import PlaceEntity from '@/place/PlaceEntity';
+import PhotoOmRecipe from '@/platforms/om-system/PhotoOmRecipe';
 
 export default function PhotoLarge({
   photo,
@@ -423,6 +424,13 @@ export default function PhotoLarge({
                           toggleRecipeOverlay={toggleRecipeOverlay}
                           isShowingRecipeOverlay={isShowingRecipeOverlay}
                         />}
+                      {showRecipeContent && photo.omRecipeData &&
+                        photo.omRecipeKey && <PhotoOmRecipe
+                        recipe={photo.omRecipeData}
+                        recipeKey={photo.omRecipeKey}
+                        contrast="medium"
+                        prefetch={prefetchRelatedLinks}
+                      />}
                       {showTagsContent &&
                         <PhotoTags
                           tags={tags}

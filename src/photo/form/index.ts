@@ -204,6 +204,22 @@ const FORM_METADATA = (
     capitalize: false,
     shouldHide: ({ make }) => make !== MAKE_FUJIFILM,
   },
+  omRecipeData: {
+    section: 'exif',
+    label: 'OM recipe',
+    type: 'hidden',
+    isJson: true,
+  },
+  omRecipeKey: {
+    section: 'exif',
+    label: 'OM recipe key',
+    type: 'hidden',
+  },
+  omRecipeCheckedVersion: {
+    section: 'exif',
+    label: 'OM recipe extraction version',
+    type: 'hidden',
+  },
   applyRecipeTitleGlobally: {
     section: 'exif',
     label: 'apply recipe title globally',
@@ -363,6 +379,8 @@ const FORM_METADATA = (
 });
 
 export const FIELDS_TO_NOT_TOAST: (keyof PhotoFormData)[] = [
+  'omRecipeKey',
+  'omRecipeCheckedVersion',
   'colorData',
   'colorSort',
   'keyColor',
@@ -479,6 +497,7 @@ export const convertPhotoToFormData = (photo: Photo): PhotoFormData => {
       case 'hidden':
         return value ? 'true' : 'false';
       case 'recipeData':
+      case 'omRecipeData':
         return JSON.stringify(value);
       case 'colorData':
         return JSON.stringify(value);
@@ -564,6 +583,9 @@ export const convertFormDataToPhotoDbInsert = (
       : undefined,
     height: photoForm.height
       ? parseInt(photoForm.height)
+      : undefined,
+    omRecipeCheckedVersion: photoForm.omRecipeCheckedVersion
+      ? parseInt(photoForm.omRecipeCheckedVersion)
       : undefined,
     // Convert form strings to numbers
     aspectRatio: photoForm.aspectRatio
