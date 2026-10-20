@@ -981,7 +981,7 @@ export default function AdminAppConfigurationClient({
             status={isExpressiveLayoutEnabled}
             optional
           >
-            Set environment variable to {'"1"'} to enable floating
+            Set environment variable to {'"0"'} to disable floating
             home page layouts, harmonized for vertical and horizontal photos
             {renderEnvVars(['NEXT_PUBLIC_EXPRESSIVE_LAYOUT'])}
           </ChecklistRow>

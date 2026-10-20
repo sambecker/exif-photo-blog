@@ -408,9 +408,9 @@ export const HIGH_DENSITY_GRID =
 // DESIGN
 
 // Floating home page layouts, harmonized for vertical/horizontal photos.
-// Off by default (classic PhotoLarge + standard grid).
+// On by default; set NEXT_PUBLIC_EXPRESSIVE_LAYOUT=0 for classic layouts.
 export const EXPRESSIVE_LAYOUT_ENABLED =
-  process.env.NEXT_PUBLIC_EXPRESSIVE_LAYOUT === '1';
+  process.env.NEXT_PUBLIC_EXPRESSIVE_LAYOUT !== '0';
 export const DEFAULT_THEME =
   process.env.NEXT_PUBLIC_DEFAULT_THEME === 'dark'
     ? 'dark'
