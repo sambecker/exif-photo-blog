@@ -65,12 +65,15 @@ export const extractImageDataFromBlobPath = async (
     generateResizedImage,
     updateColorFields = true,
     lookupLocation,
+    refreshOmRecipe = false,
   }: {
     includeInitialPhotoFields?: boolean
     generateBlurData?: boolean
     generateResizedImage?: boolean
     updateColorFields?: boolean
     lookupLocation?: boolean
+    // Refresh a known PEN photo even if its current source lost camera tags.
+    refreshOmRecipe?: boolean
   } = {},
 ): Promise<{
   blobId?: string
@@ -133,7 +136,9 @@ export const extractImageDataFromBlobPath = async (
             omRecipe = getOmRecipeFromMakerNote(makerNote);
           }
         }
-        if (isPen) { omRecipeCheckedVersion = OM_RECIPE_VERSION; }
+      }
+      if (isPen || refreshOmRecipe) {
+        omRecipeCheckedVersion = OM_RECIPE_VERSION;
       }
 
       if (generateBlurData) {

@@ -99,7 +99,8 @@ import {
   COMMAND_K_PHOTO_LIMIT,
   getPhotosQueryData,
 } from '@/query/data';
-import { OM_RECIPE_VERSION } from '@/platforms/om-system/recipe';
+import { isOmSystemPen, OM_RECIPE_VERSION }
+  from '@/platforms/om-system/recipe';
 
 // Private actions
 
@@ -556,22 +557,28 @@ export const replacePhotoStorageAction = async (
 
       const {
         formDataFromExif,
+        error,
       } = await extractImageDataFromBlobPath(updatedStorageUrl, {
         generateBlurData: BLUR_ENABLED,
+        refreshOmRecipe: isOmSystemPen(photo.make, photo.model),
       });
 
-      let imageFields: Partial<PhotoDbInsert> = {};
-      if (formDataFromExif) {
-        const photoDbInsert = convertFormDataToPhotoDbInsert(formDataFromExif);
-        imageFields = {
-          blurData: photoDbInsert.blurData,
-          width: photoDbInsert.width,
-          height: photoDbInsert.height,
-          aspectRatio: photoDbInsert.aspectRatio,
-          colorData: photoDbInsert.colorData,
-          colorSort: photoDbInsert.colorSort,
-        };
+      if (error || !formDataFromExif) {
+        throw new Error(error ?? 'Could not read replacement image metadata');
       }
+      const photoDbInsert = convertFormDataToPhotoDbInsert(formDataFromExif);
+      const imageFields: Partial<PhotoDbInsert> = {
+        blurData: photoDbInsert.blurData,
+        width: photoDbInsert.width,
+        height: photoDbInsert.height,
+        aspectRatio: photoDbInsert.aspectRatio,
+        colorData: photoDbInsert.colorData,
+        colorSort: photoDbInsert.colorSort,
+        // These fields describe the new source, including an absent recipe.
+        omRecipeData: photoDbInsert.omRecipeData,
+        omRecipeKey: photoDbInsert.omRecipeKey,
+        omRecipeCheckedVersion: photoDbInsert.omRecipeCheckedVersion,
+      };
 
       await updatePhoto({
         ...convertPhotoToPhotoDbInsert({
@@ -647,6 +654,7 @@ export const syncPhotoAction = async (
         generateBlurData: BLUR_ENABLED,
         generateResizedImage: AI_CONTENT_GENERATION_ENABLED,
         updateColorFields: AI_CONTENT_GENERATION_ENABLED,
+        refreshOmRecipe: isOmSystemPen(photo.make, photo.model),
       });
 
       if (error) { throw new Error(error); }

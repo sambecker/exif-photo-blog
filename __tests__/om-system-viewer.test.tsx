@@ -2,6 +2,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import PhotoOmRecipe from '@/platforms/om-system/PhotoOmRecipe';
 import { OmRecipe } from '@/platforms/om-system/recipe';
 import { useAppState } from '@/app/AppState';
+import OmRecipeSettings from '@/platforms/om-system/OmRecipeSettings';
 
 jest.mock('../src/app/AppState', () => ({ useAppState: jest.fn() }));
 jest.mock('../src/app/path', () => ({
@@ -52,3 +53,20 @@ it('keeps gallery navigation separate and restores page shortcuts on close',
     await waitFor(() => expect(document.activeElement).toBe(trigger));
     window.removeEventListener('keydown', pageKeydown);
   });
+
+it('exposes the active mono filter strength in its accessible name', () => {
+  render(<OmRecipeSettings recipe={{
+    ...recipe, kind: 'mono', filter: { color: 1, strength: 3 },
+    grain: 'low', hue: 'normal',
+  }} />);
+  expect(screen.getByRole('img', { name: 'Mono filter: Yellow · Level 3' }))
+    .toBeDefined();
+});
+
+it('omits retained strength when the mono filter is inactive', () => {
+  render(<OmRecipeSettings recipe={{
+    ...recipe, kind: 'mono', filter: { color: 0, strength: 3 },
+    grain: 'low', hue: 'normal',
+  }} />);
+  expect(screen.getByRole('img', { name: 'Mono filter: None' })).toBeDefined();
+});

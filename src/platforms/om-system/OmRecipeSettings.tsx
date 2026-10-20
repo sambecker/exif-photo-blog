@@ -71,7 +71,8 @@ function MonoWheel({ recipe }: {
   const marker = point(angleFor(selected - 1, 8), 77);
   return <>
     <svg viewBox="0 0 240 240" className="w-full" role="img"
-      aria-label={`Mono filter: ${OM_MONO_FILTERS[selected]}`}>
+      aria-label={`Mono filter: ${OM_MONO_FILTERS[selected]}` +
+        (selected === 0 ? '' : ` · Level ${recipe.filter.strength}`)}>
       {colors.map((color, i) => {
         const a = point(angleFor(i, 8) - Math.PI / 8, 73);
         const b = point(angleFor(i, 8) + Math.PI / 8, 73);

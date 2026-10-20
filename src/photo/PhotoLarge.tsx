@@ -571,7 +571,7 @@ export default function PhotoLarge({
                           ? photo.film
                           : undefined}
                         recipe={shouldShareRecipe
-                          ? recipeTitle
+                          ? photo.omRecipeKey ?? recipeTitle
                           : undefined}
                         focal={shouldShareFocalLength
                           ? photo.focalLength
