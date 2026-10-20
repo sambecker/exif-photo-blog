@@ -24,7 +24,8 @@ import { PhotoUpdateStatus, generatePhotoUpdateStatus } from './update';
 import { AppTextState } from '@/i18n/state';
 import { PhotoColorData } from './color/client';
 import { Place } from '@/place';
-import { OmRecipe, parseOmRecipe } from '@/platforms/om-system/recipe';
+import { isOmSystemCamera, OmRecipe, parseOmRecipe }
+  from '@/platforms/om-system/recipe';
 
 // INFINITE SCROLL: FULL
 export const INFINITE_SCROLL_FULL_INITIAL =
@@ -128,6 +129,12 @@ export interface Photo extends Omit<PhotoDb,
   updateStatus?: PhotoUpdateStatus
 }
 
+const formatPhotoExposureCompensation = (
+  photo: Pick<PhotoExif, 'make' | 'exposureCompensation'>,
+) => formatExposureCompensation(photo.exposureCompensation, {
+  thirdsRoundedToTenths: isOmSystemCamera(photo.make),
+});
+
 export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {
   const photoDb = camelcaseKeys(
     photoDbRaw as unknown as Record<string, unknown>,
@@ -150,7 +157,7 @@ export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {
     exposureTimeFormatted:
       formatExposureTime(photoDb.exposureTime),
     exposureCompensationFormatted:
-      formatExposureCompensation(photoDb.exposureCompensation),
+      formatPhotoExposureCompensation(photoDb),
     takenAtNaiveFormatted:
       formatDateFromPostgresString(photoDb.takenAtNaive),
     recipeData: photoDb.recipeData
@@ -169,6 +176,7 @@ export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {
 
 export const parseCachedPhotoDates = (photo: Photo) => ({
   ...photo,
+  exposureCompensationFormatted: formatPhotoExposureCompensation(photo),
   takenAt: new Date(photo.takenAt),
   updatedAt: new Date(photo.updatedAt),
   createdAt: new Date(photo.createdAt),
