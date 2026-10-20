@@ -16,9 +16,11 @@ Extract recipes automatically from JPEG metadata. A missing or uninterpretable d
 
 ## Viewer and gallery
 
-Follow the existing Fujifilm recipe interaction: "Color recipe" or "Mono recipe" links to its matching gallery; the separate adjacent sliders button opens the settings viewer. The viewer heading also links to the gallery.
+Follow the existing Fujifilm recipe interaction: "Color recipe" or "Mono recipe" links to its matching gallery; the separate adjacent +/× button opens the settings viewer. The viewer heading also links to the gallery.
 
-Use a responsive, read-only modal with readable values, the color or mono wheel, tone graph, white-balance grid, and remaining profile controls. Place visual panels side by side when space allows and stack them on phones. Match the supplied neutral and non-neutral graph references while retaining exact numeric labels.
+Use the existing Fujifilm recipe UI: the + button rotates to × while open, and the read-only card uses the same translucent white surface, blur, saturation, rounded corners, close icon, and light tiles. Open the card over the photo with the existing overlay hook on larger screens; phones and gallery views use a modal so the header and close control remain visible. Show readable values, the color or mono wheel, tone graph, white-balance grid, and remaining profile controls. Place visual panels side by side when space allows and stack them on phones. Match the supplied neutral and non-neutral graph references while retaining exact numeric labels.
+
+Show the source photo's EXIF camera make and model in the dialog, using the same formatting as the photo's camera link. A gallery dialog uses the selected photo, or its first matching photo when none is selected. Camera identity remains outside recipe matching.
 
 Group photos by a versioned hash of normalized active recipe settings. Include recipe kind and selected WB settings, not measured Auto-WB results, slot numbers, or stored value ranges. Equal active settings belong to the same gallery even when stored in different profile slots or compatible cameras. Preserve existing Fujifilm recipe behavior.
 
@@ -30,7 +32,7 @@ Support normal Sync and a one-time admin batch for existing OM SYSTEM and Olympu
 
 ## Evidence
 
-Both modern OM SYSTEM and Olympus MakerNote headers use the shared CameraSettings tags. Anonymous fixtures cover both headers and byte orders; camera-original validation currently comes from the supplied PEN files.
+Both modern OM SYSTEM and Olympus MakerNote headers use the shared CameraSettings tags. Anonymous fixtures cover both headers and byte orders. Published OM-3, E-P7, and PEN-F metadata samples verify the real containers and exclusion of Natural mode with retained profile settings. Active-profile camera-original validation comes from the supplied PEN files.
 
 The supplied originals verify WB axis order and signs, shared color/mono shading storage, and COLOR4/MONO4 metadata recognition. Supplied camera-screen photos establish neutral and S-shaped tone-graph references. Exact internal OM interpolation remains undocumented; it does not block a settings visualization with accurate values and visual review.
 

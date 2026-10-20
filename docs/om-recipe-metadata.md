@@ -40,6 +40,8 @@ The decoder recognizes OM SYSTEM and Olympus makes without a model allowlist. Ex
 
 Anonymous tests place the original-derived numeric settings in both header layouts and both byte orders, then wrap them in JPEGs with OM SYSTEM, OM Digital Solutions, and Olympus camera metadata. These establish parser compatibility, not camera-original validation of every model or firmware. Unknown or missing defining settings still suppress a recipe. Modes 9–11 and 12–14 identify color and mono profiles; 18 identifies Mono Profile 4. Mode 17 requires an explicit disabled ArtFilter and complete color-profile data, since the generic Art Mode label overlaps the verified COLOR4 value. Natural, Vivid, Color Creator, and active Art Filters remain excluded even when they retain profile settings.
 
+The final review also checked the 315 metadata-only JPEGs in ExifTool's published [Olympus sample archive](https://exiftool.org/sample_images.html). The OM-3 sample uses the OM SYSTEM header; E-P7 and PEN-F use the Olympus header. Their CameraSettings directories decode, including retained color and mono settings. All three select Natural (`2 2`) and correctly produce no recipe. The full archive parses without errors and produces no recipes. This checks real container layouts and rejection of ordinary picture modes; active-profile camera-original validation still comes from the supplied PEN files. Mode 17 on other models remains a coverage limit.
+
 ## Controlled card series
 
 The later files came directly from `/Volumes/OM SYSTEM/DCIM/100OMSYS/`. They are different images from the earlier Downloads files with the same basenames. The user supplied them in response to the requested COLOR4 baseline, A2/M3 WB test, +3 shading test, and MONO4 detection test.

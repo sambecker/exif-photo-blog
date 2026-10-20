@@ -503,7 +503,7 @@ Thank you ❤️ translators: [@sconetto](https://github.com/sconetto) (`pt-br`,
 
 #### How do OM SYSTEM and Olympus recipes work?
 
-> Upload camera-original JPEGs taken with a Color or Monochrome Profile on supported OM SYSTEM and Olympus cameras. The photo's "Color recipe" or "Mono recipe" link opens a gallery of photos with matching active settings. The adjacent sliders button opens a read-only viewer with the color or mono wheel, tone graph, white-balance grid, and numeric settings. Slot numbers and exposure compensation do not determine recipe matches. Noise Filter and Gradation are outside the recipe. If required metadata is missing or unsupported, no recipe is shown; there is no manual recipe entry.
+> Upload camera-original JPEGs taken with a Color or Monochrome Profile on supported OM SYSTEM and Olympus cameras. The photo's "Color recipe" or "Mono recipe" link opens a gallery of photos with matching active settings. The adjacent +/× button opens a read-only viewer with the color or mono wheel, tone graph, white-balance grid, and numeric settings. Slot numbers and exposure compensation do not determine recipe matches. Noise Filter and Gradation are outside the recipe. If required metadata is missing or unsupported, no recipe is shown; there is no manual recipe entry.
 >
 > For previously uploaded OM SYSTEM and Olympus photos, use **Admin → OM recipes** to import recipes in a batch. Successful and absent/incomplete results are saved so they do not need repeated downloads; failed imports can be retried. Normal photo Sync also reads OM recipe metadata. Stored originals must retain the required MakerNotes. Support follows the active profile metadata, not the camera model. Ordinary picture modes and Art Filters do not count as recipes.
 

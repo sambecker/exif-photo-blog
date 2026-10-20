@@ -1,9 +1,11 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import PhotoLarge from '@/photo/PhotoLarge';
 import { parsePhotoFromDb } from '@/photo';
 import { AppStateContext } from '@/app/AppState';
 import { ShareModalProps } from '@/share';
 import { absolutePathForPhoto } from '@/app/path';
+import RecipeHeader from '@/recipe/RecipeHeader';
+import { OmRecipe } from '@/platforms/om-system/recipe';
 
 jest.mock('next/navigation', () => ({
   useRouter: () => ({ prefetch: jest.fn() }),
@@ -11,6 +13,13 @@ jest.mock('next/navigation', () => ({
   useSearchParams: () => new URLSearchParams(),
 }));
 jest.mock('../src/components/image/ImageLarge', () => () => null);
+jest.mock('../src/utility/useMediaQuery', () => ({
+  __esModule: true, default: () => true,
+}));
+jest.mock('../src/photo/PhotoHeader', () => ({
+  __esModule: true,
+  default: ({ entity }: { entity: React.ReactNode }) => <>{entity}</>,
+}));
 jest.mock('../src/admin/AdminPhotoMenu', () => () => null);
 jest.mock('../src/photo/actions', () => ({}));
 jest.mock('../src/platforms/storage', () => ({}));
@@ -34,6 +43,13 @@ const basePhoto = parsePhotoFromDb({
   takenAtNaive: '2026-10-20 12:00:00', omRecipeKey: key,
 });
 
+const profile: OmRecipe = {
+  version: 1, kind: 'color', colors: Array(12).fill(0),
+  whiteBalance: { mode: 1, amber: 2, green: -3 },
+  tone: { shadow: -4, mid: 0, highlight: 4 },
+  shading: 3, sharpness: 0, contrast: 0,
+};
+
 it.each([
   { name: 'OM', recipe: key, photo: basePhoto },
   { name: 'Fujifilm', recipe: 'kodachrome', photo: {
@@ -53,3 +69,43 @@ it.each([
   expect(absolutePathForPhoto({ ...props, photo }, true)).toContain(recipe
     ? `/recipe/${recipe}/penphoto` : '/p/penphoto');
 });
+
+it.each(['photo', 'gallery', 'selected gallery'] as const)(
+  'passes the source camera to the %s recipe dialog', async source => {
+    const photo = { ...basePhoto, make: 'OLYMPUS CORPORATION', model: 'E-P7',
+      omRecipeData: profile };
+    const firstPhoto = { ...photo, id: 'firstone',
+      make: 'OM Digital Solutions', model: 'PEN' };
+    render(<AppStateContext value={{}}>
+      {source === 'photo'
+        ? <PhotoLarge photo={photo} showRecipe showCamera={false}
+          showLens={false} showFilm={false} prefetchRelatedLinks={false} />
+        : <RecipeHeader recipe={key.replace(/^om-pen-/, 'om-')}
+          photos={[firstPhoto, photo]}
+          selectedPhoto={source === 'selected gallery' ? photo : undefined} />}
+    </AppStateContext>);
+    fireEvent.click(screen.getByRole('button', {
+      name: 'Show color recipe settings',
+    }));
+    expect(screen.getByText(source === 'gallery'
+      ? 'OM Digital Solutions PEN · Settings used for this photo'
+      : 'OLYMPUS CORPORATION E-P7 · Settings used for this photo'))
+      .toBeDefined();
+    if (source === 'photo') {
+      const toggle = screen.getByRole('button', {
+        name: 'Hide color recipe settings',
+      });
+      expect(toggle.getAttribute('aria-expanded')).toBe('true');
+      fireEvent.click(toggle);
+      await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+      expect(screen.getByRole('button', {
+        name: 'Show color recipe settings',
+      }).getAttribute('aria-expanded')).toBe('false');
+      fireEvent.click(screen.getByRole('button', {
+        name: 'Show color recipe settings',
+      }));
+      fireEvent.keyDown(window, { key: 'Escape' });
+      await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+    }
+  },
+);

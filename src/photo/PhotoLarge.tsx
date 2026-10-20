@@ -60,6 +60,8 @@ import { DATA_KEY_PHOTO_LARGE } from '@/admin/edit-titles/EditTitlesProvider';
 import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import PlaceEntity from '@/place/PlaceEntity';
 import PhotoOmRecipe from '@/platforms/om-system/PhotoOmRecipe';
+import OmRecipeOverlay from '@/platforms/om-system/OmRecipeOverlay';
+import useMediaQuery from '@/utility/useMediaQuery';
 
 export default function PhotoLarge({
   photo,
@@ -183,6 +185,10 @@ export default function PhotoLarge({
     ref: refRecipe,
     refTriggers,
   });
+  const isDesktop = useMediaQuery('(min-width: 768px)');
+  const showInlineRecipeOverlay =
+    (isShowingRecipeOverlay || shouldDebugRecipeOverlays) &&
+    (!photo.omRecipeData || isDesktop);
 
   const tags = sortTagsArray(photo.tags, primaryTag);
 
@@ -274,11 +280,11 @@ export default function PhotoLarge({
         'flex items-center justify-center',
         // Allow clicks to pass through to zoom controls
         // when not showing recipe overlay
-        !(isShowingRecipeOverlay || shouldDebugRecipeOverlays) &&
+        !showInlineRecipeOverlay &&
           'pointer-events-none',
       )}>
         <AnimatePresence>
-          {(isShowingRecipeOverlay || shouldDebugRecipeOverlays) &&
+          {showInlineRecipeOverlay &&
             photo.recipeData &&
             photo.film &&
               <PhotoRecipeOverlay
@@ -290,6 +296,14 @@ export default function PhotoLarge({
                 exposure={photo.exposureCompensationFormatted}
                 onClose={hideRecipeOverlay}
               />}
+          {showInlineRecipeOverlay &&
+            photo.omRecipeData && photo.omRecipeKey && <OmRecipeOverlay
+            ref={refRecipe}
+            recipe={photo.omRecipeData}
+            recipeKey={photo.omRecipeKey}
+            camera={{ make: photo.make, model: photo.model }}
+            onClose={hideRecipeOverlay}
+          />}
         </AnimatePresence>
       </div>
     </div>;
@@ -426,10 +440,14 @@ export default function PhotoLarge({
                         />}
                       {showRecipeContent && photo.omRecipeData &&
                         photo.omRecipeKey && <PhotoOmRecipe
+                        ref={refPhotoRecipe}
                         recipe={photo.omRecipeData}
                         recipeKey={photo.omRecipeKey}
+                        camera={{ make: photo.make, model: photo.model }}
                         contrast="medium"
                         prefetch={prefetchRelatedLinks}
+                        toggleRecipeOverlay={toggleRecipeOverlay}
+                        isShowingRecipeOverlay={isShowingRecipeOverlay}
                       />}
                       {showTagsContent &&
                         <PhotoTags

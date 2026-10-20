@@ -25,8 +25,8 @@ function ColorWheel({ colors }: { colors: number[] }) {
     <svg viewBox="0 0 240 240" className="w-full" role="img"
       aria-label="Twelve color adjustments">
       <circle cx="120" cy="120" r="40" fill="none"
-        stroke="#888" strokeDasharray="2 5" />
-      <circle cx="120" cy="120" r="65" fill="none" stroke="#888" />
+        stroke="#0003" strokeDasharray="2 5" />
+      <circle cx="120" cy="120" r="65" fill="none" stroke="#0003" />
       {COLORS.map((color, index) => {
         const a = point(angleFor(index), 94);
         const b = point(angleFor(index + 1), 94);
@@ -38,7 +38,7 @@ function ColorWheel({ colors }: { colors: number[] }) {
           const p = point(angleFor(i), 65 + value * 5);
           return `${p.x},${p.y}`;
         }).join(' ')}
-        fill="#fff" fillOpacity="0.25" stroke="#eee" strokeWidth="1.5"
+        fill="#fff" fillOpacity="0.3" stroke="#0006" strokeWidth="1.5"
       />
       {colors.map((value, index) => {
         const p = point(angleFor(index), 65 + value * 5);
@@ -46,7 +46,7 @@ function ColorWheel({ colors }: { colors: number[] }) {
         return <g key={OM_COLOR_CHANNELS[index]}>
           <circle cx={p.x} cy={p.y} r="4.5" fill={COLORS[index]} />
           <text x={label.x} y={label.y} textAnchor="middle"
-            dominantBaseline="central" fill="#fafafa" fontSize="12">
+            dominantBaseline="central" fill="#000c" fontSize="12">
             {omSignedValue(value)}
           </text>
         </g>;
@@ -55,7 +55,7 @@ function ColorWheel({ colors }: { colors: number[] }) {
     <dl className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
       {OM_COLOR_CHANNELS.map((label, i) => <div key={label}
         className="flex justify-between gap-2">
-        <dt className="text-neutral-300">{label}</dt>
+        <dt className="text-black/50">{label}</dt>
         <dd>{omSignedValue(colors[i])}</dd>
       </div>)}
     </dl>
@@ -80,22 +80,22 @@ function MonoWheel({ recipe }: {
           d={`M120 120 L${a.x} ${a.y} A73 73 0 0 1 ${b.x} ${b.y} Z`}
           fill={color} opacity={selected === i + 1 ? 1 : 0.65} />;
       })}
-      <circle cx="120" cy="120" r="76" fill="none" stroke="#eee"
+      <circle cx="120" cy="120" r="76" fill="none" stroke="#0006"
         strokeWidth="2" />
       {selected !== 0 && <>
         <line x1="120" y1="120" x2={marker.x} y2={marker.y}
-          stroke="white" strokeWidth="3" />
-        <circle cx={marker.x} cy={marker.y} r="5" fill="white" />
+          stroke="#000b" strokeWidth="3" />
+        <circle cx={marker.x} cy={marker.y} r="5" fill="#000b" />
       </>}
-      <text x="120" y="222" textAnchor="middle" fill="#fafafa" fontSize="14">
+      <text x="120" y="222" textAnchor="middle" fill="#000c" fontSize="14">
         {selected === 0 ? 'No filter' :
           `${OM_MONO_FILTERS[selected]} · Level ${recipe.filter.strength}`}
       </text>
     </svg>
     <dl className="space-y-3 text-sm">
-      <div><dt className="text-xs text-neutral-400">Film grain</dt>
+      <div><dt className="text-xs text-black/50">Film grain</dt>
         <dd className="capitalize">{recipe.grain}</dd></div>
-      <div><dt className="text-xs text-neutral-400">Film hue</dt>
+      <div><dt className="text-xs text-black/50">Film hue</dt>
         <dd className="capitalize">{recipe.hue}</dd></div>
     </dl>
   </>;
@@ -141,14 +141,14 @@ function ToneGraph({ tone }: { tone: OmRecipe['tone'] }) {
     <svg viewBox="0 0 240 240" className="w-full" role="img"
       aria-label={description}>
       <path d="M16 16H224V224H16ZM120 16V224M16 120H224"
-        fill="none" stroke="#999" />
-      <path d="M16 224L224 16" stroke="#999" strokeWidth="1.5" />
-      <path d={path} fill="none" stroke="#fafafa" strokeWidth="2.5" />
+        fill="none" stroke="#0004" />
+      <path d="M16 224L224 16" stroke="#0004" strokeWidth="1.5" />
+      <path d={path} fill="none" stroke="#000c" strokeWidth="2.5" />
       {[1, 3].map(i => <path key={i}
         d={`M${x(i / 4) - 6} ${y(ys[i])}h12M${x(i / 4)} ${y(ys[i]) - 6}v12`}
-        stroke="white" strokeWidth="2" />)}
+        stroke="#000b" strokeWidth="2" />)}
     </svg>
-    <p className="text-xs text-neutral-400">Shadow · Midtone · Highlight</p>
+    <p className="text-xs text-black/50">Shadow · Midtone · Highlight</p>
   </>;
 }
 
@@ -159,10 +159,10 @@ function Setting({ label, value, limit = 5 }: {
     <div className="flex justify-between gap-3 text-sm">
       <dt>{label}</dt><dd>{omSignedValue(value)}</dd>
     </div>
-    <div className="relative h-1 rounded bg-neutral-600" aria-hidden="true">
+    <div className="relative h-1 rounded bg-black/20" aria-hidden="true">
       <span className={clsx(
         'absolute top-[-3px] size-2.5 -translate-x-1/2',
-        'rounded-full bg-neutral-200',
+        'rounded-full bg-black/40',
       )}
       style={{ left: `${10 + (value + limit) / (limit * 2) * 80}%` }} />
     </div>
@@ -171,7 +171,9 @@ function Setting({ label, value, limit = 5 }: {
 
 export default function OmRecipeSettings({ recipe }: { recipe: OmRecipe }) {
   const wb = recipe.whiteBalance;
-  const panelClass = 'rounded-lg bg-neutral-800 p-4 text-neutral-50';
+  const panelClass = clsx(
+    'rounded-lg border border-neutral-200/40 bg-neutral-100/30 p-3 text-black',
+  );
   return <div className="grid gap-4 md:grid-cols-3">
     <section className={panelClass} aria-label={recipe.kind === 'color'
       ? 'Color adjustments' : 'Mono settings'}>
@@ -189,19 +191,19 @@ export default function OmRecipeSettings({ recipe }: { recipe: OmRecipe }) {
     <section className={panelClass} aria-label="White balance and detail">
       <h3 className="text-sm font-medium">White balance</h3>
       <p className="mt-2 text-xs">{formatOmWhiteBalance(wb)}</p>
-      <p className="mt-1 text-xs text-neutral-300">{formatOmWbShift(wb)}</p>
+      <p className="mt-1 text-xs text-black/50">{formatOmWbShift(wb)}</p>
       <svg viewBox="0 0 240 220" className="w-full" role="img"
         aria-label={`White balance shift ${formatOmWbShift(wb)}`}>
         <path d="M36 28H204" stroke="#83d889" strokeWidth="4" />
         <path d="M204 28V196" stroke="#edbf66" strokeWidth="4" />
         <path d="M36 196H204" stroke="#ce8bc9" strokeWidth="4" />
         <path d="M36 28V196" stroke="#7eaff1" strokeWidth="4" />
-        <path d="M120 28V196M36 112H204" stroke="#999" />
+        <path d="M120 28V196M36 112H204" stroke="#0004" />
         {[['G', 120, 16], ['M', 120, 214], ['B', 20, 116], ['A', 221, 116]]
           .map(([label, x, y]) => <text key={label} x={x} y={y}
-            textAnchor="middle" fill="#eee" fontSize="12">{label}</text>)}
+            textAnchor="middle" fill="#0008" fontSize="12">{label}</text>)}
         <circle cx={120 + wb.amber * 11} cy={112 - wb.green * 11}
-          r="6" fill="#fafafa" />
+          r="6" fill="#000c" />
       </svg>
       <dl className="space-y-5">
         <Setting label="Shading effect" value={recipe.shading} />
