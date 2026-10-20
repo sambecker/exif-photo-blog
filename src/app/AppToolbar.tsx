@@ -110,6 +110,9 @@ export default function AppToolbar({
     pathFull,
   }), [pathname, isPhotoSetFull, pathGrid, pathFull]);
 
+  // Compact view menu is for root + photo sets only (not /library, /admin/*)
+  const showCompactViewMenu = isPhotoSet || isOnFullPath || isOnGridPath;
+
   const navigateHomeView = useCallback((
     view: 'grid' | 'full',
   ) => {
@@ -183,26 +186,27 @@ export default function AppToolbar({
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.2, ease: 'easeInOut' }}
         >
-          <AppViewMenuCompact
-            className="sm:hidden"
-            isViewFull={isViewFull}
-            isViewGrid={isViewGrid}
-            isMasonry={MASONRY_GRID_ENABLED}
-            hrefGrid={hrefGrid}
-            hrefFull={hrefFull}
-            onSelectView={isPhotoSet ? setIsPhotoSetFull : undefined}
-            isLoading={isViewSwitchLoading}
-            showSortItems={showSortControl}
-            sortConfig={sortConfig}
-            isOpen={isViewMenuOpen}
-            setIsOpen={isOpen => {
-              setIsViewMenuOpen(isOpen);
-              if (isOpen) {
-                setIsAdminMenuOpen(false);
-                setIsSortMenuOpen(false);
-              }
-            }}
-          />
+          {showCompactViewMenu &&
+            <AppViewMenuCompact
+              className="sm:hidden"
+              isViewFull={isViewFull}
+              isViewGrid={isViewGrid}
+              isMasonry={MASONRY_GRID_ENABLED}
+              hrefGrid={hrefGrid}
+              hrefFull={hrefFull}
+              onSelectView={isPhotoSet ? setIsPhotoSetFull : undefined}
+              isLoading={isViewSwitchLoading}
+              showSortItems={showSortControl}
+              sortConfig={sortConfig}
+              isOpen={isViewMenuOpen}
+              setIsOpen={isOpen => {
+                setIsViewMenuOpen(isOpen);
+                if (isOpen) {
+                  setIsAdminMenuOpen(false);
+                  setIsSortMenuOpen(false);
+                }
+              }}
+            />}
           <AppViewMenu
             className="max-sm:hidden"
             isViewFull={isViewFull}
