@@ -1,6 +1,6 @@
 # Identify OM recipes by their settings
 
-Initial OM recipe support targets the new OM SYSTEM PEN. Represent color and mono recipes through the settings recorded in each photo, without using numbered profile slots or user-assigned names as recipe identity: the same slot can hold different settings. Follow the existing Fujifilm recipe interaction: the "Color recipe" or "Mono recipe" text links to its gallery, and a separate adjacent sliders button opens its settings viewer. The viewer's recipe heading also links to the gallery. This requires separate settings for each recipe kind rather than treating an OM profile as another film name.
+OM recipe support covers OM SYSTEM and Olympus cameras that record complete Color or Monochrome Profile settings. Camera makes identify import candidates; active profile metadata determines whether a recipe is supported. Represent color and mono recipes through the settings recorded in each photo, without using numbered profile slots or user-assigned names as recipe identity: the same slot can hold different settings. Follow the existing Fujifilm recipe interaction: the "Color recipe" or "Mono recipe" text links to its gallery, and a separate adjacent sliders button opens its settings viewer. The viewer's recipe heading also links to the gallery. This requires separate settings for each recipe kind rather than treating an OM profile as another film name.
 
 Recognize only explicit Color Profile and Monochrome Profile modes. Ordinary Natural, Vivid, Art, and other picture modes do not qualify merely because the file retains profile settings.
 
@@ -12,4 +12,4 @@ Open the viewer as a responsive modal, with visual panels beside each other on l
 
 Use the supplied neutral and Sh -4 / Mid 0 / Hi +4 camera-screen photos as visual references for the tone graph, including its diagonal reference, center grid, markers, and numeric annotations. The graph presents selected settings; it is not a calibrated image-processing transfer function.
 
-Support new uploads and normal Sync, plus a one-time admin batch for existing PEN photos. The batch reads each stored original once per successful attempt, saves recipe data, and skips unrelated AI or image processing.
+Support new uploads and normal Sync, plus a one-time admin batch for existing OM SYSTEM and Olympus photos. The batch reads each stored original once per successful attempt, saves recipe data, and skips unrelated AI or image processing.

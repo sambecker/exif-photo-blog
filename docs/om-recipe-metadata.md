@@ -1,4 +1,4 @@
-# PEN recipe metadata findings
+# OM SYSTEM and Olympus recipe metadata findings
 
 Inspected the supplied camera-original `PA200002.JPG` and `PA200003.JPG` with ExifTool 13.55 and the repository's installed `ts-exif-parser`. Both identify their make as `OM Digital Solutions`, model as `PEN`, and firmware as `Version 1.0`. The parser preserves trailing spaces in the make and model strings.
 
@@ -33,6 +33,12 @@ The existing EXIF parser exposes a 19,396-byte MakerNote buffer in each file. Th
 Relevant CameraSettings tags include `PictureMode` (`0x0520`), `ToneLevel` (`0x052e`), `MonochromeProfileSettings` (`0x0537`), `FilmGrainEffect` (`0x0538`), `ColorProfileSettings` (`0x0539`), `MonochromeVignetting` (`0x053a`), and `MonochromeColor` (`0x053b`). These mappings come from the installed ExifTool `Olympus.pm`; the public reference is [Olympus tag documentation](https://exiftool.org/TagNames/Olympus.html).
 
 These first two files establish a baseline, not coverage of every profile, setting, or firmware. The later controlled card series below resolves WB axes, nonzero color shading, and fourth-slot recognition. Neutral and non-neutral camera-screen photos now provide visual graph references. The second PictureMode value is not yet interpreted; no agreed recipe field depends on its meaning.
+
+## Cross-model extraction
+
+The decoder recognizes OM SYSTEM and Olympus makes without a model allowlist. ExifTool 13.55 `MakerNotes.pm` specifies two modern containers: `OM SYSTEM\0` starts its IFD at offset 16, and `OLYMPUS\0` at offset 12. Both use MakerNote-relative offsets and the Olympus CameraSettings tags above. The decoder reads the byte-order marker four bytes before the IFD and validates each header version and field boundary. Legacy `OLYMP\0` containers use different offset rules and are not decoded here.
+
+Anonymous tests place the original-derived numeric settings in both header layouts and both byte orders, then wrap them in JPEGs with OM SYSTEM, OM Digital Solutions, and Olympus camera metadata. These establish parser compatibility, not camera-original validation of every model or firmware. Unknown or missing defining settings still suppress a recipe. Modes 9–11 and 12–14 identify color and mono profiles; 18 identifies Mono Profile 4. Mode 17 requires an explicit disabled ArtFilter and complete color-profile data, since the generic Art Mode label overlaps the verified COLOR4 value. Natural, Vivid, Color Creator, and active Art Filters remain excluded even when they retain profile settings.
 
 ## Controlled card series
 

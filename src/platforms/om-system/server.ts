@@ -1,17 +1,18 @@
 import { createHash } from 'node:crypto';
-import { isOmSystemPen, OmRecipe, parseOmRecipe } from './recipe';
+import { isOmSystemCamera, OmRecipe, parseOmRecipe } from './recipe';
 import { ExifParserFactory } from 'ts-exif-parser';
 
 // Verified against PEN originals and ExifTool's Olympus.pm/MakerNotes.pm.
-// Offsets in the OM SYSTEM format are relative to the MakerNote itself.
+// Both modern header formats use offsets relative to the MakerNote itself.
 export const readOmCameraSettings = (
   bytes: Buffer,
 ): Map<number, number[]> | undefined => {
-  if (bytes.length < 18 ||
-    bytes.toString('ascii', 0, 10) !== 'OM SYSTEM\0') {
+  const rootOffset = bytes.toString('ascii', 0, 10) === 'OM SYSTEM\0' ? 16
+    : bytes.toString('ascii', 0, 8) === 'OLYMPUS\0' ? 12 : undefined;
+  if (rootOffset === undefined || bytes.length < rootOffset + 2) {
     return undefined;
   }
-  const order = bytes.toString('ascii', 12, 14);
+  const order = bytes.toString('ascii', rootOffset - 4, rootOffset - 2);
   if (order !== 'II' && order !== 'MM') { return undefined; }
   const u16 = (offset: number) => order === 'II'
     ? bytes.readUInt16LE(offset) : bytes.readUInt16BE(offset);
@@ -19,14 +20,16 @@ export const readOmCameraSettings = (
     ? bytes.readInt16LE(offset) : bytes.readInt16BE(offset);
   const u32 = (offset: number) => order === 'II'
     ? bytes.readUInt32LE(offset) : bytes.readUInt32BE(offset);
-  if (u16(14) !== 4) { return undefined; }
+  if (u16(rootOffset - 2) !== (rootOffset === 16 ? 4 : 3)) {
+    return undefined;
+  }
   const entries = (offset: number) => {
-    if (offset < 16 || offset + 2 > bytes.length) { return undefined; }
+    if (offset < rootOffset || offset + 2 > bytes.length) { return undefined; }
     const count = u16(offset);
     if (offset + 2 + count * 12 > bytes.length) { return undefined; }
     return Array.from({ length: count }, (_, i) => offset + 2 + i * 12);
   };
-  const root = entries(16);
+  const root = entries(rootOffset);
   const pointer = root?.find(index => u16(index) === 0x2020);
   if (pointer === undefined ||
     ![4, 13].includes(u16(pointer + 2)) || u32(pointer + 4) !== 1) {
@@ -64,7 +67,8 @@ export const getOmRecipeFromMakerNote = (
   const settings = readOmCameraSettings(bytes);
   if (!settings) { return undefined; }
   const mode = settings.get(0x0520)?.[0];
-  // Value 17 is COLOR4 on PEN, despite older decoders calling it Art Mode.
+  // COLOR4 uses 17 on verified originals; older decoders call it Art Mode.
+  // Require an explicit disabled ArtFilter plus complete profile settings.
   const kind = [9, 10, 11, 17].includes(mode ?? -1) ? 'color'
     : [12, 13, 14, 18].includes(mode ?? -1) ? 'mono' : undefined;
   if (!kind) { return undefined; }
@@ -122,21 +126,21 @@ export const getOmRecipeFromMakerNote = (
 export const createOmRecipeKey = (value: OmRecipe): string => {
   const recipe = parseOmRecipe(value);
   if (!recipe) {
-    throw new Error('Cannot identify an incomplete PEN recipe');
+    throw new Error('Cannot identify an incomplete OM recipe');
   }
   const hash = createHash('sha256')
     .update(JSON.stringify(recipe)).digest('hex');
-  return `om-pen-v1-${recipe.kind}-${hash}`;
+  return `om-v1-${recipe.kind}-${hash}`;
 };
 
 export const getOmRecipeFromImage = (bytes: Buffer) => {
   const parser = ExifParserFactory.create(bytes);
   parser.enableBinaryFields(true);
   const data = parser.parse();
-  const isPen = isOmSystemPen(data.tags?.Make, data.tags?.Model);
+  const isOmCamera = isOmSystemCamera(data.tags?.Make);
   return {
-    isPen,
-    recipe: isPen && Buffer.isBuffer(data.tags?.MakerNote)
+    isOmCamera,
+    recipe: isOmCamera && Buffer.isBuffer(data.tags?.MakerNote)
       ? getOmRecipeFromMakerNote(data.tags.MakerNote) : undefined,
   };
 };

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import AdminPage from '@/admin/AdminPage';
 import ProgressButton from '@/components/primitives/ProgressButton';
 import { PATH_ADMIN_PHOTOS } from '@/app/path';
-import { importPenRecipeAction, PenRecipeImportResult } from './actions';
+import { importOmRecipeAction, OmRecipeImportResult } from './actions';
 
 const statusLabels = {
   imported: 'Imported',
@@ -13,12 +13,12 @@ const statusLabels = {
   failed: 'Failed',
 };
 
-export default function PenRecipeImport({ photos }: {
+export default function OmRecipeImport({ photos }: {
   photos: { id: string, title: string | null }[]
 }) {
   const [rows] = useState(photos);
   const [results, setResults] =
-    useState<Record<string, PenRecipeImportResult>>({});
+    useState<Record<string, OmRecipeImportResult>>({});
   const [running, setRunning] = useState(false);
   const [progress, setProgress] = useState(0);
   const active = useRef(false);
@@ -34,9 +34,9 @@ export default function PenRecipeImport({ photos }: {
     try {
       for (let i = 0; i < pending.length; i++) {
         const { id } = pending[i];
-        let result: PenRecipeImportResult;
+        let result: OmRecipeImportResult;
         try {
-          result = await importPenRecipeAction(id);
+          result = await importOmRecipeAction(id);
         } catch {
           result = { photoId: id, status: 'failed',
             message: 'Request failed; retry when connected and signed in' };
@@ -65,13 +65,14 @@ export default function PenRecipeImport({ photos }: {
     </ProgressButton>}>
     <div className="space-y-6">
       <p className="max-w-2xl text-sm text-medium">
-        Import color and mono recipes from existing PEN photos.
+        Import color and mono recipes from OM SYSTEM and Olympus photos.
         Each original is read once; other photo settings stay unchanged.
         Keep this page open while importing. Finished photos stay processed
         if you return later.
       </p>
       <p role="status" aria-live="polite" className="text-sm">
-        {rows.length === 0 ? 'All PEN photos have been checked.' :
+        {rows.length === 0
+          ? 'All OM SYSTEM and Olympus photos have been checked.' :
           `${pending.length} remaining · ` +
           `${importedCount} imported · ${absentCount} absent or incomplete · ` +
           `${failedCount} failed`}

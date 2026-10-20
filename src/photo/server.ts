@@ -39,7 +39,7 @@ import { getCompatibleExifValue } from '@/utility/exif';
 import { fetchUrlWithByteLimit } from '@/utility/fetch';
 import { getPlaceFromCoordinates } from '@/platforms/google-places';
 import {
-  isOmSystemPen,
+  isOmSystemCamera,
   OM_RECIPE_VERSION,
   OmRecipe,
   parseOmRecipe,
@@ -72,7 +72,7 @@ export const extractImageDataFromBlobPath = async (
     generateResizedImage?: boolean
     updateColorFields?: boolean
     lookupLocation?: boolean
-    // Refresh a known PEN photo even if its current source lost camera tags.
+    // Refresh known OM photos even if the source lost its camera tags.
     refreshOmRecipe?: boolean
   } = {},
 ): Promise<{
@@ -119,8 +119,9 @@ export const extractImageDataFromBlobPath = async (
       dataExifr = await exifr.parse(fileBytes, { xmp: true });
 
       // Capture film simulation for Fujifilm or Picture Control for Nikon
-      const isPen = isOmSystemPen(dataExif.tags?.Make, dataExif.tags?.Model);
-      if (isExifForFujifilm(dataExif) || isExifForNikon(dataExif) || isPen) {
+      const isOmCamera = isOmSystemCamera(dataExif.tags?.Make);
+      if (isExifForFujifilm(dataExif) || isExifForNikon(dataExif) ||
+        isOmCamera) {
         // Parse exif data again with binary fields
         // in order to access MakerNote tag
         parser.enableBinaryFields(true);
@@ -132,12 +133,12 @@ export const extractImageDataFromBlobPath = async (
             recipe = getFujifilmRecipeFromMakerNote(makerNote);
           } else if (isExifForNikon(dataExif)) {
             film = getNikonPictureControlFromMakerNote(makerNote);
-          } else if (isPen) {
+          } else if (isOmCamera) {
             omRecipe = getOmRecipeFromMakerNote(makerNote);
           }
         }
       }
-      if (isPen || refreshOmRecipe) {
+      if (isOmCamera || refreshOmRecipe) {
         omRecipeCheckedVersion = OM_RECIPE_VERSION;
       }
 
@@ -332,11 +333,11 @@ export const convertFormDataToPhotoDbInsertAndLookupRecipeTitle =
     const photo = convertFormDataToPhotoDbInsert(...args);
 
     // Derive identity on the server rather than trusting a submitted key.
-    const omRecipe = isOmSystemPen(photo.make, photo.model)
+    const omRecipe = isOmSystemCamera(photo.make)
       ? parseOmRecipe(photo.omRecipeData) : undefined;
     photo.omRecipeData = omRecipe ? JSON.stringify(omRecipe) : undefined;
     photo.omRecipeKey = omRecipe ? createOmRecipeKey(omRecipe) : undefined;
-    photo.omRecipeCheckedVersion = isOmSystemPen(photo.make, photo.model) &&
+    photo.omRecipeCheckedVersion = isOmSystemCamera(photo.make) &&
       photo.omRecipeCheckedVersion === OM_RECIPE_VERSION
       ? OM_RECIPE_VERSION : undefined;
 

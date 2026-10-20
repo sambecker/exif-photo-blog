@@ -5,32 +5,32 @@ import { getPhoto } from '@/photo/query';
 import { MAX_PHOTO_UPLOAD_SIZE_IN_BYTES } from '@/photo';
 import { revalidatePhoto } from '@/photo/cache';
 import { fetchUrlWithByteLimit } from '@/utility/fetch';
-import { isOmSystemPen } from './recipe';
+import { isOmSystemCamera } from './recipe';
 import { getOmRecipeFromImage } from './server';
-import { storePenRecipe } from './query';
+import { storeOmRecipe } from './query';
 
-export type PenRecipeImportResult = {
+export type OmRecipeImportResult = {
   photoId: string
   status: 'imported' | 'absent' | 'failed'
   message?: string
 };
 
-export const importPenRecipeAction = async (
+export const importOmRecipeAction = async (
   photoId: string,
-): Promise<PenRecipeImportResult> => runAuthenticatedAdminServerAction(
+): Promise<OmRecipeImportResult> => runAuthenticatedAdminServerAction(
   async () => {
     try {
       const photo = await getPhoto(photoId, true);
-      if (!photo || !isOmSystemPen(photo.make, photo.model)) {
-        throw new Error('PEN photo not found');
+      if (!photo || !isOmSystemCamera(photo.make)) {
+        throw new Error('OM SYSTEM or Olympus photo not found');
       }
       // Recipe-only import: no image processing, AI, or storage mutations.
       const bytes = await fetchUrlWithByteLimit(
         photo.url,
         MAX_PHOTO_UPLOAD_SIZE_IN_BYTES,
       );
-      const { isPen, recipe } = getOmRecipeFromImage(Buffer.from(bytes));
-      await storePenRecipe(photoId, photo.url, isPen ? recipe : undefined);
+      const { isOmCamera, recipe } = getOmRecipeFromImage(Buffer.from(bytes));
+      await storeOmRecipe(photoId, photo.url, isOmCamera ? recipe : undefined);
       revalidatePhoto(photoId);
       return { photoId, status: recipe ? 'imported' : 'absent' };
     } catch (error) {

@@ -36,6 +36,9 @@ it('keeps gallery navigation separate and restores page shortcuts on close',
     });
     fireEvent.click(trigger);
     const dialog = await screen.findByRole('dialog');
+    expect(screen.getByText(
+      'OM SYSTEM / Olympus · Settings used for this photo',
+    )).toBeDefined();
     expect(setKeyboardCommands).toHaveBeenLastCalledWith(false);
     expect(dialog.querySelectorAll('input')).toHaveLength(0);
     expect(screen.getByRole('img', {

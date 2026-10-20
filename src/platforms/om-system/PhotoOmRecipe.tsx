@@ -75,7 +75,7 @@ export default function PhotoOmRecipe({
                 className="hover:underline">{label}</Link>
             </Dialog.Title>
             <Dialog.Description className="mt-1 text-xs text-medium">
-              OM SYSTEM PEN · Settings used for this photo
+              OM SYSTEM / Olympus · Settings used for this photo
             </Dialog.Description>
           </div>
           <Dialog.Close asChild>

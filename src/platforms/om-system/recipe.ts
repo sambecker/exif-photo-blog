@@ -89,9 +89,14 @@ const omRecipeSchema = z.discriminatedUnion('kind', [
 
 export type OmRecipe = z.infer<typeof omRecipeSchema>;
 
-export const isOmSystemPen = (make?: string, model?: string) =>
-  /^(OM Digital Solutions|OM SYSTEM)$/i.test(make?.trim() ?? '') &&
-  model?.trim().toUpperCase() === 'PEN';
+export const OM_CAMERA_MAKES = [
+  'om digital solutions', 'om system', 'olympus',
+  'olympus imaging corp.', 'olympus corporation', 'olympus optical co.,ltd',
+];
+
+// Brand identifies candidates; active profile metadata determines support.
+export const isOmSystemCamera = (make?: string) =>
+  OM_CAMERA_MAKES.includes(make?.trim().toLowerCase() ?? '');
 
 // Parsing strips unrelated/inactive properties and fixes serialization order.
 export const parseOmRecipe = (value: unknown): OmRecipe | undefined => {
@@ -113,16 +118,23 @@ export const parseOmRecipe = (value: unknown): OmRecipe | undefined => {
   }
 };
 
-const OM_RECIPE_KEY_PATTERN = /^om-pen-v1-(color|mono)-[a-f0-9]{64}$/;
+const OM_RECIPE_KEY_PATTERN = /^om-(?:pen-)?v1-(color|mono)-[a-f0-9]{64}$/;
 
 export const isOmRecipeKey = (key?: string): boolean =>
   OM_RECIPE_KEY_PATTERN.test(key ?? '');
+
+// Keep galleries and shared URLs from the initial PEN implementation working.
+export const omRecipeKeyAliases = (key: string): [string, string] => {
+  const canonical = key.replace(/^om-pen-/, 'om-');
+  return [canonical, canonical.replace(/^om-/, 'om-pen-')];
+};
 
 export const labelForOmRecipe = (kind: OmRecipe['kind']) =>
   kind === 'color' ? 'Color recipe' : 'Mono recipe';
 
 export const labelForOmRecipeKey = (key: string) =>
-  labelForOmRecipe(key.startsWith('om-pen-v1-color-') ? 'color' : 'mono');
+  labelForOmRecipe(OM_RECIPE_KEY_PATTERN.exec(key)?.[1] === 'color'
+    ? 'color' : 'mono');
 
 export const formatOmWhiteBalance = (wb: OmRecipe['whiteBalance']) =>
   wb.kelvin ? `${wb.kelvin}K` : OM_WHITE_BALANCE_LABELS[wb.mode];

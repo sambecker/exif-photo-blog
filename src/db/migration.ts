@@ -127,7 +127,7 @@ export const MIGRATIONS: Migration[] = [{
     ADD COLUMN IF NOT EXISTS location JSONB
   `,
 }, {
-  label: '12: OM System PEN Recipes',
+  label: '12: OM SYSTEM / Olympus Recipes',
   fields: ['om_recipe_data', 'om_recipe_key', 'om_recipe_checked_version'],
   run: () => query(`
     ALTER TABLE photos

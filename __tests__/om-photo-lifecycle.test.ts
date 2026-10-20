@@ -154,6 +154,40 @@ it.each(['auto', 'only-missing', 'overwrite'] as const)(
 );
 
 it.each([
+  ['OM Digital Solutions', 'OM-3'],
+  ['OLYMPUS IMAGING CORP.', 'PEN-F'],
+  ['OLYMPUS CORPORATION', 'E-P7'],
+])('refreshes and clears %s / %s recipes during only-missing Sync',
+  async (make, model) => {
+    const original = await getPhoto('penphoto');
+    jest.mocked(getPhoto).mockResolvedValue({ ...original!, make, model });
+    const exif = piexif.dump({
+      '0th': { [piexif.ImageIFD.Make]: make, [piexif.ImageIFD.Model]: model },
+      Exif: { [piexif.ExifIFD.MakerNote]: 'fixture' },
+    });
+    const jpeg = Buffer.from(piexif.insert(exif,
+      strippedJpeg.toString('binary')), 'binary');
+    jest.mocked(fetchUrlWithByteLimit).mockResolvedValue(
+      Uint8Array.from(jpeg).buffer,
+    );
+    await syncPhotoAction('penphoto', { syncMode: 'only-missing' });
+    const [photo] = jest.mocked(updatePhoto).mock.calls[0];
+    expect(parseOmRecipe(photo.omRecipeData)).toEqual(parseOmRecipe(mono));
+    expect(photo.omRecipeKey).toBe(createOmRecipeKey(mono));
+
+    jest.mocked(updatePhoto).mockClear();
+    jest.mocked(fetchUrlWithByteLimit).mockResolvedValue(
+      Uint8Array.from(strippedJpeg).buffer,
+    );
+    await syncPhotoAction('penphoto', { syncMode: 'only-missing' });
+    expect(updatePhoto).toHaveBeenCalledWith(expect.objectContaining({
+      omRecipeData: undefined, omRecipeKey: undefined,
+      omRecipeCheckedVersion: 1,
+    }));
+  },
+);
+
+it.each([
   { action: 'replace', failure: 'download' },
   { action: 'replace', failure: 'decode' },
   { action: 'sync', failure: 'download' },

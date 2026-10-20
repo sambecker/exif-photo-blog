@@ -27,7 +27,7 @@ _Submit your site as an example by [opening an issue](https://github.com/sambeck
 - AI-generated text descriptions
 - RSS/JSON feeds
 - Support for Fujifilm recipes and film simulations
-- OM SYSTEM PEN color and mono recipes, with galleries for matching settings
+- OM SYSTEM and Olympus color and mono recipes, with galleries for matching settings
 
 <img src="/readme/og-image-share.png" alt="OG Image Preview" width=600 />
 
@@ -501,11 +501,11 @@ Thank you ❤️ translators: [@sconetto](https://github.com/sconetto) (`pt-br`,
 #### Why aren't Fujifilm simulations importing alongside EXIF data?
 > Fujifilm simulation data is stored in vendor-specific Makernote binaries embedded in EXIF data. Under certain circumstances an intermediary may strip out this data. For instance, there is a known issue on iOS where editing an image, e.g., cropping it, causes Makernote data loss. If simulation data appears to be missing, try importing the original file as it was stored by the camera. Additionally, if you can confirm the simulation mode, you can edit the photo and manually select it.
 
-#### How do OM SYSTEM PEN recipes work?
+#### How do OM SYSTEM and Olympus recipes work?
 
-> Upload camera-original JPEGs taken with a Color or Monochrome Profile on the OM SYSTEM PEN. The photo's "Color recipe" or "Mono recipe" link opens a gallery of photos with matching active settings. The adjacent sliders button opens a read-only viewer with the color or mono wheel, tone graph, white-balance grid, and numeric settings. Slot numbers and exposure compensation do not determine recipe matches. Noise Filter and Gradation are outside the recipe. If required metadata is missing or unsupported, no recipe is shown; there is no manual recipe entry.
+> Upload camera-original JPEGs taken with a Color or Monochrome Profile on supported OM SYSTEM and Olympus cameras. The photo's "Color recipe" or "Mono recipe" link opens a gallery of photos with matching active settings. The adjacent sliders button opens a read-only viewer with the color or mono wheel, tone graph, white-balance grid, and numeric settings. Slot numbers and exposure compensation do not determine recipe matches. Noise Filter and Gradation are outside the recipe. If required metadata is missing or unsupported, no recipe is shown; there is no manual recipe entry.
 >
-> For previously uploaded PEN photos, use **Admin → OM recipes** to import recipes in a batch. Successful and absent/incomplete results are saved so they do not need repeated downloads; failed imports can be retried. Normal photo Sync also reads PEN recipe metadata. Stored originals must retain the required MakerNotes. Initial support targets the OM SYSTEM PEN, rather than older Olympus PEN models.
+> For previously uploaded OM SYSTEM and Olympus photos, use **Admin → OM recipes** to import recipes in a batch. Successful and absent/incomplete results are saved so they do not need repeated downloads; failed imports can be retried. Normal photo Sync also reads OM recipe metadata. Stored originals must retain the required MakerNotes. Support follows the active profile metadata, not the camera model. Ordinary picture modes and Art Filters do not count as recipes.
 
 #### My Fujifilm recipes are missing/displaying incorrect data. What should I do?
 > If you don't see a recipe, first try syncing your photo from the ••• menu, or from `/admin/photos`. If the data looks incorrect, open an issue with the file in question attached in order for it to be investigated. Fujifilm file specifications have evolved over time and recipe parsing may need to be adjusted based on camera model/vintage.

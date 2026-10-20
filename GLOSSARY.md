@@ -5,7 +5,7 @@ Terms for the camera settings that define the look of a photo.
 ## Language
 
 **OM recipe**:
-The camera settings that define an OM System photo's color or monochrome look. Recipes describe the settings used for a photo, without a user-assigned name.
+The camera settings that define an OM SYSTEM or Olympus photo's color or monochrome look. Recipes describe the settings used for a photo, without a user-assigned name.
 _Avoid_: Profile name, numbered profile
 
 **Color recipe**:

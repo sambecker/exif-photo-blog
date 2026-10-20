@@ -99,7 +99,7 @@ import {
   COMMAND_K_PHOTO_LIMIT,
   getPhotosQueryData,
 } from '@/query/data';
-import { isOmSystemPen, OM_RECIPE_VERSION }
+import { isOmSystemCamera, OM_RECIPE_VERSION }
   from '@/platforms/om-system/recipe';
 
 // Private actions
@@ -560,7 +560,7 @@ export const replacePhotoStorageAction = async (
         error,
       } = await extractImageDataFromBlobPath(updatedStorageUrl, {
         generateBlurData: BLUR_ENABLED,
-        refreshOmRecipe: isOmSystemPen(photo.make, photo.model),
+        refreshOmRecipe: isOmSystemCamera(photo.make),
       });
 
       if (error || !formDataFromExif) {
@@ -654,7 +654,7 @@ export const syncPhotoAction = async (
         generateBlurData: BLUR_ENABLED,
         generateResizedImage: AI_CONTENT_GENERATION_ENABLED,
         updateColorFields: AI_CONTENT_GENERATION_ENABLED,
-        refreshOmRecipe: isOmSystemPen(photo.make, photo.model),
+        refreshOmRecipe: isOmSystemCamera(photo.make),
       });
 
       if (error) { throw new Error(error); }

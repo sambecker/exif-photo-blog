@@ -1,14 +1,19 @@
 /* eslint-disable @stylistic/max-len */
-import fixtures from './fixtures/om-pen.json';
+import fixtures from './fixtures/om-system.json';
 import {
   createOmRecipeKey,
+  getOmRecipeFromImage,
   getOmRecipeFromMakerNote,
 } from '@/platforms/om-system/server';
+import sharp from 'sharp';
+import piexif from 'piexifjs';
 import {
-  isOmSystemPen,
+  isOmSystemCamera,
   isOmRecipeKey,
   parseOmRecipe,
   formatOmWbShift,
+  labelForOmRecipeKey,
+  omRecipeKeyAliases,
 } from '@/platforms/om-system/recipe';
 import { formatRecipe } from '@/recipe';
 import { getWheresFromOptions } from '@/db';
@@ -21,8 +26,11 @@ import {
 type Entry = { tag: number, type: number, values: number[] };
 
 // Real numeric tag values in a minimal, anonymous OM MakerNote container.
-const makerNote = (entries: Entry[], littleEndian = true) => {
-  const directory = 34;
+const makerNote = (
+  entries: Entry[], littleEndian = true, header: 'om' | 'olympus' = 'om',
+) => {
+  const rootOffset = header === 'om' ? 16 : 12;
+  const directory = rootOffset + 18;
   const size = directory + 2 + entries.length * 12 + 4;
   const bytes = Buffer.alloc(size + entries.reduce((n, entry) =>
     n + (entry.values.length > 2 ? entry.values.length * 2 : 0), 0));
@@ -32,14 +40,14 @@ const makerNote = (entries: Entry[], littleEndian = true) => {
     ? bytes.writeInt16LE(value, offset) : bytes.writeInt16BE(value, offset);
   const u32 = (value: number, offset: number) => littleEndian
     ? bytes.writeUInt32LE(value, offset) : bytes.writeUInt32BE(value, offset);
-  bytes.write('OM SYSTEM\0\0\0', 0, 'ascii');
-  bytes.write(littleEndian ? 'II' : 'MM', 12, 'ascii');
-  u16(4, 14);
-  u16(1, 16);
-  u16(0x2020, 18);
-  u16(13, 20);
-  u32(1, 22);
-  u32(directory, 26);
+  bytes.write(header === 'om' ? 'OM SYSTEM\0\0\0' : 'OLYMPUS\0', 0, 'ascii');
+  bytes.write(littleEndian ? 'II' : 'MM', rootOffset - 4, 'ascii');
+  u16(header === 'om' ? 4 : 3, rootOffset - 2);
+  u16(1, rootOffset);
+  u16(0x2020, rootOffset + 2);
+  u16(13, rootOffset + 4);
+  u32(1, rootOffset + 6);
+  u32(directory, rootOffset + 10);
   u16(entries.length, directory);
   let tail = size;
   entries.forEach(({ tag, type, values }, i) => {
@@ -67,11 +75,51 @@ const requireRecipe = (entries: Entry[]) => {
   return recipe;
 };
 
-describe('OM SYSTEM PEN', () => {
-  it('recognizes padded camera metadata without matching other models', () => {
-    expect(isOmSystemPen('OM Digital Solutions   ', 'PEN             ')).toBe(true);
-    expect(isOmSystemPen('OM Digital Solutions', 'OM-3')).toBe(false);
-    expect(isOmSystemPen('OLYMPUS', 'PEN-F')).toBe(false);
+describe('OM SYSTEM and Olympus profiles', () => {
+  it.each([
+    'OM Digital Solutions   ', 'OM SYSTEM', 'OLYMPUS',
+    'OLYMPUS IMAGING CORP.', 'OLYMPUS CORPORATION', 'OLYMPUS OPTICAL CO.,LTD',
+  ])('recognizes the %s camera make without a model restriction', make => {
+    expect(isOmSystemCamera(make)).toBe(true);
+  });
+
+  it('rejects other makes, missing tags, and make lookalikes', () => {
+    for (const make of ['FUJIFILM', 'NIKON', 'OM SYSTEM FAKE', '', undefined]) {
+      expect(isOmSystemCamera(make)).toBe(false);
+    }
+  });
+
+  it.each([
+    ['OM Digital Solutions', 'PEN', 'om'],
+    ['OM Digital Solutions', 'OM-3', 'olympus'],
+    ['OM SYSTEM', 'Future model', 'om'],
+    ['OLYMPUS IMAGING CORP.', 'PEN-F', 'olympus'],
+    ['OLYMPUS CORPORATION', 'E-P7', 'olympus'],
+  ] as const)('extracts complete profiles from JPEGs tagged %s / %s',
+    async (make, model, header) => {
+      const jpeg = await sharp({ create: {
+        width: 8, height: 6, channels: 3, background: '#444444',
+      } }).jpeg().toBuffer();
+      const exif = piexif.dump({
+        '0th': { [piexif.ImageIFD.Make]: make, [piexif.ImageIFD.Model]: model },
+        Exif: { [piexif.ExifIFD.MakerNote]:
+          makerNote(fixtures.color1, true, header).toString('binary') },
+      });
+      const image = Buffer.from(piexif.insert(exif, jpeg.toString('binary')), 'binary');
+      const extracted = getOmRecipeFromImage(image);
+      expect(extracted).toEqual({
+        isOmCamera: true, recipe: requireRecipe(fixtures.color1),
+      });
+      expect(createOmRecipeKey(extracted.recipe!))
+        .toBe(createOmRecipeKey(requireRecipe(fixtures.color1)));
+    },
+  );
+
+  it.each(['om', 'olympus'] as const)('reads both byte orders in the %s header', header => {
+    for (const littleEndian of [true, false]) {
+      expect(getOmRecipeFromMakerNote(makerNote(fixtures.mono1, littleEndian, header)))
+        .toEqual(decode(fixtures.mono1));
+    }
   });
 
   it('decodes the original color controls and signed tone values', () => {
@@ -102,11 +150,6 @@ describe('OM SYSTEM PEN', () => {
     expect(decode(fixtures['color4-shading'])?.shading).toBe(3);
   });
 
-  it('respects TIFF byte order', () => {
-    expect(getOmRecipeFromMakerNote(makerNote(fixtures.mono1, false)))
-      .toEqual(decode(fixtures.mono1));
-  });
-
   it.each([0x0500, 0x0502, 0x0523, 0x0524, 0x052e, 0x0539, 0x053a])(
     'does not substitute neutral values for missing defining tag %i', tag => {
       expect(decode(fixtures.color4.filter(entry => entry.tag !== tag)))
@@ -115,7 +158,11 @@ describe('OM SYSTEM PEN', () => {
   );
 
   it('rejects unsupported modes, active Art Filters, and unknown values', () => {
-    expect(decode(change(fixtures.color4, 0x0520, [2, 2]))).toBeUndefined();
+    for (const mode of [1, 2, 7, 256, 512]) {
+      expect(decode(change(fixtures.color4, 0x0520, [mode, 2]))).toBeUndefined();
+    }
+    expect(decode(fixtures.color4.filter(entry => entry.tag !== 0x0529)))
+      .toBeUndefined();
     expect(decode(change(fixtures.color4, 0x0529, [2, 0, 0, 0]))).toBeUndefined();
     expect(decode(change(fixtures.mono4, 0x0538, [99]))).toBeUndefined();
     expect(decode(change(fixtures.color4, 0x0500, [999]))).toBeUndefined();
@@ -130,14 +177,21 @@ describe('OM SYSTEM PEN', () => {
       .toMatchObject({ filter: { color: 1, strength: 3 } });
   });
 
-  it('fails closed for truncated, corrupt, and non-OM data', () => {
-    const bytes = makerNote(fixtures.color4);
-    for (const length of [0, 10, 17, 24, bytes.length - 1]) {
+  it.each(['om', 'olympus'] as const)('rejects truncated or corrupt %s headers and offsets', header => {
+    const rootOffset = header === 'om' ? 16 : 12;
+    const bytes = makerNote(fixtures.color4, true, header);
+    for (const length of [0, 10, rootOffset + 1, rootOffset + 8, bytes.length - 1]) {
       expect(getOmRecipeFromMakerNote(bytes.subarray(0, length))).toBeUndefined();
     }
     const corrupt = Buffer.from(bytes);
-    corrupt.writeUInt32LE(0xffffffff, 26);
+    corrupt.writeUInt32LE(0xffffffff, rootOffset + 10);
     expect(getOmRecipeFromMakerNote(corrupt)).toBeUndefined();
+    const unknownVersion = Buffer.from(bytes);
+    unknownVersion.writeUInt16LE(99, rootOffset - 2);
+    expect(getOmRecipeFromMakerNote(unknownVersion)).toBeUndefined();
+    const unknownByteOrder = Buffer.from(bytes);
+    unknownByteOrder.write('XX', rootOffset - 4, 'ascii');
+    expect(getOmRecipeFromMakerNote(unknownByteOrder)).toBeUndefined();
     expect(getOmRecipeFromMakerNote(Buffer.alloc(500))).toBeUndefined();
   });
 
@@ -179,9 +233,17 @@ describe('OM SYSTEM PEN', () => {
 
   it('filters OM galleries by key and keeps Fuji title queries unchanged', () => {
     const key = createOmRecipeKey(requireRecipe(fixtures.color4));
-    expect(getWheresFromOptions({ recipe: key })).toMatchObject({
-      wheres: expect.stringContaining('om_recipe_key=$1'),
-    });
+    expect(key).toMatch(/^om-v1-color-/);
+    const legacy = key.replace(/^om-/, 'om-pen-');
+    expect(isOmRecipeKey(legacy)).toBe(true);
+    expect(labelForOmRecipeKey(legacy)).toBe('Color recipe');
+    expect(omRecipeKeyAliases(legacy)).toEqual([key, legacy]);
+    for (const recipe of [key, legacy]) {
+      expect(getWheresFromOptions({ recipe })).toMatchObject({
+        wheres: expect.stringContaining('om_recipe_key IN ($1, $2)'),
+        wheresValues: [key, legacy],
+      });
+    }
     expect(getWheresFromOptions({ recipe: 'kodachrome' })).toMatchObject({
       wheres: expect.stringContaining('recipe_title=$1'),
     });
