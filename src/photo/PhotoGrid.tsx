@@ -29,14 +29,19 @@ import LinkWithStatus from '@/components/LinkWithStatus';
 import Spinner from '@/components/Spinner';
 import useVisibility from '@/utility/useVisibility';
 
-// Size the photo box by aspect ratio so it matches the rendered image
-// (menu/overlay anchor to the photo, not the square cell).
+// Width classes for matted tiles.
+// Below lg: landscapes fill the cell; portraits size as if in a square
+// cell (width = column × aspect) so they don't stretch full-bleed.
+// lg+: matte inset inside the square cell.
 function mattedPhotoBoxClass(aspectRatio: number) {
-  // Small screens: tighter matte (photos fill more of the cell).
-  // md+: keep the airier floating inset.
-  if (aspectRatio > 3 / 2 + 0.1) { return 'w-[98%] md:w-[96%]'; }
-  if (aspectRatio >= 1) { return 'w-[96%] md:w-[90%]'; }
-  return 'h-[98%] md:h-[96%]';
+  if (aspectRatio > 3 / 2 + 0.1) {
+    return 'w-full lg:w-[96%]';
+  }
+  if (aspectRatio >= 1) {
+    return 'w-full lg:w-[90%]';
+  }
+  // Portrait: calc width from column (square-cell equivalent), then lg inset
+  return 'w-[calc(100%*var(--photo-ar))] lg:w-auto lg:h-[96%]';
 }
 
 function PhotoGridMattedTile({
@@ -66,15 +71,16 @@ function PhotoGridMattedTile({
   return (
     <div
       className={clsx(
-        'flex aspect-square',
+        'flex w-full',
         'items-center justify-center',
         'overflow-visible',
+        // lg+: square floating cell; below lg: hug photo height
+        'lg:aspect-square',
       )}
     >
       <div
         className={clsx(
           'relative group',
-          // Photo silhouette inside the square cell
           'aspect-[var(--photo-ar)]',
           mattedPhotoBoxClass(photo.aspectRatio),
         )}
@@ -339,12 +345,14 @@ export default function PhotoGrid({
   const gridClassName = useMatted
     ? clsx(
       'grid',
-      // No gap — matte inset already spaces photos inside square cells
-      // Floating column counts at all sizes (2 → 3 → 4)
+      // Below lg: tight x, slightly roomier y; lg+: matte inset, no gap
+      'gap-4 lg:gap-0',
+      // Floating column counts (2 → 3 → 4)
       small
         ? 'grid-cols-3 xs:grid-cols-6'
         : 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4',
-      'items-center',
+      // Center photos within each row track
+      'items-center justify-items-center',
     )
     : clsx(
       'grid',

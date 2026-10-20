@@ -95,7 +95,8 @@ export default function PhotoGridHybridContainer({
     )}>
       {renderHeader}
       <div className={matted && !MASONRY_GRID_ENABLED
-        ? undefined
+        // Match matted grid gap-y-2 between infinite-scroll batches below lg
+        ? 'max-lg:space-y-2'
         : GRID_SPACE_CLASSNAME}
       >
         {(!MASONRY_GRID_ENABLED || count <= photos.length) && (
@@ -125,7 +126,8 @@ export default function PhotoGridHybridContainer({
     </div>
   );
 
-  // Matted /grid feed (no sidebar): wider than nav, like /full
+  // Matted /grid feed (no sidebar): at lg+ wider than nav (like /full);
+  // below lg full content width so edge photos meet page margins
   // Masonry uses standard AppGrid width instead
   if (matted && !MASONRY_GRID_ENABLED && !sidebar) {
     return (
