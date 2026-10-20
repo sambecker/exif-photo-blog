@@ -1,6 +1,6 @@
 # Identify OM recipes by their settings
 
-Initial OM recipe support targets the new OM SYSTEM PEN. Represent color and mono recipes through the settings recorded in each photo, without using numbered profile slots or user-assigned names as recipe identity: the same slot can hold different settings. Follow the existing Fujifilm recipe interaction: the "Color recipe" or "Mono recipe" text links to its gallery, and a separate adjacent + opens its settings viewer. The viewer's recipe heading also links to the gallery. This requires separate settings for each recipe kind rather than treating an OM profile as another film name.
+Initial OM recipe support targets the new OM SYSTEM PEN. Represent color and mono recipes through the settings recorded in each photo, without using numbered profile slots or user-assigned names as recipe identity: the same slot can hold different settings. Follow the existing Fujifilm recipe interaction: the "Color recipe" or "Mono recipe" text links to its gallery, and a separate adjacent sliders button opens its settings viewer. The viewer's recipe heading also links to the gallery. This requires separate settings for each recipe kind rather than treating an OM profile as another film name.
 
 Recognize only explicit Color Profile and Monochrome Profile modes. Ordinary Natural, Vivid, Art, and other picture modes do not qualify merely because the file retains profile settings.
 

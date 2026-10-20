@@ -16,7 +16,7 @@ Extract recipes automatically from JPEG metadata. A missing or uninterpretable d
 
 ## Viewer and gallery
 
-Follow the existing Fujifilm recipe interaction: "Color recipe" or "Mono recipe" links to its matching gallery; the separate adjacent + opens the settings viewer. The viewer heading also links to the gallery.
+Follow the existing Fujifilm recipe interaction: "Color recipe" or "Mono recipe" links to its matching gallery; the separate adjacent sliders button opens the settings viewer. The viewer heading also links to the gallery.
 
 Use a responsive, read-only modal with readable values, the color or mono wheel, tone graph, white-balance grid, and remaining profile controls. Place visual panels side by side when space allows and stack them on phones. Match the supplied neutral and non-neutral graph references while retaining exact numeric labels.
 

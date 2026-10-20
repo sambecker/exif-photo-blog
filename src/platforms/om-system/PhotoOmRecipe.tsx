@@ -3,7 +3,7 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { FaPlus } from 'react-icons/fa6';
+import { LuSlidersHorizontal } from 'react-icons/lu';
 import { IoClose } from 'react-icons/io5';
 import EntityLink, { EntityLinkExternalProps }
   from '@/components/entity/EntityLink';
@@ -44,10 +44,11 @@ export default function PhotoOmRecipe({
           aria-label={`Show ${label.toLowerCase()} settings`}
           title={`Show ${label.toLowerCase()} settings`}
           className={clsx(
-            'inline-flex size-5 items-center justify-center rounded-md',
+            'inline-flex size-5 items-center justify-center rounded-md p-0',
+            'border-transparent shadow-none',
             'bg-dim text-medium hover:bg-medium hover:text-main',
           )}>
-          <FaPlus size={10} />
+          <LuSlidersHorizontal size={14} className="shrink-0" />
         </button>
       </Dialog.Trigger>}
     />

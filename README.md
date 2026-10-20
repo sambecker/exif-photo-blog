@@ -503,7 +503,7 @@ Thank you ❤️ translators: [@sconetto](https://github.com/sconetto) (`pt-br`,
 
 #### How do OM SYSTEM PEN recipes work?
 
-> Upload camera-original JPEGs taken with a Color or Monochrome Profile on the OM SYSTEM PEN. The photo's "Color recipe" or "Mono recipe" link opens a gallery of photos with matching active settings. The adjacent + opens a read-only viewer with the color or mono wheel, tone graph, white-balance grid, and numeric settings. Slot numbers and exposure compensation do not determine recipe matches. Noise Filter and Gradation are outside the recipe. If required metadata is missing or unsupported, no recipe is shown; there is no manual recipe entry.
+> Upload camera-original JPEGs taken with a Color or Monochrome Profile on the OM SYSTEM PEN. The photo's "Color recipe" or "Mono recipe" link opens a gallery of photos with matching active settings. The adjacent sliders button opens a read-only viewer with the color or mono wheel, tone graph, white-balance grid, and numeric settings. Slot numbers and exposure compensation do not determine recipe matches. Noise Filter and Gradation are outside the recipe. If required metadata is missing or unsupported, no recipe is shown; there is no manual recipe entry.
 >
 > For previously uploaded PEN photos, use **Admin → OM recipes** to import recipes in a batch. Successful and absent/incomplete results are saved so they do not need repeated downloads; failed imports can be retried. Normal photo Sync also reads PEN recipe metadata. Stored originals must retain the required MakerNotes. Initial support targets the OM SYSTEM PEN, rather than older Olympus PEN models.
 
