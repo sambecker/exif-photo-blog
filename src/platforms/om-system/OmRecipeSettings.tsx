@@ -103,7 +103,7 @@ function MonoWheel({ recipe }: {
 
 // A settings visualization, checked against the camera's neutral and S curves.
 // Smooth monotone segments avoid overshoot; labels carry the exact settings.
-export const omTonePoints = ({ shadow, mid, highlight }: OmRecipe['tone']) => {
+const omTonePoints = ({ shadow, mid, highlight }: OmRecipe['tone']) => {
   const center = 0.5 + mid * 0.02;
   return [0,
     Math.max(0.01, Math.min(

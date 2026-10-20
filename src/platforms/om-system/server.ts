@@ -4,7 +4,7 @@ import { ExifParserFactory } from 'ts-exif-parser';
 
 // Verified against PEN originals and ExifTool's Olympus.pm/MakerNotes.pm.
 // Both modern header formats use offsets relative to the MakerNote itself.
-export const readOmCameraSettings = (
+const readOmCameraSettings = (
   bytes: Buffer,
 ): Map<number, number[]> | undefined => {
   const rootOffset = bytes.toString('ascii', 0, 10) === 'OM SYSTEM\0' ? 16

@@ -1,4 +1,8 @@
 /* eslint-disable @stylistic/max-len */
+// Numeric settings from camera-original PEN JPEGs; no photos or identifying EXIF.
+// Controlled captures verify COLOR4=17, MONO4=18, A2/M3=[2,-3], and shading
+// tag 0x053a=3. WB is [A,G]: positive amber/green, negative blue/magenta.
+// Other camera tags below test container compatibility, not original captures.
 import fixtures from './fixtures/om-system.json';
 import {
   createOmRecipeKey,
