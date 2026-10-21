@@ -534,13 +534,13 @@ export default function PhotoFull({
       <div className={clsx(
         'w-full max-w-[1400px]',
         'flex flex-col items-center',
-        'gap-2 md:gap-6',
+        'max-sm:gap-2',
         'md:flex-row md:justify-center',
         // Meta left of photo:
         // Reverse row so photo stays first in DOM for mobile
         metaSide === 'left' && 'md:flex-row-reverse',
       )}>
-        <div className="w-full md:flex-1 md:min-w-0 max-w-4xl">
+        <div className="w-full md:flex-1 md:min-w-0 max-w-5xl">
           {showZoomControls
             ? <div className={photoContainerClassName}>
               {renderLargePhoto}
