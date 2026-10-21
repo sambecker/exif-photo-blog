@@ -9,9 +9,11 @@ import {
   PATH_ROOT,
   absolutePathForPhoto,
   absolutePathForPhotoImage,
+  pathForPhoto,
 } from '@/app/path';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
 import {
+  getPhotoCached,
   getPhotosMetaCached,
   getPhotosNearIdCached,
 } from '@/photo/cache';
@@ -69,7 +71,11 @@ export default async function PhotoRecentsPage({
   const { photo, photos, photosGrid, indexNumber } =
     await getPhotosNearIdCachedCached(photoId);
 
-  if (!photo) { redirect(PATH_ROOT); }
+  if (!photo) {
+    // If photo's no longer recent, redirect to canonical detail page
+    const photo = await getPhotoCached(photoId);
+    redirect(photo ? pathForPhoto({ photo }) : PATH_ROOT);
+  }
 
   const { count, dateRange } = await getPhotosMetaCached({ recent: true });
 
