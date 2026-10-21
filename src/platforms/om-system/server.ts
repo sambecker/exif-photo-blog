@@ -4,9 +4,7 @@ import { ExifParserFactory } from 'ts-exif-parser';
 
 // Verified against PEN originals and ExifTool's Olympus.pm/MakerNotes.pm.
 // Both modern header formats use offsets relative to the MakerNote itself.
-const readOmCameraSettings = (
-  bytes: Buffer,
-): Map<number, number[]> | undefined => {
+const readOmDirectories = (bytes: Buffer) => {
   const rootOffset = bytes.toString('ascii', 0, 10) === 'OM SYSTEM\0' ? 16
     : bytes.toString('ascii', 0, 8) === 'OLYMPUS\0' ? 12 : undefined;
   if (rootOffset === undefined || bytes.length < rootOffset + 2) {
@@ -30,7 +28,17 @@ const readOmCameraSettings = (
     return Array.from({ length: count }, (_, i) => offset + 2 + i * 12);
   };
   const root = entries(rootOffset);
-  const pointer = root?.find(index => u16(index) === 0x2020);
+  if (!root) { return undefined; }
+  return { rootOffset, root, entries, u16, s16, u32 };
+};
+
+const readOmCameraSettings = (
+  bytes: Buffer,
+): Map<number, number[]> | undefined => {
+  const reader = readOmDirectories(bytes);
+  if (!reader) { return undefined; }
+  const { root, entries, u16, s16, u32 } = reader;
+  const pointer = root.find(index => u16(index) === 0x2020);
   if (pointer === undefined ||
     ![4, 13].includes(u16(pointer + 2)) || u32(pointer + 4) !== 1) {
     return undefined;
@@ -59,6 +67,39 @@ const readOmCameraSettings = (
       type === 8 ? s16(offset + i * 2) : u16(offset + i * 2)));
   }
   return settings;
+};
+
+export const getOmFocalLengthIn35MmFormat = (
+  bytes: Buffer,
+  focalLength?: number,
+): number | undefined => {
+  if (!focalLength || !Number.isFinite(focalLength) || focalLength <= 0) {
+    return undefined;
+  }
+  const reader = readOmDirectories(bytes);
+  if (!reader) { return undefined; }
+  const { rootOffset, root, entries, u16, u32 } = reader;
+  // Olympus Equipment IFD: FocalPlaneDiagonal is an unsigned rational in mm.
+  const pointers = root.filter(index => u16(index) === 0x2010);
+  if (pointers.length !== 1) { return undefined; }
+  const pointer = pointers[0];
+  if (![4, 13].includes(u16(pointer + 2)) || u32(pointer + 4) !== 1) {
+    return undefined;
+  }
+  const fields = entries(u32(pointer + 8))
+    ?.filter(index => u16(index) === 0x0103);
+  if (fields?.length !== 1) { return undefined; }
+  const field = fields[0];
+  if (u16(field + 2) !== 5 || u32(field + 4) !== 1) { return undefined; }
+  const offset = u32(field + 8);
+  if (offset < rootOffset || offset + 8 > bytes.length) { return undefined; }
+  const numerator = u32(offset);
+  const denominator = u32(offset + 4);
+  if (!numerator || !denominator) { return undefined; }
+  const equivalent = Math.round(
+    focalLength * Math.hypot(36, 24) / (numerator / denominator),
+  );
+  return equivalent > 0 && equivalent <= 32767 ? equivalent : undefined;
 };
 
 export const getOmRecipeFromMakerNote = (

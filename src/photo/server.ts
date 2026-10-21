@@ -46,6 +46,7 @@ import {
 } from '@/platforms/om-system/recipe';
 import {
   createOmRecipeKey,
+  getOmFocalLengthIn35MmFormat,
   getOmRecipeFromMakerNote,
 } from '@/platforms/om-system/server';
 
@@ -135,6 +136,16 @@ export const extractImageDataFromBlobPath = async (
             film = getNikonPictureControlFromMakerNote(makerNote);
           } else if (isOmCamera) {
             omRecipe = getOmRecipeFromMakerNote(makerNote);
+            const equivalent = Number(getCompatibleExifValue(
+              'FocalLengthIn35mmFormat', dataExif, dataExifr,
+            ));
+            if ((!Number.isFinite(equivalent) || equivalent <= 0) &&
+              dataExif.tags) {
+              dataExif.tags.FocalLengthIn35mmFormat =
+                getOmFocalLengthIn35MmFormat(makerNote, Number(
+                  getCompatibleExifValue('FocalLength', dataExif, dataExifr),
+                ))?.toString();
+            }
           }
         }
       }

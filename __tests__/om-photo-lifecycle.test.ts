@@ -6,6 +6,7 @@ import { parsePhotoFromDb } from '@/photo';
 import { fetchUrlWithByteLimit } from '@/utility/fetch';
 import {
   createOmRecipeKey,
+  getOmFocalLengthIn35MmFormat,
   getOmRecipeFromMakerNote,
 } from '@/platforms/om-system/server';
 import { OmRecipe, parseOmRecipe } from '@/platforms/om-system/recipe';
@@ -31,6 +32,7 @@ jest.mock('../src/utility/fetch', () => ({ fetchUrlWithByteLimit: jest.fn() }));
 jest.mock('../src/platforms/om-system/server', () => ({
   ...jest.requireActual('../src/platforms/om-system/server'),
   getOmRecipeFromMakerNote: jest.fn(),
+  getOmFocalLengthIn35MmFormat: jest.fn(),
 }));
 jest.mock('../src/photo/color/server', () => ({
   getColorFieldsForPhotoForm: jest.fn(),
@@ -79,7 +81,10 @@ beforeAll(async () => {
       [piexif.ImageIFD.Make]: 'OM Digital Solutions',
       [piexif.ImageIFD.Model]: 'PEN',
     },
-    Exif: { [piexif.ExifIFD.MakerNote]: 'fixture' },
+    Exif: {
+      [piexif.ExifIFD.MakerNote]: 'fixture',
+      [piexif.ExifIFD.FocalLength]: [25, 1],
+    },
   });
   penJpeg = Buffer.from(
     piexif.insert(exif, strippedJpeg.toString('binary')), 'binary',
@@ -98,8 +103,43 @@ beforeEach(() => {
     omRecipeCheckedVersion: 1,
   }));
   jest.mocked(getOmRecipeFromMakerNote).mockReturnValue(mono);
+  jest.mocked(getOmFocalLengthIn35MmFormat).mockReturnValue(undefined);
   jest.mocked(fetchUrlWithByteLimit).mockImplementation(async () =>
     Uint8Array.from(penJpeg).buffer);
+});
+
+it('fills a missing 35mm equivalent during only-missing Sync without a recipe',
+  async () => {
+    jest.mocked(getOmRecipeFromMakerNote).mockReturnValueOnce(undefined);
+    jest.mocked(getOmFocalLengthIn35MmFormat).mockReturnValueOnce(50);
+    await syncPhotoAction('penphoto', { syncMode: 'only-missing' });
+    expect(updatePhoto).toHaveBeenCalledWith(expect.objectContaining({
+      focalLength: 25, focalLengthIn35MmFormat: 50,
+    }));
+    expect(getOmFocalLengthIn35MmFormat)
+      .toHaveBeenCalledWith(Buffer.from('fixture'), 25);
+  },
+);
+
+it('keeps an explicit 35mm equivalent instead of deriving one', async () => {
+  const exif = piexif.dump({
+    '0th': { [piexif.ImageIFD.Make]: 'OM Digital Solutions' },
+    Exif: {
+      [piexif.ExifIFD.MakerNote]: 'fixture',
+      [piexif.ExifIFD.FocalLength]: [25, 1],
+      [piexif.ExifIFD.FocalLengthIn35mmFilm]: 60,
+    },
+  });
+  const jpeg = Buffer.from(piexif.insert(exif,
+    strippedJpeg.toString('binary')), 'binary');
+  jest.mocked(fetchUrlWithByteLimit).mockResolvedValue(
+    Uint8Array.from(jpeg).buffer,
+  );
+  await syncPhotoAction('penphoto');
+  expect(updatePhoto).toHaveBeenCalledWith(expect.objectContaining({
+    focalLength: 25, focalLengthIn35MmFormat: 60,
+  }));
+  expect(getOmFocalLengthIn35MmFormat).not.toHaveBeenCalled();
 });
 
 it('replaces the color recipe with the re-uploaded mono recipe', async () => {

@@ -50,6 +50,26 @@ const profile: OmRecipe = {
   shading: 3, sharpness: 0, contrast: 0,
 };
 
+it.each([[14, 28], [17, 34], [25, 50]])(
+  'shows native %imm alongside its %imm equivalent', (focal, equivalent) => {
+    const photo = parsePhotoFromDb({
+      id: 'focal', url: 'https://photos.example/focal.jpg', extension: 'jpg',
+      tags: [], aspectRatio: 4 / 3,
+      takenAt: basePhoto.takenAt, createdAt: basePhoto.createdAt,
+      updatedAt: basePhoto.updatedAt, takenAtNaive: basePhoto.takenAtNaive,
+      focalLength: focal,
+      focalLengthIn35MmFormat: equivalent,
+    });
+    render(<AppStateContext value={{ supportsHover: false }}>
+      <PhotoLarge photo={photo} showCamera={false} showLens={false}
+        showFilm={false} showRecipe={false} prefetchRelatedLinks={false} />
+    </AppStateContext>);
+    expect(screen.getByRole('link', { name: `${focal}mm` })).toBeDefined();
+    expect(screen.getByRole('button', { name: `${equivalent}mm` }))
+      .toBeDefined();
+  },
+);
+
 it.each([
   { name: 'OM', recipe: key, photo: basePhoto },
   { name: 'Fujifilm', recipe: 'kodachrome', photo: {

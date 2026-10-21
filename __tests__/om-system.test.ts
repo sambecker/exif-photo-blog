@@ -8,6 +8,7 @@ import {
   createOmRecipeKey,
   getOmRecipeFromImage,
   getOmRecipeFromMakerNote,
+  getOmFocalLengthIn35MmFormat,
 } from '@/platforms/om-system/server';
 import sharp from 'sharp';
 import piexif from 'piexifjs';
@@ -79,7 +80,67 @@ const requireRecipe = (entries: Entry[]) => {
   return recipe;
 };
 
+const equipmentMakerNote = (
+  diagonal = [216, 10], littleEndian = true,
+  header: 'om' | 'olympus' = 'om',
+) => {
+  const root = header === 'om' ? 16 : 12;
+  const directory = root + 18;
+  const bytes = Buffer.alloc(directory + 26);
+  makerNote([], littleEndian, header).copy(bytes);
+  const u16 = (value: number, offset: number) => littleEndian
+    ? bytes.writeUInt16LE(value, offset) : bytes.writeUInt16BE(value, offset);
+  const u32 = (value: number, offset: number) => littleEndian
+    ? bytes.writeUInt32LE(value, offset) : bytes.writeUInt32BE(value, offset);
+  u16(0x2010, root + 2);
+  u16(1, directory);
+  u16(0x0103, directory + 2);
+  u16(5, directory + 4);
+  u32(1, directory + 6);
+  u32(directory + 18, directory + 10);
+  u32(diagonal[0], directory + 18);
+  u32(diagonal[1], directory + 22);
+  return bytes;
+};
+
 describe('OM SYSTEM and Olympus profiles', () => {
+  it.each(['om', 'olympus'] as const)(
+    'derives 35mm equivalents from the %s equipment sensor diagonal', header => {
+      for (const littleEndian of [true, false]) {
+        const bytes = equipmentMakerNote([216, 10], littleEndian, header);
+        expect(getOmFocalLengthIn35MmFormat(bytes, 14)).toBe(28);
+        expect(getOmFocalLengthIn35MmFormat(bytes, 17)).toBe(34);
+        expect(getOmFocalLengthIn35MmFormat(bytes, 25)).toBe(50);
+        // Use the recorded sensor size, rather than assuming every OM is MFT.
+        expect(getOmFocalLengthIn35MmFormat(
+          equipmentMakerNote([77, 10], littleEndian, header), 5,
+        )).toBe(28);
+      }
+    },
+  );
+
+  it('withholds equivalents for missing or malformed sensor metadata', () => {
+    expect(getOmFocalLengthIn35MmFormat(makerNote(fixtures.color1), 25))
+      .toBeUndefined();
+    for (const diagonal of [[0, 10], [216, 0]]) {
+      expect(getOmFocalLengthIn35MmFormat(equipmentMakerNote(diagonal), 25))
+        .toBeUndefined();
+    }
+    const bytes = equipmentMakerNote();
+    for (const length of [0, 12, 35, bytes.length - 1]) {
+      expect(getOmFocalLengthIn35MmFormat(bytes.subarray(0, length), 25))
+        .toBeUndefined();
+    }
+    for (const offset of [0, 0xffffffff]) {
+      const corrupt = Buffer.from(bytes);
+      corrupt.writeUInt32LE(offset, 44);
+      expect(getOmFocalLengthIn35MmFormat(corrupt, 25)).toBeUndefined();
+    }
+    for (const focal of [undefined, 0, -1, Infinity, NaN]) {
+      expect(getOmFocalLengthIn35MmFormat(bytes, focal)).toBeUndefined();
+    }
+  });
+
   it.each([
     'OM Digital Solutions   ', 'OM SYSTEM', 'OLYMPUS',
     'OLYMPUS IMAGING CORP.', 'OLYMPUS CORPORATION', 'OLYMPUS OPTICAL CO.,LTD',
