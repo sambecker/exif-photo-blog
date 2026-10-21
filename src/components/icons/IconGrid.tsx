@@ -39,9 +39,9 @@ export default function IconGrid({
         stroke="currentColor"
         mask={`url(#${maskId})`}
       />
-      <path d="M12.9273 6L12.9273 19.2" strokeWidth="1.25" stroke="currentColor" />
-      <path d="M19.5273 6L19.5273 19.2" strokeWidth="1.25" stroke="currentColor" />
-      <path d="M5.4023 11.925L26.2023 11.925" strokeWidth="1.25" stroke="currentColor" />
+      <path d="M12.9273 6L12.9273 19.2" strokeWidth="1" stroke="currentColor" />
+      <path d="M19.5273 6L19.5273 19.2" strokeWidth="1" stroke="currentColor" />
+      <path d="M5.4023 11.925L26.2023 11.925" strokeWidth="1" stroke="currentColor" />
     </svg>
   );
 }
