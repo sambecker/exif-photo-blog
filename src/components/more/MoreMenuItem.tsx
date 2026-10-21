@@ -14,16 +14,34 @@ import LoaderLink from '../LoaderLink';
 import IconCheck from '../icons/IconCheck';
 import { getMenuItemColorClasses } from '../primitives/surface';
 
-// Indicate the active option in a menu of mutually-exclusive choices
-export const renderMenuItemCheck = (isChecked: boolean) => isChecked
-  ? <IconCheck size={13} />
-  : <span />;
+/** Default icon column — fits typical 14–16px glyphs */
+export const MENU_ICON_SLOT_CLASS = clsx(
+  'inline-flex items-center justify-center shrink-0',
+  'w-5 h-5',
+);
+
+/** Wide icon column — fits 32×24 nav glyphs (full/grid/sort/etc.) */
+export const MENU_ICON_SLOT_WIDE_CLASS = clsx(
+  'inline-flex items-center justify-center shrink-0',
+  'w-8 h-6',
+);
+
+export const getMenuIconSlotClass = (wide?: boolean) =>
+  wide ? MENU_ICON_SLOT_WIDE_CLASS : MENU_ICON_SLOT_CLASS;
+
+// Indicate the active option in a menu of mutually-exclusive choices.
+// Always reserves check-sized space so labels stay left-aligned.
+export const renderMenuItemCheck = (isChecked: boolean) =>
+  <span className="size-[13px] inline-flex items-center justify-center">
+    {isChecked && <IconCheck size={13} />}
+  </span>;
 
 export default function MoreMenuItem({
   label,
   labelComplex,
   annotation,
   icon,
+  iconWide,
   accessoryEnd,
   color = 'grey',
   href,
@@ -39,6 +57,8 @@ export default function MoreMenuItem({
   labelComplex?: ReactNode
   annotation?: ReactNode
   icon?: ReactNode
+  // Use for 32×24 nav icons so labels align with checkmarks
+  iconWide?: boolean
   accessoryEnd?: ReactNode
   color?: 'grey' | 'red' | 'yellow'
   href?: string
@@ -51,6 +71,8 @@ export default function MoreMenuItem({
   keyCommandModifier?: ComponentProps<typeof KeyCommand>['modifier']
 }) {
   const [isLoading, setIsLoading] = useState(false);
+
+  const iconSlotClass = getMenuIconSlotClass(iconWide);
 
   // Stretch the label so a trailing annotation sits on the menu's right edge
   const classNameContent = annotation
@@ -71,7 +93,7 @@ export default function MoreMenuItem({
     <DropdownMenu.Item
       disabled={isLoading}
       className={clsx(
-        'flex items-center h-8.5 gap-4',
+        'flex items-center h-8.5 gap-3',
         'px-2 py-2 rounded-lg',
         'select-none hover:outline-hidden',
         getMenuItemColorClasses(color),
@@ -125,6 +147,7 @@ export default function MoreMenuItem({
             '-m-2 p-2',
             keyCommand && 'sm:-mr-10',
           )}
+          classNameIcon={iconSlotClass}
           classNameWrapper={annotation ? 'grow' : undefined}
           classNameContent={classNameContent}
           onLoad={() => {
@@ -140,8 +163,9 @@ export default function MoreMenuItem({
           isLoading={isLoading}
           hideText="never"
           styleAs="link-without-hover"
-          className="translate-y-[0.5px] text-sm grow text-left"
-          classNameIcon="translate-y-[-0.5px]!"
+          // h-auto: link style defaults to h-4, which clips tall nav icons
+          className="text-sm grow text-left h-auto!"
+          classNameIcon={iconSlotClass}
           classNameContent={classNameContent}
         >
           {buttonContent}

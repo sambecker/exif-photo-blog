@@ -25,8 +25,6 @@ import {
 } from './config';
 import IconSortNav from '@/components/icons/IconSortNav';
 
-const VIEW_ICON_CLASS = 'w-[32px] -ml-[4px] translate-x-[1px]';
-
 export default function AppViewMenuCompact({
   isViewFull,
   isViewGrid,
@@ -57,27 +55,18 @@ export default function AppViewMenuCompact({
 }) {
   const appText = useAppText();
 
-  const renderIconGrid = (forMenu?: boolean, selected?: boolean) => isMasonry
-    ? <IconGridMasonry
-      selected={selected}
-      className={forMenu ? VIEW_ICON_CLASS : ''}
-    />
-    : <IconGrid
-      selected={selected}
-      className={forMenu ? VIEW_ICON_CLASS : ''}
-    />;
+  const renderIconGrid = (selected?: boolean) => isMasonry
+    ? <IconGridMasonry selected={selected} />
+    : <IconGrid selected={selected} />;
 
   // Selected views are marked with a check, unselected show their own icon
-  const renderViewIcon = (icon: ReactNode, isSelected?: boolean) => isSelected
-    ? renderMenuItemCheck(true)
-    : icon;
+  const renderViewIcon = (icon: ReactNode, isSelected?: boolean) =>
+    isSelected ? renderMenuItemCheck(true) : icon;
 
   const itemGrid = {
     label: appText.nav.grid,
-    icon: renderViewIcon(
-      renderIconGrid(true, isViewGrid),
-      isViewGrid,
-    ),
+    icon: renderViewIcon(renderIconGrid(isViewGrid), isViewGrid),
+    iconWide: true,
     ...hrefGrid
       ? { href: hrefGrid }
       : { action: () => onSelectView?.(false) },
@@ -87,12 +76,10 @@ export default function AppViewMenuCompact({
   const itemFull = {
     label: appText.nav.full,
     icon: renderViewIcon(
-      <IconFull
-        selected={isViewFull}
-        className={VIEW_ICON_CLASS}
-      />,
+      <IconFull selected={isViewFull} />,
       isViewFull,
     ),
+    iconWide: true,
     ...hrefFull
       ? { href: hrefFull }
       : { action: () => onSelectView?.(true) },
@@ -118,9 +105,10 @@ export default function AppViewMenuCompact({
       icon: <IconSortNav
         sort={sortConfig.isAscending ? 'asc' : 'desc'}
         chromatic={sortConfig.isColor}
-        className={clsx(VIEW_ICON_CLASS, '-ml-2!')} 
       />,
-      // Sort types are only offered where the nav exposes a full sort menu
+      iconWide: true,
+      // Sort types are only offered where the nav exposes a full sort menu.
+      // Submenu items are check-only — keep default (narrow) icon slots.
       sections: NAV_SORT_CONTROL === 'menu'
         ? [{ items: itemsSortOrder }, { items: itemsSortType }]
         : [{ items: itemsSortOrder }],
@@ -148,12 +136,12 @@ export default function AppViewMenuCompact({
           sideOffset={10}
           alignOffset={4}
           icon={<>
-            <span className="flex items-center justify-center">
+            <span className="flex items-center justify-center w-8 h-6">
               {isLoading
                 ? <Spinner />
                 : isViewFull
                   ? <IconFull selected={isViewFull} />
-                  : renderIconGrid(false, isViewGrid)}
+                  : renderIconGrid(isViewGrid)}
             </span>
             <FiChevronDown
               size={13}

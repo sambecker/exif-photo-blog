@@ -85,23 +85,23 @@ export default function LoaderButton({
       )}
       disabled={isLoading || disabled}
     >
-      {icon &&
+      {icon !== undefined &&
         <span className={clsx(
-          'min-w-[1.25rem] max-h-5',
-          styleAs === 'button' ? 'translate-y-[-0.5px]' : 'translate-y-[0.5px]',
-          'inline-flex justify-center shrink-0',
+          'relative inline-flex items-center justify-center shrink-0',
+          // Fallback when caller doesn’t pass a fixed slot (e.g. MoreMenuItem)
+          !classNameIcon && 'min-w-[1.25rem] h-5',
+          styleAs === 'button' && 'translate-y-[-0.5px]',
           classNameIcon,
         )}>
-          {isLoading
-            ? <Spinner
-              size={14}
-              color={spinnerColor}
-              className={clsx(
-                'translate-y-[0.5px]',
-                spinnerClassName,
-              )}
-            />
-            : icon}
+          <span className={clsx(isLoading && 'invisible')}>{icon}</span>
+          {isLoading &&
+            <span className="absolute inset-0 flex items-center justify-center">
+              <Spinner
+                size={14}
+                color={spinnerColor}
+                className={spinnerClassName}
+              />
+            </span>}
         </span>}
       {children && <span className={clsx(
         styleAs !== 'button' && isLoading && 'text-dim',
