@@ -209,6 +209,7 @@ export default function PhotoDetailPage({
           film={film}
           focal={focal}
           year={year}
+          recipe={recipe}
           animateOnFirstLoadOnly
         />}
       />

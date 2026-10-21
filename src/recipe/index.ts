@@ -14,6 +14,10 @@ import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
 import { labelForFilm } from '@/film';
 import { AppTextState } from '@/i18n/state';
 import { CategoryQueryMeta } from '@/category';
+import {
+  isOmRecipeKey,
+  labelForOmRecipeKey,
+} from '@/platforms/om-system/recipe';
 
 export type RecipeWithMeta = { recipe: string } & CategoryQueryMeta;
 
@@ -29,7 +33,9 @@ export interface RecipeProps {
 }
 
 export const formatRecipe = (recipe?: string) =>
-  capitalizeWords(recipe?.replaceAll('-', ' '));
+  recipe && isOmRecipeKey(recipe)
+    ? labelForOmRecipeKey(recipe)
+    : capitalizeWords(recipe?.replaceAll('-', ' '));
 
 export const titleForRecipe = (
   recipe: string,

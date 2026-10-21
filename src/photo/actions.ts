@@ -99,6 +99,8 @@ import {
   COMMAND_K_PHOTO_LIMIT,
   getPhotosQueryData,
 } from '@/query/data';
+import { isOmSystemCamera, OM_RECIPE_VERSION }
+  from '@/platforms/om-system/recipe';
 
 // Private actions
 
@@ -555,22 +557,28 @@ export const replacePhotoStorageAction = async (
 
       const {
         formDataFromExif,
+        error,
       } = await extractImageDataFromBlobPath(updatedStorageUrl, {
         generateBlurData: BLUR_ENABLED,
+        refreshOmRecipe: isOmSystemCamera(photo.make),
       });
 
-      let imageFields: Partial<PhotoDbInsert> = {};
-      if (formDataFromExif) {
-        const photoDbInsert = convertFormDataToPhotoDbInsert(formDataFromExif);
-        imageFields = {
-          blurData: photoDbInsert.blurData,
-          width: photoDbInsert.width,
-          height: photoDbInsert.height,
-          aspectRatio: photoDbInsert.aspectRatio,
-          colorData: photoDbInsert.colorData,
-          colorSort: photoDbInsert.colorSort,
-        };
+      if (error || !formDataFromExif) {
+        throw new Error(error ?? 'Could not read replacement image metadata');
       }
+      const photoDbInsert = convertFormDataToPhotoDbInsert(formDataFromExif);
+      const imageFields: Partial<PhotoDbInsert> = {
+        blurData: photoDbInsert.blurData,
+        width: photoDbInsert.width,
+        height: photoDbInsert.height,
+        aspectRatio: photoDbInsert.aspectRatio,
+        colorData: photoDbInsert.colorData,
+        colorSort: photoDbInsert.colorSort,
+        // These fields describe the new source, including an absent recipe.
+        omRecipeData: photoDbInsert.omRecipeData,
+        omRecipeKey: photoDbInsert.omRecipeKey,
+        omRecipeCheckedVersion: photoDbInsert.omRecipeCheckedVersion,
+      };
 
       await updatePhoto({
         ...convertPhotoToPhotoDbInsert({
@@ -640,12 +648,16 @@ export const syncPhotoAction = async (
         imageResizedBase64,
         shouldStripGpsData,
         fileBytes,
+        error,
       } = await extractImageDataFromBlobPath(photo.url, {
         includeInitialPhotoFields: false,
         generateBlurData: BLUR_ENABLED,
         generateResizedImage: AI_CONTENT_GENERATION_ENABLED,
         updateColorFields: AI_CONTENT_GENERATION_ENABLED,
+        refreshOmRecipe: isOmSystemCamera(photo.make),
       });
+
+      if (error) { throw new Error(error); }
 
       const uniqueTags = await getUniqueTags();
 
@@ -681,6 +693,11 @@ export const syncPhotoAction = async (
         const formDataFromPhoto = convertPhotoToFormData(photo);
 
         Object.entries(formDataFromExif).forEach(([field, value]) => {
+          if (formDataFromExif.omRecipeCheckedVersion ===
+            String(OM_RECIPE_VERSION) && field.startsWith('omRecipe')) {
+            // OM settings are extracted facts, without manual overrides.
+            return;
+          }
           const existingValue =
             formDataFromPhoto[field as keyof PhotoFormData];
           switch (syncMode) {

@@ -12,12 +12,14 @@ import {
 } from '@/app/path';
 import AdminNavClient from './AdminNavClient';
 import { getAppText } from '@/i18n/state/server';
+import { getOmPhotoCount } from '@/platforms/om-system/query';
 
 export default async function AdminNav() {
   const [
     countPhotos,
     countRecipes,
     mostRecentPhotoUpdateTime,
+    countOmPhotos,
   ] = await Promise.all([
     getPhotosMetaCached({ hidden: 'include' })
       .then(({ count }) => count)
@@ -25,6 +27,7 @@ export default async function AdminNav() {
     getUniqueRecipesCached().then(recipes => recipes.length)
       .catch(() => 0),
     getPhotosMostRecentUpdateCached().catch(() => undefined),
+    getOmPhotoCount().catch(() => 0),
   ]);
 
   const appText = await getAppText();
@@ -59,6 +62,11 @@ export default async function AdminNav() {
   if (countRecipes > 0) { items.push({
     label: appText.category.recipePlural,
     href: PATH_ADMIN_RECIPES,
+  }); }
+
+  if (countOmPhotos > 0) { items.push({
+    label: 'OM recipes',
+    href: `${PATH_ADMIN_PHOTOS}/om-recipes`,
   }); }
 
   return (
