@@ -1,31 +1,36 @@
 /* eslint-disable @stylistic/max-len */
 
-const INTRINSIC_WIDTH = 28;
+import clsx from 'clsx/lite';
+
+const INTRINSIC_WIDTH = 32;
 const INTRINSIC_HEIGHT = 24;
 
 export default function IconLibrary({
   width = INTRINSIC_WIDTH,
   className,
+  selected,
 }: {
   width?: number
   className?: string
+  selected?: boolean
 }) {
   return (
     <svg
       width={width}
       height={INTRINSIC_HEIGHT * width / INTRINSIC_WIDTH}
-      viewBox="0 0 28 24"
+      viewBox="0 0 32 24"
       fill="none"
-      stroke="currentColor"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
       <path
-        d="M7 10.7117H21.6504M20.269 17H8.38139C8.01502 17 7.66366 16.8545 7.4046 16.5954C7.14554 16.3363 7 15.985 7 15.6186V8.22516C7 7.85879 7.14554 7.50743 7.4046 7.24837C7.66366 6.9893 8.01502 6.84377 8.38139 6.84377H11.0022C11.275 6.84377 11.5416 6.92452 11.7686 7.07584L12.73 7.7168C12.9569 7.86812 13.2236 7.94887 13.4963 7.94888H20.269C20.6353 7.94888 20.9867 8.09442 21.2458 8.35348C21.5048 8.61254 21.6504 8.9639 21.6504 9.33027V15.6186C21.6504 15.985 21.5048 16.3363 21.2458 16.5954C20.9867 16.8545 20.6353 17 20.269 17Z"
+        d="M6.55695 10.0841V17.3214C6.55695 17.7082 6.73258 18.0792 7.0452 18.3528C7.35782 18.6263 7.78183 18.78 8.22394 18.78H23.7761C24.2182 18.78 24.6422 18.6263 24.9548 18.3528C25.2674 18.0792 25.4431 17.7082 25.4431 17.3214V10.0841M6.55695 10.0841V7.45862C6.55695 7.07177 6.73258 6.70077 7.0452 6.42722C7.35782 6.15368 7.78183 6 8.22394 6H11.3867C11.7158 6.00001 12.0376 6.08527 12.3114 6.24505L13.4717 6.92185C13.7455 7.08163 14.0673 7.16689 14.3964 7.1669H23.7761C24.2182 7.1669 24.6422 7.32057 24.9548 7.59412C25.2674 7.86766 25.4431 8.23867 25.4431 8.62552V10.0841M6.55695 10.0841H25.4431"
+        stroke="currentColor"
         strokeWidth="1.25"
         strokeLinecap="round"
         strokeLinejoin="round"
+        className={clsx(selected && 'fill-medium')}
       />
     </svg>
   );
-};
+}

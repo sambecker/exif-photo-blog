@@ -205,6 +205,11 @@ html {
   @apply
     bg-gray-900 dark:bg-gray-100
 }
+/* Fill */
+@utility fill-medium {
+  @apply
+  fill-gray-200 dark:fill-gray-700/65
+}
 /* Baseline Grid */
 @utility space-y-baseline {
   @apply

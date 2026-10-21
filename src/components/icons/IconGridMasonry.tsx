@@ -1,14 +1,18 @@
 /* eslint-disable @stylistic/max-len */
 
+import clsx from 'clsx/lite';
+
 const INTRINSIC_WIDTH = 28;
 const INTRINSIC_HEIGHT = 24;
 
 export default function IconGridMasonry({
   width = INTRINSIC_WIDTH,
   className,
+  selected,
 }: {
   width?: number
   className?: string
+  selected?: boolean
 }) {
   return (
     <svg
@@ -20,7 +24,16 @@ export default function IconGridMasonry({
       xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
-      <rect x="0.625" y="-0.625" width="16.75" height="10.75" rx="2.375" transform="matrix(1 0 0 -1 5 16.75)" strokeWidth="1.25"/>
+      <rect
+        x="0.625"
+        y="-0.625"
+        width="16.75"
+        height="10.75"
+        rx="2.375"
+        transform="matrix(1 0 0 -1 5 16.75)"
+        strokeWidth="1.25"
+        className={clsx(selected && 'fill-medium')}
+      />
       <line y1="-0.625" x2="11" y2="-0.625" transform="matrix(-4.37114e-08 -1 -1 4.37114e-08 10.75 17)" strokeWidth="1.25"/>
       <line y1="-0.625" x2="11" y2="-0.625" transform="matrix(-4.37114e-08 -1 -1 4.37114e-08 16.25 17)" strokeWidth="1.25"/>
       <path d="M5 11L11.5 11" strokeWidth="1.25"/>
@@ -28,4 +41,4 @@ export default function IconGridMasonry({
       <path d="M17 11H22.5" strokeWidth="1.25"/>
     </svg>
   );
-};
+}

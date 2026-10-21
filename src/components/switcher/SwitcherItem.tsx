@@ -8,7 +8,7 @@ import Tooltip from '../Tooltip';
 export const SWITCHER_ITEM_WIDTH = 46;
 
 export const WIDTH_CLASS         = 'w-[46px]';
-export const WIDTH_CLASS_NARROW  = 'w-[36px]';
+export const WIDTH_CLASS_NARROW  = 'w-[36px] sm:w-[42px]';
 export const HEIGHT_CLASS        = 'h-[32px]';
 
 // Segmented Switcher controls (e.g. theme switch)
@@ -73,7 +73,7 @@ export default function SwitcherItem({
   const className = clsx(
     'link',
     'flex items-center justify-center',
-    naked && 'rounded-md',
+    naked && 'rounded-lg',
     `${widthClass} ${HEIGHT_CLASS}`,
     isInteractive && 'cursor-pointer',
     isInteractive && (naked
@@ -92,7 +92,7 @@ export default function SwitcherItem({
   const renderIcon = () => noPadding
     ? icon
     : <div className={clsx(
-      'w-[28px] h-[24px]',
+      'w-[32px] h-[24px]',
       'flex items-center justify-center',
     )}>
       {icon}
@@ -107,7 +107,7 @@ export default function SwitcherItem({
       className,
       prefetch,
       icon: renderIcon(),
-      loader: <Spinner />,
+      loader: <Spinner size={16} />,
     }}
     aria-label={ariaLabel ?? title}
     />

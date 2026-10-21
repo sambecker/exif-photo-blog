@@ -229,7 +229,7 @@ export default function AppToolbar({
         </motion.div>}
       {!isInEmptyState &&
         <SwitcherItem
-          icon={<IconLibrary />}
+          icon={<IconLibrary selected={isPathLibrary(pathname)} />}
           href={PATH_LIBRARY}
           hrefRef={refHrefLibrary}
           active={isPathLibrary(pathname)}

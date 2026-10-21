@@ -25,7 +25,7 @@ import {
 } from './config';
 import IconSortNav from '@/components/icons/IconSortNav';
 
-const VIEW_ICON_CLASS = 'w-[24px] -ml-[4px] translate-x-[1px]';
+const VIEW_ICON_CLASS = 'w-[32px] -ml-[4px] translate-x-[1px]';
 
 export default function AppViewMenuCompact({
   isViewFull,
@@ -57,18 +57,27 @@ export default function AppViewMenuCompact({
 }) {
   const appText = useAppText();
 
-  const renderIconGrid = (forMenu?: boolean) => isMasonry
-    ? <IconGridMasonry className={forMenu ? VIEW_ICON_CLASS : ''} />
-    : <IconGrid className={forMenu ? VIEW_ICON_CLASS : ''} />;
+  const renderIconGrid = (forMenu?: boolean, selected?: boolean) => isMasonry
+    ? <IconGridMasonry
+      selected={selected}
+      className={forMenu ? VIEW_ICON_CLASS : ''}
+    />
+    : <IconGrid
+      selected={selected}
+      className={forMenu ? VIEW_ICON_CLASS : ''}
+    />;
 
   // Selected views are marked with a check, unselected show their own icon
-  const renderViewIcon = (icon: ReactNode, isSelected: boolean) => isSelected
+  const renderViewIcon = (icon: ReactNode, isSelected?: boolean) => isSelected
     ? renderMenuItemCheck(true)
     : icon;
 
   const itemGrid = {
     label: appText.nav.grid,
-    icon: renderViewIcon(renderIconGrid(true), Boolean(isViewGrid)),
+    icon: renderViewIcon(
+      renderIconGrid(true, isViewGrid),
+      isViewGrid,
+    ),
     ...hrefGrid
       ? { href: hrefGrid }
       : { action: () => onSelectView?.(false) },
@@ -78,8 +87,11 @@ export default function AppViewMenuCompact({
   const itemFull = {
     label: appText.nav.full,
     icon: renderViewIcon(
-      <IconFull className={VIEW_ICON_CLASS} />,
-      Boolean(isViewFull),
+      <IconFull
+        selected={isViewFull}
+        className={VIEW_ICON_CLASS}
+      />,
+      isViewFull,
     ),
     ...hrefFull
       ? { href: hrefFull }
@@ -93,7 +105,7 @@ export default function AppViewMenuCompact({
 
   // Dim on non-home pages (e.g. /library); 
   // full when a view is active or menu open
-  const isViewActive = Boolean(isViewFull || isViewGrid);
+  const isViewActive = isViewFull || isViewGrid;
 
   // Views first, sort last (toolbar on large screens keeps sort first)
   const items: MoreMenuSection['items'] = [...viewItems];
@@ -106,7 +118,7 @@ export default function AppViewMenuCompact({
       icon: <IconSortNav
         sort={sortConfig.isAscending ? 'asc' : 'desc'}
         chromatic={sortConfig.isColor}
-        className={clsx(VIEW_ICON_CLASS, 'w-[30px]! -ml-2!')} 
+        className={clsx(VIEW_ICON_CLASS, '-ml-2!')} 
       />,
       // Sort types are only offered where the nav exposes a full sort menu
       sections: NAV_SORT_CONTROL === 'menu'
@@ -140,8 +152,8 @@ export default function AppViewMenuCompact({
               {isLoading
                 ? <Spinner />
                 : isViewFull
-                  ? <IconFull />
-                  : renderIconGrid()}
+                  ? <IconFull selected={isViewFull} />
+                  : renderIconGrid(false, isViewGrid)}
             </span>
             <FiChevronDown
               size={13}

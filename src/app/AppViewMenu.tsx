@@ -54,13 +54,13 @@ export default function AppViewMenu({
   const switcherItemGrid = <SwitcherItem
     key="grid"
     icon={isMasonry
-      ? <IconGridMasonry />
-      : <IconGrid />}
+      ? <IconGridMasonry selected={isViewGrid} />
+      : <IconGrid selected={isViewGrid} />}
     href={hrefGrid}
     onClick={hrefGrid
       ? undefined
       : () => onSelectView?.(false)}
-    active={Boolean(isViewGrid)}
+    active={isViewGrid}
     naked
     tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
       content: appText.nav.grid,
@@ -72,12 +72,12 @@ export default function AppViewMenu({
 
   const switcherItemFull = <SwitcherItem
     key="full"
-    icon={<IconFull />}
+    icon={<IconFull selected={isViewFull} />}
     href={hrefFull}
     onClick={hrefFull
       ? undefined
       : () => onSelectView?.(true)}
-    active={Boolean(isViewFull)}
+    active={isViewFull}
     naked
     tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
       content: appText.nav.full,
@@ -101,8 +101,8 @@ export default function AppViewMenu({
           setIsOpen={setIsSortMenuOpen}
         />}
         iconIsFocusable
-        active={!isSortedByDefault || Boolean(isSortMenuOpen)}
-        persistHover={!isSortedByDefault || Boolean(isSortMenuOpen)}
+        active={!isSortedByDefault || isSortMenuOpen}
+        persistHover={!isSortedByDefault || isSortMenuOpen}
         naked
         tooltip={{
           ...!isSortMenuOpen && SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
