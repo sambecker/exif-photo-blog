@@ -12,8 +12,9 @@ Link to hosted site that you personally maintain
 
 **Selection criteria**
 Please confirm your submission meets the following:
-- [ ] Project keeps fork up to date, so it always shows latest template design + behavior
+- [ ] Fork up to date, so it always shows latest template design + behavior
 - [ ] Static pre-rendering enabled for responsive site loading
+- [ ] At least 100 library photos
 
 Photos must:
 - [ ] be family friendly (inoffensive to a general audience)

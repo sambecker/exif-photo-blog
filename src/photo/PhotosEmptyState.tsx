@@ -20,7 +20,10 @@ export default async function PhotosEmptyState() {
       contentMain={
         <Container
           key="PhotosEmptyState"
-          className="min-h-[20rem] sm:min-h-[30rem] px-8"
+          className={clsx(
+            'min-h-[20rem] sm:min-h-[30rem] px-8',
+            'mt-px',
+          )}
           padding="loose"
         >
           <HiOutlinePhotograph
