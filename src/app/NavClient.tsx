@@ -80,6 +80,7 @@ export default function NavClient({
             ? [<nav
               key="nav"
               className={clsx(
+                'text-base',
                 'w-full flex items-center gap-2 sm:gap-3',
                 NAV_HEIGHT_CLASS,
               )}
