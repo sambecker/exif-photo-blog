@@ -24,7 +24,7 @@ export default function LoaderLink({
           'inline-flex items-center gap-1.5',
           classNameWrapper,
         )}>
-          {icon !== undefined &&
+          {icon &&
             <span className={clsx(
               'relative inline-flex items-center justify-center shrink-0',
               // Fallback when caller doesn’t pass
@@ -42,7 +42,7 @@ export default function LoaderLink({
             </span>}
           {children &&
             <span className={clsx(
-              isLoading && icon === undefined && 'text-dim',
+              isLoading && !icon && 'text-dim',
               classNameContent,
             )}>
               {children}

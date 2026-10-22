@@ -85,7 +85,7 @@ export default function LoaderButton({
       )}
       disabled={isLoading || disabled}
     >
-      {icon !== undefined &&
+      {icon &&
         <span className={clsx(
           'relative inline-flex items-center justify-center shrink-0',
           // Fallback when caller doesn’t pass a fixed slot (e.g. MoreMenuItem)
@@ -105,7 +105,7 @@ export default function LoaderButton({
         </span>}
       {children && <span className={clsx(
         styleAs !== 'button' && isLoading && 'text-dim',
-        hideText === 'on-mobile' && icon !== undefined && 'max-sm:hidden',
+        hideText === 'on-mobile' && Boolean(icon) && 'max-sm:hidden',
         hideText === 'always' && 'hidden',
         classNameContent,
       )}>
