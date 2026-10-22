@@ -374,14 +374,12 @@ export default function PhotoFull({
                     {showCameraContent &&
                       <PhotoCamera
                         camera={camera}
-                        type="text-only"
                         contrast="medium"
                         prefetch={prefetchRelatedLinks}
                       />}
                     {showLensContent &&
                       <PhotoLens
                         lens={lens}
-                        type="text-only"
                         contrast="medium"
                         prefetch={prefetchRelatedLinks}
                       />}
@@ -390,7 +388,6 @@ export default function PhotoFull({
                   <PhotoRecipe
                     ref={refPhotoRecipe}
                     recipe={recipeTitle}
-                    type="text-only"
                     contrast="medium"
                     prefetch={prefetchRelatedLinks}
                   />}
