@@ -13,7 +13,7 @@ import { pathForAdminPhotoEdit, pathForPhoto } from '@/app/path';
 import { useAppState } from '@/app/AppState';
 import { AnimationConfig } from '@/components/AnimateItems';
 import { clsx } from 'clsx/lite';
-import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { HiChevronRight, HiChevronLeft } from 'react-icons/hi2';
 import useNavigateOrRunActionWithToast
   from '@/components/useNavigateOrRunActionWithToast';
 import {
@@ -25,6 +25,7 @@ import { isPhotoFav } from '@/tag';
 import Tooltip from '@/components/Tooltip';
 import {
   ALLOW_PUBLIC_DOWNLOADS,
+  PHOTO_TITLE_SERIF,
   SHOW_KEYBOARD_SHORTCUT_TOOLTIPS,
 } from '@/app/config';
 import { downloadFileFromBrowser } from '@/utility/url';
@@ -35,6 +36,11 @@ import { useAppText } from '@/i18n/state/client';
 
 const ANIMATION_LEFT: AnimationConfig = { type: 'left', duration: 0.3 };
 const ANIMATION_RIGHT: AnimationConfig = { type: 'right', duration: 0.3 };
+
+const ICON_CLASSNAME = clsx(
+  'mx-1',
+  PHOTO_TITLE_SERIF ? 'text-[1.25rem]' : 'text-[1.1rem]',
+);
 
 export default function PhotoPrevNextActions({
   photo,
@@ -216,13 +222,16 @@ export default function PhotoPrevNextActions({
             loaderType="badge"
             prefetch
           >
-            <FiChevronLeft className="sm:hidden text-[1.1rem]" />
+            <HiChevronLeft className={clsx(
+              'sm:hidden',
+              ICON_CLASSNAME,
+            )} />
             <span className="hidden sm:inline-block uppercase">
               {appText.nav.prevShort}
             </span>
           </PhotoLink>
         </Tooltip>
-        <span className="text-extra-extra-dim">
+        <span className="text-extra-extra-dim text-[1.25rem] font-serif">
           /
         </span>
         <Tooltip
@@ -241,7 +250,10 @@ export default function PhotoPrevNextActions({
             loaderType="badge"
             prefetch
           >
-            <FiChevronRight className="sm:hidden text-[1.1rem]" />
+            <HiChevronRight className={clsx(
+              'sm:hidden',
+              ICON_CLASSNAME,
+            )} />
             <span className="hidden sm:inline-block uppercase">
               {appText.nav.nextShort}
             </span>
