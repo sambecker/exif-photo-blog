@@ -207,8 +207,9 @@ html {
 }
 /* Fill */
 @utility fill-medium {
+  /* Used in nav icon fills (deviates from bg-medium in dark mode) */
   @apply
-  fill-gray-200 dark:fill-gray-700/65
+  fill-gray-200 dark:fill-gray-700/80
 }
 /* Baseline Grid */
 @utility space-y-baseline {
