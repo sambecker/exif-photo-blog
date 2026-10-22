@@ -161,6 +161,50 @@ export const validationMessageNaivePostgresDateString = (date = '') =>
     ? undefined
     : `Invalid format (${VALIDATION_EXAMPLE_POSTGRES_NAIVE})`;
 
+// Keep "taken at" (UTC) and "taken at (naive)" (local) in sync,
+// since sorting uses the former and display uses the latter
+
+const MAX_TIMEZONE_OFFSET_MS = 14 * 60 * 60 * 1000;
+const TIMEZONE_OFFSET_STEP_MS = 15 * 60 * 1000;
+
+const naivePostgresStringToUtcMs = (naive: string) =>
+  new Date(`${naive.replace(' ', 'T')}Z`).getTime();
+
+const utcMsToNaivePostgresString = (ms: number) =>
+  convertTimestampToNaivePostgresString(new Date(ms).toISOString());
+
+// Returns local offset (naive - utc) in ms, if pair is a plausible timezone
+export const getTakenAtOffsetMs = (
+  takenAt = '',
+  takenAtNaive = '',
+): number | undefined => {
+  if (
+    !validatePostgresDateString(takenAt) ||
+    !validateNaivePostgresDateString(takenAtNaive)
+  ) {
+    return undefined;
+  }
+  // Ignore sub-second precision
+  const utcMs = Math.floor(new Date(takenAt).getTime() / 1000) * 1000;
+  const offsetMs = naivePostgresStringToUtcMs(takenAtNaive) - utcMs;
+  return (
+    Math.abs(offsetMs) <= MAX_TIMEZONE_OFFSET_MS &&
+    offsetMs % TIMEZONE_OFFSET_STEP_MS === 0
+  )
+    ? offsetMs
+    : undefined;
+};
+
+export const convertTakenAtToNaive = (takenAt: string, offsetMs: number) =>
+  utcMsToNaivePostgresString(new Date(takenAt).getTime() + offsetMs);
+
+export const convertTakenAtNaiveToUtc = (
+  takenAtNaive: string,
+  offsetMs: number,
+) =>
+  new Date(naivePostgresStringToUtcMs(takenAtNaive) - offsetMs)
+    .toISOString();
+
 // Short local timezone label, e.g. "EST", "PST", "UTC+5"
 export const getLocalTimeZoneLabel = () =>
   new Date().toLocaleTimeString('en-US', { timeZoneName: 'short' })

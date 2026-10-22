@@ -4,6 +4,9 @@ import {
   convertTimestampWithOffsetToPostgresString,
   validatePostgresDateString,
   validateNaivePostgresDateString,
+  getTakenAtOffsetMs,
+  convertTakenAtToNaive,
+  convertTakenAtNaiveToUtc,
 } from '../src/utility/date';
 
 describe('Date utility', () => {
@@ -60,6 +63,31 @@ describe('Date utility', () => {
       expect(validateNaivePostgresDateString('2025-01-03T16:00:44')).toBe(false);
       expect(validatePostgresDateString('2025-01-03T21:00:44.000ZZ')).toBe(false);
       expect(validateNaivePostgresDateString('2025-01-03 16:00:44Z')).toBe(false);
+    });
+  });
+  describe('syncs taken-at fields', () => {
+    const HOUR = 60 * 60 * 1000;
+    it('computes plausible offsets', () => {
+      expect(getTakenAtOffsetMs('2024-01-07T21:30:50.000Z', '2024-01-07 15:30:50'))
+        .toBe(-6 * HOUR);
+      expect(getTakenAtOffsetMs('2026-10-18T12:35:47.000Z', '2026-10-18 12:35:47'))
+        .toBe(0);
+      expect(getTakenAtOffsetMs('2024-01-07T10:00:00.000Z', '2024-01-07 15:45:00'))
+        .toBe(5.75 * HOUR);
+    });
+    it('rejects implausible or invalid offsets', () => {
+      expect(getTakenAtOffsetMs('2026-10-20T20:20:09.384Z', '2026-10-10 20:09:09'))
+        .toBeUndefined();
+      expect(getTakenAtOffsetMs('2026-10-18T12:35:47.000Z', '2026-10-18 12:35:40'))
+        .toBeUndefined();
+      expect(getTakenAtOffsetMs('2026-10-18', '2026-10-18 12:35:47'))
+        .toBeUndefined();
+    });
+    it('converts between fields', () => {
+      expect(convertTakenAtToNaive('2024-01-07T21:30:50.000Z', -6 * HOUR))
+        .toBe('2024-01-07 15:30:50');
+      expect(convertTakenAtNaiveToUtc('2024-01-07 15:30:50', -6 * HOUR))
+        .toBe('2024-01-07T21:30:50.000Z');
     });
   });
 });
