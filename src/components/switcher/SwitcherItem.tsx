@@ -8,7 +8,7 @@ import Tooltip from '../Tooltip';
 export const SWITCHER_ITEM_WIDTH = 46;
 
 export const WIDTH_CLASS         = 'w-[46px]';
-export const WIDTH_CLASS_NARROW  = 'w-[36px] sm:w-[42px]';
+export const WIDTH_CLASS_NARROW  = 'w-[42px]';
 export const HEIGHT_CLASS        = 'h-[32px]';
 
 // Segmented Switcher controls (e.g. theme switch)
