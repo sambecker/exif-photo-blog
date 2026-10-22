@@ -121,9 +121,7 @@ export default function PhotoHeader({
         GRID_GAP_CLASSNAME,
         'items-start',
         'grid-cols-4',
-        isGridHighDensity
-          ? 'lg:grid-cols-6'
-          : 'md:grid-cols-3 lg:grid-cols-4',
+        isGridHighDensity && 'lg:grid-cols-6',
       )}
     >
       {content}
@@ -143,14 +141,14 @@ export default function PhotoHeader({
             headerType === 'photo-set'
               ? isGridHighDensity
                 ? 'col-span-2 lg:col-span-3'
-                : 'col-span-2 md:col-span-1 lg:col-span-2'
+                : 'col-span-2 lg:col-span-2'
               : headerType === 'photo-detail-with-entity'
                 ? isGridHighDensity
                   ? 'col-span-2 lg:col-span-3'
                   : 'col-span-2 md:col-span-1 lg:col-span-2'
                 : isGridHighDensity
                   ? 'col-span-3 sm:col-span-3 lg:col-span-5 w-[110%] xl:w-full'
-                  : 'col-span-3 md:col-span-2 lg:col-span-3 w-[110%] xl:w-full',
+                  : 'col-span-3 w-[110%] xl:w-full',
           )}>
             {headerType === 'photo-detail-with-entity'
               ? renderContentA
