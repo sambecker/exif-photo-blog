@@ -83,6 +83,8 @@ function PhotoGridMattedTile({
           'relative group',
           'aspect-[var(--photo-ar)]',
           mattedPhotoBoxClass(photo.aspectRatio),
+          // Clip the photo to the selection wash, selected or not
+          isSelectingPhotos && 'overflow-hidden rounded-sm',
         )}
         style={{
           '--photo-ar': String(photo.aspectRatio),
@@ -249,6 +251,8 @@ export default function PhotoGrid({
       className={clsx(
         'flex relative overflow-hidden',
         'group',
+        // Clip the photo to the selection wash, selected or not
+        isSelectingPhotos && 'rounded-sm',
       )}
       style={{
         ...(MASONRY_GRID_ENABLED) ? {
