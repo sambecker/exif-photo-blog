@@ -19,6 +19,7 @@ export const SWITCHER_ITEM_INTERACTIVE_BG = clsx(
 
 // Flat nav toolbar icons — matches compact view trigger / MoreMenu
 export const NAV_ITEM_INTERACTIVE_BG = clsx(
+  'transition-colors duration-200',
   'hover:bg-gray-100 active:bg-gray-200/75',
   'dark:hover:bg-gray-800/75 dark:active:bg-gray-900',
 );
