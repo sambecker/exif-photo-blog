@@ -292,12 +292,12 @@ export default function PhotoFull({
       metaAlignClass,
     )}>
       <div className={clsx(
-        'w-full',
+        'w-full min-w-0',
         'grid grid-cols-2 md:grid-cols-1',
         'gap-x-0.5 sm:gap-x-1',
         'gap-y-2 md:gap-y-baseline',
       )}>
-        <div className="pr-3 md:pr-0">
+        <div className="pr-3 md:pr-0 min-w-0">
           {!isEditingTitles &&
             <div className={clsx(
               // Mirror corners:
@@ -348,7 +348,10 @@ export default function PhotoFull({
             : hasTitle && renderPhotoLink}
           <div className={clsx(
             'space-y-1.5 md:space-y-baseline',
-            metaSide === 'left' && 'md:flex md:flex-col md:items-end',
+            // Keep the column width so right-aligned text can ellipsize
+            metaSide === 'left' &&
+              'md:flex md:flex-col md:items-end md:w-full md:min-w-0',
+            metaSide === 'left' && 'md:*:max-w-full md:*:min-w-0',
           )}>
             {!isEditingTitles && photo.caption &&
               <div className={clsx(UPPERCASE_TITLES && 'uppercase')}>
@@ -362,13 +365,15 @@ export default function PhotoFull({
               showTagsContent
             ) &&
               <div className={clsx(
-                metaSide === 'left' && 'md:flex md:flex-col md:items-end',
+                metaSide === 'left' &&
+                  'md:flex md:flex-col md:items-end md:w-full md:min-w-0',
+                metaSide === 'left' && 'md:*:max-w-full md:*:min-w-0',
               )}>
                 {(showCameraContent || showLensContent) &&
                   <div className={clsx(
-                    'flex flex-col',
+                    'flex flex-col w-full min-w-0',
                     metaSide === 'left'
-                      ? 'md:*:self-end *:self-start'
+                      ? 'md:*:self-end md:*:max-w-full md:*:min-w-0 *:self-start'
                       : '*:self-start',
                   )}>
                     {showCameraContent &&
@@ -403,9 +408,12 @@ export default function PhotoFull({
         <div className={clsx(
           'relative',
           'space-y-1.5 md:space-y-baseline',
-          // Mobile: left-align with date in column 2; md+ follows meta side
-          'flex flex-col items-start',
-          metaSide === 'left' ? 'md:items-end' : 'md:items-start',
+          // Mobile: left-align with date in column 2; md+ follows meta side.
+          // Full width on the left so right-aligned rows can ellipsize.
+          'flex flex-col items-start w-full min-w-0',
+          metaSide === 'left'
+            ? 'md:items-end md:*:max-w-full md:*:min-w-0'
+            : 'md:items-start',
           !hasTitleContent && !hasMetaContent && 'md:-mt-baseline',
           // Room for absolutely positioned ••• (float is ignored inside flex)
           isUserSignedIn && !isEditingTitles && 'max-md:pr-7',
