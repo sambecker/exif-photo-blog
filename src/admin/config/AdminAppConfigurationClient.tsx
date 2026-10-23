@@ -1051,7 +1051,7 @@ export default function AdminAppConfigurationClient({
             Set a variable to {'"1"'} to disable that treatment.
             <div className="pt-1 flex flex-col gap-1">
               <EnvVar variable="NEXT_PUBLIC_DISABLE_UPPERCASE_TITLES" />
-              <EnvVar variable="NEXT_PUBLIC_DISABLE_SERIF_TITLES" />
+              <EnvVar variable="NEXT_PUBLIC_DISABLE_SERIF_FONT" />
               <EnvVar variable="NEXT_PUBLIC_DISABLE_COLOR_BAR" />
             </div>
           </ChecklistRow>
