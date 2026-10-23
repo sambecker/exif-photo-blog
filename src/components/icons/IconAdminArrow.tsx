@@ -1,5 +1,3 @@
-/* eslint-disable @stylistic/max-len */
-
 import clsx from 'clsx/lite';
 
 const INTRINSIC_WIDTH = 32;
