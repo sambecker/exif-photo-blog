@@ -6,7 +6,7 @@ https://github.com/sambecker/exif-photo-blog/assets/169298/4253ea54-558a-4358-88
 
 > [!NOTE]
 > **New redesign**
-> This template received a significant visual update 23 OCT 2026 featuring a more open grid that harmonizes vertical and horizontal layouts. This, and the use of a serif font, can be disabled by `NEXT_PUBLIC_DISABLE_EXPRESSIVE_LAYOUT` and `NEXT_PUBLIC_DISABLE_SERIF_FONT` respectively.
+> This template received a significant visual update 23 OCT 2026 featuring a more open grid that harmonizes portrait and landscape photos. This, and the use of a serif font, can be disabled by `NEXT_PUBLIC_DISABLE_EXPRESSIVE_LAYOUT` and `NEXT_PUBLIC_DISABLE_SERIF_FONT` respectively.
 
 🎬&nbsp;&nbsp;Example sites
 -
