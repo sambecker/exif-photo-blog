@@ -23,11 +23,14 @@ import {
   NAV_SORT_CONTROL,
   SHOW_KEYBOARD_SHORTCUT_TOOLTIPS,
 } from './config';
+import { PATH_LIBRARY } from './path';
 import IconSortNav from '@/components/icons/IconSortNav';
+import IconLibrary from '@/components/icons/IconLibrary';
 
 export default function AppViewMenuCompact({
   isViewFull,
   isViewGrid,
+  isViewLibrary,
   isMasonry,
   // Sets toggle via onSelectView; elsewhere navigate via hrefs
   hrefGrid,
@@ -42,6 +45,7 @@ export default function AppViewMenuCompact({
 }: {
   isViewFull?: boolean
   isViewGrid?: boolean
+  isViewLibrary?: boolean
   isMasonry?: boolean
   hrefGrid?: string
   hrefFull?: string
@@ -86,34 +90,60 @@ export default function AppViewMenuCompact({
     ...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && { keyCommand: KEY_COMMANDS.full },
   };
 
-  const viewItems: MoreMenuSection['items'] = GRID_HOMEPAGE_ENABLED
-    ? [itemGrid, itemFull]
-    : [itemFull, itemGrid];
+  const itemLibrary = {
+    label: appText.nav.library,
+    icon: renderViewIcon(
+      <IconLibrary selected={isViewLibrary} />,
+      isViewLibrary,
+    ),
+    iconWide: true,
+    href: PATH_LIBRARY,
+    ...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && { keyCommand: KEY_COMMANDS.library },
+  };
 
-  // Dim on non-home pages (e.g. /library); 
-  // full when a view is active or menu open
-  const isViewActive = isViewFull || isViewGrid;
+  const viewItems: MoreMenuSection['items'] = [
+    ...GRID_HOMEPAGE_ENABLED
+      ? [itemGrid, itemFull]
+      : [itemFull, itemGrid],
+    itemLibrary,
+  ];
 
-  // Views first, sort last (toolbar on large screens keeps sort first)
-  const items: MoreMenuSection['items'] = [...viewItems];
+  // Full color when a view is active or the menu is open.
+  // Photo detail / admin stay dim with nothing checked.
+  const isViewActive = isViewFull || isViewGrid || isViewLibrary;
+
+  const sections: MoreMenuSection[] = [{ items: viewItems }];
 
   if (showSortItems) {
     const { itemsSortOrder, itemsSortType } =
       getSortMenuItems(sortConfig, appText);
-    items.push({
-      label: appText.sort.sort,
-      icon: <IconSortNav
-        sort={sortConfig.isAscending ? 'asc' : 'desc'}
-        chromatic={sortConfig.isColor}
-      />,
-      iconWide: true,
-      // Sort types are only offered where the nav exposes a full sort menu.
-      // Submenu items are check-only — keep default (narrow) icon slots.
-      sections: NAV_SORT_CONTROL === 'menu'
-        ? [{ items: itemsSortOrder }, { items: itemsSortType }]
-        : [{ items: itemsSortOrder }],
+    sections.push({
+      items: [{
+        label: appText.sort.sort,
+        icon: <IconSortNav
+          sort={sortConfig.isAscending ? 'asc' : 'desc'}
+          chromatic={sortConfig.isColor}
+        />,
+        iconWide: true,
+        // Sort types are only offered where the nav exposes a full sort menu.
+        // Submenu items are check-only — keep default (narrow) icon slots.
+        sections: NAV_SORT_CONTROL === 'menu'
+          ? [{ items: itemsSortOrder }, { items: itemsSortType }]
+          : [{ items: itemsSortOrder }],
+      }],
     });
   }
+
+  const renderTriggerIcon = () => {
+    if (isLoading) { return <Spinner />; }
+    if (isViewFull) { return <IconFull selected />; }
+    if (isViewGrid) { return renderIconGrid(true); }
+    if (isViewLibrary) { return <IconLibrary selected />; }
+    // Non-view pages: top menu item, unselected
+    return GRID_HOMEPAGE_ENABLED
+      ? renderIconGrid(false)
+      : <IconFull />;
+  };
 
   return (
     <Tooltip
@@ -130,18 +160,14 @@ export default function AppViewMenuCompact({
       )}>
         <MoreMenu
           {...{ isOpen, setIsOpen }}
-          sections={[{ items }]}
+          sections={sections}
           ariaLabel="View Menu"
           align="end"
           sideOffset={10}
           alignOffset={4}
           icon={<>
             <span className="flex items-center justify-center w-8 h-6">
-              {isLoading
-                ? <Spinner />
-                : isViewFull
-                  ? <IconFull selected={isViewFull} />
-                  : renderIconGrid(isViewGrid)}
+              {renderTriggerIcon()}
             </span>
             <FiChevronDown
               size={13}
@@ -150,7 +176,7 @@ export default function AppViewMenuCompact({
           </>}
           classNameButton={clsx(
             'inline-flex items-center',
-            'h-[28px]',
+            HEIGHT_CLASS,
             'rounded-md',
             isViewActive || isOpen
               ? 'text-main!'
