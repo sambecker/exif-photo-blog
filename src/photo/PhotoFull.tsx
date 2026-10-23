@@ -531,7 +531,7 @@ export default function PhotoFull({
       <div className={clsx(
         'w-full max-w-[1400px]',
         'flex flex-col items-center',
-        'max-sm:gap-2',
+        'max-md:gap-2',
         'md:flex-row md:justify-center',
         // Meta left of photo:
         // Reverse row so photo stays first in DOM for mobile
