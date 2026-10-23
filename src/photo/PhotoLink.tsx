@@ -74,8 +74,13 @@ export default function PhotoLink({
         {children}
       </LinkWithLoaderBackground>
     : <span className={clsx(
-      'text-gray-300 dark:text-gray-700 cursor-default',
       className,
+      'text-gray-300 dark:text-gray-700 cursor-default',
+      // Placeholder isn't a control — don't pick up button hover chrome
+      'hover:bg-transparent! active:bg-transparent!',
+      'dark:hover:bg-transparent! dark:active:bg-transparent!',
+      'hover:text-gray-300! dark:hover:text-gray-700!',
+      'active:text-gray-300! dark:active:text-gray-700!',
     )}>
       {children}
     </span>;
