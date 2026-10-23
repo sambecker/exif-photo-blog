@@ -373,6 +373,7 @@ export default function PhotoFull({
                   <div className={clsx(
                     'flex flex-col w-full min-w-0',
                     metaSide === 'left'
+                      // eslint-disable-next-line @stylistic/max-len
                       ? 'md:*:self-end md:*:max-w-full md:*:min-w-0 *:self-start'
                       : '*:self-start',
                   )}>
