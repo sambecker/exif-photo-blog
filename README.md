@@ -211,7 +211,7 @@ Create Upstash Redis store from storage tab of Vercel dashboard and link to your
 - `NEXT_PUBLIC_SHOW_LARGE_THUMBNAILS = 1` ensures large thumbnails on photo grid views (if not configured, density is based on aspect ratio)
 
 ### Design
-- `NEXT_PUBLIC_EXPRESSIVE_LAYOUT = 0` disables floating home page layouts, harmonized for vertical and horizontal photos (on by default)
+- `NEXT_PUBLIC_DISABLE_EXPRESSIVE_LAYOUT = 1` disables floating home page layouts, harmonized for vertical and horizontal photos
 - `NEXT_PUBLIC_DEFAULT_THEME = light | dark` sets preferred initial theme (defaults to `system` when not configured)
 - `NEXT_PUBLIC_DISABLE_UPPERCASE_TITLES = 1` prevents photo titles and captions displaying in uppercase
 - `NEXT_PUBLIC_DISABLE_SERIF_TITLES = 1` prevents photo titles from displaying in serif
