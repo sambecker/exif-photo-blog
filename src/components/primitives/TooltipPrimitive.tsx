@@ -124,7 +124,10 @@ export default function TooltipPrimitive({
         open={(includeButton ? isOpen : undefined) || debug}
         disableHoverableContent={disableHoverableContent}
       >
-        <Tooltip.Trigger asChild>
+        <Tooltip.Trigger
+          asChild
+          onFocus={preventTooltipOpenOnPointerFocus}
+        >
           {!triggerIsFocusable
             ? <button
               ref={refTrigger}
@@ -135,7 +138,6 @@ export default function TooltipPrimitive({
                 // when tooltip is combined with a button
                 clearGlobalFocus();
               }}
-              onFocus={preventTooltipOpenOnPointerFocus}
               className={clsx('link', classNameTrigger)}
             >
               {children}
@@ -148,7 +150,6 @@ export default function TooltipPrimitive({
             : <span
               className={classNameTrigger}
               onClick={clearGlobalFocus}
-              onFocus={preventTooltipOpenOnPointerFocus}
             >
               {children}
             </span>}
