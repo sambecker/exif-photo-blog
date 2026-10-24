@@ -58,7 +58,7 @@ import PhotoColorBar from './color/PhotoColorBar';
 import ShareButton from '@/share/ShareButton';
 import DownloadButton from '@/components/DownloadButton';
 
-export default function PhotoFull({
+export default function PhotoExpressive({
   photo,
   className,
   metaSide = 'left',

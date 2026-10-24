@@ -1,3 +1,5 @@
+/* eslint-disable @stylistic/max-len */
+
 /**
  * Sitewide layout rules
  *
@@ -9,7 +11,7 @@
  *    width at lg+ (LAYOUT_FEED); below lg it is full content width so
  *    horizontal photos meet page margins (gap-x-1 / gap-y-2)
  * 5. Home grid with sidebar stays on LAYOUT_MAIN / WITH_SIDE; set/detail grids
- *    are not matted. Expressive full feed = PhotoFull*; otherwise / default
+ *    are not matted. Expressive full feed = PhotoExpressive*; otherwise / default
  *    full = PhotoLarge / PhotosLarge. Set full always = PhotoLarge
  *
  * Math (px):
@@ -33,5 +35,4 @@ export const LAYOUT_CLASS_FEED = 'lg:max-w-[1100px]';
 export const LAYOUT_CLASS_WITH_SIDE_3XL = '3xl:max-w-[1172px] 3xl:w-[1172px]';
 export const LAYOUT_CLASS_SIDE_3XL = '3xl:max-w-[200px]';
 export const LAYOUT_CLASS_SIDE_OFFSET_3XL = '3xl:relative 3xl:left-[108px]';
-export const LAYOUT_CLASS_COLS_WITH_SIDE_3XL =
-  '3xl:grid-cols-[minmax(0,956px)_200px] 3xl:gap-4';
+export const LAYOUT_CLASS_COLS_WITH_SIDE_3XL = '3xl:grid-cols-[minmax(0,956px)_200px] 3xl:gap-4';

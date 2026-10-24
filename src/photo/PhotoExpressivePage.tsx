@@ -8,12 +8,14 @@ import {
 } from '.';
 import PhotosLarge from './PhotosLarge';
 import PhotosLargeInfinite from './PhotosLargeInfinite';
-import PhotosFull, { PHOTOS_FULL_SPACING } from './PhotosFull';
-import PhotosFullInfinite from './PhotosFullInfinite';
+import PhotosExpressive, {
+  PHOTOS_EXPRESSIVE_SPACING,
+} from './PhotosExpressive';
+import PhotosExpressiveInfinite from './PhotosExpressiveInfinite';
 import { SortBy } from './sort';
 import { PATH_FULL_INFERRED } from '@/app/path';
 
-export default function PhotoFullPage({
+export default function PhotoExpressivePage({
   photos,
   photosCount,
   sortBy,
@@ -37,10 +39,10 @@ export default function PhotoFullPage({
 
   if (EXPRESSIVE_LAYOUT_ENABLED) {
     return (
-      <div className={PHOTOS_FULL_SPACING}>
-        <PhotosFull {...{ photos, showStorageCheck }} />
+      <div className={PHOTOS_EXPRESSIVE_SPACING}>
+        <PhotosExpressive {...{ photos, showStorageCheck }} />
         {photosCount > photos.length &&
-          <PhotosFullInfinite {...infiniteProps} />}
+          <PhotosExpressiveInfinite {...infiniteProps} />}
       </div>
     );
   }

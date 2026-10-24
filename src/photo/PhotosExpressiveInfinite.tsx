@@ -1,10 +1,10 @@
 'use client';
 
 import InfinitePhotoScroll from './InfinitePhotoScroll';
-import PhotosFull from './PhotosFull';
+import PhotosExpressive from './PhotosExpressive';
 import { SortBy } from './sort';
 
-export default function PhotosFullInfinite({
+export default function PhotosExpressiveInfinite({
   cacheKey,
   initialOffset,
   itemsPerPage,
@@ -33,7 +33,7 @@ export default function PhotosFullInfinite({
       excludeFromFeeds={excludeFromFeeds}
     >
       {({ key, photos, onLastPhotoVisible, revalidatePhoto }) =>
-        <PhotosFull
+        <PhotosExpressive
           key={key}
           {...{
             photos,

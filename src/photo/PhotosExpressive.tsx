@@ -1,11 +1,11 @@
 import AnimateItems from '@/components/AnimateItems';
 import { Photo } from '.';
-import PhotoFull from './PhotoFull';
+import PhotoExpressive from './PhotoExpressive';
 import { RevalidatePhoto } from './InfinitePhotoScroll';
 
-export const PHOTOS_FULL_SPACING = 'max-md:space-y-12';
+export const PHOTOS_EXPRESSIVE_SPACING = 'max-md:space-y-12';
 
-export default function PhotosFull({
+export default function PhotosExpressive({
   photos,
   animate = true,
   prefetchFirstPhotoLinks,
@@ -24,7 +24,7 @@ export default function PhotosFull({
 }) {
   return (
     <AnimateItems
-      className={PHOTOS_FULL_SPACING}
+      className={PHOTOS_EXPRESSIVE_SPACING}
       type={animate ? 'scale' : 'none'}
       duration={0.7}
       staggerDelay={0.15}
@@ -33,7 +33,7 @@ export default function PhotosFull({
       items={photos.map((photo, index) => {
         const absoluteIndex = indexOffset + index;
         return (
-          <PhotoFull
+          <PhotoExpressive
             key={photo.id}
             photo={photo}
             metaSide={absoluteIndex % 2 === 0 ? 'right' : 'left'}
