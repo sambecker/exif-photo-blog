@@ -173,10 +173,18 @@ export default function PhotoFull({
   useVisibility({ ref, onVisible });
 
   const hasTitle = Boolean(photo.title);
+  const hasCaption = Boolean(photo.caption);
   const hasTitleContent =
     isEditingTitles ||
     hasTitle ||
-    Boolean(photo.caption);
+    hasCaption;
+  // Serif titles carry their own margin. Sans titles with no caption
+  // join the meta stack so the gap matches the other block spacing.
+  const titleInMetaStack =
+    !PHOTO_TITLE_SERIF &&
+    hasTitle &&
+    !hasCaption &&
+    !isEditingTitles;
   const hasMetaContent =
     showCameraContent ||
     showLensContent ||
@@ -345,7 +353,7 @@ export default function PhotoFull({
                 hideLabel
               />
             </div>
-            : hasTitle && renderPhotoLink}
+            : hasTitle && !titleInMetaStack && renderPhotoLink}
           <div className={clsx(
             'space-y-1.5 md:space-y-baseline',
             // Keep the column width so right-aligned text can ellipsize
@@ -353,6 +361,7 @@ export default function PhotoFull({
               'md:flex md:flex-col md:items-end md:w-full md:min-w-0',
             metaSide === 'left' && 'md:*:max-w-full md:*:min-w-0',
           )}>
+            {titleInMetaStack && renderPhotoLink}
             {!isEditingTitles && photo.caption &&
               <div className={clsx(UPPERCASE_TITLES && 'uppercase')}>
                 {photo.caption}
