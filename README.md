@@ -4,6 +4,10 @@ https://github.com/sambecker/exif-photo-blog/assets/169298/4253ea54-558a-4358-88
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/sambecker-pro/clone?demo-description=Store%20photos%20with%20original%20camera%20data&demo-image=%2F%2Fimages.ctfassets.net%2Fe5382hct74si%2F39rys245Px3FVBGRJNYEON%2Fbf68d5c052bda9e9e5bec21878764bc3%2Fimage.png&demo-title=Photo%20Blog&demo-url=https%3A%2F%2Fphotos.sambecker.com&from=templates&project-name=Photo%20Blog&repository-name=exif-photo-blog&repository-url=https%3A%2F%2Fgithub.com%2Fsambecker%2Fexif-photo-blog&skippable-integrations=1&stores=%5B%7B%22type%22%3A%22postgres%22%7D%2C%7B%22type%22%3A%22blob%22%7D%5D&teamCreateStatus=hidden)
 
+> [!NOTE]
+> **New redesign**
+> This template received a significant visual update 23 OCT 2026 featuring a more open grid that harmonizes portrait and landscape photos. This, and the use of a serif font, can be disabled by `NEXT_PUBLIC_DISABLE_EXPRESSIVE_LAYOUT` and `NEXT_PUBLIC_DISABLE_SERIF_FONT` respectively.
+
 🎬&nbsp;&nbsp;Example sites
 -
 - [photos.sambecker.com](https://photos.sambecker.com)
@@ -212,8 +216,11 @@ Create Upstash Redis store from storage tab of Vercel dashboard and link to your
 - `NEXT_PUBLIC_SHOW_LARGE_THUMBNAILS = 1` ensures large thumbnails on photo grid views (if not configured, density is based on aspect ratio)
 
 ### Design
+- `NEXT_PUBLIC_DISABLE_EXPRESSIVE_LAYOUT = 1` disables floating home page layouts, harmonized for vertical and horizontal photos
 - `NEXT_PUBLIC_DEFAULT_THEME = light | dark` sets preferred initial theme (defaults to `system` when not configured)
 - `NEXT_PUBLIC_DISABLE_UPPERCASE_TITLES = 1` prevents photo titles and captions displaying in uppercase
+- `NEXT_PUBLIC_DISABLE_SERIF_FONT = 1` prevents photo titles from displaying in serif
+- `NEXT_PUBLIC_DISABLE_COLOR_BAR = 1` prevents photo color bars from displaying
 - `NEXT_PUBLIC_MATTE_PHOTOS = 1` constrains the size of each photo, and displays a surrounding border, potentially useful for photos with tall aspect ratios (colors can be customized via `NEXT_PUBLIC_MATTE_COLOR` + `NEXT_PUBLIC_MATTE_COLOR_DARK`)
 - `NEXT_PUBLIC_TINT_FOLDERS = 1` shows tinted folders on /library page
 - `NEXT_PUBLIC_HIGH_DENSITY_PREVIEWS = 1` shows up to 6 photos in category image hovers and OG images (max defaults to 5)

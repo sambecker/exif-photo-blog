@@ -12,7 +12,6 @@ import {
 } from '@/app/path';
 import { useAppState } from '@/app/AppState';
 import { useUploadState } from '@/admin/upload/UploadState';
-import { IoArrowDown, IoArrowUp } from 'react-icons/io5';
 import { clsx } from 'clsx/lite';
 import AdminAppInfoIcon from './AdminAppInfoIcon';
 import { signOutAction } from '@/auth/actions';
@@ -24,6 +23,7 @@ import IconTag from '@/components/icons/IconTag';
 import IconFolder from '@/components/icons/IconFolder';
 import IconSignOut from '@/components/icons/IconSignOut';
 import IconBroom from '@/components/icons/IconBroom';
+import IconAdminArrow from '@/components/icons/IconAdminArrow';
 import InsightsIndicatorDot from './insights/InsightsIndicatorDot';
 import Spinner from '@/components/Spinner';
 import { useAppText } from '@/i18n/state/client';
@@ -34,10 +34,7 @@ import { useSelectPhotosState } from './select/SelectPhotosState';
 import { useEditTitlesState } from './edit-titles/EditTitlesState';
 import IconAlbum from '@/components/icons/IconAlbum';
 import IconEdit from '@/components/icons/IconEdit';
-import {
-  HEIGHT_CLASS,
-  SWITCHER_ITEM_WIDTH,
-} from '@/components/switcher/SwitcherItem';
+import { HEIGHT_CLASS } from '@/components/switcher/SwitcherItem';
 import { TbSquareRoundedCheck, TbSquareRoundedX } from 'react-icons/tb';
 
 const labelWithTrailingEllipsis = (text: string) => {
@@ -261,20 +258,21 @@ export default function AdminAppMenu({
       icon={<div className={`w-full ${HEIGHT_CLASS} overflow-hidden`}>
         <div className={clsx(
           'relative flex flex-col items-center gap-2',
-          'translate-y-[-16px]',
+          // Closed: show up arrow; open: slide to down
+          // (icon 24px + gap 8px; center in 32px viewport)
+          'translate-y-[-28px]',
         )}>
-          <IoArrowDown size={16} className="shrink-0" />
-          <IoArrowUp size={16} className="shrink-0" />
+          <IconAdminArrow direction="down" />
+          <IconAdminArrow direction="up" />
         </div>
       </div>}
-      align="start"
+      align="end"
       sideOffset={10}
-      alignOffset={-(SWITCHER_ITEM_WIDTH * 3)}
       onOpen={refreshAdminData}
       sections={sections}
       ariaLabel="Admin Menu"
       classNameButtonOpen={clsx(
-        '[&>*>*]:translate-y-[8px]',
+        '[&>*>*]:translate-y-[4px]',
         '[&>*>*]:duration-300',
       )}
     />

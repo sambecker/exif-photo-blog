@@ -1,38 +1,36 @@
 /* eslint-disable @stylistic/max-len */
 
-const INTRINSIC_WIDTH = 28;
+import clsx from 'clsx/lite';
+
+const INTRINSIC_WIDTH = 32;
 const INTRINSIC_HEIGHT = 24;
 
 export default function IconLibrary({
   width = INTRINSIC_WIDTH,
   className,
+  selected,
 }: {
   width?: number
   className?: string
+  selected?: boolean
 }) {
   return (
     <svg
       width={width}
       height={INTRINSIC_HEIGHT * width / INTRINSIC_WIDTH}
-      viewBox="0 0 28 24"
+      viewBox="0 0 32 24"
       fill="none"
-      stroke="currentColor"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
-      <g clipPath="url(#libraryClip)">
-        <path
-          d="M7.4375 10.125H20.5625M19.3906 17.1563H8.60938C8.29857 17.1563 8.0005 17.0328 7.78073 16.813C7.56097 16.5933 7.4375 16.2952 7.4375 15.9844V8.01564C7.4375 7.70484 7.56097 7.40676 7.78073 7.187C8.0005 6.96723 8.29857 6.84376 8.60938 6.84376H10.8327C11.0641 6.84377 11.2903 6.91227 11.4828 7.04064L12.2984 7.58439C12.4909 7.71275 12.7172 7.78126 12.9485 7.78126H19.3906C19.7014 7.78126 19.9995 7.90473 20.2193 8.1245C20.439 8.34426 20.5625 8.64234 20.5625 8.95314V15.9844C20.5625 16.2952 20.439 16.5933 20.2193 16.813C19.9995 17.0328 19.7014 17.1563 19.3906 17.1563Z"
-          strokeWidth="1.25"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </g>
-      <defs>
-        <clipPath id="libraryClip">
-          <rect width="15" height="15" fill="white" transform="translate(6.5 4.5)"/>
-        </clipPath>
-      </defs>
+      <path
+        d="M6.55695 9.58414V16.8214C6.55695 17.2082 6.73258 17.5792 7.0452 17.8528C7.35782 18.1263 7.78183 18.28 8.22394 18.28H23.7761C24.2182 18.28 24.6422 18.1263 24.9548 17.8528C25.2674 17.5792 25.4431 17.2082 25.4431 16.8214V9.58414M6.55695 9.58414V6.95862C6.55695 6.57177 6.73258 6.20077 7.0452 5.92722C7.35782 5.65368 7.78183 5.5 8.22394 5.5H11.3867C11.7158 5.50001 12.0376 5.58527 12.3114 5.74505L13.4717 6.42185C13.7455 6.58163 14.0673 6.66689 14.3964 6.6669H23.7761C24.2182 6.6669 24.6422 6.82057 24.9548 7.09412C25.2674 7.36766 25.4431 7.73867 25.4431 8.12552V9.58414M6.55695 9.58414H25.4431"
+        stroke="currentColor"
+        strokeWidth="1.25"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className={clsx(selected && 'fill-medium')}
+      />
     </svg>
   );
-};
+}

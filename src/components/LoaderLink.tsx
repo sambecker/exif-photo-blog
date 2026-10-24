@@ -26,13 +26,19 @@ export default function LoaderLink({
         )}>
           {icon &&
             <span className={clsx(
-              'inline-flex items-center justify-center',
-              'min-w-[1.25rem] h-6',
+              'relative inline-flex items-center justify-center shrink-0',
+              // Fallback when caller doesn’t pass
+              // fixed slot (e.g. MoreMenuItem)
+              !classNameIcon && 'min-w-[1.25rem] h-5',
               classNameIcon,
             )}>
-              {isLoading
-                ? <Spinner />
-                : icon}
+              <span className={clsx(isLoading && 'invisible')}>{icon}</span>
+              {isLoading &&
+                <span className={clsx(
+                  'absolute inset-0 flex items-center justify-center',
+                )}>
+                  <Spinner />
+                </span>}
             </span>}
           {children &&
             <span className={clsx(

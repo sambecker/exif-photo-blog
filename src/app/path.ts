@@ -25,6 +25,9 @@ export const PATH_GRID_INFERRED = GRID_HOMEPAGE_ENABLED
 export const PATH_FULL_INFERRED = GRID_HOMEPAGE_ENABLED
   ? PATH_FULL
   : PATH_ROOT;
+export const PATH_HOME_INFERRED = GRID_HOMEPAGE_ENABLED
+  ? PATH_ROOT
+  : PATH_FULL_INFERRED;
 
 // Modifiers
 const EDIT = 'edit';
@@ -284,7 +287,7 @@ export const ABSOLUTE_PATH_GRID =
   `${getBaseUrl()}${PATH_GRID}`;
 
 export const ABSOLUTE_PATH_FULL =
-  `${getBaseUrl()}${PATH_FULL}`;
+  `${getBaseUrl()}${PATH_FULL_INFERRED}`;
 
 export const ABSOLUTE_PATH_FEED_JSON =
   `${getBaseUrl()}${PATH_FEED_JSON}`;

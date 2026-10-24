@@ -7,7 +7,13 @@ import PhotoGridHybridContainer from './PhotoGridHybridContainer';
 import { ComponentProps, useMemo, useRef } from 'react';
 import clsx from 'clsx/lite';
 import MaskedScroll from '@/components/MaskedScroll';
-import { IS_RECENTS_FIRST, SHOW_CATEGORIES_ON_MOBILE } from '@/app/config';
+import {
+  EXPRESSIVE_LAYOUT_ENABLED,
+  IS_RECENTS_FIRST,
+  MASONRY_GRID_ENABLED,
+  SHOW_CATEGORIES_ON_MOBILE,
+} from '@/app/config';
+import { LAYOUT_CLASS_MAIN } from '@/app/layout-metrics';
 import { SortBy } from './sort';
 import useViewportHeight from '@/utility/useViewportHeight';
 import TopPhotoEntities from './TopPhotoEntities';
@@ -50,7 +56,11 @@ export default function PhotoGridPageClient({
           items={[
             <div key="mobile-sidebar" className={clsx(
               'flex gap-x-2',
-              'md:hidden',
+              // Match AppGrid main column width
+              'w-full mx-auto',
+              LAYOUT_CLASS_MAIN,
+              // Match AppGrid: sidebar sits beside only at 3xl+
+              '3xl:hidden',
               'mb-4',
             )}>
               <TopPhotoEntities
@@ -67,6 +77,8 @@ export default function PhotoGridPageClient({
         sortWithPriority={sortWithPriority}
         excludeFromFeeds
         prioritizeInitialPhotos
+        // Floating matted grid (expressive); masonry replaces it when enabled
+        matted={EXPRESSIVE_LAYOUT_ENABLED && !MASONRY_GRID_ENABLED}
         sidebar={
           <MaskedScroll
             ref={ref}

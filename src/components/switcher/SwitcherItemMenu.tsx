@@ -21,14 +21,19 @@ export default function SwitcherItemMenu({
         'p-0!',
         'w-full h-full',
         'flex items-center justify-center',
-        'hover:bg-transparent dark:hover:bg-transparent',
-        'active:bg-transparent dark:active:bg-transparent',
-        'rounded-none focus:outline-none',
-        'text-gray-400 dark:text-gray-600 hover:text-main',
+        // Parent SwitcherItem owns hover/active chrome — keep trigger clear
+        'bg-transparent!',
+        'hover:bg-transparent! dark:hover:bg-transparent!',
+        'active:bg-transparent! dark:active:bg-transparent!',
+        'rounded-md focus:outline-none',
+        // Inherit color from SwitcherItem (active / hover / persist)
+        'text-inherit!',
         classNameButton,
       )}
       classNameButtonOpen={clsx(
-        'bg-dim text-main!',
+        // Keep clear so parent SwitcherItem persistHover chrome shows
+        'bg-transparent!',
+        'text-main!',
         classNameButtonOpen,
       )}
     />
