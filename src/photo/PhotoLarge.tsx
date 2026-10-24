@@ -234,7 +234,7 @@ export default function PhotoLarge({
             'font-serif',
             'text-[1.25rem] sm:text-[1.5rem] leading-tight',
             // Keep serif/sans text in phase
-            'inline-flex mb-[13px] sm:mb-[8px] grow',
+            'inline-flex mb-[12.75px] sm:mb-[8px] grow',
           )
           : 'font-bold grow',
         UPPERCASE_TITLES && 'uppercase',
@@ -397,7 +397,10 @@ export default function PhotoLarge({
                     : renderPhotoLink)}
                 <div className="space-y-baseline">
                   {!isEditingTitles && photo.caption &&
-                    <div className={clsx(UPPERCASE_TITLES && 'uppercase')}>
+                    <div className={clsx(
+                      UPPERCASE_TITLES && 'uppercase',
+                      PHOTO_TITLE_SERIF && 'text-medium',
+                    )}>
                       {photo.caption}
                     </div>}
                   {(
