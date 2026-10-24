@@ -207,7 +207,7 @@ export default function PhotoExpressive({
           PHOTO_TITLE_SERIF
             ? clsx(
               'font-serif',
-              'text-[1.25rem] sm:text-[1.5rem] leading-snug',
+              'text-[1.25rem] sm:text-[1.5rem] leading-[1.2]',
             )
             : 'font-bold grow',
           UPPERCASE_TITLES && 'uppercase',
