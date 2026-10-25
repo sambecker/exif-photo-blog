@@ -239,6 +239,10 @@ export const CURRENT_STORAGE: StorageType =
           : 'vercel-blob'
   );
 
+// AUTH
+
+export const IMPORT_API_ENABLED = Boolean(process.env.IMPORT_PUBLIC_KEY);
+
 // PERFORMANCE
 
 export const STATICALLY_OPTIMIZED_PHOTOS =
@@ -487,6 +491,7 @@ export const APP_CONFIGURATION = {
   hasMultipleStorageProviders: HAS_MULTIPLE_STORAGE_PROVIDERS,
   currentStorage: CURRENT_STORAGE,
   // Auth
+  isImportApiEnabled: IMPORT_API_ENABLED,
   hasAuthSecret: Boolean(process.env.AUTH_SECRET),
   hasAdminUser: (
     Boolean(process.env.ADMIN_EMAIL) &&
