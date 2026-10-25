@@ -132,6 +132,7 @@ export default function PhotoExpressive({
   ], []);
   const {
     isShowingRecipeOverlay,
+    toggleRecipeOverlay,
     hideRecipeOverlay,
   } = useRecipeOverlay({
     ref: refRecipe,
@@ -405,6 +406,8 @@ export default function PhotoExpressive({
                     recipe={recipeTitle}
                     contrast="medium"
                     prefetch={prefetchRelatedLinks}
+                    toggleRecipeOverlay={toggleRecipeOverlay}
+                    isShowingRecipeOverlay={isShowingRecipeOverlay}
                   />}
                 {showTagsContent &&
                   <PhotoTags
@@ -435,7 +438,7 @@ export default function PhotoExpressive({
           {showExifContent &&
             <>
               <ul className="text-medium">
-                {(photo.focalLength || photo.isoFormatted) &&
+                {(photo.focalLength || photo.fNumberFormatted) &&
                   <li className={clsx(
                     'flex gap-x-3',
                     metaSide === 'left' && 'md:justify-end',
@@ -452,11 +455,11 @@ export default function PhotoExpressive({
                         {focalLengthLink}
                       </Tooltip>
                       : focalLengthLink)}
-                    {photo.isoFormatted &&
-                      <span>{photo.isoFormatted}</span>}
+                    {photo.fNumberFormatted &&
+                      <span>{photo.fNumberFormatted}</span>}
                   </li>}
                 {(
-                  photo.fNumberFormatted ||
+                  photo.isoFormatted ||
                   photo.exposureTimeFormatted ||
                   photo.exposureCompensationFormatted ||
                   ALWAYS_SHOW_EXPOSURE_COMP
@@ -465,10 +468,10 @@ export default function PhotoExpressive({
                     'flex gap-x-3',
                     metaSide === 'left' && 'md:justify-end',
                   )}>
-                    {photo.fNumberFormatted &&
-                      <span>{photo.fNumberFormatted}</span>}
                     {photo.exposureTimeFormatted &&
                       <span>{photo.exposureTimeFormatted}</span>}
+                    {photo.isoFormatted &&
+                      <span>{photo.isoFormatted}</span>}
                     {photo.exposureCompensationFormatted
                       ? <span>{photo.exposureCompensationFormatted}</span>
                       : ALWAYS_SHOW_EXPOSURE_COMP && <span>0ev</span>}
@@ -480,6 +483,12 @@ export default function PhotoExpressive({
                   film={photo.film}
                   make={photo.make}
                   prefetch={prefetchRelatedLinks}
+                  badged={false}
+                  contrast="medium"
+                  {...photo.recipeData && !photo.recipeTitle && {
+                    toggleRecipeOverlay,
+                    isShowingRecipeOverlay,
+                  }}
                 />}
               {showPlaceContent && photo.location &&
                 <div>
