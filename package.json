@@ -82,6 +82,6 @@
     "postcss": "8.5.31",
     "tailwindcss": "4.3.3",
     "ts-node": "^10.9.2",
-    "typescript": "^5"
+    "typescript": "^6"
   }
 }
