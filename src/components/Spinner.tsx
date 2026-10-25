@@ -14,10 +14,16 @@ export default function Spinner({
   color = 'light-gray',
   className,
 }: {
-  size?: number
+  // Numbers are pixels. CSS lengths (for example "1em") scale the
+  // whole mark, including the stroke, with the surrounding text.
+  size?: number | string
   color?: SpinnerColor
   className?: string
 }) {
+  const strokeWidth = typeof size === 'number'
+    ? SIZE_DEFAULT / size * 2
+    : 2;
+
   return (
     <span
       className={clsx(
@@ -43,7 +49,7 @@ export default function Spinner({
         viewBox="0 0 12 12"
         fill="none"
         stroke="currentColor"
-        strokeWidth={SIZE_DEFAULT / size * 2}
+        strokeWidth={strokeWidth}
         xmlns="http://www.w3.org/2000/svg"
         className="animate-rotate-pulse"
       >

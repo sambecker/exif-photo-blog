@@ -5,6 +5,7 @@ import { Photo, titleForPhoto } from '@/photo';
 import { PhotoSetCategory } from '@/category';
 import { AnimationConfig } from '../components/AnimateItems';
 import { useAppState } from '@/app/AppState';
+import { PHOTO_TITLE_SERIF } from '@/app/config';
 import { pathForPhoto } from '@/app/path';
 import { clsx } from 'clsx/lite';
 import LinkWithStatus from '@/components/LinkWithStatus';
@@ -60,12 +61,23 @@ export default function PhotoLink({
   const link = photo && linkProps
     ? loaderType === 'spinner'
       ? <LinkWithStatus {...linkProps}>
-        {({ isLoading }) => <>
-          {children}
-          {isLoading && <>
-            &nbsp;<Spinner className="translate-y-[0.5px]" />
-          </>}
-        </>}
+        {({ isLoading }) =>
+          PHOTO_TITLE_SERIF && isLoading
+            ? <span className={clsx(
+              'inline-flex items-start max-w-full gap-x-[0.3em]',
+            )}>
+              <span className="min-w-0">{children}</span>
+              {/* One line tall, so mark stays centered on first line */}
+              <span className="inline-flex h-[1lh] shrink-0 items-center">
+                <Spinner size="0.6em" />
+              </span>
+            </span>
+            : <>
+              {children}
+              {isLoading && <>
+                &nbsp;<Spinner className="translate-y-[0.5px]" />
+              </>}
+            </>}
       </LinkWithStatus>
       : <LinkWithLoaderBackground
         {...linkProps}
