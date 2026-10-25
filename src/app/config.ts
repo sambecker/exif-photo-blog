@@ -407,6 +407,8 @@ export const HIGH_DENSITY_GRID =
 
 // DESIGN
 
+export const EXPRESSIVE_LAYOUT_ENABLED =
+  process.env.NEXT_PUBLIC_DISABLE_EXPRESSIVE_LAYOUT !== '1';
 export const DEFAULT_THEME =
   process.env.NEXT_PUBLIC_DEFAULT_THEME === 'dark'
     ? 'dark'
@@ -415,6 +417,10 @@ export const DEFAULT_THEME =
       : 'system';
 export const UPPERCASE_TITLES =
   process.env.NEXT_PUBLIC_DISABLE_UPPERCASE_TITLES !== '1';
+export const PHOTO_TITLE_SERIF =
+  process.env.NEXT_PUBLIC_DISABLE_SERIF_FONT !== '1';
+export const PHOTO_COLOR_BAR =
+  process.env.NEXT_PUBLIC_DISABLE_COLOR_BAR !== '1';
 export const MATTE_PHOTOS =
   process.env.NEXT_PUBLIC_MATTE_PHOTOS === '1';
 export const MATTE_COLOR =
@@ -578,6 +584,7 @@ export const APP_CONFIGURATION = {
   hasGridDensityPreference:
     Boolean(process.env.NEXT_PUBLIC_SHOW_LARGE_THUMBNAILS),
   // Design
+  isExpressiveLayoutEnabled: EXPRESSIVE_LAYOUT_ENABLED,
   hasDefaultTheme: Boolean(process.env.NEXT_PUBLIC_DEFAULT_THEME),
   defaultTheme: DEFAULT_THEME,
   arePhotosMatted: MATTE_PHOTOS,
@@ -587,6 +594,8 @@ export const APP_CONFIGURATION = {
   matteColor: MATTE_COLOR,
   matteColorDark: MATTE_COLOR_DARK,
   arePhotoTitlesUppercase: UPPERCASE_TITLES,
+  arePhotoTitlesSerif: PHOTO_TITLE_SERIF,
+  arePhotoColorBarsShown: PHOTO_COLOR_BAR,
   areFoldersTinted: TINT_FOLDERS,
   hasHighDensityPreviews: HIGH_DENSITY_PREVIEWS,
   isOgTextBottomAligned: OG_TEXT_BOTTOM_ALIGNMENT,

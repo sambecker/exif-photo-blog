@@ -45,6 +45,13 @@ import { getOrderedKeyListStatus } from '@/utility/key';
 import { DEFAULT_SOCIAL_KEYS, SOCIAL_KEYS } from '@/social';
 import MaskedScroll from '@/components/MaskedScroll';
 import { IoLink } from 'react-icons/io5';
+import {
+  Photo,
+  altTextForPhoto,
+  doesPhotoNeedBlurCompatibility,
+} from '@/photo';
+import PhotoColorBar from '@/photo/color/PhotoColorBar';
+import ImageMedium from '@/components/image/ImageMedium';
 
 export default function AdminAppConfigurationClient({
   // Storage
@@ -131,9 +138,12 @@ export default function AdminAppConfigurationClient({
   hasHighGridDensity,
   hasGridDensityPreference,
   // Design
+  isExpressiveLayoutEnabled,
   hasDefaultTheme,
   defaultTheme,
   arePhotoTitlesUppercase,
+  arePhotoTitlesSerif,
+  arePhotoColorBarsShown,
   arePhotosMatted,
   arePhotoMatteColorsConfigured,
   matteColor,
@@ -168,11 +178,13 @@ export default function AdminAppConfigurationClient({
   // Component props
   simplifiedView,
   isAnalyzingConfiguration,
+  samplePhotoTitlePhoto,
 }: AppConfiguration &
   { secret: string } &
   Partial<Awaited<ReturnType<typeof testConnectionsAction>>> & {
     simplifiedView?: boolean
     isAnalyzingConfiguration?: boolean
+    samplePhotoTitlePhoto?: Photo
   }) {
   const [hasScrolled, setHasScrolled] = useState(false);
 
@@ -965,6 +977,85 @@ export default function AdminAppConfigurationClient({
       case 'Design':
         return <>
           <ChecklistRow
+            title="Expressive layouts"
+            status={isExpressiveLayoutEnabled}
+            optional
+          >
+            Set environment variable to {'"1"'} to disable floating
+            home page layouts, harmonized for vertical and horizontal photos
+            {renderEnvVars(['NEXT_PUBLIC_DISABLE_EXPRESSIVE_LAYOUT'])}
+          </ChecklistRow>
+          <ChecklistRow
+            title="Photo title design"
+            status={arePhotoTitlesUppercase ||
+              arePhotoTitlesSerif ||
+              arePhotoColorBarsShown}
+            optional
+          >
+            <div className="flex items-center gap-3 my-4 translate-x-px">
+              {/* Match SharedHover photo chrome (surface + border + shadow) */}
+              <div className={clsx(
+                'shrink-0 p-1',
+                'component-surface shadow-sm dark:shadow-md',
+                'rounded-[14px]',
+              )}>
+                <div className={clsx(
+                  'relative w-20 h-16 overflow-clip',
+                  'rounded-[10px]',
+                  'bg-extra-dim',
+                )}>
+                  {samplePhotoTitlePhoto
+                    ? <ImageMedium
+                      className="w-full h-full"
+                      classNameImage="object-cover w-full h-full"
+                      alt={altTextForPhoto(samplePhotoTitlePhoto)}
+                      src={samplePhotoTitlePhoto.url}
+                      aspectRatio={samplePhotoTitlePhoto.aspectRatio}
+                      blurDataURL={samplePhotoTitlePhoto.blurData}
+                      blurCompatibilityMode={
+                        doesPhotoNeedBlurCompatibility(samplePhotoTitlePhoto)
+                      }
+                    />
+                    : <div
+                      className="w-full h-full bg-gray-100 dark:bg-gray-900/50"
+                      aria-hidden
+                    />}
+                  <div className={clsx(
+                    'absolute inset-0',
+                    'border rounded-[10px] border-medium',
+                    'pointer-events-none',
+                  )} />
+                </div>
+              </div>
+              <div className={clsx(
+                'flex flex-col -space-y-0.5 max-w-[150px]',
+                'translate-y-0.5',
+              )}>
+                <div className={clsx(
+                  'leading-tight',
+                  arePhotoTitlesSerif
+                    ? 'font-serif font-normal text-[1.25rem]'
+                    : 'font-bold',
+                  arePhotoTitlesUppercase && 'uppercase',
+                )}>
+                  Example photo title treatment
+                </div>
+                {arePhotoColorBarsShown &&
+                  <PhotoColorBar
+                    colorData={samplePhotoTitlePhoto?.colorData}
+                  />}
+              </div>
+            </div>
+            Titles default to uppercase and serif; color bars show by default.
+            {' '}
+            Set a variable to {'"1"'} to disable that treatment.
+            <div className="pt-1 flex flex-col gap-1">
+              <EnvVar variable="NEXT_PUBLIC_DISABLE_UPPERCASE_TITLES" />
+              <EnvVar variable="NEXT_PUBLIC_DISABLE_SERIF_FONT" />
+              <EnvVar variable="NEXT_PUBLIC_DISABLE_COLOR_BAR" />
+            </div>
+          </ChecklistRow>
+          <ChecklistRow
             title={`Default theme: ${defaultTheme}`}
             status={hasDefaultTheme}
             optional
@@ -975,15 +1066,6 @@ export default function AdminAppConfigurationClient({
             {' '}
             (defaults to {'\'system\''})
             {renderEnvVars(['NEXT_PUBLIC_DEFAULT_THEME'])}
-          </ChecklistRow>
-          <ChecklistRow
-            title="Uppercase titles"
-            status={arePhotoTitlesUppercase}
-            optional
-          >
-            Set environment variable to {'"1"'} to prevent
-            photo titles and captions from displaying in uppercase
-            {renderEnvVars(['NEXT_PUBLIC_DISABLE_UPPERCASE_TITLES'])}
           </ChecklistRow>
           <ChecklistRow
             title="Photo matting"

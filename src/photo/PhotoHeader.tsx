@@ -18,7 +18,7 @@ import ResponsiveText from '@/components/primitives/ResponsiveText';
 import { useAppState } from '@/app/AppState';
 import { GRID_GAP_CLASSNAME } from '@/components';
 import { useAppText } from '@/i18n/state/client';
-import { UPPERCASE_TITLES } from '@/app/config';
+import { PHOTO_TITLE_SERIF, UPPERCASE_TITLES } from '@/app/config';
 
 export default function PhotoHeader({
   photos,
@@ -100,12 +100,19 @@ export default function PhotoHeader({
         <PhotoLink
           photo={selectedPhoto}
           className={clsx(
-            'font-bold truncate',
+            PHOTO_TITLE_SERIF
+              // Instrument Serif only ships weight 400
+              ? clsx(
+                'font-serif leading-tight',
+                'text-[1.25rem] sm:text-[1.5rem]',
+              )
+              : 'font-bold',
             UPPERCASE_TITLES && 'uppercase',
           )}
         >
           {titleForPhoto(selectedPhoto, true)}
-        </PhotoLink>);
+        </PhotoLink>
+    );
 
   const renderBlock = (content: ReactNode) =>
     <DivDebugBaselineGrid
@@ -114,9 +121,7 @@ export default function PhotoHeader({
         GRID_GAP_CLASSNAME,
         'items-start',
         'grid-cols-4',
-        isGridHighDensity
-          ? 'lg:grid-cols-6'
-          : 'md:grid-cols-3 lg:grid-cols-4',
+        isGridHighDensity && 'lg:grid-cols-6',
       )}
     >
       {content}
@@ -136,14 +141,14 @@ export default function PhotoHeader({
             headerType === 'photo-set'
               ? isGridHighDensity
                 ? 'col-span-2 lg:col-span-3'
-                : 'col-span-2 md:col-span-1 lg:col-span-2'
+                : 'col-span-2 lg:col-span-2'
               : headerType === 'photo-detail-with-entity'
                 ? isGridHighDensity
                   ? 'col-span-2 lg:col-span-3'
                   : 'col-span-2 md:col-span-1 lg:col-span-2'
                 : isGridHighDensity
                   ? 'col-span-3 sm:col-span-3 lg:col-span-5 w-[110%] xl:w-full'
-                  : 'col-span-3 md:col-span-2 lg:col-span-3 w-[110%] xl:w-full',
+                  : 'col-span-3 w-[110%] xl:w-full',
           )}>
             {headerType === 'photo-detail-with-entity'
               ? renderContentA
@@ -203,8 +208,11 @@ export default function PhotoHeader({
               ? 'hidden sm:flex'
               : 'flex',
             'justify-end',
-            // Make full height for prev/next symbols
-            'max-sm:h-full',
+            !entity && selectedPhoto !== undefined && PHOTO_TITLE_SERIF
+              // Center vertically with serif photo titles
+              ? 'h-full items-center -translate-y-0.5'
+              // Make full height for prev/next symbols
+              : 'max-sm:h-full',
           )}>
             {selectedPhoto
               ? renderPrevNext

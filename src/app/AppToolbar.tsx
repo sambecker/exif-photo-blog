@@ -1,16 +1,10 @@
 'use client';
 
-import Switcher from '@/components/switcher/Switcher';
 import SwitcherItem from '@/components/switcher/SwitcherItem';
 import {
   PATH_LIBRARY,
-  PATH_FULL_INFERRED,
-  PATH_GRID_INFERRED,
-  PATH_ROOT,
+  PATH_HOME_INFERRED,
   isPathLibrary,
-  isPathFull,
-  isPathHome,
-  isPathPhotoSet,
 } from '@/app/path';
 import IconSearch from '../components/icons/IconSearch';
 import { useAppState } from '@/app/AppState';
@@ -38,9 +32,9 @@ import { useAppText } from '@/i18n/state/client';
 import { getSortStateFromPath } from '@/photo/sort/path';
 import { motion } from 'framer-motion';
 import IconLibrary from '@/components/icons/IconLibrary';
-import { BiHomeAlt as HomeIcon } from 'react-icons/bi';
 import AppViewMenu from './AppViewMenu';
 import AppViewMenuCompact from './AppViewMenuCompact';
+import getHomeViewNavState from './getHomeViewNavState';
 
 export default function AppToolbar({
   className,
@@ -94,18 +88,32 @@ export default function AppToolbar({
   const [isViewSwitchLoading, setIsViewSwitchLoading] = useState(false);
   useDelayedLoading(isPending, setIsViewSwitchLoading);
 
-  const refHrefHome = useRef<HTMLAnchorElement>(null);
   const refHrefLibrary = useRef<HTMLAnchorElement>(null);
 
   const [isAdminMenuOpen, setIsAdminMenuOpen] = useState(false);
   const [isViewMenuOpen, setIsViewMenuOpen] = useState(false);
-  
-  // Home screens switch views by navigating, sets by toggling state
-  const isHome = isPathHome(pathname);
-  const isPhotoSet = isPathPhotoSet(pathname);
 
-  const navigateHomeView = useCallback((isGrid: boolean) => {
-    const path = isGrid ? pathGrid : pathFull;
+  const {
+    isPhotoSet,
+    isOnFullPath,
+    isOnGridPath,
+    isViewFull,
+    isViewGrid,
+    hrefGrid,
+    hrefFull,
+    pathGridRoot,
+    pathFullRoot,
+  } = useMemo(() => getHomeViewNavState({
+    pathname,
+    isPhotoSetFull,
+    pathGrid,
+    pathFull,
+  }), [pathname, isPhotoSetFull, pathGrid, pathFull]);
+
+  const navigateHomeView = useCallback((
+    view: 'grid' | 'full',
+  ) => {
+    const path = view === 'grid' ? pathGrid : pathFull;
     startTransition(() => router.push(path));
   }, [pathFull, pathGrid, router]);
 
@@ -114,129 +122,76 @@ export default function AppToolbar({
       switch (e.key.toLocaleUpperCase()) {
         case KEY_COMMANDS.full:
           if (isPhotoSet) {
-            setIsPhotoSetFull?.(true);
-          } else if (pathname !== PATH_FULL_INFERRED) {
-            navigateHomeView(false);
+            if (isPhotoSetFull) {
+              startTransition(() => router.push(pathFullRoot));
+            } else {
+              setIsPhotoSetFull?.(true);
+            }
+          } else if (!isOnFullPath) {
+            navigateHomeView('full');
           }
           break;
         case KEY_COMMANDS.grid:
           if (isPhotoSet) {
-            setIsPhotoSetFull?.(false);
-          } else if (pathname !== PATH_GRID_INFERRED) {
-            navigateHomeView(true);
+            if (!isPhotoSetFull) {
+              startTransition(() => router.push(pathGridRoot));
+            } else {
+              setIsPhotoSetFull?.(false);
+            }
+          } else if (!isOnGridPath) {
+            navigateHomeView('grid');
           }
           break;
         case KEY_COMMANDS.home:
-          if (pathname !== PATH_ROOT) { refHrefHome.current?.click(); }
+          if (pathname !== PATH_HOME_INFERRED) {
+            startTransition(() => router.push(PATH_HOME_INFERRED));
+          }
           break;
         case KEY_COMMANDS.library:
-          if (pathname !== PATH_LIBRARY) { refHrefLibrary.current?.click(); }
+          if (!isInEmptyState && pathname !== PATH_LIBRARY) {
+            refHrefLibrary.current?.click();
+          }
           break;
       }
     }
   }, [
+    isInEmptyState,
     isPhotoSet,
+    isPhotoSetFull,
+    isOnFullPath,
+    isOnGridPath,
+    pathFullRoot,
+    pathGridRoot,
     pathname,
     navigateHomeView,
+    router,
     setIsPhotoSetFull,
   ]);
   useKeydownHandler({ onKeyDown });
 
   const [isSortMenuOpen, setIsSortMenuOpen] = useState(false);
 
-  const showViewMenu = isHome || isPhotoSet;
-  const isViewFull = isHome
-    ? pathname === PATH_FULL_INFERRED || isPathFull(pathname)
-    : isPhotoSetFull;
-
   return (
     <div className={clsx(
       className,
-      'flex',
-      'gap-1.5 sm:gap-4',
+      'flex items-center shrink-0',
     )}>
-      <Switcher>
-        <SwitcherItem
-          icon={<HomeIcon size={17} />}
-          href={PATH_ROOT}
-          hrefRef={refHrefHome}
-          active={isHome}
-          tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
-            content: appText.nav.home,
-            keyCommand: KEY_COMMANDS.home,
-          }}}
-        />
-        <SwitcherItem
-          icon={<IconLibrary />}
-          href={PATH_LIBRARY}
-          hrefRef={refHrefLibrary}
-          active={isPathLibrary(pathname)}
-          tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
-            content: appText.nav.library,
-            keyCommand: KEY_COMMANDS.library,
-          }}}
-          noPadding
-        />
-        <SwitcherItem
-          icon={<IconSearch />}
-          onClick={() => setIsCommandKOpen?.(true)}
-          tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
-            content: appText.nav.search,
-            keyCommandModifier: KEY_COMMANDS.search[0],
-            keyCommand: KEY_COMMANDS.search[1],
-          }}}
-          noPadding
-        />
-        {/* Show spinner if admin is suspected to be logged in */}
-        {(isUserSignedInEager && !isUserSignedIn) &&
-          <SwitcherItem
-            icon={<Spinner />}
-            isInteractive={false}
-            noPadding
-            tooltip={{
-              ...!isAdminMenuOpen && SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
-                content: appText.nav.admin,
-              },
-            }}
-          />}
-        {isUserSignedIn &&
-          <SwitcherItem
-            icon={<AdminAppMenu
-              isOpen={isAdminMenuOpen}
-              setIsOpen={isOpen => {
-                setIsAdminMenuOpen(isOpen);
-                if (isOpen) {
-                  setIsSortMenuOpen(false);
-                  setIsViewMenuOpen(false);
-                }
-              }}
-            />}
-            iconIsFocusable
-            tooltip={{
-              ...!isAdminMenuOpen && SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
-                content: appText.nav.admin,
-              },
-            }}
-            noPadding
-          />}
-      </Switcher>
       {!isInEmptyState &&
         <motion.div
-          initial={animate ? { opacity: 0, width: 0 } : false}
-          animate={{
-            opacity: showViewMenu ? 1 : 0,
-            width: showViewMenu ? 'auto' : 0,
-          }}
+          className="flex items-center"
+          initial={animate ? { opacity: 0, x: -8 } : false}
+          animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.2, ease: 'easeInOut' }}
         >
           <AppViewMenuCompact
             className="sm:hidden"
             isViewFull={isViewFull}
-            isMasonry={MASONRY_GRID_ENABLED && isHome}
-            // Sort-aware paths retain the active sort while switching views
-            hrefGrid={isHome ? pathGrid : undefined}
-            hrefFull={isHome ? pathFull : undefined}
-            onSelectView={setIsPhotoSetFull}
+            isViewGrid={isViewGrid}
+            isViewLibrary={isPathLibrary(pathname)}
+            isMasonry={MASONRY_GRID_ENABLED}
+            hrefGrid={hrefGrid}
+            hrefFull={hrefFull}
+            onSelectView={isPhotoSet ? setIsPhotoSetFull : undefined}
             isLoading={isViewSwitchLoading}
             showSortItems={showSortControl}
             sortConfig={sortConfig}
@@ -252,10 +207,11 @@ export default function AppToolbar({
           <AppViewMenu
             className="max-sm:hidden"
             isViewFull={isViewFull}
-            isMasonry={MASONRY_GRID_ENABLED && isHome}
-            hrefGrid={isHome ? pathGrid : undefined}
-            hrefFull={isHome ? pathFull : undefined}
-            onSelectView={setIsPhotoSetFull}
+            isViewGrid={isViewGrid}
+            isMasonry={MASONRY_GRID_ENABLED}
+            hrefGrid={hrefGrid}
+            hrefFull={hrefFull}
+            onSelectView={isPhotoSet ? setIsPhotoSetFull : undefined}
             showSortControl={showSortControl}
             sortConfig={sortConfig}
             isSortMenuOpen={isSortMenuOpen}
@@ -268,6 +224,72 @@ export default function AppToolbar({
             }}
           />
         </motion.div>}
+      {!isInEmptyState &&
+        <div className="max-sm:hidden sm:contents">
+          <SwitcherItem
+            icon={<IconLibrary selected={isPathLibrary(pathname)} />}
+            href={PATH_LIBRARY}
+            hrefRef={refHrefLibrary}
+            active={isPathLibrary(pathname)}
+            naked
+            width="narrow"
+            noPadding
+            tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
+              content: appText.nav.library,
+              keyCommand: KEY_COMMANDS.library,
+            }}}
+          />
+        </div>}
+      <SwitcherItem
+        icon={<IconSearch />}
+        onClick={() => setIsCommandKOpen?.(true)}
+        naked
+        width="narrow"
+        noPadding
+        tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
+          content: appText.nav.search,
+          keyCommandModifier: KEY_COMMANDS.search[0],
+          keyCommand: KEY_COMMANDS.search[1],
+        }}}
+      />
+      {/* Show spinner if admin is suspected to be logged in */}
+      {(isUserSignedInEager && !isUserSignedIn) &&
+        <SwitcherItem
+          icon={<Spinner />}
+          isInteractive={false}
+          naked
+          width="narrow"
+          noPadding
+          tooltip={{
+            ...!isAdminMenuOpen && SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
+              content: appText.nav.admin,
+            },
+          }}
+        />}
+      {isUserSignedIn &&
+        <SwitcherItem
+          icon={<AdminAppMenu
+            isOpen={isAdminMenuOpen}
+            setIsOpen={isOpen => {
+              setIsAdminMenuOpen(isOpen);
+              if (isOpen) {
+                setIsSortMenuOpen(false);
+                setIsViewMenuOpen(false);
+              }
+            }}
+          />}
+          iconIsFocusable
+          active={isAdminMenuOpen}
+          persistHover={isAdminMenuOpen}
+          naked
+          width="narrow"
+          noPadding
+          tooltip={{
+            ...!isAdminMenuOpen && SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
+              content: appText.nav.admin,
+            },
+          }}
+        />}
     </div>
   );
 }

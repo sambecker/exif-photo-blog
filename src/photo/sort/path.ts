@@ -157,16 +157,17 @@ export const getSortStateFromPath = (
   }) => {
     const { sortBy } = _getSortOptionsFromParams(sortType, sortOrder);
     if (sortBy === USER_DEFAULT_SORT_BY) {
-      return gridOrFull === 'grid'
-        ? PATH_GRID_INFERRED
-        : PATH_FULL_INFERRED;
+      switch (gridOrFull) {
+        case 'grid': return PATH_GRID_INFERRED;
+        default: return PATH_FULL_INFERRED;
+      }
     } else {
       return `/${gridOrFull}/${sortType}/${sortOrder}`;
     }
   };
 
   // Core paths
-  // (reset custom sort when clicking grid/full a second time)
+  // (reset custom sort when clicking a view a second time)
   const pathGrid = _gridOrFull === 'grid' && sortBy !== USER_DEFAULT_SORT_BY
     ? PATH_GRID_INFERRED
     : getPath({ gridOrFull: 'grid', sortType, sortOrder });
