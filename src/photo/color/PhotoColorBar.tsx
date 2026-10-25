@@ -24,9 +24,10 @@ export default function PhotoColorBar({
   return (
     <div
       className={clsx(
-        // Occupy a baseline row so vertical rhythm matches adjacent EXIF lines
-        'inline-flex items-center w-fit h-baseline',
-        className,
+        // Center the swatch in the row. Default row matches EXIF;
+        // callers can pass a height to match another line, such as a title.
+        'inline-flex items-center w-fit',
+        className ?? 'h-baseline',
       )}
     >
       <div className="inline-flex h-[3px] overflow-hidden">

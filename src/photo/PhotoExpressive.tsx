@@ -364,7 +364,10 @@ export default function PhotoExpressive({
           )}>
             {titleInMetaStack && renderPhotoLink}
             {!isEditingTitles && photo.caption &&
-              <div className={clsx(UPPERCASE_TITLES && 'uppercase')}>
+              <div className={clsx(
+                'text-medium',
+                UPPERCASE_TITLES && 'uppercase',
+              )}>
                 {photo.caption}
               </div>}
             {(
@@ -512,7 +515,18 @@ export default function PhotoExpressive({
             hideTime={!SHOW_TAKEN_AT_TIME}
           />
           {PHOTO_COLOR_BAR && photo.colorData &&
-            <PhotoColorBar colorData={photo.colorData} />}
+            <PhotoColorBar
+              colorData={photo.colorData}
+              className={clsx(
+                // Small screens: top of this column, beside the title
+                'max-md:order-first',
+                PHOTO_TITLE_SERIF
+                  // Serif title line box: size × leading-[1.2]
+                  ? 'h-[1.5rem] sm:h-[1.8rem]'
+                  // Sans title uses the body line height
+                  : 'h-[1.1875rem] md:h-[1.25rem]',
+              )}
+            />}
           <div className={clsx(
             'flex gap-1 translate-y-[0.5px]',
             'translate-x-[-2.5px]',
