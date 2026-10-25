@@ -33,7 +33,13 @@ import {
 } from '@/app/config';
 import AdminPhotoMenu from '@/admin/AdminPhotoMenu';
 import { RevalidatePhoto } from './InfinitePhotoScroll';
-import { useCallback, useMemo, useRef } from 'react';
+import {
+  useCallback,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import useVisibility from '@/utility/useVisibility';
 import PhotoDate from './PhotoDate';
 import { useAppState } from '@/app/AppState';
@@ -57,6 +63,24 @@ import PlaceEntity from '@/place/PlaceEntity';
 import PhotoColorBar from './color/PhotoColorBar';
 import ShareButton from '@/share/ShareButton';
 import DownloadButton from '@/components/DownloadButton';
+import MaskedScroll from '@/components/MaskedScroll';
+import useMediaQuery from '@/utility/useMediaQuery';
+
+// Photo frame is 90% of the 3:2 matte (`md:h-[90%]` below)
+const EXPRESSIVE_PHOTO_FRAME_HEIGHT = 'md:max-h-[90%]';
+
+const containedPhotoHeight = (
+  width: number,
+  height: number,
+  aspectRatio: number,
+) => {
+  if (width <= 0 || height <= 0) return 0;
+  // object-contain letterboxes the bitmap inside the img box
+  const fitted = aspectRatio > 0
+    ? Math.min(height, width / aspectRatio)
+    : height;
+  return Math.round(fitted);
+};
 
 export default function PhotoExpressive({
   photo,
@@ -90,6 +114,10 @@ export default function PhotoExpressive({
   showStorageCheck?: boolean
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const refPhotoFrame = useRef<HTMLDivElement>(null);
+  const [photoHeight, setPhotoHeight] = useState<number>();
+  // Side-by-side layout starts at Tailwind's md breakpoint
+  const isLargeScreen = useMediaQuery('(min-width: 48rem)');
   const refZoomControls = useRef<ZoomControlsRef>(null);
   const refPhotoRecipe = useRef<HTMLDivElement>(null);
   const refPhotoFilm = useRef<HTMLDivElement>(null);
@@ -173,6 +201,33 @@ export default function PhotoExpressive({
 
   useVisibility({ ref, onVisible });
 
+  useLayoutEffect(() => {
+    const frame = refPhotoFrame.current;
+    if (!frame || !isLargeScreen) return;
+
+    const update = () => {
+      const image = Array.from(frame.getElementsByTagName('img'))
+        .find(img => !img.src.startsWith('data:'));
+      const target = image ?? frame;
+      const next = containedPhotoHeight(
+        target.clientWidth,
+        target.clientHeight,
+        photo.aspectRatio,
+      );
+      if (next > 0) {
+        setPhotoHeight(current => current === next ? current : next);
+      }
+    };
+
+    const observer = new ResizeObserver(update);
+    observer.observe(frame);
+    const image = Array.from(frame.getElementsByTagName('img'))
+      .find(img => !img.src.startsWith('data:'));
+    if (image) observer.observe(image);
+    update();
+    return () => observer.disconnect();
+  }, [isLargeScreen, photo.aspectRatio, photo.id, showZoomControls]);
+
   const hasTitle = Boolean(photo.title);
   const hasCaption = Boolean(photo.caption);
   const hasTitleContent =
@@ -226,12 +281,15 @@ export default function PhotoExpressive({
         : undefined;
 
   const renderLargePhoto =
-    <div className={clsx(
-      'relative',
-      'md:flex md:items-center md:justify-center',
-      'md:h-[90%]',
-      matteContentWidthForAspectRatio,
-    )}>
+    <div
+      ref={refPhotoFrame}
+      className={clsx(
+        'relative',
+        'md:flex md:items-center md:justify-center',
+        'md:h-[90%]',
+        matteContentWidthForAspectRatio,
+      )}
+    >
       <ZoomControls
         ref={refZoomControls}
         selectImageElement={selectZoomImageElement}
@@ -297,7 +355,7 @@ export default function PhotoExpressive({
   const renderMeta =
     <DivDebugBaselineGrid className={clsx(
       'flex flex-col gap-y-2 md:gap-y-baseline',
-      'w-full md:w-48 lg:w-56 shrink-0',
+      'w-full',
       metaAlignClass,
     )}>
       <div className={clsx(
@@ -595,7 +653,32 @@ export default function PhotoExpressive({
               {renderLargePhoto}
             </Link>}
         </div>
-        {renderMeta}
+        <div className={clsx(
+          'w-full min-w-0',
+          'md:relative md:w-48 md:shrink-0 md:self-stretch lg:w-56',
+        )}>
+          <div className={clsx(
+            'w-full',
+            'md:absolute md:inset-0 md:flex md:items-center',
+          )}>
+            <MaskedScroll
+              direction="vertical"
+              setMaxSize={false}
+              fadeSize={120}
+              animationDuration={0.7}
+              className={clsx(
+                'w-full min-w-0 md:min-h-0',
+                'max-md:overflow-visible! max-md:[mask-image:none]!',
+                EXPRESSIVE_PHOTO_FRAME_HEIGHT,
+              )}
+              style={isLargeScreen && photoHeight
+                ? { maxHeight: photoHeight }
+                : undefined}
+            >
+              {renderMeta}
+            </MaskedScroll>
+          </div>
+        </div>
       </div>
     </div>
   );

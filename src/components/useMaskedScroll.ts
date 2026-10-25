@@ -1,15 +1,19 @@
-import useElementHeight from '@/utility/useElementHeight';
 import {
   CSSProperties,
   RefObject,
   useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
+  useState,
 } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 
 const CSS_VAR_MASK_COLOR_START = '--mask-color-start';
 const CSS_VAR_MASK_COLOR_END   = '--mask-color-end';
+// Subpixel layout and overflow:scroll can report a few px of overflow
+// when the content still fits. Don't fade until more than this is hidden.
+const MASK_OVERFLOW_TOLERANCE = 8;
 
 export default function useMaskedScroll({
   ref: containerRef,
@@ -32,18 +36,20 @@ export default function useMaskedScroll({
   scrollToEndOnMount?: boolean
 }) {
   const isVertical = direction === 'vertical';
-
-  const containerHeight = useElementHeight(containerRef);
+  const [scrollable, setScrollable] = useState(false);
 
   const _updateMask = useCallback(() => {
     const ref = containerRef?.current;
     if (ref) {
-      const start = isVertical
-        ? ref.scrollTop < 1
-        : ref.scrollLeft < 1;
-      const end = isVertical
-        ? (ref.scrollHeight - ref.scrollTop) - ref.clientHeight < 1
-        : (ref.scrollWidth - ref.scrollLeft) - ref.clientWidth < 1;
+      const startOverflow = isVertical ? ref.scrollTop : ref.scrollLeft;
+      const endOverflow = isVertical
+        ? ref.scrollHeight - ref.scrollTop - ref.clientHeight
+        : ref.scrollWidth - ref.scrollLeft - ref.clientWidth;
+      const start = startOverflow <= MASK_OVERFLOW_TOLERANCE;
+      const end = endOverflow <= MASK_OVERFLOW_TOLERANCE;
+      // Content that isn't clipped must not be a scroll container,
+      // or trackpads rubber-band it.
+      setScrollable(!(start && end));
       ref.style.setProperty(CSS_VAR_MASK_COLOR_START, start
         ? 'rgba(0, 0, 0, 1)'
         : 'rgba(0, 0, 0, 0)');
@@ -55,32 +61,22 @@ export default function useMaskedScroll({
 
   const updateMask = useDebouncedCallback(_updateMask, 50, { leading: true });
 
-  // Update on scroll/resize
-  useEffect(() => {
+  useLayoutEffect(() => {
     const ref = containerRef?.current;
-    if (ref && updateMaskOnEvents) {
-      ref.addEventListener('scroll', updateMask);
-      ref.addEventListener('resize', updateMask);
-      return () => {
-        ref.removeEventListener('scroll', updateMask);
-        ref.removeEventListener('resize', updateMask);
-      };
-    }
+    if (!ref) return;
+
+    updateMask();
+    if (!updateMaskOnEvents) return;
+
+    const observer = new ResizeObserver(() => updateMask());
+    observer.observe(ref);
+    Array.from(ref.children).forEach(child => observer.observe(child));
+    ref.addEventListener('scroll', updateMask);
+    return () => {
+      observer.disconnect();
+      ref.removeEventListener('scroll', updateMask);
+    };
   }, [containerRef, updateMask, updateMaskOnEvents]);
-
-  // Update on container height change
-  useEffect(() => {
-    if (updateMaskOnEvents) {
-      updateMask();
-    }
-  }, [containerHeight, updateMaskOnEvents, updateMask]);
-
-  // Update on mount when not responding to events
-  useEffect(() => {
-    if (!updateMaskOnEvents) {
-      updateMask();
-    }
-  }, [updateMask, updateMaskOnEvents]);
 
   useEffect(() => {
     const ref = containerRef?.current;
@@ -110,10 +106,27 @@ export default function useMaskedScroll({
   }, []);
 
   const styleMask: CSSProperties = useMemo(() => {
-    // eslint-disable-next-line @stylistic/max-len
-    const gradientStart = `linear-gradient(to ${isVertical ? 'bottom' : 'right'}, var(${CSS_VAR_MASK_COLOR_START}), black ${fadeSize}px)`;
-    // eslint-disable-next-line @stylistic/max-len
-    const gradientEnd = `linear-gradient(to ${isVertical ? 'top' : 'left'}, var(${CSS_VAR_MASK_COLOR_END}), black ${fadeSize}px)`;
+    const gradient = (
+      direction: 'bottom' | 'top' | 'right' | 'left',
+      color: string,
+    ) => {
+      const midStop = Math.round(fadeSize * 0.42);
+      return [
+        `linear-gradient(to ${direction}`,
+        `var(${color}) 0px`,
+        // Stay mostly visible, then ease out toward the edge
+        `color-mix(in srgb, var(${color}) 28%, black) ${midStop}px`,
+        `black ${fadeSize}px)`,
+      ].join(', ');
+    };
+    const gradientStart = gradient(
+      isVertical ? 'bottom' : 'right',
+      CSS_VAR_MASK_COLOR_START,
+    );
+    const gradientEnd = gradient(
+      isVertical ? 'top' : 'left',
+      CSS_VAR_MASK_COLOR_END,
+    );
     const maskImage = [gradientStart, gradientEnd].join(', ');
     const transition = [
       `${CSS_VAR_MASK_COLOR_START} ${animationDuration}s ease-in-out`,
@@ -128,13 +141,22 @@ export default function useMaskedScroll({
       ...isVertical
         ? {
           ...setMaxSize && { maxHeight: '100%' },
-          overflowY: 'scroll',
+          overflowX: 'hidden',
+          overflowY: scrollable ? 'auto' : 'hidden',
         } : {
           ...setMaxSize && { maxWidth: '100%' },
-          overflowX: 'scroll',
+          overflowX: scrollable ? 'auto' : 'hidden',
+          overflowY: 'hidden',
         },
     };
-  }, [isVertical, fadeSize, animationDuration, hideScrollbar, setMaxSize]);
+  }, [
+    isVertical,
+    fadeSize,
+    animationDuration,
+    hideScrollbar,
+    setMaxSize,
+    scrollable,
+  ]);
 
   return { styleMask, updateMask };
 }
