@@ -417,6 +417,9 @@ export default function PhotoExpressive({
                     tags={tags}
                     contrast="medium"
                     prefetch={prefetchRelatedLinks}
+                    className={metaSide === 'left'
+                      ? 'md:items-end md:*:max-w-full md:*:min-w-0'
+                      : undefined}
                   />}
               </div>}
           </div>
