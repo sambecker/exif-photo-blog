@@ -401,6 +401,7 @@ export default function PhotoExpressive({
                         lens={lens}
                         contrast="medium"
                         prefetch={prefetchRelatedLinks}
+                        includeFocalLength={false}
                       />}
                   </div>}
                 {showRecipeContent && recipeTitle &&

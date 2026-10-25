@@ -19,6 +19,7 @@ export const isLensApple = ({ make, model }: Lens) =>
 export const formatAppleLensText = (
   model: string,
   includeDeviceName?: boolean,
+  includeFocalLength = true,
 ) => {
   const [
     _,
@@ -29,7 +30,7 @@ export const formatAppleLensText = (
   // eslint-disable-next-line @stylistic/max-len
   ] = (/iPhone ([0-9a-z]{1,3}(?: (?:Pro|Max|Plus|Mini))*).*?(back|front).*?([0-9\.]+)mm.*?f\/([0-9\.]+)/gi.exec(model) ?? []);
 
-  const format = (lensName: string, includeFocalLength = true) => {
+  const format = (lensName: string, showFocalLength = true) => {
     let result = '';
     if (includeDeviceName) {
       result += `${phoneName} `;
@@ -38,7 +39,7 @@ export const formatAppleLensText = (
     if (!includeDeviceName) {
       result += ' Camera';
     }
-    if (includeFocalLength && focalLength) {
+    if (includeFocalLength && showFocalLength && focalLength) {
       result += ` (${focalLength}mm)`;
     }
     return result;
@@ -165,6 +166,24 @@ export const formatAppleLensText = (
           case '2.2': return format('Wide');
           case '1.78': return format('Main');
           case '2.8': return format('Telephoto');
+        }
+      case '18 PRO':
+      case '18 PRO MAX':
+        switch (aperture) {
+          case '2.2': return format('Wide');
+          case '1.48':
+          case '1.8':
+          case '4':
+          case '4.0': return format('Main');
+          // Main stops down to f/2.8 (≈6.9mm); telephoto is f/2.8 at ≈16.9mm
+          case '2.8': return format(
+            parseFloat(focalLength) >= 12 ? 'Telephoto' : 'Main',
+          );
+        }
+      case 'DUO':
+        switch (aperture) {
+          case '2.2': return format('Wide');
+          case '1.6': return format('Main');
         }
       default:
         return format('Back', true);

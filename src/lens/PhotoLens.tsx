@@ -11,17 +11,23 @@ import useCategoryCounts from '@/category/useCategoryCounts';
 export default function PhotoLens({
   lens,
   longText,
+  includeFocalLength = true,
   ...props
 }: {
   lens: Lens
   longText?: boolean
+  includeFocalLength?: boolean
 } & EntityLinkExternalProps) {
   const { getLensCount } = useCategoryCounts();
   return (
     <EntityLink
       {...props}
-      label={formatLensText(lens, longText ? 'long' : 'short')}
-      labelSmall={formatLensText(lens, 'short')}
+      label={formatLensText(
+        lens,
+        longText ? 'long' : 'short',
+        includeFocalLength,
+      )}
+      labelSmall={formatLensText(lens, 'short', includeFocalLength)}
       path={pathForLens(lens)}
       hoverQueryOptions={{ lens }}
       icon={<IconLens

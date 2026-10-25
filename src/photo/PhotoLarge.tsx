@@ -424,6 +424,7 @@ export default function PhotoLarge({
                               lens={lens}
                               contrast="medium"
                               prefetch={prefetchRelatedLinks}
+                              includeFocalLength={false}
                             />}
                         </div>}
                       {showRecipeContent && recipeTitle &&

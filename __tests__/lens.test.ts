@@ -22,6 +22,14 @@ const IPHONE_15_PRO_BACK_TELEPHOTO: Lens = { make: 'Apple', model: 'iPhone 15 Pr
 const IPHONE_14_PRO_BACK_WIDE_NO_MAKE: Lens = { model: 'iPhone 14 Pro back dual wide camera 6.86mm f/1.78' };
 const IPHONE_12_PRO_MAX_BACK_WIDE_NO_MAKE: Lens = { model: 'iPhone 12 Pro Max back dual camera 7.5mm f/2.2' };
 const IPHONE_12_PRO_MAX_BACK_TELEPHOTO_NO_MAKE: Lens = { model: 'iPhone 12 Pro Max back triple camera 5.1mm f/1.6' };
+const IPHONE_18_PRO_BACK_WIDE: Lens = { make: 'Apple', model: 'iPhone 18 Pro back triple camera 2.22mm f/2.2' };
+const IPHONE_18_PRO_BACK_MAIN: Lens = { make: 'Apple', model: 'iPhone 18 Pro back triple camera 6.93mm f/1.48' };
+const IPHONE_18_PRO_BACK_MAIN_STOPPED_DOWN: Lens = { make: 'Apple', model: 'iPhone 18 Pro back triple camera 6.93mm f/2.8' };
+const IPHONE_18_PRO_BACK_MAIN_DEEP: Lens = { make: 'Apple', model: 'iPhone 18 Pro back triple camera 6.93mm f/4.0' };
+const IPHONE_18_PRO_BACK_TELEPHOTO: Lens = { make: 'Apple', model: 'iPhone 18 Pro back triple camera 16.891mm f/2.8' };
+const IPHONE_18_PRO_MAX_BACK_MAIN: Lens = { make: 'Apple', model: 'iPhone 18 Pro Max back triple camera 6.93mm f/1.8' };
+const IPHONE_DUO_BACK_WIDE: Lens = { make: 'Apple', model: 'iPhone Duo back dual camera 2.22mm f/2.2' };
+const IPHONE_DUO_BACK_MAIN: Lens = { make: 'Apple', model: 'iPhone Duo back dual camera 5.96mm f/1.6' };
 
 const PIXEL_8_PRO_BACK: Lens = { make: 'Google', model: 'Pixel 8 Pro back camera 6.9mm f/1.68' };
 const PIXEL_8_PRO_BACK_NO_MAKE: Lens = { model: 'Pixel 8 Pro back camera 6.9mm f/1.68' };
@@ -38,6 +46,16 @@ describe('Lens', () => {
       expect(formatLensText(IPHONE_14_PRO_BACK_WIDE_NO_MAKE)).toBe('14 Pro Main (6.86mm)');
       expect(formatLensText(IPHONE_12_PRO_MAX_BACK_WIDE_NO_MAKE)).toBe('12 Pro Max Telephoto (7.5mm)');
       expect(formatLensText(IPHONE_12_PRO_MAX_BACK_TELEPHOTO_NO_MAKE)).toBe('12 Pro Max Main (5.1mm)');
+      expect(formatLensText(IPHONE_18_PRO_BACK_WIDE)).toBe('18 Pro Wide (2.22mm)');
+      expect(formatLensText(IPHONE_18_PRO_BACK_MAIN)).toBe('18 Pro Main (6.93mm)');
+      expect(formatLensText(IPHONE_18_PRO_BACK_MAIN_STOPPED_DOWN)).toBe('18 Pro Main (6.93mm)');
+      expect(formatLensText(IPHONE_18_PRO_BACK_MAIN_DEEP)).toBe('18 Pro Main (6.93mm)');
+      expect(formatLensText(IPHONE_18_PRO_BACK_TELEPHOTO)).toBe('18 Pro Telephoto (16.891mm)');
+      expect(formatLensText(IPHONE_18_PRO_MAX_BACK_MAIN)).toBe('18 Pro Max Main (6.93mm)');
+      expect(formatLensText(IPHONE_DUO_BACK_WIDE)).toBe('Duo Wide (2.22mm)');
+      expect(formatLensText(IPHONE_DUO_BACK_MAIN)).toBe('Duo Main (5.96mm)');
+      expect(formatLensText(IPHONE_18_PRO_BACK_MAIN, 'short', false)).toBe('Main Camera');
+      expect(formatLensText(IPHONE_18_PRO_BACK_TELEPHOTO, 'long', false)).toBe('Apple iPhone 18 Pro back triple camera 16.891mm f/2.8');
     });
     it('Pixel lenses', () => {
       expect(formatLensText(PIXEL_8_PRO_BACK, 'medium')).toBe('Pixel 8 Pro Back (6.9mm)');
