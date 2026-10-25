@@ -3,6 +3,7 @@
 import { TINT_FOLDERS } from '@/app/config';
 import CategoryIcon from '@/category/CategoryIcon';
 import type { CategoryKey } from '@/category';
+import AnimateItems from '@/components/AnimateItems';
 import PhotoFolder from '@/components/folder/PhotoFolder';
 import IconFavs from '@/components/icons/IconFavs';
 import IconRecents from '@/components/icons/IconRecents';
@@ -89,31 +90,28 @@ export default function LibrarySection({
         {title}
       </button>
       {isOpen &&
-        <div
-          id={contentId}
-          className={clsx(
-            'grid gap-3',
-            'grid-cols-2 sm:grid-cols-3',
-            'lg:grid-cols-5',
-          )}
-        >
-          {folders.map(folder =>
-            <div
-              key={folder.key}
-              className={clsx(
-                'w-full h-full',
-                'flex items-center',
-              )}
-            >
+        <div id={contentId}>
+          <AnimateItems
+            className={clsx(
+              'grid gap-3',
+              'grid-cols-2 sm:grid-cols-3',
+              'lg:grid-cols-5',
+            )}
+            classNameItem="w-full h-full flex items-center"
+            duration={0.5}
+            staggerDelay={0.04}
+            items={folders.map(folder =>
               <PhotoFolder
+                key={folder.key}
                 photos={folder.photos}
                 caption={folder.caption}
                 captionIcon={getFolderCaptionIcon(folder.key)}
                 count={folder.count}
                 href={folder.path}
                 tint={TINT_FOLDERS ? 'on' : 'off'}
-              />
-            </div>)}
+              />)}
+            itemKeys={folders.map(({ key }) => key)}
+          />
         </div>}
     </div>
   );
