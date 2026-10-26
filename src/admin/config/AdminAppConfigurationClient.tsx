@@ -1046,13 +1046,15 @@ export default function AdminAppConfigurationClient({
                   />}
               </div>
             </div>
-            Titles default to uppercase and serif; color bars show by default.
+            Titles default to uppercase and serif.
             {' '}
             Set a variable to {'"1"'} to disable that treatment.
+            {' '}
+            Set {'"1"'} to show color bars.
             <div className="pt-1 flex flex-col gap-1">
               <EnvVar variable="NEXT_PUBLIC_DISABLE_UPPERCASE_TITLES" />
               <EnvVar variable="NEXT_PUBLIC_DISABLE_SERIF_FONT" />
-              <EnvVar variable="NEXT_PUBLIC_DISABLE_COLOR_BAR" />
+              <EnvVar variable="NEXT_PUBLIC_SHOW_PHOTO_COLOR_BARS" />
             </div>
           </ChecklistRow>
           <ChecklistRow

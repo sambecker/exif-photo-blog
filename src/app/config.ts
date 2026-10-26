@@ -420,7 +420,7 @@ export const UPPERCASE_TITLES =
 export const PHOTO_TITLE_SERIF =
   process.env.NEXT_PUBLIC_DISABLE_SERIF_FONT !== '1';
 export const PHOTO_COLOR_BAR =
-  process.env.NEXT_PUBLIC_DISABLE_COLOR_BAR !== '1';
+  process.env.NEXT_PUBLIC_SHOW_PHOTO_COLOR_BARS === '1';
 export const MATTE_PHOTOS =
   process.env.NEXT_PUBLIC_MATTE_PHOTOS === '1';
 export const MATTE_COLOR =
