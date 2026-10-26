@@ -25,8 +25,8 @@ html {
   --font-serif: "Instrument Serif", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
 
   --breakpoint-xs: 24.5rem;
-  /* Sidebar-beside breakpoint — see src/app/layout-metrics.ts (1172 + offset) */
-  --breakpoint-3xl: 87rem;
+  /* Sidebar-beside breakpoint — see src/app/layout-metrics.ts (1016 + offset) */
+  --breakpoint-3xl: 77rem;
 
   --text-xs: 0.75rem;
   --text-xs--line-height: 1rem;

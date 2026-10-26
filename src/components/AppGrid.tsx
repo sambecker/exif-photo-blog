@@ -6,10 +6,7 @@ import {
   LAYOUT_CLASS_SIDE_3XL,
   LAYOUT_CLASS_SIDE_OFFSET_3XL,
   LAYOUT_CLASS_WITH_SIDE_3XL,
-  LAYOUT_MAIN,
 } from '@/app/layout-metrics';
-
-export const APP_GRID_WIDTH_MAIN = LAYOUT_MAIN;
 
 // Offsets sidebar width when centering on large screens.
 // Applied to columns, not the container, so that consumer-supplied
