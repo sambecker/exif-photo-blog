@@ -88,6 +88,12 @@ import { capitalize } from '@/utility/string';
 import AnchorSections from '@/components/AnchorSections';
 import useIsVisible from '@/utility/useIsVisible';
 import useHash from '@/utility/useHash';
+import useMediaQuery from '@/utility/useMediaQuery';
+import {
+  LAYOUT_CLASS_MAIN,
+  LAYOUT_CLASS_SHELL_X,
+  LAYOUT_MAIN,
+} from '@/app/layout-metrics';
 import { getOptimizedPhotoUrlForManipulation } from '../storage';
 import {
   getFileNamePartsFromStorageUrl,
@@ -102,6 +108,18 @@ import { useSearchParams } from 'next/navigation';
 import DateTimePicker from '@/components/DateTimePicker';
 
 const THUMBNAIL_SIZE = 300;
+/** Form cap. The floating thumb is placed to the right of this. */
+const FORM_MAX_WIDTH_PX = 38 * 16;
+/**
+ * The floating thumb used to sit 3rem from the form. Most of that gap is
+ * now thumb size (more than half); 1rem remains so the two don't touch.
+ */
+const FORM_THUMB_GAP_PX = 16;
+const FLOATING_THUMB_SIZE = THUMBNAIL_SIZE + (3 * 16 - FORM_THUMB_GAP_PX);
+/** Resting offset from the viewport top (`top-8`). */
+const FLOATING_THUMB_TOP_PX = 32;
+/** Entrance rise (`-translate-y-4`), kept inside the clip box. */
+const FLOATING_THUMB_RISE_PX = 16;
 
 export default function PhotoForm({
   type = 'create',
@@ -524,7 +542,16 @@ export default function PhotoForm({
   const isThumbnailVisible = useIsVisible({ ref, initiallyVisible: true });
   const thumbnailDimensions =
     getDimensionsFromSize(THUMBNAIL_SIZE, formData.aspectRatio);
-  const thumbnail = (includeRef?: boolean, className?: string) =>
+  const floatingThumbDimensions =
+    getDimensionsFromSize(FLOATING_THUMB_SIZE, formData.aspectRatio);
+  // Stay visible once the viewport is wider than the main column.
+  // Narrower than that, the shell has no side margin to hold it.
+  const canFloatThumb = useMediaQuery(`(min-width: ${LAYOUT_MAIN}px)`);
+  const thumbnail = (
+    includeRef?: boolean,
+    className?: string,
+    dimensions = thumbnailDimensions,
+  ) =>
     <ImageWithFallback
       ref={includeRef ? ref : undefined}
       alt={formData.title || 'Photo thumbnail'}
@@ -536,8 +563,8 @@ export default function PhotoForm({
       )}
       blurDataURL={formData.blurData}
       blurCompatibilityLevel="none"
-      width={thumbnailDimensions.width}
-      height={thumbnailDimensions.height}
+      width={dimensions.width}
+      height={dimensions.height}
       loading="eager"
     />;
 
@@ -545,22 +572,39 @@ export default function PhotoForm({
     <div className="space-y-4 max-w-[38rem]">
       <div className="relative flex gap-2">
         {thumbnail(true)}
-        <div className={clsx(
-          'max-md:hidden',
-          'fixed top-8 mr-4',
-          // Orient around responsive form fields
-          'left-[77%] min-[850px]:left-[41rem] lg:left-[42rem]',
-          // For some reason, left property cannot target relative ancestor
-          '3xl:left-auto 3xl:translate-x-[41rem]',
-          // Prevent image blocking form button interaction
-          'pointer-events-none',
-        )}>
-          {thumbnail(false, clsx(
-            'opacity-0 -translate-y-4',
-            !isThumbnailVisible &&
-              'opacity-100 translate-y-0 transition-all duration-300',
-          ))}
-        </div>
+        {canFloatThumb &&
+          <div
+            className={clsx(
+              // Match the page shell and centered main column so the thumb
+              // stays in the margin beside the form. Clip at the shell edge
+              // instead of unmounting while part of the thumb still fits.
+              'fixed z-10 inset-x-0 overflow-clip',
+              'pointer-events-none',
+              LAYOUT_CLASS_SHELL_X,
+            )}
+            style={{
+              top: FLOATING_THUMB_TOP_PX - FLOATING_THUMB_RISE_PX,
+              height: floatingThumbDimensions.height +
+                FLOATING_THUMB_RISE_PX + 2,
+              paddingTop: FLOATING_THUMB_RISE_PX,
+            }}
+          >
+            <div className={clsx(
+              'relative mx-auto w-full',
+              LAYOUT_CLASS_MAIN,
+            )}>
+              <div
+                className="absolute top-0"
+                style={{ left: FORM_MAX_WIDTH_PX + FORM_THUMB_GAP_PX }}
+              >
+                {thumbnail(false, clsx(
+                  'opacity-0 -translate-y-4',
+                  !isThumbnailVisible &&
+                    'opacity-100 translate-y-0 transition-all duration-300',
+                ), floatingThumbDimensions)}
+              </div>
+            </div>
+          </div>}
         <div className={clsx(
           'absolute top-2 left-2 transition-opacity duration-500',
           aiContent?.isLoading ? 'opacity-100' : 'opacity-0',

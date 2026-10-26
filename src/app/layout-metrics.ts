@@ -36,3 +36,5 @@ export const LAYOUT_CLASS_WITH_SIDE_3XL = '3xl:max-w-[1016px] 3xl:w-[1016px]';
 export const LAYOUT_CLASS_SIDE_3XL = '3xl:max-w-[200px]';
 export const LAYOUT_CLASS_SIDE_OFFSET_3XL = '3xl:relative 3xl:left-[108px]';
 export const LAYOUT_CLASS_COLS_WITH_SIDE_3XL = '3xl:grid-cols-[minmax(0,800px)_200px] 3xl:gap-4';
+/** Horizontal inset of the page shell — app/layout.tsx */
+export const LAYOUT_CLASS_SHELL_X = 'mx-3 lg:mx-6';
