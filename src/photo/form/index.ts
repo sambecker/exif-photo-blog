@@ -4,6 +4,7 @@ import {
   convertTakenAtToNaive,
   generateLocalNaivePostgresString,
   generateLocalPostgresString,
+  getTakenAtOffsetMs,
   validateNaivePostgresDateString,
   validatePostgresDateString,
   validationMessageNaivePostgresDateString,
@@ -645,6 +646,18 @@ export const formDataWithSyncedTakenAt = (
   }
   return formUpdated;
 };
+
+// Offset between taken-at fields, keeping previous offset while either
+// field is partially typed (undefined when fields are inconsistent)
+export const getTakenAtOffsetMsForForm = (
+  { takenAt, takenAtNaive }: Partial<PhotoFormData>,
+  offsetMsPrevious?: number,
+) => (
+  validatePostgresDateString(takenAt) &&
+  validateNaivePostgresDateString(takenAtNaive)
+)
+  ? getTakenAtOffsetMs(takenAt, takenAtNaive)
+  : offsetMsPrevious;
 
 export const generateTakenAtFields = (
   form?: Partial<PhotoFormData>,
