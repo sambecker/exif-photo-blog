@@ -1,7 +1,12 @@
 import { DEFAULT_ASPECT_RATIO, Photo, PhotoDbInsert } from '..';
 import {
+  convertTakenAtNaiveToUtc,
+  convertTakenAtToNaive,
   generateLocalNaivePostgresString,
   generateLocalPostgresString,
+  getTakenAtOffsetMs,
+  validateNaivePostgresDateString,
+  validatePostgresDateString,
   validationMessageNaivePostgresDateString,
   validationMessagePostgresDateString,
 } from '@/utility/date';
@@ -620,6 +625,39 @@ export const getChangedFormFields = (
       (current[key as keyof PhotoFormData] ?? ''),
     ) as (keyof PhotoFormData)[];
 };
+
+// Editing one taken-at field shifts the other by the same amount,
+// preserving timezone offset, so sort order (UTC) matches display (naive)
+export const formDataWithSyncedTakenAt = (
+  form: Partial<PhotoFormData>,
+  key: 'takenAt' | 'takenAtNaive',
+  value: string,
+  offsetMs?: number,
+): Partial<PhotoFormData> => {
+  const formUpdated = { ...form, [key]: value };
+  if (offsetMs === undefined) { return formUpdated; }
+  if (key === 'takenAt' && validatePostgresDateString(value)) {
+    formUpdated.takenAtNaive = convertTakenAtToNaive(value, offsetMs);
+  } else if (
+    key === 'takenAtNaive' &&
+    validateNaivePostgresDateString(value)
+  ) {
+    formUpdated.takenAt = convertTakenAtNaiveToUtc(value, offsetMs);
+  }
+  return formUpdated;
+};
+
+// Offset between taken-at fields, keeping previous offset while either
+// field is partially typed (undefined when fields are inconsistent)
+export const getTakenAtOffsetMsForForm = (
+  { takenAt, takenAtNaive }: Partial<PhotoFormData>,
+  offsetMsPrevious?: number,
+) => (
+  validatePostgresDateString(takenAt) &&
+  validateNaivePostgresDateString(takenAtNaive)
+)
+  ? getTakenAtOffsetMs(takenAt, takenAtNaive)
+  : offsetMsPrevious;
 
 export const generateTakenAtFields = (
   form?: Partial<PhotoFormData>,

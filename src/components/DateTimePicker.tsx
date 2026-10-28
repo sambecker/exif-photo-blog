@@ -154,7 +154,7 @@ export default function DateTimePicker({
   const s = parsedDate?.getSeconds() ?? 0;
 
   return (
-    <div ref={containerRef} className="relative self-start">
+    <div ref={containerRef} className="relative h-full">
       <button
         type="button"
         tabIndex={-1}
@@ -166,7 +166,7 @@ export default function DateTimePicker({
           }
           setIsOpen(o => !o);
         }}
-        className="h-9"
+        className="h-full"
       >
         <TbCalendar size={16} />
       </button>

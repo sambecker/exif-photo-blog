@@ -3,6 +3,7 @@
 
 import {
   ComponentProps,
+  Fragment,
   useCallback,
   useEffect,
   useMemo,
@@ -23,8 +24,11 @@ import {
   isFormValid,
   formDataWithUpdatedColorData,
   formDataWithUpdatedKeyColor,
+  formDataWithSyncedTakenAt,
+  getTakenAtOffsetMsForForm,
 } from '.';
 import FieldsetWithStatus from '@/components/FieldsetWithStatus';
+import Checkbox from '@/components/Checkbox';
 import {
   createPhotoAction,
   getAiColorAction,
@@ -167,6 +171,13 @@ export default function PhotoForm({
   const [formErrors, setFormErrors] =
     useState(getFormErrors(initialPhotoForm));
   const [formActionErrorMessage, setFormActionErrorMessage] = useState('');
+
+  // Last known timezone offset between taken-at fields,
+  // remembered so partially typed dates still sync once valid
+  const [takenAtOffsetMs, setTakenAtOffsetMs] = useState(() =>
+    getTakenAtOffsetMsForForm(initialPhotoForm));
+  const [shouldSyncTakenAt, setShouldSyncTakenAt] = useState(true);
+  const canSyncTakenAt = takenAtOffsetMs !== undefined;
 
   const [detectedFilm, setDetectedFilm] =
     useState(initialPhotoForm.film);
@@ -725,12 +736,32 @@ export default function PhotoForm({
                         changedFormKeys.includes(key)
                       ),
                       onChange: value => {
-                        const formUpdated = { ...formData, [key]: value };
+                        let formUpdated = { ...formData, [key]: value };
+                        let syncedErrors: Partial<typeof formErrors> = {};
+                        if (key === 'takenAt' || key === 'takenAtNaive') {
+                          formUpdated = formDataWithSyncedTakenAt(
+                            formData,
+                            key,
+                            value,
+                            shouldSyncTakenAt ? takenAtOffsetMs : undefined,
+                          );
+                          setTakenAtOffsetMs(getTakenAtOffsetMsForForm(
+                            formUpdated,
+                            takenAtOffsetMs,
+                          ));
+                          const keySynced = key === 'takenAt'
+                            ? 'takenAtNaive'
+                            : 'takenAt';
+                          if (formUpdated[keySynced] !== formData[keySynced]) {
+                            syncedErrors = { [keySynced]: undefined };
+                          }
+                        }
                         setFormData(formUpdated);
                         if (validate) {
                           setFormErrors({
-                            ...formErrors, [key]:
-                            validate(value),
+                            ...formErrors,
+                            ...syncedErrors,
+                            [key]: validate(value),
                           });
                         } else if (validateStringMaxLength !== undefined) {
                           setFormErrors({
@@ -912,16 +943,42 @@ export default function PhotoForm({
                           className="relative z-2"
                         />;
                       case 'takenAt':
-                        return <FieldsetWithStatus
-                          key={key}
-                          {...fieldProps}
-                          accessory={<DateTimePicker
-                            value={formData.takenAt ?? ''}
-                            onChange={fieldProps.onChange}
-                            type="utc"
-                            readOnly={fieldProps.readOnly}
-                          />}
-                        />;
+                        return <Fragment key={key}>
+                          <label className={clsx(
+                            'flex items-center gap-2 select-none',
+                            canSyncTakenAt
+                              ? 'cursor-pointer'
+                              : 'cursor-not-allowed',
+                          )}>
+                            <Checkbox
+                              checked={canSyncTakenAt && shouldSyncTakenAt}
+                              disabled={!canSyncTakenAt}
+                              readOnly={!canSyncTakenAt}
+                              onChange={e =>
+                                setShouldSyncTakenAt(e.target.checked)}
+                            />
+                            <span className={clsx(
+                              !canSyncTakenAt && 'opacity-50',
+                            )}>
+                              Keep taken at fields in sync
+                            </span>
+                            {!canSyncTakenAt &&
+                              <span className={clsx(
+                                'text-gray-400 dark:text-gray-600',
+                              )}>
+                                (fields are inconsistent)
+                              </span>}
+                          </label>
+                          <FieldsetWithStatus
+                            {...fieldProps}
+                            accessory={<DateTimePicker
+                              value={formData.takenAt ?? ''}
+                              onChange={fieldProps.onChange}
+                              type="utc"
+                              readOnly={fieldProps.readOnly}
+                            />}
+                          />
+                        </Fragment>;
                       case 'takenAtNaive':
                         return <FieldsetWithStatus
                           key={key}
