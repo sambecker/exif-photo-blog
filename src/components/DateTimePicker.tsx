@@ -173,7 +173,8 @@ export default function DateTimePicker({
       {isOpen && (
         <div className={clsx(
           'component-surface shadow-lg dark:shadow-xl',
-          'absolute right-0 top-full mt-1 z-10',
+          // Clear the sticky form actions (z-10)
+          'absolute right-0 top-full mt-1 z-20',
           'p-3 w-60',
           'animate-fade-in-from-top',
         )}>
