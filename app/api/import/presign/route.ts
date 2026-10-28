@@ -1,5 +1,5 @@
-import { verifyImportRequest } from '@/import/auth';
-import { CURRENT_STORAGE, IMPORT_API_ENABLED } from '@/app/config';
+import { auth } from '@/auth/server';
+import { CURRENT_STORAGE } from '@/app/config';
 import {
   baseUrlForStorage,
   generateFileNameWithId,
@@ -14,18 +14,13 @@ const schema = z.object({
 });
 
 export async function POST(request: Request) {
-  if (!IMPORT_API_ENABLED) {
-    return new Response('Not Found', { status: 404 });
-  }
-
-  const rawBody = Buffer.from(await request.arrayBuffer());
-  if (!verifyImportRequest(request, rawBody, process.env.IMPORT_PUBLIC_KEY)) {
+  if (!(await auth())?.user) {
     return new Response('Unauthorized', { status: 401 });
   }
 
   let json: unknown;
   try {
-    json = JSON.parse(rawBody.toString('utf8'));
+    json = await request.json();
   } catch {
     return new Response('Invalid JSON', { status: 400 });
   }

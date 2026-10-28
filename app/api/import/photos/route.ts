@@ -1,16 +1,10 @@
-import { IMPORT_API_ENABLED } from '@/app/config';
-import { verifyImportRequest } from '@/import/auth';
+import { auth } from '@/auth/server';
 import { getPhotos } from '@/photo/query';
 
 export const runtime = 'nodejs';
 
 export async function GET(request: Request) {
-  if (!IMPORT_API_ENABLED) {
-    return new Response('Not Found', { status: 404 });
-  }
-
-  const rawBody = Buffer.from(await request.arrayBuffer());
-  if (!verifyImportRequest(request, rawBody, process.env.IMPORT_PUBLIC_KEY)) {
+  if (!(await auth())?.user) {
     return new Response('Unauthorized', { status: 401 });
   }
 

@@ -59,7 +59,6 @@ export default function AdminAppConfigurationClient({
   hasMultipleStorageProviders,
   currentStorage,
   // Auth
-  isImportApiEnabled,
   hasAuthSecret,
   hasAdminUser,
   // Content
@@ -431,14 +430,6 @@ export default function AdminAppConfigurationClient({
               'ADMIN_EMAIL',
               'ADMIN_PASSWORD',
             ])}
-          </ChecklistRow>
-          <ChecklistRow
-            title="Programmatic uploads"
-            status={isImportApiEnabled}
-            optional
-          >
-            Set an Ed25519 public key to enable signed imports
-            {renderEnvVars(['IMPORT_PUBLIC_KEY'])}
           </ChecklistRow>
         </>;
       case 'Content':

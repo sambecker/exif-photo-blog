@@ -1,24 +1,40 @@
-import { createHash, sign } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import { extname, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { parseArgs } from 'node:util';
 
-export const signImportRequest = (
-  method,
-  url,
-  body,
-  privateKey,
-  timestamp = String(Date.now()),
-) => {
-  const hash = createHash('sha256').update(body).digest('hex');
-  const message = `${method}\n${new URL(url).pathname}\n${timestamp}\n${hash}`;
-  return {
-    'x-import-timestamp': timestamp,
-    'x-import-signature': sign(null, Buffer.from(message), privateKey)
-      .toString('base64'),
-  };
+// Request cookies from Set-Cookie headers, optionally filtered by name
+// (ignoring `__Secure-`/`__Host-` prefixes and `.0`, `.1` chunk suffixes)
+export const cookiesFrom = (response, name) => response.headers
+  .getSetCookie()
+  .map(cookie => cookie.split(';')[0])
+  .filter(cookie => {
+    const [key, value] = cookie.split('=');
+    const baseName = key.replace(/^__(Secure|Host)-/, '').replace(/\.\d+$/, '');
+    return value && (!name || baseName === name);
+  })
+  .join('; ');
+
+// Standard Auth.js credentials sign-in (same provider as the admin sign-in)
+export const signIn = async (base, email, password) => {
+  const csrf = await fetch(new URL('/api/auth/csrf', base));
+  if (!csrf.ok) {
+    throw new Error(`GET /api/auth/csrf: HTTP ${csrf.status}`);
+  }
+  const { csrfToken } = await csrf.json();
+  const callback = new URL('/api/auth/callback/credentials', base);
+  const response = await fetch(callback, {
+    method: 'POST',
+    redirect: 'manual',
+    headers: { Cookie: cookiesFrom(csrf) },
+    body: new URLSearchParams({ csrfToken, email, password }),
+  });
+  const session = cookiesFrom(response, 'authjs.session-token');
+  if (!session) {
+    throw new Error('Sign-in failed: check ADMIN_EMAIL and ADMIN_PASSWORD');
+  }
+  return session;
 };
 
 const contentTypes = {
@@ -38,7 +54,6 @@ const main = async () => {
     allowPositionals: true,
     options: {
       base: { type: 'string' },
-      key: { type: 'string' },
       title: { type: 'string' },
       visible: { type: 'boolean', default: false },
       hidden: { type: 'string', default: 'include' },
@@ -46,27 +61,26 @@ const main = async () => {
   });
   const [command, file, ...extra] = positionals;
   if (
-    !values.base || !values.key || extra.length ||
+    !values.base || extra.length ||
     (command !== 'upload' && command !== 'list') ||
     (command === 'upload' && !file) || (command === 'list' && file)
   ) {
     throw new Error(
-      'Usage: --base URL --key PEM upload FILE [--title T] [--visible]' +
+      'Usage: --base URL upload FILE [--title T] [--visible]' +
       ' | list [--hidden only|include|exclude]',
     );
   }
 
-  const privateKey = await readFile(expandPath(values.key), 'utf8');
+  const { ADMIN_EMAIL, ADMIN_PASSWORD } = process.env;
+  if (!ADMIN_EMAIL || !ADMIN_PASSWORD) {
+    throw new Error('Set ADMIN_EMAIL and ADMIN_PASSWORD');
+  }
+  const cookie = await signIn(values.base, ADMIN_EMAIL, ADMIN_PASSWORD);
   const request = async (method, path, data) => {
-    const url = new URL(path, values.base);
-    const body = data === undefined ? '' : JSON.stringify(data);
-    const response = await fetch(url, {
+    const response = await fetch(new URL(path, values.base), {
       method,
-      headers: {
-        ...signImportRequest(method, url, body, privateKey),
-        'Content-Type': 'application/json',
-      },
-      ...method !== 'GET' && { body },
+      headers: { Cookie: cookie, 'Content-Type': 'application/json' },
+      ...data !== undefined && { body: JSON.stringify(data) },
     });
     if (!response.ok) {
       throw new Error(`${method} ${path}: HTTP ${response.status}`);

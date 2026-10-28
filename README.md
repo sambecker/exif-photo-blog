@@ -161,26 +161,19 @@ Create Upstash Redis store from storage tab of Vercel dashboard and link to your
 
 ### Programmatic uploads (optional)
 
-Upload photos from local scripts without a browser session (Node >= 22).
+Upload photos from local scripts (Node >= 22).
 Requires S3, Cloudflare R2, or MinIO storage for direct presigned uploads.
-Generate an Ed25519 key pair:
+The script signs in with the existing admin credentials; no extra server setup:
 
 ```sh
-openssl genpkey -algorithm ed25519 -out import.pem && openssl pkey -in import.pem -pubout
-```
-
-Set `IMPORT_PUBLIC_KEY` to the printed SPKI PEM public key and redeploy;
-literal `\n` escapes are also accepted. Keep `import.pem` on your local machine.
-Without this variable, `/api/import/*` returns 404.
-
-```sh
-node scripts/photo-import.mjs --base https://photos.example.com --key import.pem upload photo.jpg
-node scripts/photo-import.mjs --base https://photos.example.com --key import.pem list --hidden only
+export ADMIN_EMAIL=... ADMIN_PASSWORD=...
+node scripts/photo-import.mjs --base https://photos.example.com upload photo.jpg
+node scripts/photo-import.mjs --base https://photos.example.com list --hidden only
 ```
 
 Uploads are hidden by default (`--visible` makes them visible) and are not
 idempotent: use `list` to check the result before retrying an uncertain upload.
-See [script notes](scripts/README.md) for the Node keygen alternative and protocol.
+See [script notes](scripts/README.md) for details.
 
 ### Categories
 - `NEXT_PUBLIC_CATEGORY_VISIBILITY`
