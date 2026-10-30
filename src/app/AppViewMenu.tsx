@@ -18,8 +18,9 @@ import IconSortNav from '@/components/icons/IconSortNav';
 
 export default function AppViewMenu({
   isViewFull,
+  isViewGrid,
   isMasonry,
-  // Home views switch by navigating, sets by toggling state
+  // Sets toggle via onSelectView; elsewhere navigate via hrefs
   hrefGrid,
   hrefFull,
   onSelectView,
@@ -30,6 +31,7 @@ export default function AppViewMenu({
   className,
 }: {
   isViewFull?: boolean
+  isViewGrid?: boolean
   isMasonry?: boolean
   hrefGrid?: string
   hrefFull?: string
@@ -52,13 +54,14 @@ export default function AppViewMenu({
   const switcherItemGrid = <SwitcherItem
     key="grid"
     icon={isMasonry
-      ? <IconGridMasonry />
-      : <IconGrid />}
+      ? <IconGridMasonry selected={isViewGrid} />
+      : <IconGrid selected={isViewGrid} />}
     href={hrefGrid}
     onClick={hrefGrid
       ? undefined
       : () => onSelectView?.(false)}
-    active={!isViewFull}
+    active={isViewGrid}
+    naked
     tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
       content: appText.nav.grid,
       keyCommand: KEY_COMMANDS.grid,
@@ -69,12 +72,13 @@ export default function AppViewMenu({
 
   const switcherItemFull = <SwitcherItem
     key="full"
-    icon={<IconFull />}
+    icon={<IconFull selected={isViewFull} />}
     href={hrefFull}
     onClick={hrefFull
       ? undefined
       : () => onSelectView?.(true)}
     active={isViewFull}
+    naked
     tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
       content: appText.nav.full,
       keyCommand: KEY_COMMANDS.full,
@@ -83,54 +87,61 @@ export default function AppViewMenu({
     noPadding
   />;
 
+  const viewItems = GRID_HOMEPAGE_ENABLED
+    ? [switcherItemGrid, switcherItemFull]
+    : [switcherItemFull, switcherItemGrid];
+
+  const sortItem = showSortControl
+    ? (NAV_SORT_CONTROL === 'menu'
+      ? <SwitcherItem
+        key="sort"
+        icon={<SortMenu
+          {...sortConfig}
+          isOpen={isSortMenuOpen}
+          setIsOpen={setIsSortMenuOpen}
+        />}
+        iconIsFocusable
+        active={!isSortedByDefault || isSortMenuOpen}
+        persistHover={!isSortedByDefault || isSortMenuOpen}
+        naked
+        tooltip={{
+          ...!isSortMenuOpen && SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
+            content: appText.sort.sort,
+          },
+        }}
+        width="narrow"
+        noPadding
+      />
+      : <SwitcherItem
+        key="sort"
+        href={pathSortToggle}
+        icon={<IconSortNav
+          sort={isAscending ? 'asc' : 'desc'}
+          chromatic={isColor}
+        />}
+        active={!isSortedByDefault}
+        persistHover={!isSortedByDefault}
+        naked
+        tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
+          content: isAscending
+            ? appText.sort.viewNewest
+            : appText.sort.viewOldest,
+        }}}
+        width="narrow"
+        noPadding
+      />)
+    : null;
+
   return (
     <div
       className={clsx(
         className,
         'flex items-center',
-        '*:rounded-lg *:overflow-hidden',
       )}
     >
-      {GRID_HOMEPAGE_ENABLED
-        ? [switcherItemGrid, switcherItemFull]
-        : [switcherItemFull, switcherItemGrid]}
-      {showSortControl && (NAV_SORT_CONTROL === 'menu'
-        ? <SwitcherItem
-          className={clsx(
-            !isSortedByDefault && '*:bg-dim *:text-main!',
-          )}
-          icon={<SortMenu
-            {...sortConfig}
-            isOpen={isSortMenuOpen}
-            setIsOpen={setIsSortMenuOpen}
-          />}
-          iconIsFocusable
-          tooltip={{
-            ...!isSortMenuOpen && SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
-              content: appText.sort.sort,
-            },
-          }}
-          width="narrow"
-          noPadding
-        />
-        : <SwitcherItem
-          className={clsx(
-            '*:w-full *:h-full *:flex *:items-center *:justify-center',
-            !isSortedByDefault && '*:bg-dim *:text-main!',
-          )}
-          href={pathSortToggle}
-          icon={<IconSortNav
-            sort={isAscending ? 'asc' : 'desc'}
-            chromatic={isColor}
-          />}
-          tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
-            content: isAscending
-              ? appText.sort.viewNewest
-              : appText.sort.viewOldest,
-          }}}
-          width="narrow"
-          noPadding
-        />)}
+      {/* Sort first to match nav sketch: sort, views, library, search */}
+      {sortItem}
+      {viewItems}
     </div>
   );
 }

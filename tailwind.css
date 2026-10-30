@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=Instrument+Serif:ital@0;1&display=swap");
 
 @import 'tailwindcss';
 
@@ -22,9 +22,11 @@ html {
 
 @theme {
   --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --font-serif: "Instrument Serif", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
 
   --breakpoint-xs: 24.5rem;
-  --breakpoint-3xl: 102rem;
+  /* Sidebar-beside breakpoint — see src/app/layout-metrics.ts (1016 + offset) */
+  --breakpoint-3xl: 77rem;
 
   --text-xs: 0.75rem;
   --text-xs--line-height: 1rem;
@@ -202,6 +204,12 @@ html {
 @utility bg-invert {
   @apply
     bg-gray-900 dark:bg-gray-100
+}
+/* Fill */
+@utility fill-medium {
+  /* Used in nav icon fills (deviates from bg-medium in dark mode) */
+  @apply
+  fill-gray-200 dark:fill-gray-700/80
 }
 /* Baseline Grid */
 @utility space-y-baseline {

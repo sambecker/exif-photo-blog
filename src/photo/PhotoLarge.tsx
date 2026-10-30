@@ -32,6 +32,8 @@ import {
   MATTE_COLOR_DARK,
   ALWAYS_SHOW_EXPOSURE_COMP,
   UPPERCASE_TITLES,
+  PHOTO_TITLE_SERIF,
+  PHOTO_COLOR_BAR,
   GEO_PRIVACY_ENABLED,
 } from '@/app/config';
 import AdminPhotoMenu from '@/admin/AdminPhotoMenu';
@@ -63,6 +65,7 @@ import PhotoOmRecipe from '@/platforms/om-system/PhotoOmRecipe';
 import OmRecipeOverlay from '@/platforms/om-system/OmRecipeOverlay';
 import useMediaQuery from '@/utility/useMediaQuery';
 import { getFujifilmRecipe, getOmRecipe } from '@/recipe/serialization';
+import PhotoColorBar from './color/PhotoColorBar';
 
 export default function PhotoLarge({
   photo,
@@ -238,7 +241,14 @@ export default function PhotoLarge({
     <PhotoLink
       photo={photo}
       className={clsx(
-        'font-bold grow',
+        PHOTO_TITLE_SERIF
+          ? clsx(
+            'font-serif',
+            'text-[1.25rem] sm:text-[1.5rem] leading-tight',
+            // Keep serif/sans text in phase
+            'inline-flex mb-[12.75px] sm:mb-[8px] grow',
+          )
+          : 'font-bold grow',
         UPPERCASE_TITLES && 'uppercase',
       )}
       prefetch={prefetch}
@@ -350,24 +360,25 @@ export default function PhotoLarge({
       classNameSide="relative"
       sideHiddenOnMobile={false}
       contentSide={
-        <div className="md:absolute inset-0 -mt-1">
+        <div className="3xl:absolute inset-0 -mt-1">
           <MaskedScroll className="sticky top-4 self-start">
             <DivDebugBaselineGrid className={clsx(
-              'grid grid-cols-2 md:grid-cols-1',
+              // 2-col when stacked below photo; 1-col in 3xl+ sidebar
+              'grid grid-cols-2 3xl:grid-cols-1',
               'gap-x-0.5 sm:gap-x-1 gap-y-baseline',
-              'mb-6 md:mb-4',
+              'mb-6 3xl:mb-4',
             )}>
               {/* Meta */}
-              <div className="pr-3 md:pr-0">
+              <div className="pr-3 3xl:pr-0">
                 {!isEditingTitles &&
-                  <div className="float-end hidden md:block">
+                  <div className="float-end hidden 3xl:block">
                     {renderAdminMenu}
                   </div>}
                 {isEditingTitles
                   ? <div className={clsx(
                     'space-y-2 mb-2',
                     // Keep text large for iOS forms
-                    'md:[&_input]:text-sm',
+                    '3xl:[&_input]:text-sm',
                   )}>
                     <FieldsetWithStatus
                       id={`edit-title-${photo.id}`}
@@ -406,7 +417,10 @@ export default function PhotoLarge({
                     : renderPhotoLink)}
                 <div className="space-y-baseline">
                   {!isEditingTitles && photo.caption &&
-                    <div className={clsx(UPPERCASE_TITLES && 'uppercase')}>
+                    <div className={clsx(
+                      UPPERCASE_TITLES && 'uppercase',
+                      PHOTO_TITLE_SERIF && 'text-medium',
+                    )}>
                       {photo.caption}
                     </div>}
                   {(
@@ -430,6 +444,7 @@ export default function PhotoLarge({
                               lens={lens}
                               contrast="medium"
                               prefetch={prefetchRelatedLinks}
+                              includeFocalLength={false}
                             />}
                         </div>}
                       {showRecipeContent && !omRecipe && recipeTitle &&
@@ -464,10 +479,10 @@ export default function PhotoLarge({
               {/* EXIF Data */}
               <div className={clsx(
                 'space-y-baseline',
-                !hasTitleContent && !hasMetaContent && 'md:-mt-baseline',
+                !hasTitleContent && !hasMetaContent && '3xl:-mt-baseline',
               )}>
                 {!isEditingTitles &&
-                  <div className="float-end md:hidden">
+                  <div className="float-end 3xl:hidden">
                     {renderAdminMenu}
                   </div>}
                 {showExifContent &&
@@ -532,28 +547,35 @@ export default function PhotoLarge({
                         />
                       </div>}
                   </>}
+              </div>
+              {PHOTO_COLOR_BAR &&
+                <div className="max-3xl:col-start-2">
+                  <PhotoColorBar colorData={photo.colorData} />
+                </div>}
+              <div className={clsx(
+                // Second column on mobile, directly under the color bar
+                'max-3xl:col-start-2',
+                'flex gap-x-3 gap-y-baseline',
+                '3xl:flex-col flex-wrap',
+                '3xl:justify-normal',
+              )}>
+                <PhotoDate
+                  photo={photo}
+                  className={clsx(
+                    'text-medium',
+                    // Prevent collision with admin button
+                    !hasNonDateContent && isUserSignedIn && '3xl:pr-7',
+                  )}
+                  // 'createdAt' is a naive datetime which does not require
+                  // a timezone and will not cause server/client mismatch
+                  timezone={null}
+                  hideTime={!SHOW_TAKEN_AT_TIME}
+                />
                 <div className={clsx(
-                  'flex gap-x-3 gap-y-baseline',
-                  'md:flex-col flex-wrap',
-                  'md:justify-normal',
+                  'flex gap-1 translate-y-[0.5px]',
+                  'translate-x-[-2.5px]',
                 )}>
-                  <PhotoDate
-                    photo={photo}
-                    className={clsx(
-                      'text-medium',
-                      // Prevent collision with admin button
-                      !hasNonDateContent && isUserSignedIn && 'md:pr-7',
-                    )}
-                    // 'createdAt' is a naive datetime which does not require
-                    // a timezone and will not cause server/client mismatch
-                    timezone={null}
-                    hideTime={!SHOW_TAKEN_AT_TIME}
-                  />
-                  <div className={clsx(
-                    'flex gap-1 translate-y-[0.5px]',
-                    'translate-x-[-2.5px]',
-                  )}>
-                    {showZoomControls &&
+                  {showZoomControls &&
                       <LoaderButton
                         tooltip={appText.tooltip.zoom}
                         aria-label={appText.tooltip.zoom}
@@ -563,7 +585,7 @@ export default function PhotoLarge({
                         className="text-medium translate-y-[0.25px]"
                         hideFocusOutline
                       />}
-                    {shouldShare &&
+                  {shouldShare &&
                       <ShareButton
                         tooltip={appText.tooltip.sharePhoto}
                         photo={photo}
@@ -599,15 +621,14 @@ export default function PhotoLarge({
                           : undefined}
                         prefetch={prefetchRelatedLinks}
                       />}
-                    {ALLOW_PUBLIC_DOWNLOADS && 
+                  {ALLOW_PUBLIC_DOWNLOADS &&
                       <DownloadButton 
-                        className="translate-y-[0.5px] md:translate-y-0"
+                        className="translate-y-[0.5px] 3xl:translate-y-0"
                         photo={photo} 
                       />}
-                  </div>
-                  {showStorageCheck &&
-                    <AdminPhotoStorageCheck photo={photo} />}
                 </div>
+                {showStorageCheck &&
+                    <AdminPhotoStorageCheck photo={photo} />}
               </div>
             </DivDebugBaselineGrid>
           </MaskedScroll>

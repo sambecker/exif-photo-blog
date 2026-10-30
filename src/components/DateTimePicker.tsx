@@ -154,7 +154,7 @@ export default function DateTimePicker({
   const s = parsedDate?.getSeconds() ?? 0;
 
   return (
-    <div ref={containerRef} className="relative self-start">
+    <div ref={containerRef} className="relative h-full">
       <button
         type="button"
         tabIndex={-1}
@@ -166,14 +166,15 @@ export default function DateTimePicker({
           }
           setIsOpen(o => !o);
         }}
-        className="h-9"
+        className="h-full"
       >
         <TbCalendar size={16} />
       </button>
       {isOpen && (
         <div className={clsx(
           'component-surface shadow-lg dark:shadow-xl',
-          'absolute right-0 top-full mt-1 z-10',
+          // Clear the sticky form actions (z-10)
+          'absolute right-0 top-full mt-1 z-20',
           'p-3 w-60',
           'animate-fade-in-from-top',
         )}>

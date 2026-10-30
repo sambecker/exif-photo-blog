@@ -17,6 +17,9 @@ jest.mock('../src/photo/actions', () => ({}));
 jest.mock('../src/auth/server', () => ({}));
 jest.mock('../src/place/actions', () => ({}));
 jest.mock('../src/album/actions', () => ({}));
+jest.mock('../src/utility/useMediaQuery', () => ({
+  __esModule: true, default: () => false,
+}));
 jest.mock('../src/utility/useIsVisible', () => ({
   __esModule: true, default: () => true,
 }));

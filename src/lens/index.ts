@@ -96,6 +96,7 @@ export const lensFromPhoto = (
 export const formatLensText = (
   lens: Lens,
   length: MakeModelTextLength = 'medium',
+  includeFocalLength = true,
 ) => {
   const { make, model: modelRaw } = lens;
 
@@ -107,7 +108,7 @@ export const formatLensText = (
   );
 
   const model = isLensApple(lens)
-    ? formatAppleLensText(modelRaw, length !== 'short')
+    ? formatAppleLensText(modelRaw, length !== 'short', includeFocalLength)
     : isLensGoogle(lens)
       ? formatGoogleLensText(modelRaw, length !== 'short')
       : doesModelStartWithMake

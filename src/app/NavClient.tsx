@@ -3,16 +3,16 @@
 import { clsx } from 'clsx/lite';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import AppGrid from '../components/AppGrid';
 import AppToolbar from '@/app/AppToolbar';
 import {
-  PATH_ROOT,
+  PATH_HOME_INFERRED,
   isPathAdmin,
   isPathAdminPhotoEdit,
   isPathSignIn,
 } from '@/app/path';
 import AnimateItems from '../components/AnimateItems';
 import { NAV_CAPTION } from './config';
+import { LAYOUT_CLASS_MAIN } from './layout-metrics';
 import { useRef } from 'react';
 import useStickyHeader from './useStickyHeader';
 import { useAppState } from '@/app/AppState';
@@ -56,16 +56,23 @@ export default function NavClient({
       : <button onClick={linkOrAction} type="button">{text}</button>;
 
   return (
-    <AppGrid
-      containerRef={ref}
-      className={containerClassName}
+    <div
+      ref={ref}
+      className={clsx('w-full', containerClassName)}
       style={containerStyle}
-      classNameMain={clsx(
-        // Stationary column would cover banners after the nav slides away
-        'pointer-events-none!',
-      )}
-      contentMain={
+    >
+      <div
+        className={clsx(
+          'bg-main',
+          // Full-bleed without w-screen (overflow breaks position:sticky)
+          'shadow-[0_0_0_100vmax_white] dark:shadow-[0_0_0_100vmax_black]',
+          '[clip-path:inset(0_-100vmax)]',
+          contentClassName,
+        )}
+        style={contentStyle}
+      >
         <AnimateItems
+          className={clsx('mx-auto w-full', LAYOUT_CLASS_MAIN)}
           animateOnFirstLoadOnly
           type={!isInEmptyState && !isPathAdmin(pathname) ? 'bottom' : 'none'}
           distanceOffset={10}
@@ -73,23 +80,17 @@ export default function NavClient({
             ? [<nav
               key="nav"
               className={clsx(
-                'w-full flex items-center gap-1.5 sm:gap-2 bg-main',
+                'text-base',
+                'w-full flex items-center gap-2 sm:gap-3',
                 NAV_HEIGHT_CLASS,
-                // Enlarge nav to ensure it fully masks underlying content
-                'md:w-[calc(100%+8px)] md:translate-x-[-4px] md:px-[4px]',
-                contentClassName,
               )}
-              style={contentStyle}>
-              <AppToolbar
-                animate={hasLoadedWithAnimations && isVisible}
-                isInEmptyState={isInEmptyState}
-              />
+            >
               <div className={clsx(
-                'grow text-right min-w-0',
+                'grow min-w-0',
                 'translate-y-[-1px]',
               )}>
                 <div className="truncate overflow-hidden select-none">
-                  {renderLink(navTitle, PATH_ROOT)}
+                  {renderLink(navTitle, PATH_HOME_INFERRED)}
                 </div>
                 {navCaption &&
                   <div className={clsx(
@@ -99,10 +100,14 @@ export default function NavClient({
                     {navCaption}
                   </div>}
               </div>
+              <AppToolbar
+                animate={hasLoadedWithAnimations && isVisible}
+                isInEmptyState={isInEmptyState}
+              />
             </nav>]
             : []}
         />
-      }
-    />
+      </div>
+    </div>
   );
 };

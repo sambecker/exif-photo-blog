@@ -3,7 +3,7 @@ import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { Metadata } from 'next/types';
 import { cache } from 'react';
 import { getPhotos } from '@/photo/query';
-import PhotoFullPage from '@/photo/PhotoFullPage';
+import PhotoExpressivePage from '@/photo/PhotoExpressivePage';
 import { getPhotosMetaCached } from '@/photo/cache';
 import { SortProps } from '@/photo/sort';
 import { getSortOptionsFromParams } from '@/photo/sort/path';
@@ -42,7 +42,7 @@ export default async function FullPageSort({ params }: SortProps) {
 
   return (
     photos.length > 0
-      ? <PhotoFullPage {...{
+      ? <PhotoExpressivePage {...{
         photos,
         photosCount,
         ...sortOptions,

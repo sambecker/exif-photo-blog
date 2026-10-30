@@ -10,7 +10,7 @@ import {
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { clsx } from 'clsx/lite';
 import { FiMoreHorizontal } from 'react-icons/fi';
-import MoreMenuItem from './MoreMenuItem';
+import MoreMenuItem, { getMenuIconSlotClass } from './MoreMenuItem';
 import { clearGlobalFocus } from '@/utility/dom';
 import { FaChevronRight } from 'react-icons/fa6';
 import {
@@ -37,6 +37,7 @@ export type MoreMenuSubmenu = {
   label: string
   labelComplex?: ReactNode
   icon?: ReactNode
+  iconWide?: boolean
 } & (
   | { items: ComponentProps<typeof MoreMenuItem>[], sections?: never }
   // Sections render as groups separated by a dividing line
@@ -133,7 +134,7 @@ export default function MoreMenu({
                   <div className="px-1 focus:outline-none">
                     <div className={clsx(
                       'outline-none focus:outline-none',
-                      'flex items-center h-8.5 gap-4',
+                      'flex items-center h-8.5 gap-3',
                       'px-2 py-2 rounded-lg',
                       'text-sm text-main hover:text-main',
                       getMenuItemColorClasses(),
@@ -145,10 +146,7 @@ export default function MoreMenu({
                         'inline-flex items-center gap-1.5 grow min-w-0',
                       )}>
                         {item.icon &&
-                          <span className={clsx(
-                            'inline-flex items-center justify-center',
-                            'min-w-[1.25rem] h-6 shrink-0',
-                          )}>
+                          <span className={getMenuIconSlotClass(item.iconWide)}>
                             {item.icon}
                           </span>}
                         <span className="grow min-w-0 text-left">

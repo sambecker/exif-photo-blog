@@ -28,6 +28,7 @@ import { PATH_FEED_JSON, PATH_RSS_XML } from '@/app/path';
 import AdminBatchEditPanel from '@/admin/select/AdminBatchEditPanel';
 import AdminEditTitlesPanel from '@/admin/edit-titles/AdminEditTitlesPanel';
 import Script from 'next/script';
+import { LAYOUT_CLASS_SHELL_X } from '@/app/layout-metrics';
 
 import '../tailwind.css';
 
@@ -102,8 +103,11 @@ export default function RootLayout({
         <StateProviders>
           <ThemeColors />
           <div className={clsx(
-            'mx-3 pb-3',
-            'lg:mx-6 lg:pb-6',
+            // Stretch when body becomes 3xl:flex items-center, otherwise
+            // the page shrink-wraps to content max-width
+            'self-stretch',
+            LAYOUT_CLASS_SHELL_X,
+            'pb-3 lg:pb-6',
             'min-h-dvh flex flex-col',
           )}>
             <Nav />

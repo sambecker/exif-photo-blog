@@ -3,7 +3,7 @@ import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { Metadata } from 'next/types';
 import { cache } from 'react';
 import { getPhotos } from '@/photo/query';
-import PhotoFullPage from '@/photo/PhotoFullPage';
+import PhotoExpressivePage from '@/photo/PhotoExpressivePage';
 import { getPhotosMetaCached } from '@/photo/cache';
 import { USER_DEFAULT_SORT_OPTIONS } from '@/app/config';
 import { FEED_META_QUERY_OPTIONS, feedQueryOptions } from '@/feed';
@@ -35,7 +35,7 @@ export default async function FullPage() {
 
   return (
     photos.length > 0
-      ? <PhotoFullPage {...{
+      ? <PhotoExpressivePage {...{
         photos,
         photosCount,
         ...USER_DEFAULT_SORT_OPTIONS,

@@ -1,5 +1,6 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import PhotoLarge from '@/photo/PhotoLarge';
+import PhotoExpressive from '@/photo/PhotoExpressive';
 import { parsePhotoFromDb } from '@/photo';
 import { AppStateContext } from '@/app/AppState';
 import { ShareModalProps } from '@/share';
@@ -35,6 +36,14 @@ jest.mock('../src/components/image/zoom/ZoomControls', () => ({
   __esModule: true,
   default: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
+
+beforeAll(() => {
+  global.ResizeObserver = class {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  };
+});
 
 const key = `om-pen-v1-color-${'a'.repeat(64)}`;
 const basePhoto = parsePhotoFromDb({
@@ -91,7 +100,7 @@ it.each([
     ? `/recipe/${recipe}/penphoto` : '/p/penphoto');
 });
 
-it.each(['photo', 'gallery', 'selected gallery'] as const)(
+it.each(['photo', 'expressive', 'gallery', 'selected gallery'] as const)(
   'passes the source camera to the %s recipe dialog', async source => {
     const photo = { ...basePhoto, make: 'OLYMPUS CORPORATION', model: 'E-P7',
       recipeData: createOmRecipeData(profile) };
@@ -101,9 +110,12 @@ it.each(['photo', 'gallery', 'selected gallery'] as const)(
       {source === 'photo'
         ? <PhotoLarge photo={photo} showRecipe showCamera={false}
           showLens={false} showFilm={false} prefetchRelatedLinks={false} />
-        : <RecipeHeader recipe={key.replace(/^om-pen-/, 'om-')}
-          photos={[firstPhoto, photo]}
-          selectedPhoto={source === 'selected gallery' ? photo : undefined} />}
+        : source === 'expressive'
+          ? <PhotoExpressive photo={photo} prefetchRelatedLinks={false} />
+          : <RecipeHeader recipe={key.replace(/^om-pen-/, 'om-')}
+            photos={[firstPhoto, photo]}
+            selectedPhoto={source === 'selected gallery' ? photo : undefined}
+          />}
     </AppStateContext>);
     fireEvent.click(screen.getByRole('button', {
       name: 'Show color recipe settings',
@@ -112,7 +124,7 @@ it.each(['photo', 'gallery', 'selected gallery'] as const)(
       ? 'OM Digital Solutions PEN · Settings used for this photo'
       : 'OLYMPUS CORPORATION E-P7 · Settings used for this photo'))
       .toBeDefined();
-    if (source === 'photo') {
+    if (source === 'photo' || source === 'expressive') {
       const toggle = screen.getByRole('button', {
         name: 'Hide color recipe settings',
       });

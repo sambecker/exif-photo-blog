@@ -12,7 +12,7 @@ import Spinner from '@/components/Spinner';
 import Tooltip from '@/components/Tooltip';
 import {
   HEIGHT_CLASS,
-  SWITCHER_ITEM_INTERACTIVE_BG,
+  NAV_ITEM_INTERACTIVE_BG,
 } from '@/components/switcher/SwitcherItem';
 import { useAppText } from '@/i18n/state/client';
 import { KEY_COMMANDS } from '@/photo/key-commands';
@@ -23,14 +23,16 @@ import {
   NAV_SORT_CONTROL,
   SHOW_KEYBOARD_SHORTCUT_TOOLTIPS,
 } from './config';
+import { PATH_LIBRARY } from './path';
 import IconSortNav from '@/components/icons/IconSortNav';
-
-const VIEW_ICON_CLASS = 'w-[24px] -ml-[4px] translate-x-[1px]';
+import IconLibrary from '@/components/icons/IconLibrary';
 
 export default function AppViewMenuCompact({
   isViewFull,
+  isViewGrid,
+  isViewLibrary,
   isMasonry,
-  // Home views switch by navigating, sets by toggling state
+  // Sets toggle via onSelectView; elsewhere navigate via hrefs
   hrefGrid,
   hrefFull,
   onSelectView,
@@ -42,6 +44,8 @@ export default function AppViewMenuCompact({
   className,
 }: {
   isViewFull?: boolean
+  isViewGrid?: boolean
+  isViewLibrary?: boolean
   isMasonry?: boolean
   hrefGrid?: string
   hrefFull?: string
@@ -55,18 +59,18 @@ export default function AppViewMenuCompact({
 }) {
   const appText = useAppText();
 
-  const renderIconGrid = (forMenu?: boolean) => isMasonry
-    ? <IconGridMasonry className={forMenu ? VIEW_ICON_CLASS : ''} />
-    : <IconGrid className={forMenu ? VIEW_ICON_CLASS : ''} />;
+  const renderIconGrid = (selected?: boolean) => isMasonry
+    ? <IconGridMasonry selected={selected} />
+    : <IconGrid selected={selected} />;
 
   // Selected views are marked with a check, unselected show their own icon
-  const renderViewIcon = (icon: ReactNode, isSelected: boolean) => isSelected
-    ? renderMenuItemCheck(true)
-    : icon;
+  const renderViewIcon = (icon: ReactNode, isSelected?: boolean) =>
+    isSelected ? renderMenuItemCheck(true) : icon;
 
   const itemGrid = {
     label: appText.nav.grid,
-    icon: renderViewIcon(renderIconGrid(true), !isViewFull),
+    icon: renderViewIcon(renderIconGrid(isViewGrid), isViewGrid),
+    iconWide: true,
     ...hrefGrid
       ? { href: hrefGrid }
       : { action: () => onSelectView?.(false) },
@@ -76,35 +80,70 @@ export default function AppViewMenuCompact({
   const itemFull = {
     label: appText.nav.full,
     icon: renderViewIcon(
-      <IconFull className={VIEW_ICON_CLASS} />,
-      Boolean(isViewFull),
+      <IconFull selected={isViewFull} />,
+      isViewFull,
     ),
+    iconWide: true,
     ...hrefFull
       ? { href: hrefFull }
       : { action: () => onSelectView?.(true) },
     ...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && { keyCommand: KEY_COMMANDS.full },
   };
 
-  const items: MoreMenuSection['items'] = GRID_HOMEPAGE_ENABLED
-    ? [itemGrid, itemFull]
-    : [itemFull, itemGrid];
+  const itemLibrary = {
+    label: appText.nav.library,
+    icon: renderViewIcon(
+      <IconLibrary selected={isViewLibrary} />,
+      isViewLibrary,
+    ),
+    iconWide: true,
+    href: PATH_LIBRARY,
+    ...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && { keyCommand: KEY_COMMANDS.library },
+  };
+
+  const viewItems: MoreMenuSection['items'] = [
+    ...GRID_HOMEPAGE_ENABLED
+      ? [itemGrid, itemFull]
+      : [itemFull, itemGrid],
+    itemLibrary,
+  ];
+
+  // Full color when a view is active or the menu is open.
+  // Photo detail / admin stay dim with nothing checked.
+  const isViewActive = isViewFull || isViewGrid || isViewLibrary;
+
+  const sections: MoreMenuSection[] = [{ items: viewItems }];
 
   if (showSortItems) {
     const { itemsSortOrder, itemsSortType } =
       getSortMenuItems(sortConfig, appText);
-    items.push({
-      label: appText.sort.sort,
-      icon: <IconSortNav
-        sort={sortConfig.isAscending ? 'asc' : 'desc'}
-        chromatic={sortConfig.isColor}
-        className={clsx(VIEW_ICON_CLASS, 'w-[30px]! -ml-2!')} 
-      />,
-      // Sort types are only offered where the nav exposes a full sort menu
-      sections: NAV_SORT_CONTROL === 'menu'
-        ? [{ items: itemsSortOrder }, { items: itemsSortType }]
-        : [{ items: itemsSortOrder }],
+    sections.push({
+      items: [{
+        label: appText.sort.sort,
+        icon: <IconSortNav
+          sort={sortConfig.isAscending ? 'asc' : 'desc'}
+          chromatic={sortConfig.isColor}
+        />,
+        iconWide: true,
+        // Sort types are only offered where the nav exposes a full sort menu.
+        // Submenu items are check-only — keep default (narrow) icon slots.
+        sections: NAV_SORT_CONTROL === 'menu'
+          ? [{ items: itemsSortOrder }, { items: itemsSortType }]
+          : [{ items: itemsSortOrder }],
+      }],
     });
   }
+
+  const renderTriggerIcon = () => {
+    if (isLoading) { return <Spinner />; }
+    if (isViewFull) { return <IconFull selected />; }
+    if (isViewGrid) { return renderIconGrid(true); }
+    if (isViewLibrary) { return <IconLibrary selected />; }
+    // Non-view pages: top menu item, unselected
+    return GRID_HOMEPAGE_ENABLED
+      ? renderIconGrid(false)
+      : <IconFull />;
+  };
 
   return (
     <Tooltip
@@ -121,18 +160,14 @@ export default function AppViewMenuCompact({
       )}>
         <MoreMenu
           {...{ isOpen, setIsOpen }}
-          sections={[{ items }]}
+          sections={sections}
           ariaLabel="View Menu"
-          align="start"
+          align="end"
           sideOffset={10}
-          alignOffset={-4}
+          alignOffset={4}
           icon={<>
-            <span className="flex items-center justify-center">
-              {isLoading
-                ? <Spinner />
-                : isViewFull
-                  ? <IconFull />
-                  : renderIconGrid()}
+            <span className="flex items-center justify-center w-8 h-6">
+              {renderTriggerIcon()}
             </span>
             <FiChevronDown
               size={13}
@@ -141,13 +176,17 @@ export default function AppViewMenuCompact({
           </>}
           classNameButton={clsx(
             'inline-flex items-center',
-            'h-[28px]',
-            'rounded-full',
-            'text-main!',
-            SWITCHER_ITEM_INTERACTIVE_BG,
+            HEIGHT_CLASS,
+            'rounded-md',
+            isViewActive || isOpen
+              ? 'text-main!'
+              : 'text-gray-400! dark:text-gray-600!',
+            !isViewActive && !isOpen &&
+              'hover:text-gray-700! dark:hover:text-gray-400!',
+            NAV_ITEM_INTERACTIVE_BG,
             'cursor-pointer',
           )}
-          classNameButtonOpen="bg-dim!"
+          classNameButtonOpen="bg-dim! text-main!"
         />
       </div>
     </Tooltip>
