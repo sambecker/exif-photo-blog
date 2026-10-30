@@ -6,6 +6,7 @@ import { ShareModalProps } from '@/share';
 import { absolutePathForPhoto } from '@/app/path';
 import RecipeHeader from '@/recipe/RecipeHeader';
 import { OmRecipe } from '@/platforms/om-system/recipe';
+import { createOmRecipeData } from '@/recipe/serialization';
 
 jest.mock('next/navigation', () => ({
   useRouter: () => ({ prefetch: jest.fn() }),
@@ -40,7 +41,7 @@ const basePhoto = parsePhotoFromDb({
   id: 'penphoto', url: 'https://photos.example/photo.jpg', extension: 'jpg',
   title: 'Gallery photo', tags: [], aspectRatio: 4 / 3,
   takenAt: new Date(), createdAt: new Date(), updatedAt: new Date(),
-  takenAtNaive: '2026-10-20 12:00:00', omRecipeKey: key,
+  takenAtNaive: '2026-10-20 12:00:00', recipeTitle: key,
 });
 
 const profile: OmRecipe = {
@@ -73,7 +74,7 @@ it.each([[14, 28], [17, 34], [25, 50]])(
 it.each([
   { name: 'OM', recipe: key, photo: basePhoto },
   { name: 'Fujifilm', recipe: 'kodachrome', photo: {
-    ...basePhoto, omRecipeKey: undefined, recipeTitle: 'kodachrome',
+    ...basePhoto, recipeTitle: 'kodachrome',
   } },
   { name: 'unscoped OM', recipe: undefined, photo: basePhoto },
 ])('keeps the share scope for $name photos', ({ recipe, photo }) => {
@@ -93,7 +94,7 @@ it.each([
 it.each(['photo', 'gallery', 'selected gallery'] as const)(
   'passes the source camera to the %s recipe dialog', async source => {
     const photo = { ...basePhoto, make: 'OLYMPUS CORPORATION', model: 'E-P7',
-      omRecipeData: profile };
+      recipeData: createOmRecipeData(profile) };
     const firstPhoto = { ...photo, id: 'firstone',
       make: 'OM Digital Solutions', model: 'PEN' };
     render(<AppStateContext value={{}}>

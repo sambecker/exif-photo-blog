@@ -19,12 +19,13 @@ import { capitalize, parameterize } from '@/utility/string';
 import camelcaseKeys from 'camelcase-keys';
 import { isBefore } from 'date-fns';
 import type { Metadata } from 'next';
-import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
+import { getFujifilmRecipe, getOmRecipe, parseRecipeData, RecipeData }
+  from '@/recipe/serialization';
 import { PhotoUpdateStatus, generatePhotoUpdateStatus } from './update';
 import { AppTextState } from '@/i18n/state';
 import { PhotoColorData } from './color/client';
 import { Place } from '@/place';
-import { isOmSystemCamera, OmRecipe, parseOmRecipe }
+import { isOmSystemCamera }
   from '@/platforms/om-system/recipe';
 
 // INFINITE SCROLL: FULL
@@ -71,9 +72,6 @@ export interface PhotoExif {
   longitude?: number
   film?: string
   recipeData?: string
-  omRecipeData?: string
-  omRecipeKey?: string
-  omRecipeCheckedVersion?: number
   takenAt?: string
   takenAtNaive?: string
   // Photo meta potentially located in EXIF/XMP data
@@ -114,7 +112,7 @@ export interface PhotoDb extends
 
 // Parsed db response
 export interface Photo extends Omit<PhotoDb,
-  'recipeData' | 'colorData' | 'omRecipeData'> {
+  'recipeData' | 'colorData'> {
   focalLengthFormatted?: string
   focalLengthIn35MmFormatFormatted?: string
   fNumberFormatted?: string
@@ -123,8 +121,7 @@ export interface Photo extends Omit<PhotoDb,
   exposureCompensationFormatted?: string
   takenAtNaiveFormatted: string
   tags: string[]
-  recipeData?: FujifilmRecipe
-  omRecipeData?: OmRecipe
+  recipeData?: RecipeData
   colorData?: PhotoColorData
   updateStatus?: PhotoUpdateStatus
 }
@@ -160,13 +157,7 @@ export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {
       formatPhotoExposureCompensation(photoDb),
     takenAtNaiveFormatted:
       formatDateFromPostgresString(photoDb.takenAtNaive),
-    recipeData: photoDb.recipeData
-      // Legacy check on escaped, string-based JSON
-      ? typeof photoDb.recipeData === 'string'
-        ? JSON.parse(photoDb.recipeData)
-        : photoDb.recipeData
-      : undefined,
-    omRecipeData: parseOmRecipe(photoDb.omRecipeData),
+    recipeData: parseRecipeData(photoDb.recipeData),
     colorData: photoDb.colorData
       ? photoDb.colorData
       : undefined,
@@ -191,7 +182,6 @@ export const convertPhotoToPhotoDbInsert = (
   ...photo,
   takenAt: photo.takenAt.toISOString(),
   recipeData: JSON.stringify(photo.recipeData),
-  omRecipeData: JSON.stringify(photo.omRecipeData),
   colorData: JSON.stringify(photo.colorData),
 });
 
@@ -363,7 +353,8 @@ const photoHasLensData = (photo: Photo) =>
   Boolean(photo.lensModel);
 
 const photoHasRecipeData = (photo: Photo) =>
-  Boolean(photo.recipeData || (photo.omRecipeData && photo.omRecipeKey));
+  Boolean(getFujifilmRecipe(photo.recipeData) ||
+    (getOmRecipe(photo.recipeData) && photo.recipeTitle));
 
 const photoHasExifData = (photo: Photo) =>
   Boolean(photo.focalLength) ||

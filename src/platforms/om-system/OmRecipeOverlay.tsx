@@ -67,7 +67,7 @@ export default function OmRecipeOverlay({
     className={clsx(
       'z-10 max-h-[calc(100dvh-2rem)] overflow-y-auto p-2 space-y-3',
       ...(isOnPhoto ? [
-        'w-[calc(100%-1rem)] max-w-5xl shadow-2xl',
+        'w-[calc(100%-1rem)] max-w-sm shadow-2xl',
         'self-start md:self-auto',
       ] : ['w-full shadow-2xl/20 dark:shadow-2xl/100']),
       'scroll-mt-8 rounded-2xl text-[13.5px] text-black',

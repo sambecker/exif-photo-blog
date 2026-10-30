@@ -159,11 +159,16 @@ export const getWheresFromOptions = (
   }
   if (recipe) {
     if (isOmRecipeKey(recipe)) {
-      wheres.push(`om_recipe_key IN ($${valuesIndex++}, $${valuesIndex++})`);
+      wheres.push(`recipe_title IN ($${valuesIndex++}, $${valuesIndex++})`);
       wheresValues.push(...omRecipeKeyAliases(recipe));
+      wheres.push('recipe_data->>\'camera\' = \'om-system\'');
     } else {
       wheres.push(`recipe_title=$${valuesIndex++}`);
       wheresValues.push(recipe);
+      wheres.push(
+        'COALESCE(recipe_data->>\'camera\', \'fujifilm\')' +
+        ' = \'fujifilm\'',
+      );
     }
   }
   // Compare against undefined so focal lengths of 0 are filtered

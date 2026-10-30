@@ -99,8 +99,10 @@ import {
   COMMAND_K_PHOTO_LIMIT,
   getPhotosQueryData,
 } from '@/query/data';
-import { isOmSystemCamera, OM_RECIPE_VERSION }
+import { isOmSystemCamera }
   from '@/platforms/om-system/recipe';
+
+import { isOmRecipeData, parseRecipeData } from '@/recipe/serialization';
 
 // Private actions
 
@@ -574,10 +576,13 @@ export const replacePhotoStorageAction = async (
         aspectRatio: photoDbInsert.aspectRatio,
         colorData: photoDbInsert.colorData,
         colorSort: photoDbInsert.colorSort,
-        // These fields describe the new source, including an absent recipe.
-        omRecipeData: photoDbInsert.omRecipeData,
-        omRecipeKey: photoDbInsert.omRecipeKey,
-        omRecipeCheckedVersion: photoDbInsert.omRecipeCheckedVersion,
+        // OM settings describe the new source, including an absent recipe.
+        ...(isOmSystemCamera(photo.make) ||
+          isOmRecipeData(photo.recipeData) ||
+          isOmRecipeData(parseRecipeData(photoDbInsert.recipeData))) && {
+          recipeData: photoDbInsert.recipeData,
+          recipeTitle: photoDbInsert.recipeTitle || undefined,
+        },
       };
 
       await updatePhoto({
@@ -693,8 +698,9 @@ export const syncPhotoAction = async (
         const formDataFromPhoto = convertPhotoToFormData(photo);
 
         Object.entries(formDataFromExif).forEach(([field, value]) => {
-          if (formDataFromExif.omRecipeCheckedVersion ===
-            String(OM_RECIPE_VERSION) && field.startsWith('omRecipe')) {
+          if ((isOmSystemCamera(photo.make) ||
+            isOmRecipeData(parseRecipeData(formDataFromExif.recipeData))) &&
+            (field === 'recipeData' || field === 'recipeTitle')) {
             // OM settings are extracted facts, without manual overrides.
             return;
           }

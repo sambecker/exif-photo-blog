@@ -40,15 +40,16 @@ import { fetchUrlWithByteLimit } from '@/utility/fetch';
 import { getPlaceFromCoordinates } from '@/platforms/google-places';
 import {
   isOmSystemCamera,
-  OM_RECIPE_VERSION,
   OmRecipe,
-  parseOmRecipe,
 } from '@/platforms/om-system/recipe';
 import {
   createOmRecipeKey,
   getOmFocalLengthIn35MmFormat,
   getOmRecipeFromMakerNote,
 } from '@/platforms/om-system/server';
+
+import { createOmRecipeData, getOmRecipe, isOmRecipeData, parseRecipeData }
+  from '@/recipe/serialization';
 
 const IMAGE_WIDTH_BLUR = 200;
 const IMAGE_WIDTH_DEFAULT = 200;
@@ -96,7 +97,7 @@ export const extractImageDataFromBlobPath = async (
   let film: FujifilmSimulation | NikonPictureControl | undefined;
   let recipe: FujifilmRecipe | undefined;
   let omRecipe: OmRecipe | undefined;
-  let omRecipeCheckedVersion: number | undefined;
+  let didCheckOmRecipe = false;
   let blurData: string | undefined;
   let imageResizedBase64: string | undefined;
   let shouldStripGpsData = false;
@@ -149,9 +150,7 @@ export const extractImageDataFromBlobPath = async (
           }
         }
       }
-      if (isOmCamera || refreshOmRecipe) {
-        omRecipeCheckedVersion = OM_RECIPE_VERSION;
-      }
+      didCheckOmRecipe = isOmCamera || (refreshOmRecipe && !recipe);
 
       if (generateBlurData) {
         blurData = await blurImage(fileBytes);
@@ -186,10 +185,9 @@ export const extractImageDataFromBlobPath = async (
       },
       ...generateBlurData && { blurData },
       ...convertExifToFormData(dataExif, dataExifr, film, recipe),
-      ...omRecipeCheckedVersion && {
-        omRecipeCheckedVersion: String(omRecipeCheckedVersion),
-        omRecipeData: omRecipe ? JSON.stringify(omRecipe) : '',
-        omRecipeKey: omRecipe ? createOmRecipeKey(omRecipe) : '',
+      ...didCheckOmRecipe && {
+        recipeData: JSON.stringify(createOmRecipeData(omRecipe)),
+        recipeTitle: omRecipe ? createOmRecipeKey(omRecipe) : '',
       },
       ...colorFields,
     } satisfies Partial<PhotoFormData>
@@ -343,16 +341,17 @@ export const convertFormDataToPhotoDbInsertAndLookupRecipeTitle =
   Promise<ReturnType<typeof convertFormDataToPhotoDbInsert>> => {
     const photo = convertFormDataToPhotoDbInsert(...args);
 
-    // Derive identity on the server rather than trusting a submitted key.
-    const omRecipe = isOmSystemCamera(photo.make)
-      ? parseOmRecipe(photo.omRecipeData) : undefined;
-    photo.omRecipeData = omRecipe ? JSON.stringify(omRecipe) : undefined;
-    photo.omRecipeKey = omRecipe ? createOmRecipeKey(omRecipe) : undefined;
-    photo.omRecipeCheckedVersion = isOmSystemCamera(photo.make) &&
-      photo.omRecipeCheckedVersion === OM_RECIPE_VERSION
-      ? OM_RECIPE_VERSION : undefined;
+    const data = parseRecipeData(photo.recipeData);
+    if (isOmRecipeData(data)) {
+      // Derive identity on the server rather than trusting a submitted title.
+      const recipe = isOmSystemCamera(photo.make)
+        ? getOmRecipe(data) : undefined;
+      photo.recipeData = JSON.stringify(createOmRecipeData(recipe));
+      photo.recipeTitle = recipe ? createOmRecipeKey(recipe) : undefined;
+    }
 
-    if (photo.recipeData && !photo.recipeTitle && photo.film) {
+    if (photo.recipeData && !isOmRecipeData(data) &&
+      !photo.recipeTitle && photo.film) {
       const recipeTitle = await getRecipeTitleForData(
         photo.recipeData,
         photo.film,
@@ -372,6 +371,7 @@ export const propagateRecipeTitleIfNecessary = async (
 ) => {
   if (
     formData.get('applyRecipeTitleGlobally') === 'true' &&
+    !isOmRecipeData(parseRecipeData(photo.recipeData)) &&
     // Only propagate recipe title if set by user before lookup
     formData.get('recipeTitle') &&
     photo.recipeTitle &&

@@ -2,6 +2,7 @@ import { safelyQuery } from '@/db/query';
 import { sql } from '@/platforms/postgres';
 import { OmRecipe, OM_RECIPE_VERSION, OM_CAMERA_MAKES } from './recipe';
 import { createOmRecipeKey } from './server';
+import { createOmRecipeData } from '@/recipe/serialization';
 
 export const getOmPhotoCount = () => safelyQuery(() => sql`
   SELECT COUNT(*) FROM photos
@@ -18,7 +19,10 @@ export const getPendingOmRecipes = () => safelyQuery(() => sql<{
   WHERE LOWER(TRIM(make)) = ANY(
     string_to_array(${OM_CAMERA_MAKES.join('|')}, '|')
   )
-  AND COALESCE(om_recipe_checked_version, 0) < ${OM_RECIPE_VERSION}
+  AND CASE WHEN recipe_data->>'camera' = 'om-system'
+    THEN COALESCE(recipe_data->>'checkedVersion', '0')
+      <> ${String(OM_RECIPE_VERSION)}
+    ELSE TRUE END
   ORDER BY created_at, id
 `.then(({ rows }) => rows), 'getPendingOmRecipes');
 
@@ -28,9 +32,8 @@ export const storeOmRecipe = (
   recipe?: OmRecipe,
 ) => safelyQuery(() => sql`
   UPDATE photos SET
-    om_recipe_data=${recipe ? JSON.stringify(recipe) : null},
-    om_recipe_key=${recipe ? createOmRecipeKey(recipe) : null},
-    om_recipe_checked_version=${OM_RECIPE_VERSION},
+    recipe_data=${JSON.stringify(createOmRecipeData(recipe))},
+    recipe_title=${recipe ? createOmRecipeKey(recipe) : null},
     updated_at=CURRENT_TIMESTAMP
   WHERE id=${photoId} AND url=${sourceUrl}
 `.then(({ rowCount }) => {

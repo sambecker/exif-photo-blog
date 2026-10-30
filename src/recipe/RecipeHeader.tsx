@@ -10,6 +10,7 @@ import { useAppText } from '@/i18n/state/client';
 import PhotoOmRecipe from '@/platforms/om-system/PhotoOmRecipe';
 import { isOmRecipeKey, omRecipeKeyAliases }
   from '@/platforms/om-system/recipe';
+import { getOmRecipe } from './serialization';
 
 export default function RecipeHeader({
   recipe,
@@ -33,17 +34,18 @@ export default function RecipeHeader({
   const recipeProps = getRecipePropsFromPhotos(photos, selectedPhoto);
   const omPhoto = isOmRecipeKey(recipe)
     ? [selectedPhoto, ...photos].find(photo =>
-      photo?.omRecipeData && photo.omRecipeKey &&
-        omRecipeKeyAliases(recipe).includes(photo.omRecipeKey))
+      getOmRecipe(photo?.recipeData) && photo?.recipeTitle &&
+        omRecipeKeyAliases(recipe).includes(photo.recipeTitle))
     : undefined;
+  const omRecipe = getOmRecipe(omPhoto?.recipeData);
 
   return (
     <PhotoHeader
       recipe={recipe}
-      entity={omPhoto?.omRecipeData ? <PhotoOmRecipe
-        recipe={omPhoto.omRecipeData}
+      entity={omRecipe ? <PhotoOmRecipe
+        recipe={omRecipe}
         recipeKey={recipe}
-        camera={{ make: omPhoto.make, model: omPhoto.model }}
+        camera={{ make: omPhoto?.make, model: omPhoto?.model }}
         contrast="high"
         hoverType="none"
         hoverCount={count}

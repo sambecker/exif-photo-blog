@@ -19,6 +19,8 @@ import {
   labelForOmRecipeKey,
 } from '@/platforms/om-system/recipe';
 
+import { getFujifilmRecipe } from './serialization';
+
 export type RecipeWithMeta = { recipe: string } & CategoryQueryMeta;
 
 export type Recipes = RecipeWithMeta[];
@@ -172,7 +174,7 @@ export const generateMetaForRecipe = (
 });
 
 const photoHasRecipe = (photo?: Photo) =>
-  photo?.film && photo?.recipeData;
+  photo?.film && getFujifilmRecipe(photo.recipeData);
 
 const getPhotoWithRecipeFromPhotos = (
   photos: Photo[],
@@ -186,10 +188,11 @@ export const getRecipePropsFromPhotos = (
   ...args: Parameters<typeof getPhotoWithRecipeFromPhotos>
 ): RecipeProps | undefined => {
   const photo = getPhotoWithRecipeFromPhotos(...args);
-  return photo?.recipeData && photo?.film
+  const data = getFujifilmRecipe(photo?.recipeData);
+  return data && photo?.film
     ? {
       title: photo.recipeTitle,
-      data: photo.recipeData,
+      data,
       film: photo.film,
       iso: photo.isoFormatted,
       exposure: photo.exposureTimeFormatted,

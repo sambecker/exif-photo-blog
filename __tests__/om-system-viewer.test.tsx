@@ -1,3 +1,4 @@
+import '@testing-library/jest-dom';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import PhotoOmRecipe from '@/platforms/om-system/PhotoOmRecipe';
 import { OmRecipe } from '@/platforms/om-system/recipe';
@@ -51,9 +52,11 @@ it('keeps gallery navigation separate and restores page shortcuts on close',
     )).toBeDefined();
     expect(setKeyboardCommands).toHaveBeenLastCalledWith(false);
     expect(dialog.querySelectorAll('input')).toHaveLength(0);
+    fireEvent.click(screen.getByRole('tab', { name: 'White balance' }));
     expect(screen.getByRole('img', {
       name: 'White balance shift A2 · M3',
     })).toBeDefined();
+    fireEvent.click(screen.getByRole('tab', { name: 'Tone' }));
     expect(screen.getByRole('img', {
       name: 'Tone settings: shadows -4, midtones 0, highlights 4',
     })).toBeDefined();
@@ -122,4 +125,31 @@ it('omits retained strength when the mono filter is inactive', () => {
     grain: 'low', hue: 'normal',
   }} />);
   expect(screen.getByRole('img', { name: 'Mono filter: None' })).toBeDefined();
+});
+
+it('shows one panel and supports arrow, Home, and End keys on tabs', () => {
+  render(<OmRecipeSettings recipe={recipe} />);
+  const color = screen.getByRole('tab', { name: 'Color' });
+  const tone = screen.getByRole('tab', { name: 'Tone' });
+  const wb = screen.getByRole('tab', { name: 'White balance' });
+  expect(screen.getAllByRole('tabpanel')).toHaveLength(1);
+  expect(screen.getByRole('tabpanel', { name: 'Color' })).toBeVisible();
+  expect(screen.queryByRole('img', {
+    name: 'White balance shift A2 · M3',
+  })).toBeNull();
+  fireEvent.keyDown(color, { key: 'ArrowRight' });
+  expect(tone).toHaveFocus();
+  expect(tone).toHaveAttribute('aria-selected', 'true');
+  expect(color).toHaveAttribute('tabindex', '-1');
+  expect(screen.getByRole('tabpanel', { name: 'Tone' })).toBeVisible();
+  fireEvent.keyDown(tone, { key: 'End' });
+  expect(wb).toHaveFocus();
+  expect(screen.getByRole('tabpanel', { name: 'White balance' })).toBeVisible();
+  fireEvent.keyDown(wb, { key: 'ArrowRight' });
+  expect(color).toHaveFocus();
+  fireEvent.keyDown(color, { key: 'ArrowLeft' });
+  expect(wb).toHaveFocus();
+  fireEvent.keyDown(wb, { key: 'Home' });
+  expect(color).toHaveFocus();
+  expect(screen.getAllByRole('tabpanel')).toHaveLength(1);
 });

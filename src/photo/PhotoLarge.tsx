@@ -62,6 +62,7 @@ import PlaceEntity from '@/place/PlaceEntity';
 import PhotoOmRecipe from '@/platforms/om-system/PhotoOmRecipe';
 import OmRecipeOverlay from '@/platforms/om-system/OmRecipeOverlay';
 import useMediaQuery from '@/utility/useMediaQuery';
+import { getFujifilmRecipe, getOmRecipe } from '@/recipe/serialization';
 
 export default function PhotoLarge({
   photo,
@@ -186,9 +187,11 @@ export default function PhotoLarge({
     refTriggers,
   });
   const isDesktop = useMediaQuery('(min-width: 768px)');
+  const omRecipe = getOmRecipe(photo.recipeData);
+  const fujifilmRecipe = getFujifilmRecipe(photo.recipeData);
   const showInlineRecipeOverlay =
     (isShowingRecipeOverlay || shouldDebugRecipeOverlays) &&
-    (!photo.omRecipeData || isDesktop);
+    (!omRecipe || isDesktop);
 
   const tags = sortTagsArray(photo.tags, primaryTag);
 
@@ -285,22 +288,22 @@ export default function PhotoLarge({
       )}>
         <AnimatePresence>
           {showInlineRecipeOverlay &&
-            photo.recipeData &&
+            fujifilmRecipe &&
             photo.film &&
               <PhotoRecipeOverlay
                 ref={refRecipe}
                 title={photo.recipeTitle}
-                data={photo.recipeData}
+                data={fujifilmRecipe}
                 film={photo.film}
                 iso={photo.isoFormatted}
                 exposure={photo.exposureCompensationFormatted}
                 onClose={hideRecipeOverlay}
               />}
           {showInlineRecipeOverlay &&
-            photo.omRecipeData && photo.omRecipeKey && <OmRecipeOverlay
+            omRecipe && photo.recipeTitle && <OmRecipeOverlay
             ref={refRecipe}
-            recipe={photo.omRecipeData}
-            recipeKey={photo.omRecipeKey}
+            recipe={omRecipe}
+            recipeKey={photo.recipeTitle}
             camera={{ make: photo.make, model: photo.model }}
             onClose={hideRecipeOverlay}
           />}
@@ -429,7 +432,7 @@ export default function PhotoLarge({
                               prefetch={prefetchRelatedLinks}
                             />}
                         </div>}
-                      {showRecipeContent && recipeTitle &&
+                      {showRecipeContent && !omRecipe && recipeTitle &&
                         <PhotoRecipe
                           ref={refPhotoRecipe}
                           recipe={recipeTitle}
@@ -438,11 +441,11 @@ export default function PhotoLarge({
                           toggleRecipeOverlay={toggleRecipeOverlay}
                           isShowingRecipeOverlay={isShowingRecipeOverlay}
                         />}
-                      {showRecipeContent && photo.omRecipeData &&
-                        photo.omRecipeKey && <PhotoOmRecipe
+                      {showRecipeContent && omRecipe &&
+                        photo.recipeTitle && <PhotoOmRecipe
                         ref={refPhotoRecipe}
-                        recipe={photo.omRecipeData}
-                        recipeKey={photo.omRecipeKey}
+                        recipe={omRecipe}
+                        recipeKey={photo.recipeTitle}
                         camera={{ make: photo.make, model: photo.model }}
                         contrast="medium"
                         prefetch={prefetchRelatedLinks}
@@ -515,7 +518,7 @@ export default function PhotoLarge({
                         film={photo.film}
                         make={photo.make}
                         prefetch={prefetchRelatedLinks}
-                        {...photo.recipeData && !photo.recipeTitle && {
+                        {...fujifilmRecipe && !photo.recipeTitle && {
                           toggleRecipeOverlay,
                           isShowingRecipeOverlay,
                         }}
@@ -589,7 +592,7 @@ export default function PhotoLarge({
                           ? photo.film
                           : undefined}
                         recipe={shouldShareRecipe
-                          ? photo.omRecipeKey ?? recipeTitle
+                          ? recipeTitle
                           : undefined}
                         focal={shouldShareFocalLength
                           ? photo.focalLength

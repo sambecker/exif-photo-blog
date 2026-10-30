@@ -67,7 +67,7 @@ export default function PhotoOmRecipe({
         className="fixed inset-0 z-50 bg-white/90 dark:bg-black/80" />
       <Dialog.Content onEscapeKeyDown={event => event.stopPropagation()}
         className={clsx(
-          'fixed left-1/2 top-1/2 z-[60] w-[calc(100vw-2rem)] max-w-5xl',
+          'fixed left-1/2 top-1/2 z-[60] w-[calc(100vw-2rem)] max-w-sm',
           '-translate-x-1/2 -translate-y-1/2 outline-none',
         )}>
         <OmRecipeOverlay recipe={recipe} recipeKey={recipeKey}

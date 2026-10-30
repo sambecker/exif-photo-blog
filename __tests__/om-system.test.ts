@@ -21,6 +21,8 @@ import {
   omRecipeKeyAliases,
 } from '@/platforms/om-system/recipe';
 import { formatRecipe } from '@/recipe';
+import { createOmRecipeData, getOmRecipe, parseRecipeData }
+  from '@/recipe/serialization';
 import { getWheresFromOptions } from '@/db';
 import { parsePhotoFromDb } from '@/photo';
 import {
@@ -305,7 +307,7 @@ describe('OM SYSTEM and Olympus profiles', () => {
     expect(omRecipeKeyAliases(legacy)).toEqual([key, legacy]);
     for (const recipe of [key, legacy]) {
       expect(getWheresFromOptions({ recipe })).toMatchObject({
-        wheres: expect.stringContaining('om_recipe_key IN ($1, $2)'),
+        wheres: expect.stringContaining('recipe_title IN ($1, $2)'),
         wheresValues: [key, legacy],
       });
     }
@@ -322,15 +324,16 @@ describe('OM SYSTEM and Olympus profiles', () => {
       make: 'OM Digital Solutions', model: 'PEN', aspectRatio: 4 / 3,
       takenAt: new Date(), createdAt: new Date(), updatedAt: new Date(),
       takenAtNaive: '2026-10-20 12:00:00', tags: [],
-      omRecipeData: JSON.stringify(recipe), omRecipeKey: key,
-      omRecipeCheckedVersion: 1,
+      recipeData: JSON.stringify(createOmRecipeData(recipe)), recipeTitle: key,
     });
     const form = convertPhotoToFormData(photo);
     form.title = 'Updated title';
     const insert = convertFormDataToPhotoDbInsert(form);
     expect(insert.title).toBe('Updated title');
-    expect(parseOmRecipe(insert.omRecipeData)).toEqual(recipe);
-    expect(insert.omRecipeKey).toBe(key);
-    expect(insert.omRecipeCheckedVersion).toBe(1);
+    expect(getOmRecipe(parseRecipeData(insert.recipeData))).toEqual(recipe);
+    expect(insert.recipeTitle).toBe(key);
+    expect(parseRecipeData(insert.recipeData)).toMatchObject({
+      camera: 'om-system', checkedVersion: 1,
+    });
   });
 });

@@ -10,6 +10,8 @@ import {
   getOmRecipeFromMakerNote,
 } from '@/platforms/om-system/server';
 import { OmRecipe, parseOmRecipe } from '@/platforms/om-system/recipe';
+import { createOmRecipeData, getOmRecipe, parseRecipeData }
+  from '@/recipe/serialization';
 import { deleteFile } from '@/platforms/storage';
 
 jest.mock('../src/auth/server', () => ({
@@ -99,8 +101,8 @@ beforeEach(() => {
     make: 'OM Digital Solutions', model: 'PEN', aspectRatio: 4 / 3,
     takenAt: new Date(), createdAt: new Date(), updatedAt: new Date(),
     takenAtNaive: '2026-10-20 12:00:00',
-    omRecipeData: JSON.stringify(color), omRecipeKey: createOmRecipeKey(color),
-    omRecipeCheckedVersion: 1,
+    recipeData: JSON.stringify(createOmRecipeData(color)),
+    recipeTitle: createOmRecipeKey(color),
   }));
   jest.mocked(getOmRecipeFromMakerNote).mockReturnValue(mono);
   jest.mocked(getOmFocalLengthIn35MmFormat).mockReturnValue(undefined);
@@ -149,10 +151,11 @@ it('replaces the color recipe with the re-uploaded mono recipe', async () => {
   expect(photo.url).toBe('https://photos.example/replacement.jpg');
   expect(photo.title).toBe('Keep this title');
   expect(photo.tags).toEqual(['keep-tag']);
-  expect(parseOmRecipe(photo.omRecipeData)).toEqual(parseOmRecipe(mono));
-  expect(photo.omRecipeKey).toBe(createOmRecipeKey(mono));
-  expect(photo.omRecipeKey).not.toBe(createOmRecipeKey(color));
-  expect(photo.omRecipeCheckedVersion).toBe(1);
+  expect(getOmRecipe(parseRecipeData(photo.recipeData)))
+    .toEqual(parseOmRecipe(mono));
+  expect(photo.recipeTitle).toBe(createOmRecipeKey(mono));
+  expect(photo.recipeTitle).not.toBe(createOmRecipeKey(color));
+  expect(parseRecipeData(photo.recipeData)?.camera).toBe('om-system');
   expect(fetchUrlWithByteLimit).toHaveBeenCalledTimes(1);
 });
 
@@ -163,8 +166,7 @@ it('clears the recipe when a replacement has no camera EXIF', async () => {
   await replacePhotoStorageAction('penphoto',
     'https://photos.example/edited.jpg');
   expect(updatePhoto).toHaveBeenCalledWith(expect.objectContaining({
-    omRecipeData: undefined, omRecipeKey: undefined,
-    omRecipeCheckedVersion: 1,
+    recipeData: JSON.stringify(createOmRecipeData()), recipeTitle: undefined,
   }));
   expect(getOmRecipeFromMakerNote).not.toHaveBeenCalled();
 });
@@ -177,8 +179,7 @@ it.each(['auto', 'only-missing'] as const)(
     await syncPhotoAction('penphoto', { syncMode });
     expect(updatePhoto).toHaveBeenCalledWith(expect.objectContaining({
       make: 'OM Digital Solutions', model: 'PEN',
-      omRecipeData: undefined, omRecipeKey: undefined,
-      omRecipeCheckedVersion: 1,
+      recipeData: JSON.stringify(createOmRecipeData()), recipeTitle: undefined,
     }));
   },
 );
@@ -187,9 +188,10 @@ it.each(['auto', 'only-missing', 'overwrite'] as const)(
   'refreshes changed active settings during %s Sync', async syncMode => {
     await syncPhotoAction('penphoto', { syncMode });
     const [photo] = jest.mocked(updatePhoto).mock.calls[0];
-    expect(parseOmRecipe(photo.omRecipeData)).toEqual(parseOmRecipe(mono));
-    expect(photo.omRecipeKey).toBe(createOmRecipeKey(mono));
-    expect(photo.omRecipeCheckedVersion).toBe(1);
+    expect(getOmRecipe(parseRecipeData(photo.recipeData)))
+      .toEqual(parseOmRecipe(mono));
+    expect(photo.recipeTitle).toBe(createOmRecipeKey(mono));
+    expect(parseRecipeData(photo.recipeData)?.camera).toBe('om-system');
   },
 );
 
@@ -212,8 +214,9 @@ it.each([
     );
     await syncPhotoAction('penphoto', { syncMode: 'only-missing' });
     const [photo] = jest.mocked(updatePhoto).mock.calls[0];
-    expect(parseOmRecipe(photo.omRecipeData)).toEqual(parseOmRecipe(mono));
-    expect(photo.omRecipeKey).toBe(createOmRecipeKey(mono));
+    expect(getOmRecipe(parseRecipeData(photo.recipeData)))
+      .toEqual(parseOmRecipe(mono));
+    expect(photo.recipeTitle).toBe(createOmRecipeKey(mono));
 
     jest.mocked(updatePhoto).mockClear();
     jest.mocked(fetchUrlWithByteLimit).mockResolvedValue(
@@ -221,8 +224,7 @@ it.each([
     );
     await syncPhotoAction('penphoto', { syncMode: 'only-missing' });
     expect(updatePhoto).toHaveBeenCalledWith(expect.objectContaining({
-      omRecipeData: undefined, omRecipeKey: undefined,
-      omRecipeCheckedVersion: 1,
+      recipeData: JSON.stringify(createOmRecipeData()), recipeTitle: undefined,
     }));
   },
 );

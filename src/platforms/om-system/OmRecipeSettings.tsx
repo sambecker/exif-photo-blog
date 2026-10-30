@@ -1,3 +1,6 @@
+'use client';
+
+import { useId, useRef, useState } from 'react';
 import {
   formatOmWhiteBalance,
   formatOmWbShift,
@@ -22,7 +25,7 @@ const angleFor = (index: number, count = 12) =>
 
 function ColorWheel({ colors }: { colors: number[] }) {
   return <>
-    <svg viewBox="0 0 240 240" className="w-full" role="img"
+    <svg viewBox="0 0 240 240" className="mx-auto w-full max-w-56" role="img"
       aria-label="Twelve color adjustments">
       <circle cx="120" cy="120" r="40" fill="none"
         stroke="#0003" strokeDasharray="2 5" />
@@ -70,7 +73,7 @@ function MonoWheel({ recipe }: {
   const selected = recipe.filter.color;
   const marker = point(angleFor(selected - 1, 8), 77);
   return <>
-    <svg viewBox="0 0 240 240" className="w-full" role="img"
+    <svg viewBox="0 0 240 240" className="mx-auto w-full max-w-56" role="img"
       aria-label={`Mono filter: ${OM_MONO_FILTERS[selected]}` +
         (selected === 0 ? '' : ` · Level ${recipe.filter.strength}`)}>
       {colors.map((color, i) => {
@@ -138,7 +141,7 @@ function ToneGraph({ tone }: { tone: OmRecipe['tone'] }) {
           <dd>{omSignedValue(tone[key])}</dd>
         </div>)}
     </dl>
-    <svg viewBox="0 0 240 240" className="w-full" role="img"
+    <svg viewBox="0 0 240 240" className="mx-auto w-full max-w-56" role="img"
       aria-label={description}>
       <path d="M16 16H224V224H16ZM120 16V224M16 120H224"
         fill="none" stroke="#0004" />
@@ -156,7 +159,9 @@ function Setting({ label, value, limit = 5 }: {
   label: string, value: number, limit?: number
 }) {
   return <div className="space-y-1.5">
-    <div className="flex justify-between gap-3 text-sm">
+    <div className={clsx(
+      'flex flex-wrap items-baseline justify-between gap-x-2 gap-y-0.5 text-xs',
+    )}>
       <dt>{label}</dt><dd>{omSignedValue(value)}</dd>
     </div>
     <div className="relative h-1 rounded bg-black/20" aria-hidden="true">
@@ -171,12 +176,57 @@ function Setting({ label, value, limit = 5 }: {
 
 export default function OmRecipeSettings({ recipe }: { recipe: OmRecipe }) {
   const wb = recipe.whiteBalance;
+  const id = useId();
+  const [selected, setSelected] = useState(0);
+  const tabs = useRef<(HTMLButtonElement | null)[]>([]);
+  const labels = [recipe.kind === 'color' ? 'Color' : 'Mono', 'Tone',
+    'White balance'];
+  const panelProps = (index: number) => ({
+    role: 'tabpanel',
+    id: `${id}-panel-${index}`,
+    'aria-labelledby': `${id}-tab-${index}`,
+    hidden: selected !== index,
+    tabIndex: 0,
+  });
   const panelClass = clsx(
-    'rounded-lg border border-neutral-200/40 bg-neutral-100/30 p-3 text-black',
+    'min-h-[25rem] rounded-lg border border-neutral-200/40',
+    'bg-neutral-100/30 p-3 text-black',
   );
-  return <div className="grid gap-4 md:grid-cols-3">
-    <section className={panelClass} aria-label={recipe.kind === 'color'
-      ? 'Color adjustments' : 'Mono settings'}>
+  return <div className="space-y-2">
+    <div role="tablist" aria-label="Recipe settings"
+      className="flex gap-1 rounded-lg bg-black/5 p-1">
+      {labels.map((label, index) => <button key={label}
+        ref={node => { tabs.current[index] = node; }}
+        id={`${id}-tab-${index}`} role="tab" type="button"
+        aria-selected={selected === index}
+        aria-controls={`${id}-panel-${index}`}
+        tabIndex={selected === index ? 0 : -1}
+        onClick={() => setSelected(index)}
+        onKeyDown={event => {
+          const next = event.key === 'ArrowRight' ? (index + 1) % labels.length
+            : event.key === 'ArrowLeft'
+              ? (index + labels.length - 1) % labels.length
+              : event.key === 'Home' ? 0
+                : event.key === 'End' ? labels.length - 1 : undefined;
+          if (next !== undefined) {
+            event.preventDefault();
+            event.stopPropagation();
+            setSelected(next);
+            tabs.current[next]?.focus();
+          }
+        }}
+        className={clsx(
+          'min-h-9 rounded-md border-0 px-1.5 text-xs shadow-none',
+          'whitespace-nowrap',
+          index === 2 ? 'flex-[1.5]' : 'flex-1',
+          'focus-visible:outline-2 focus-visible:outline-offset-2',
+          selected === index ? 'bg-white/80 text-black' :
+            'bg-transparent text-black/60 hover:bg-white/40',
+        )}>
+        {label}
+      </button>)}
+    </div>
+    <section {...panelProps(0)} className={panelClass}>
       <h3 className="text-sm font-medium">
         {recipe.kind === 'color' ? 'Color adjustments' : 'Mono settings'}
       </h3>
@@ -184,15 +234,15 @@ export default function OmRecipeSettings({ recipe }: { recipe: OmRecipe }) {
         ? <ColorWheel colors={recipe.colors} />
         : <MonoWheel recipe={recipe} />}
     </section>
-    <section className={panelClass} aria-label="Tone settings">
+    <section {...panelProps(1)} className={panelClass}>
       <h3 className="mb-4 text-sm font-medium">Tone settings</h3>
       <ToneGraph tone={recipe.tone} />
     </section>
-    <section className={panelClass} aria-label="White balance and detail">
+    <section {...panelProps(2)} className={panelClass}>
       <h3 className="text-sm font-medium">White balance</h3>
       <p className="mt-2 text-xs">{formatOmWhiteBalance(wb)}</p>
       <p className="mt-1 text-xs text-black/50">{formatOmWbShift(wb)}</p>
-      <svg viewBox="0 0 240 220" className="w-full" role="img"
+      <svg viewBox="0 0 240 220" className="mx-auto w-full max-w-56" role="img"
         aria-label={`White balance shift ${formatOmWbShift(wb)}`}>
         <path d="M36 28H204" stroke="#83d889" strokeWidth="4" />
         <path d="M204 28V196" stroke="#edbf66" strokeWidth="4" />
@@ -205,8 +255,8 @@ export default function OmRecipeSettings({ recipe }: { recipe: OmRecipe }) {
         <circle cx={120 + wb.amber * 11} cy={112 - wb.green * 11}
           r="6" fill="#000c" />
       </svg>
-      <dl className="space-y-5">
-        <Setting label="Shading effect" value={recipe.shading} />
+      <dl className="mt-4 grid grid-cols-3 gap-4">
+        <Setting label="Shading" value={recipe.shading} />
         <Setting label="Sharpness" value={recipe.sharpness} limit={2} />
         <Setting label="Contrast" value={recipe.contrast} limit={2} />
       </dl>
