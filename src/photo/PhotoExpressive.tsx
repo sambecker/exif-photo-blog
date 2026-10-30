@@ -65,6 +65,9 @@ import ShareButton from '@/share/ShareButton';
 import DownloadButton from '@/components/DownloadButton';
 import MaskedScroll from '@/components/MaskedScroll';
 import useMediaQuery from '@/utility/useMediaQuery';
+import PhotoOmRecipe from '@/platforms/om-system/PhotoOmRecipe';
+import OmRecipeOverlay from '@/platforms/om-system/OmRecipeOverlay';
+import { getFujifilmRecipe, getOmRecipe } from '@/recipe/serialization';
 
 // Photo frame is 90% of the 3:2 matte (`md:h-[90%]` below)
 const EXPRESSIVE_PHOTO_FRAME_HEIGHT = 'md:max-h-[90%]';
@@ -166,6 +169,12 @@ export default function PhotoExpressive({
     ref: refRecipe,
     refTriggers,
   });
+
+  const omRecipe = getOmRecipe(photo.recipeData);
+  const fujifilmRecipe = getFujifilmRecipe(photo.recipeData);
+  const showInlineRecipeOverlay =
+    (isShowingRecipeOverlay || shouldDebugRecipeOverlays) &&
+    (!omRecipe || isLargeScreen);
 
   const tags = sortTagsArray(photo.tags);
   const camera = cameraFromPhoto(photo);
@@ -309,22 +318,30 @@ export default function PhotoExpressive({
       <div className={clsx(
         'absolute inset-0',
         'flex items-center justify-center',
-        !(isShowingRecipeOverlay || shouldDebugRecipeOverlays) &&
+        !showInlineRecipeOverlay &&
           'pointer-events-none',
       )}>
         <AnimatePresence>
-          {(isShowingRecipeOverlay || shouldDebugRecipeOverlays) &&
-            photo.recipeData &&
+          {showInlineRecipeOverlay &&
+            fujifilmRecipe &&
             photo.film &&
               <PhotoRecipeOverlay
                 ref={refRecipe}
                 title={photo.recipeTitle}
-                data={photo.recipeData}
+                data={fujifilmRecipe}
                 film={photo.film}
                 iso={photo.isoFormatted}
                 exposure={photo.exposureCompensationFormatted}
                 onClose={hideRecipeOverlay}
               />}
+          {showInlineRecipeOverlay &&
+            omRecipe && recipeTitle && <OmRecipeOverlay
+            ref={refRecipe}
+            recipe={omRecipe}
+            recipeKey={recipeTitle}
+            camera={{ make: photo.make, model: photo.model }}
+            onClose={hideRecipeOverlay}
+          />}
         </AnimatePresence>
       </div>
     </div>;
@@ -462,10 +479,21 @@ export default function PhotoExpressive({
                         includeFocalLength={false}
                       />}
                   </div>}
-                {showRecipeContent && recipeTitle &&
+                {showRecipeContent && !omRecipe && recipeTitle &&
                   <PhotoRecipe
                     ref={refPhotoRecipe}
                     recipe={recipeTitle}
+                    contrast="medium"
+                    prefetch={prefetchRelatedLinks}
+                    toggleRecipeOverlay={toggleRecipeOverlay}
+                    isShowingRecipeOverlay={isShowingRecipeOverlay}
+                  />}
+                {showRecipeContent && omRecipe && recipeTitle &&
+                  <PhotoOmRecipe
+                    ref={refPhotoRecipe}
+                    recipe={omRecipe}
+                    recipeKey={recipeTitle}
+                    camera={{ make: photo.make, model: photo.model }}
                     contrast="medium"
                     prefetch={prefetchRelatedLinks}
                     toggleRecipeOverlay={toggleRecipeOverlay}
@@ -550,7 +578,7 @@ export default function PhotoExpressive({
                   prefetch={prefetchRelatedLinks}
                   badged={false}
                   contrast="medium"
-                  {...photo.recipeData && !photo.recipeTitle && {
+                  {...fujifilmRecipe && !photo.recipeTitle && {
                     toggleRecipeOverlay,
                     isShowingRecipeOverlay,
                   }}

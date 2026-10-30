@@ -15,7 +15,6 @@ import { convertStringToArray, parameterize } from '@/utility/string';
 import { generateNanoid } from '@/utility/nanoid';
 import { TAG_FAVS, getValidationMessageForTags } from '@/tag';
 import { MAKE_FUJIFILM } from '@/platforms/fujifilm';
-import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
 import { ReactNode } from 'react';
 import { FujifilmSimulation } from '@/platforms/fujifilm/simulation';
 import { SelectMenuOptionType } from '@/components/SelectMenuOption';
@@ -556,7 +555,6 @@ export const convertFormDataToPhotoDbInsert = (
   return {
     ...(photoForm as PhotoFormData & {
       film?: FujifilmSimulation
-      recipeData?: FujifilmRecipe
     }),
     ...!photoForm.id && { id: generateNanoid() },
     // Delete array field when empty

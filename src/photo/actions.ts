@@ -99,6 +99,10 @@ import {
   COMMAND_K_PHOTO_LIMIT,
   getPhotosQueryData,
 } from '@/query/data';
+import { isOmSystemCamera }
+  from '@/platforms/om-system/recipe';
+
+import { isOmRecipeData, parseRecipeData } from '@/recipe/serialization';
 
 // Private actions
 
@@ -555,22 +559,31 @@ export const replacePhotoStorageAction = async (
 
       const {
         formDataFromExif,
+        error,
       } = await extractImageDataFromBlobPath(updatedStorageUrl, {
         generateBlurData: BLUR_ENABLED,
+        refreshOmRecipe: isOmSystemCamera(photo.make),
       });
 
-      let imageFields: Partial<PhotoDbInsert> = {};
-      if (formDataFromExif) {
-        const photoDbInsert = convertFormDataToPhotoDbInsert(formDataFromExif);
-        imageFields = {
-          blurData: photoDbInsert.blurData,
-          width: photoDbInsert.width,
-          height: photoDbInsert.height,
-          aspectRatio: photoDbInsert.aspectRatio,
-          colorData: photoDbInsert.colorData,
-          colorSort: photoDbInsert.colorSort,
-        };
+      if (error || !formDataFromExif) {
+        throw new Error(error ?? 'Could not read replacement image metadata');
       }
+      const photoDbInsert = convertFormDataToPhotoDbInsert(formDataFromExif);
+      const imageFields: Partial<PhotoDbInsert> = {
+        blurData: photoDbInsert.blurData,
+        width: photoDbInsert.width,
+        height: photoDbInsert.height,
+        aspectRatio: photoDbInsert.aspectRatio,
+        colorData: photoDbInsert.colorData,
+        colorSort: photoDbInsert.colorSort,
+        // OM settings describe the new source, including an absent recipe.
+        ...(isOmSystemCamera(photo.make) ||
+          isOmRecipeData(photo.recipeData) ||
+          isOmRecipeData(parseRecipeData(photoDbInsert.recipeData))) && {
+          recipeData: photoDbInsert.recipeData,
+          recipeTitle: photoDbInsert.recipeTitle || undefined,
+        },
+      };
 
       await updatePhoto({
         ...convertPhotoToPhotoDbInsert({
@@ -640,12 +653,16 @@ export const syncPhotoAction = async (
         imageResizedBase64,
         shouldStripGpsData,
         fileBytes,
+        error,
       } = await extractImageDataFromBlobPath(photo.url, {
         includeInitialPhotoFields: false,
         generateBlurData: BLUR_ENABLED,
         generateResizedImage: AI_CONTENT_GENERATION_ENABLED,
         updateColorFields: AI_CONTENT_GENERATION_ENABLED,
+        refreshOmRecipe: isOmSystemCamera(photo.make),
       });
+
+      if (error) { throw new Error(error); }
 
       const uniqueTags = await getUniqueTags();
 
@@ -681,6 +698,12 @@ export const syncPhotoAction = async (
         const formDataFromPhoto = convertPhotoToFormData(photo);
 
         Object.entries(formDataFromExif).forEach(([field, value]) => {
+          if ((isOmSystemCamera(photo.make) ||
+            isOmRecipeData(parseRecipeData(formDataFromExif.recipeData))) &&
+            (field === 'recipeData' || field === 'recipeTitle')) {
+            // OM settings are extracted facts, without manual overrides.
+            return;
+          }
           const existingValue =
             formDataFromPhoto[field as keyof PhotoFormData];
           switch (syncMode) {

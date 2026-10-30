@@ -19,11 +19,14 @@ import { capitalize, parameterize } from '@/utility/string';
 import camelcaseKeys from 'camelcase-keys';
 import { isBefore } from 'date-fns';
 import type { Metadata } from 'next';
-import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
+import { getFujifilmRecipe, getOmRecipe, parseRecipeData, RecipeData }
+  from '@/recipe/serialization';
 import { PhotoUpdateStatus, generatePhotoUpdateStatus } from './update';
 import { AppTextState } from '@/i18n/state';
 import { PhotoColorData } from './color/client';
 import { Place } from '@/place';
+import { isOmSystemCamera }
+  from '@/platforms/om-system/recipe';
 
 // INFINITE SCROLL: FULL
 export const INFINITE_SCROLL_FULL_INITIAL =
@@ -108,7 +111,8 @@ export interface PhotoDb extends
 }
 
 // Parsed db response
-export interface Photo extends Omit<PhotoDb, 'recipeData' | 'colorData'> {
+export interface Photo extends Omit<PhotoDb,
+  'recipeData' | 'colorData'> {
   focalLengthFormatted?: string
   focalLengthIn35MmFormatFormatted?: string
   fNumberFormatted?: string
@@ -117,10 +121,16 @@ export interface Photo extends Omit<PhotoDb, 'recipeData' | 'colorData'> {
   exposureCompensationFormatted?: string
   takenAtNaiveFormatted: string
   tags: string[]
-  recipeData?: FujifilmRecipe
+  recipeData?: RecipeData
   colorData?: PhotoColorData
   updateStatus?: PhotoUpdateStatus
 }
+
+const formatPhotoExposureCompensation = (
+  photo: Pick<PhotoExif, 'make' | 'exposureCompensation'>,
+) => formatExposureCompensation(photo.exposureCompensation, {
+  thirdsRoundedToTenths: isOmSystemCamera(photo.make),
+});
 
 export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {
   const photoDb = camelcaseKeys(
@@ -144,15 +154,10 @@ export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {
     exposureTimeFormatted:
       formatExposureTime(photoDb.exposureTime),
     exposureCompensationFormatted:
-      formatExposureCompensation(photoDb.exposureCompensation),
+      formatPhotoExposureCompensation(photoDb),
     takenAtNaiveFormatted:
       formatDateFromPostgresString(photoDb.takenAtNaive),
-    recipeData: photoDb.recipeData
-      // Legacy check on escaped, string-based JSON
-      ? typeof photoDb.recipeData === 'string'
-        ? JSON.parse(photoDb.recipeData)
-        : photoDb.recipeData
-      : undefined,
+    recipeData: parseRecipeData(photoDb.recipeData),
     colorData: photoDb.colorData
       ? photoDb.colorData
       : undefined,
@@ -162,6 +167,7 @@ export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {
 
 export const parseCachedPhotoDates = (photo: Photo) => ({
   ...photo,
+  exposureCompensationFormatted: formatPhotoExposureCompensation(photo),
   takenAt: new Date(photo.takenAt),
   updatedAt: new Date(photo.updatedAt),
   createdAt: new Date(photo.createdAt),
@@ -347,7 +353,8 @@ const photoHasLensData = (photo: Photo) =>
   Boolean(photo.lensModel);
 
 const photoHasRecipeData = (photo: Photo) =>
-  Boolean(photo.recipeData);
+  Boolean(getFujifilmRecipe(photo.recipeData) ||
+    (getOmRecipe(photo.recipeData) && photo.recipeTitle));
 
 const photoHasExifData = (photo: Photo) =>
   Boolean(photo.focalLength) ||

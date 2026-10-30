@@ -38,6 +38,18 @@ import exifr from 'exifr';
 import { getCompatibleExifValue } from '@/utility/exif';
 import { fetchUrlWithByteLimit } from '@/utility/fetch';
 import { getPlaceFromCoordinates } from '@/platforms/google-places';
+import {
+  isOmSystemCamera,
+  OmRecipe,
+} from '@/platforms/om-system/recipe';
+import {
+  createOmRecipeKey,
+  getOmFocalLengthIn35MmFormat,
+  getOmRecipeFromMakerNote,
+} from '@/platforms/om-system/server';
+
+import { createOmRecipeData, getOmRecipe, isOmRecipeData, parseRecipeData }
+  from '@/recipe/serialization';
 
 const IMAGE_WIDTH_BLUR = 200;
 const IMAGE_WIDTH_DEFAULT = 200;
@@ -55,12 +67,15 @@ export const extractImageDataFromBlobPath = async (
     generateResizedImage,
     updateColorFields = true,
     lookupLocation,
+    refreshOmRecipe = false,
   }: {
     includeInitialPhotoFields?: boolean
     generateBlurData?: boolean
     generateResizedImage?: boolean
     updateColorFields?: boolean
     lookupLocation?: boolean
+    // Refresh known OM photos even if the source lost its camera tags.
+    refreshOmRecipe?: boolean
   } = {},
 ): Promise<{
   blobId?: string
@@ -81,6 +96,8 @@ export const extractImageDataFromBlobPath = async (
   let dataExifr: any | undefined;
   let film: FujifilmSimulation | NikonPictureControl | undefined;
   let recipe: FujifilmRecipe | undefined;
+  let omRecipe: OmRecipe | undefined;
+  let didCheckOmRecipe = false;
   let blurData: string | undefined;
   let imageResizedBase64: string | undefined;
   let shouldStripGpsData = false;
@@ -104,7 +121,9 @@ export const extractImageDataFromBlobPath = async (
       dataExifr = await exifr.parse(fileBytes, { xmp: true });
 
       // Capture film simulation for Fujifilm or Picture Control for Nikon
-      if (isExifForFujifilm(dataExif) || isExifForNikon(dataExif)) {
+      const isOmCamera = isOmSystemCamera(dataExif.tags?.Make);
+      if (isExifForFujifilm(dataExif) || isExifForNikon(dataExif) ||
+        isOmCamera) {
         // Parse exif data again with binary fields
         // in order to access MakerNote tag
         parser.enableBinaryFields(true);
@@ -116,9 +135,22 @@ export const extractImageDataFromBlobPath = async (
             recipe = getFujifilmRecipeFromMakerNote(makerNote);
           } else if (isExifForNikon(dataExif)) {
             film = getNikonPictureControlFromMakerNote(makerNote);
+          } else if (isOmCamera) {
+            omRecipe = getOmRecipeFromMakerNote(makerNote);
+            const equivalent = Number(getCompatibleExifValue(
+              'FocalLengthIn35mmFormat', dataExif, dataExifr,
+            ));
+            if ((!Number.isFinite(equivalent) || equivalent <= 0) &&
+              dataExif.tags) {
+              dataExif.tags.FocalLengthIn35mmFormat =
+                getOmFocalLengthIn35MmFormat(makerNote, Number(
+                  getCompatibleExifValue('FocalLength', dataExif, dataExifr),
+                ))?.toString();
+            }
           }
         }
       }
+      didCheckOmRecipe = isOmCamera || (refreshOmRecipe && !recipe);
 
       if (generateBlurData) {
         blurData = await blurImage(fileBytes);
@@ -153,6 +185,10 @@ export const extractImageDataFromBlobPath = async (
       },
       ...generateBlurData && { blurData },
       ...convertExifToFormData(dataExif, dataExifr, film, recipe),
+      ...didCheckOmRecipe && {
+        recipeData: JSON.stringify(createOmRecipeData(omRecipe)),
+        recipeTitle: omRecipe ? createOmRecipeKey(omRecipe) : '',
+      },
       ...colorFields,
     } satisfies Partial<PhotoFormData>
     : undefined;
@@ -305,7 +341,17 @@ export const convertFormDataToPhotoDbInsertAndLookupRecipeTitle =
   Promise<ReturnType<typeof convertFormDataToPhotoDbInsert>> => {
     const photo = convertFormDataToPhotoDbInsert(...args);
 
-    if (photo.recipeData && !photo.recipeTitle && photo.film) {
+    const data = parseRecipeData(photo.recipeData);
+    if (isOmRecipeData(data)) {
+      // Derive identity on the server rather than trusting a submitted title.
+      const recipe = isOmSystemCamera(photo.make)
+        ? getOmRecipe(data) : undefined;
+      photo.recipeData = JSON.stringify(createOmRecipeData(recipe));
+      photo.recipeTitle = recipe ? createOmRecipeKey(recipe) : undefined;
+    }
+
+    if (photo.recipeData && !isOmRecipeData(data) &&
+      !photo.recipeTitle && photo.film) {
       const recipeTitle = await getRecipeTitleForData(
         photo.recipeData,
         photo.film,
@@ -325,6 +371,7 @@ export const propagateRecipeTitleIfNecessary = async (
 ) => {
   if (
     formData.get('applyRecipeTitleGlobally') === 'true' &&
+    !isOmRecipeData(parseRecipeData(photo.recipeData)) &&
     // Only propagate recipe title if set by user before lookup
     formData.get('recipeTitle') &&
     photo.recipeTitle &&

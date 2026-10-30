@@ -38,6 +38,7 @@ export interface EntityLinkExternalProps {
   hoverType?: 'auto' | 'text' | 'image' | 'none'
   hoverQueryOptions?: PhotoQueryOptions
   hoverDescription?: string
+  labelAria?: string
 }
 
 export default function EntityLink({
@@ -46,6 +47,7 @@ export default function EntityLink({
   iconBadgeStart,
   iconBadgeEnd,
   label,
+  labelAria,
   labelForHover,
   labelSmall,
   iconWide,
@@ -133,6 +135,7 @@ export default function EntityLink({
   const renderLink = (useForHover?: boolean) =>
     <LinkWithStatus
       href={path}
+      aria-label={labelAria}
       className={clsx(
         'peer',
         'inline-flex items-center gap-2 max-w-full truncate',
@@ -220,6 +223,7 @@ export default function EntityLink({
     return renderWithHover(
       <LinkWithStatus
         href={path}
+        aria-label={labelAria}
         className={className}
         isLoading={isLoading}
         setIsLoading={setIsLoading}

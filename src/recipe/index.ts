@@ -14,6 +14,12 @@ import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
 import { labelForFilm } from '@/film';
 import { AppTextState } from '@/i18n/state';
 import { CategoryQueryMeta } from '@/category';
+import {
+  isOmRecipeKey,
+  labelForOmRecipeKey,
+} from '@/platforms/om-system/recipe';
+
+import { getFujifilmRecipe } from './serialization';
 
 export type RecipeWithMeta = { recipe: string } & CategoryQueryMeta;
 
@@ -29,7 +35,9 @@ export interface RecipeProps {
 }
 
 export const formatRecipe = (recipe?: string) =>
-  capitalizeWords(recipe?.replaceAll('-', ' '));
+  recipe && isOmRecipeKey(recipe)
+    ? labelForOmRecipeKey(recipe)
+    : capitalizeWords(recipe?.replaceAll('-', ' '));
 
 export const titleForRecipe = (
   recipe: string,
@@ -166,7 +174,7 @@ export const generateMetaForRecipe = (
 });
 
 const photoHasRecipe = (photo?: Photo) =>
-  photo?.film && photo?.recipeData;
+  photo?.film && getFujifilmRecipe(photo.recipeData);
 
 const getPhotoWithRecipeFromPhotos = (
   photos: Photo[],
@@ -180,10 +188,11 @@ export const getRecipePropsFromPhotos = (
   ...args: Parameters<typeof getPhotoWithRecipeFromPhotos>
 ): RecipeProps | undefined => {
   const photo = getPhotoWithRecipeFromPhotos(...args);
-  return photo?.recipeData && photo?.film
+  const data = getFujifilmRecipe(photo?.recipeData);
+  return data && photo?.film
     ? {
       title: photo.recipeTitle,
-      data: photo.recipeData,
+      data,
       film: photo.film,
       iso: photo.isoFormatted,
       exposure: photo.exposureTimeFormatted,

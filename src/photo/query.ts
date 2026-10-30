@@ -286,6 +286,7 @@ export const deletePhotoRecipeGlobally = (recipe: string) =>
     UPDATE photos
     SET recipe_title=NULL
     WHERE recipe_title=${recipe}
+    AND COALESCE(recipe_data->>'camera', 'fujifilm') = 'fujifilm'
   `, 'deletePhotoRecipeGlobally');
 
 export const renamePhotoRecipeGlobally = (
@@ -296,6 +297,7 @@ export const renamePhotoRecipeGlobally = (
     UPDATE photos
     SET recipe_title=${updatedRecipe}
     WHERE recipe_title=${recipe}
+    AND COALESCE(recipe_data->>'camera', 'fujifilm') = 'fujifilm'
   `, 'renamePhotoRecipeGlobally');
 
 export const deletePhoto = (id: string) =>
@@ -380,6 +382,7 @@ export const getUniqueRecipes = async () =>
       MAX(updated_at) as last_modified
     FROM photos
     WHERE hidden IS NOT TRUE AND recipe_title IS NOT NULL
+    AND COALESCE(recipe_data->>'camera', 'fujifilm') = 'fujifilm'
     GROUP BY recipe_title
     ORDER BY recipe_title ASC
   `.then(({ rows }): Recipes => rows
@@ -406,6 +409,17 @@ export const getUniqueYears = async () =>
       lastModified: last_modified as Date,
     }))), 'getUniqueYears');
 
+// Preserve legacy JSONB strings as well as objects when matching recipes.
+// The camera discriminator is metadata, not a Fujifilm setting.
+const recipeDataForMatching = (data: string | object) => {
+  const parsed = typeof data === 'string' ? JSON.parse(data) : data;
+  return JSON.stringify(parsed && typeof parsed === 'object' &&
+    !Array.isArray(parsed)
+    ? Object.fromEntries(Object.entries(parsed)
+      .filter(([key]) => key !== 'camera'))
+    : parsed);
+};
+
 export const getRecipeTitleForData = async (
   data: string | object,
   film: string,
@@ -414,7 +428,10 @@ export const getRecipeTitleForData = async (
   safelyQuery(() => sql`
     SELECT recipe_title FROM photos
     WHERE hidden IS NOT TRUE
-    AND recipe_data=${typeof data === 'string' ? data : JSON.stringify(data)}
+    AND COALESCE(recipe_data->>'camera', 'fujifilm') = 'fujifilm'
+    AND CASE WHEN jsonb_typeof(recipe_data) = 'object'
+      THEN recipe_data - 'camera' ELSE recipe_data END
+      = ${recipeDataForMatching(data)}
     AND film=${film}
     LIMIT 1
   `
@@ -428,6 +445,7 @@ export const getRecipeDataForTitle = async (title: string) =>
     AND recipe_title=${title}
     AND recipe_data IS NOT NULL
     AND recipe_data::text <> 'null'
+    AND COALESCE(recipe_data->>'camera', 'fujifilm') = 'fujifilm'
     ORDER BY taken_at DESC
     LIMIT 1
   `
@@ -445,7 +463,10 @@ export const getPhotosNeedingRecipeTitleCount = async (
     SELECT COUNT(*)
     FROM photos
     WHERE recipe_title IS NULL
-    AND recipe_data=${data}
+    AND COALESCE(recipe_data->>'camera', 'fujifilm') = 'fujifilm'
+    AND CASE WHEN jsonb_typeof(recipe_data) = 'object'
+      THEN recipe_data - 'camera' ELSE recipe_data END
+      = ${recipeDataForMatching(data)}
     AND film=${film}
     AND id <> ${photoIdToExclude}
   `.then(({ rows }) => parseInt(rows[0].count, 10))
@@ -460,7 +481,10 @@ export const updateAllMatchingRecipeTitles = (
     UPDATE photos
     SET recipe_title=${title}
     WHERE recipe_title IS NULL
-    AND recipe_data=${data}
+    AND COALESCE(recipe_data->>'camera', 'fujifilm') = 'fujifilm'
+    AND CASE WHEN jsonb_typeof(recipe_data) = 'object'
+      THEN recipe_data - 'camera' ELSE recipe_data END
+      = ${recipeDataForMatching(data)}
     AND film=${film}
   `, 'updateAllMatchingRecipeTitles');
 

@@ -7,6 +7,10 @@ import { useAppState } from '@/app/AppState';
 import { descriptionForRecipePhotos, getRecipePropsFromPhotos } from '.';
 import { AI_CONTENT_GENERATION_ENABLED } from '@/app/config';
 import { useAppText } from '@/i18n/state/client';
+import PhotoOmRecipe from '@/platforms/om-system/PhotoOmRecipe';
+import { isOmRecipeKey, omRecipeKeyAliases }
+  from '@/platforms/om-system/recipe';
+import { getOmRecipe } from './serialization';
 
 export default function RecipeHeader({
   recipe,
@@ -28,11 +32,24 @@ export default function RecipeHeader({
   const appText = useAppText();
 
   const recipeProps = getRecipePropsFromPhotos(photos, selectedPhoto);
+  const omPhoto = isOmRecipeKey(recipe)
+    ? [selectedPhoto, ...photos].find(photo =>
+      getOmRecipe(photo?.recipeData) && photo?.recipeTitle &&
+        omRecipeKeyAliases(recipe).includes(photo.recipeTitle))
+    : undefined;
+  const omRecipe = getOmRecipe(omPhoto?.recipeData);
 
   return (
     <PhotoHeader
       recipe={recipe}
-      entity={<PhotoRecipe
+      entity={omRecipe ? <PhotoOmRecipe
+        recipe={omRecipe}
+        recipeKey={recipe}
+        camera={{ make: omPhoto?.make, model: omPhoto?.model }}
+        contrast="high"
+        hoverType="none"
+        hoverCount={count}
+      /> : <PhotoRecipe
         recipe={recipe}
         contrast="high"
         hoverType="none"

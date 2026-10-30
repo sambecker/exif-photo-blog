@@ -110,6 +110,7 @@ import FieldsetAlbum from '@/album/FieldsetAlbum';
 import Form from 'next/form';
 import { useSearchParams } from 'next/navigation';
 import DateTimePicker from '@/components/DateTimePicker';
+import { isOmRecipeData, parseRecipeData } from '@/recipe/serialization';
 
 const THUMBNAIL_SIZE = 300;
 /** Form cap. The floating thumb is placed to the right of this. */
@@ -449,6 +450,8 @@ export default function PhotoForm({
     }
   };
 
+  const hasOmRecipeData = isOmRecipeData(parseRecipeData(formData.recipeData));
+
   const isFieldHidden = (
     key: FormFields,
     hideIfEmpty?: boolean,
@@ -718,6 +721,11 @@ export default function PhotoForm({
                   type,
                   staticValue,
                 }]) => {
+                  if (hasOmRecipeData &&
+                    (key === 'recipeData' || key === 'recipeTitle')) {
+                    return <input key={key} type="hidden" name={key}
+                      value={formData[key] ?? ''} />;
+                  }
                   if (!isFieldHidden(key, hideIfEmpty, shouldHide)) {
                     // eslint-disable-next-line @stylistic/max-len
                     const fieldProps: ComponentProps<typeof FieldsetWithStatus> = {
