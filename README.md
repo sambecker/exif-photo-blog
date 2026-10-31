@@ -163,6 +163,23 @@ To add location meta to entities like photos and albums:
 
 Create Upstash Redis store from storage tab of Vercel dashboard and link to your project (if required, add environment variable prefix `EXIF`) in order to enable rate limiting—no further configuration necessary.
 
+### Programmatic uploads (optional)
+
+Upload photos from local scripts (Node >= 22). Works with Vercel Blob, S3,
+Cloudflare R2, or MinIO; image bytes go directly to storage, as with admin
+uploads (Vercel Blob uses this repo's installed `@vercel/blob` package).
+The script signs in with the existing admin credentials; no extra server setup:
+
+```sh
+export ADMIN_EMAIL=... ADMIN_PASSWORD=...
+node scripts/photo-import.mjs --base https://photos.example.com upload photo.jpg
+node scripts/photo-import.mjs --base https://photos.example.com list --hidden only
+```
+
+Uploads are hidden by default (`--visible` makes them visible) and are not
+idempotent: use `list` to check the result before retrying an uncertain upload.
+See [script notes](scripts/README.md) for details.
+
 ### Categories
 - `NEXT_PUBLIC_CATEGORY_VISIBILITY`
   - Comma-separated value controlling which photo sets appear in grid sidebar and CMD-K menu, and in what order. For example, you could move cameras above tags, and hide film simulations, by updating to `cameras,tags,lenses,recipes`.
