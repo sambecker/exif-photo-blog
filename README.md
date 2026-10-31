@@ -161,8 +161,9 @@ Create Upstash Redis store from storage tab of Vercel dashboard and link to your
 
 ### Programmatic uploads (optional)
 
-Upload photos from local scripts (Node >= 22).
-Requires S3, Cloudflare R2, or MinIO storage for direct presigned uploads.
+Upload photos from local scripts (Node >= 22). Works with Vercel Blob, S3,
+Cloudflare R2, or MinIO; image bytes go directly to storage, as with admin
+uploads (Vercel Blob uses this repo's installed `@vercel/blob` package).
 The script signs in with the existing admin credentials; no extra server setup:
 
 ```sh

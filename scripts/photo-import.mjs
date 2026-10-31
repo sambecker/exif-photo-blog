@@ -106,19 +106,31 @@ const main = async () => {
     throw new Error('Supported extensions: jpg, jpeg, png, heic, webp');
   }
   const bytes = await readFile(expandPath(file));
-  const { uploadUrl, putUrl } = await request(
+  const { uploadUrl, putUrl, pathname, handleUploadUrl } = await request(
     'POST', '/api/import/presign', { extension },
   );
-  const uploaded = await fetch(putUrl, {
-    method: 'PUT',
-    headers: { 'Content-Type': contentType },
-    body: bytes,
-  });
-  if (!uploaded.ok) {
-    throw new Error(`Storage PUT: HTTP ${uploaded.status}`);
+  let url = uploadUrl;
+  if (handleUploadUrl) {
+    // Vercel Blob: client token from the admin upload endpoint
+    const { upload } = await import('@vercel/blob/client');
+    ({ url } = await upload(pathname, bytes, {
+      access: 'public',
+      contentType,
+      handleUploadUrl: new URL(handleUploadUrl, values.base).href,
+      headers: { Cookie: cookie },
+    }));
+  } else {
+    const uploaded = await fetch(putUrl, {
+      method: 'PUT',
+      headers: { 'Content-Type': contentType },
+      body: bytes,
+    });
+    if (!uploaded.ok) {
+      throw new Error(`Storage PUT: HTTP ${uploaded.status}`);
+    }
   }
   const photo = await request('POST', '/api/import/add', {
-    uploadUrl,
+    uploadUrl: url,
     title: values.title,
     hidden: !values.visible,
   });

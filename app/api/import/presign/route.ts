@@ -1,5 +1,7 @@
 import { auth } from '@/auth/server';
 import { CURRENT_STORAGE } from '@/app/config';
+import { PATH_API_VERCEL_BLOB_UPLOAD } from '@/app/path';
+import { ACCEPTED_PHOTO_FILE_TYPES } from '@/photo';
 import {
   baseUrlForStorage,
   generateFileNameWithId,
@@ -29,16 +31,27 @@ export async function POST(request: Request) {
     return new Response('Invalid extension', { status: 400 });
   }
 
+  const { extension } = result.data;
+  const key = `${generateFileNameWithId('upload')}.${extension}`;
+  const uploadUrl = `${baseUrlForStorage(CURRENT_STORAGE)}/${key}`;
+
   if (CURRENT_STORAGE === 'vercel-blob') {
-    return new Response('Presigned uploads require S3, R2, or MinIO', {
-      status: 400,
-    });
+    // Same token endpoint and file types as admin uploads
+    if (!ACCEPTED_PHOTO_FILE_TYPES.includes(`image/${extension}`)) {
+      return new Response('Vercel Blob uploads accept jpg, jpeg, or png', {
+        status: 400,
+      });
+    }
+    return Response.json({
+      uploadUrl,
+      pathname: key,
+      handleUploadUrl: PATH_API_VERCEL_BLOB_UPLOAD,
+    }, { headers: { 'Cache-Control': 'no-store' } });
   }
 
-  const key = `${generateFileNameWithId('upload')}.${result.data.extension}`;
   const putUrl = await getSignedUrlForKey(key, 'PUT');
   return Response.json({
-    uploadUrl: `${baseUrlForStorage(CURRENT_STORAGE)}/${key}`,
+    uploadUrl,
     putUrl,
   }, { headers: { 'Cache-Control': 'no-store' } });
 }

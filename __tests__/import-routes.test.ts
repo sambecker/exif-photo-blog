@@ -1,6 +1,7 @@
 /** @jest-environment node */
 
-// Isolate auth, storage, DB, and image processing; config remains real.
+// Isolate auth, storage, DB, image processing, and ESM-heavy modules;
+// config remains real.
 jest.mock('../src/auth/server', () => ({
   auth: jest.fn(async () => ({ user: { email: 'admin@example.com' } })),
 }));
@@ -8,6 +9,12 @@ jest.mock('../src/platforms/storage', () => ({
   baseUrlForStorage: () => 'https://storage.example/photos',
   generateFileNameWithId: () => 'upload-1234567890abcdef',
   getSignedUrlForKey: jest.fn(async () => 'https://storage.example/put'),
+}));
+jest.mock('../src/photo', () => ({
+  ACCEPTED_PHOTO_FILE_TYPES: ['image/jpg', 'image/jpeg', 'image/png'],
+}));
+jest.mock('../src/app/path', () => ({
+  PATH_API_VERCEL_BLOB_UPLOAD: '/api/storage/vercel-blob',
 }));
 jest.mock('../src/photo/add-upload', () => ({ addUpload: jest.fn() }));
 jest.mock('../src/photo/query', () => ({ getPhotos: jest.fn() }));
@@ -62,17 +69,27 @@ it('presigns an upload object on the configured storage', async () => {
   );
 });
 
-it('rejects unsupported extensions and Vercel Blob presigning', async () => {
+it('rejects unsupported extensions', async () => {
   const [presign] = handlers();
   expect((await presign(requestFor('presign', { extension: 'exe' }))).status)
     .toBe(400);
-  jest.resetModules();
+});
+
+it('hands Vercel Blob uploads to the admin client-token endpoint', async () => {
   process.env.NEXT_PUBLIC_STORAGE_PREFERENCE = 'vercel-blob';
-  const [blobPresign] = handlers();
-  const response = await blobPresign(requestFor('presign', {
-    extension: 'jpg',
-  }));
-  expect(response.status).toBe(400);
+  const [presign] = handlers();
+  const response = await presign(requestFor('presign', { extension: 'jpg' }));
+  expect(response.status).toBe(200);
+  expect(await response.json()).toEqual({
+    uploadUrl: 'https://storage.example/photos/upload-1234567890abcdef.jpg',
+    pathname: 'upload-1234567890abcdef.jpg',
+    handleUploadUrl: '/api/storage/vercel-blob',
+  });
+  const { getSignedUrlForKey } = require('../src/platforms/storage');
+  expect(getSignedUrlForKey).not.toHaveBeenCalled();
+  // Admin client tokens only allow jpg/png
+  expect((await presign(requestFor('presign', { extension: 'heic' }))).status)
+    .toBe(400);
 });
 
 it.each([
