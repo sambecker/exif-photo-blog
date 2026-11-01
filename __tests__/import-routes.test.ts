@@ -54,26 +54,39 @@ it('returns generic 401 responses without an admin session', async () => {
   }
 });
 
-it('presigns an upload object on the configured storage', async () => {
-  const [presign] = handlers();
-  const response = await presign(requestFor('presign', { extension: 'jpg' }));
-  expect(response.status).toBe(200);
-  expect(response.headers.get('Cache-Control')).toBe('no-store');
-  expect(await response.json()).toEqual({
-    uploadUrl: 'https://storage.example/photos/upload-1234567890abcdef.jpg',
-    putUrl: 'https://storage.example/put',
-  });
-  const { getSignedUrlForKey } = require('../src/platforms/storage');
-  expect(getSignedUrlForKey).toHaveBeenCalledWith(
-    'upload-1234567890abcdef.jpg', 'PUT',
-  );
-});
+it.each([
+  ['jpg', 'jpg', 'image/jpeg'],
+  ['JPG', 'jpg', 'image/jpeg'],
+  ['jpeg', 'jpeg', 'image/jpeg'],
+  ['JPEG', 'jpeg', 'image/jpeg'],
+  ['png', 'png', 'image/png'],
+  ['PNG', 'png', 'image/png'],
+])(
+  'presigns a .%s upload on the configured storage',
+  async (extension, keyExtension, contentType) => {
+    const [presign] = handlers();
+    const response = await presign(requestFor('presign', { extension }));
+    expect(response.status).toBe(200);
+    expect(response.headers.get('Cache-Control')).toBe('no-store');
+    const key = `upload-1234567890abcdef.${keyExtension}`;
+    expect(await response.json()).toEqual({
+      uploadUrl: `https://storage.example/photos/${key}`,
+      contentType,
+      putUrl: 'https://storage.example/put',
+    });
+    const { getSignedUrlForKey } = require('../src/platforms/storage');
+    expect(getSignedUrlForKey).toHaveBeenCalledWith(key, 'PUT');
+  },
+);
 
-it('rejects unsupported extensions', async () => {
-  const [presign] = handlers();
-  expect((await presign(requestFor('presign', { extension: 'exe' }))).status)
-    .toBe(400);
-});
+it.each(['exe', 'heic', 'webp', ''])(
+  'rejects unsupported extension: %s',
+  async extension => {
+    const [presign] = handlers();
+    expect((await presign(requestFor('presign', { extension }))).status)
+      .toBe(400);
+  },
+);
 
 it('hands Vercel Blob uploads to the admin client-token endpoint', async () => {
   process.env.NEXT_PUBLIC_STORAGE_PREFERENCE = 'vercel-blob';
@@ -82,14 +95,12 @@ it('hands Vercel Blob uploads to the admin client-token endpoint', async () => {
   expect(response.status).toBe(200);
   expect(await response.json()).toEqual({
     uploadUrl: 'https://storage.example/photos/upload-1234567890abcdef.jpg',
+    contentType: 'image/jpeg',
     pathname: 'upload-1234567890abcdef.jpg',
     handleUploadUrl: '/api/storage/vercel-blob',
   });
   const { getSignedUrlForKey } = require('../src/platforms/storage');
   expect(getSignedUrlForKey).not.toHaveBeenCalled();
-  // Admin client tokens only allow jpg/png
-  expect((await presign(requestFor('presign', { extension: 'heic' }))).status)
-    .toBe(400);
 });
 
 it.each([
@@ -98,6 +109,8 @@ it.each([
   'https://storage.example/photos/photo-1234567890abcdef.jpg',
   'https://storage.example/photos/upload-1234567890abcdef.jpg?x=1',
   'https://storage.example/photos/../upload-1234567890abcdef.jpg',
+  'https://storage.example/photos/upload-1234567890abcdef.heic',
+  'https://storage.example/photos/upload-1234567890abcdef',
 ])('rejects an invalid upload URL: %s', async uploadUrl => {
   const [, add] = handlers();
   const { addUpload } = require('../src/photo/add-upload');
@@ -119,6 +132,15 @@ it.each([undefined, false])('adds a photo with hidden=%s', async hidden => {
     excludeFromFeeds: 'false',
     shouldRevalidateAllKeysAndPaths: true,
   }));
+});
+
+it('accepts upload URLs with uppercase extensions', async () => {
+  const [, add] = handlers();
+  const { addUpload } = require('../src/photo/add-upload');
+  addUpload.mockResolvedValue({ id: 'newphoto', hidden: true });
+  const uploadUrl =
+    'https://storage.example/photos/upload-1234567890abcdef.JPEG';
+  expect((await add(requestFor('add', { uploadUrl }))).status).toBe(200);
 });
 
 it('returns 422 when photo processing cannot add the upload', async () => {

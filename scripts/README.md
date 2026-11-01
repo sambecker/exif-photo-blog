@@ -23,8 +23,8 @@ Uploads are hidden by default; add `--visible` to make a photo visible.
 Upload output is one JSON line; `title` is the supplied override, or `null`
 when the existing server pipeline selects the title from EXIF/AI.
 List output is JSON, up to 10,000 photos; `--hidden` accepts `include` (default),
-`only`, or `exclude`. Extensions: jpg, jpeg, png, heic, webp (Vercel Blob:
-jpg, jpeg, png, the same types as admin uploads).
+`only`, or `exclude`. Accepted file types are the same as admin uploads
+(jpg, jpeg, png).
 Image bytes go directly to storage, avoiding the serverless request body limit
 of 4.5 MB: a presigned PUT for S3, R2, or MinIO, or for Vercel Blob a
 `@vercel/blob/client` upload with a client token from the admin upload endpoint

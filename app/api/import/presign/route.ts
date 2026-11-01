@@ -12,7 +12,10 @@ import { z } from 'zod';
 export const runtime = 'nodejs';
 
 const schema = z.object({
-  extension: z.enum(['jpg', 'jpeg', 'png', 'heic', 'webp']),
+  extension: z.string()
+    .transform(extension => extension.toLowerCase())
+    .refine(extension =>
+      ACCEPTED_PHOTO_FILE_TYPES.includes(`image/${extension}`)),
 });
 
 export async function POST(request: Request) {
@@ -28,22 +31,21 @@ export async function POST(request: Request) {
   }
   const result = schema.safeParse(json);
   if (!result.success) {
-    return new Response('Invalid extension', { status: 400 });
+    return new Response(
+      `Accepted file types: ${ACCEPTED_PHOTO_FILE_TYPES.join(', ')}`,
+      { status: 400 },
+    );
   }
 
   const { extension } = result.data;
   const key = `${generateFileNameWithId('upload')}.${extension}`;
   const uploadUrl = `${baseUrlForStorage(CURRENT_STORAGE)}/${key}`;
+  const contentType = extension === 'jpg' ? 'image/jpeg' : `image/${extension}`;
 
   if (CURRENT_STORAGE === 'vercel-blob') {
-    // Same token endpoint and file types as admin uploads
-    if (!ACCEPTED_PHOTO_FILE_TYPES.includes(`image/${extension}`)) {
-      return new Response('Vercel Blob uploads accept jpg, jpeg, or png', {
-        status: 400,
-      });
-    }
     return Response.json({
       uploadUrl,
+      contentType,
       pathname: key,
       handleUploadUrl: PATH_API_VERCEL_BLOB_UPLOAD,
     }, { headers: { 'Cache-Control': 'no-store' } });
@@ -52,6 +54,7 @@ export async function POST(request: Request) {
   const putUrl = await getSignedUrlForKey(key, 'PUT');
   return Response.json({
     uploadUrl,
+    contentType,
     putUrl,
   }, { headers: { 'Cache-Control': 'no-store' } });
 }

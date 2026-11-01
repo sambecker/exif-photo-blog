@@ -1,6 +1,7 @@
 import { auth } from '@/auth/server';
 import { addUpload } from '@/photo/add-upload';
 import { CURRENT_STORAGE } from '@/app/config';
+import { ACCEPTED_PHOTO_FILE_TYPES } from '@/photo';
 import { baseUrlForStorage } from '@/platforms/storage';
 import {
   generateLocalNaivePostgresString,
@@ -41,7 +42,12 @@ export async function POST(request: Request) {
     return new Response('Invalid upload URL', { status: 400 });
   }
   const key = uploadUrl.slice(baseUrl.length + 1);
-  if (!/^upload-[a-zA-Z0-9]{16}\.(jpg|jpeg|png|heic|webp)$/.test(key)) {
+  const [, extension] =
+    key.match(/^upload-[a-zA-Z0-9]{16}\.([a-zA-Z]+)$/) ?? [];
+  if (
+    !extension ||
+    !ACCEPTED_PHOTO_FILE_TYPES.includes(`image/${extension.toLowerCase()}`)
+  ) {
     return new Response('Invalid upload URL', { status: 400 });
   }
 

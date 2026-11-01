@@ -37,14 +37,6 @@ export const signIn = async (base, email, password) => {
   return session;
 };
 
-const contentTypes = {
-  jpg: 'image/jpeg',
-  jpeg: 'image/jpeg',
-  png: 'image/png',
-  heic: 'image/heic',
-  webp: 'image/webp',
-};
-
 const expandPath = path => path.startsWith('~/')
   ? resolve(homedir(), path.slice(2))
   : resolve(path);
@@ -83,7 +75,9 @@ const main = async () => {
       ...data !== undefined && { body: JSON.stringify(data) },
     });
     if (!response.ok) {
-      throw new Error(`${method} ${path}: HTTP ${response.status}`);
+      throw new Error(
+        `${method} ${path}: HTTP ${response.status} ${await response.text()}`,
+      );
     }
     return response.json();
   };
@@ -100,14 +94,15 @@ const main = async () => {
     return;
   }
 
-  const extension = extname(file).slice(1).toLowerCase();
-  const contentType = contentTypes[extension];
-  if (!contentType) {
-    throw new Error('Supported extensions: jpg, jpeg, png, heic, webp');
-  }
   const bytes = await readFile(expandPath(file));
-  const { uploadUrl, putUrl, pathname, handleUploadUrl } = await request(
-    'POST', '/api/import/presign', { extension },
+  const {
+    uploadUrl,
+    contentType,
+    putUrl,
+    pathname,
+    handleUploadUrl,
+  } = await request(
+    'POST', '/api/import/presign', { extension: extname(file).slice(1) },
   );
   let url = uploadUrl;
   if (handleUploadUrl) {
