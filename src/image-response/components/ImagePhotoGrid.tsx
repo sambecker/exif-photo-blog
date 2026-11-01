@@ -84,7 +84,7 @@ export default async function ImagePhotoGrid({
   );
 
   const renderPhoto = (
-    { id, urlData }: typeof photoUrls[number],
+    { id, urlData }: NonNullable<typeof photoUrls>[number],
     width: number,
     height: number,
     style?: React.CSSProperties,
@@ -125,7 +125,7 @@ export default async function ImagePhotoGrid({
         overflow: 'hidden',
       }}
     >
-      {photoUrls.length > 0
+      {photoUrls && photoUrls.length > 0
         ? hasFiveLayout
           ? <>
             {renderPhoto(photoUrls[0], fiveLeftWidth, height, {
