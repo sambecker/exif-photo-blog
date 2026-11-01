@@ -164,6 +164,8 @@ export const TEXT: I18N = {
     // eslint-disable-next-line @stylistic/max-len
     syncOverwriteConfirm: 'Tüm fotoğraf alanlarının üzerine yazmak istediğinize emin misiniz? Özelleştirilmiş veriler kaybolabilir.',
     reupload: 'Yeniden Yükle',
+    reuploadReplaceFile: 'Dosyayı değiştir',
+    reuploadReplaceFileSync: 'Dosyayı değiştir + senkronize et',
     delete: 'Sil',
     // eslint-disable-next-line @stylistic/max-len
     deleteConfirm: '"{{photoTitle}}" adlı fotoğrafı silmek istediğinize emin misiniz?',

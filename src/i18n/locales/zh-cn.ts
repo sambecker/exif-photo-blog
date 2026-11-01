@@ -163,6 +163,8 @@ export const TEXT: I18N = {
     syncOverwrite: '覆盖',
     syncOverwriteConfirm: '确定要覆盖所有照片字段吗？自定义数据可能会丢失。',
     reupload: '重新上传',
+    reuploadReplaceFile: '替换文件',
+    reuploadReplaceFileSync: '替换文件并同步',
     delete: '删除',
     deleteConfirm: '确定要删除 "{{photoTitle}}" 吗？',
     setVisibility: '可见性',

@@ -164,6 +164,8 @@ export const TEXT: I18N = {
     // eslint-disable-next-line @stylistic/max-len
     syncOverwriteConfirm: 'Tem certeza de que deseja sobrescrever todos os campos da foto? Dados personalizados podem ser perdidos.',
     reupload: 'Enviar novamente',
+    reuploadReplaceFile: 'Substituir arquivo',
+    reuploadReplaceFileSync: 'Substituir arquivo e sincronizar',
     delete: 'Excluir',
     deleteConfirm: 'Tem certeza de que deseja excluir "{{photoTitle}}"?',
     setVisibility: 'Visibilidade',

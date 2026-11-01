@@ -164,6 +164,8 @@ export const TEXT: I18N = {
     // eslint-disable-next-line @stylistic/max-len
     syncOverwriteConfirm: 'क्या आप सुनिश्चित हैं कि आप सभी फोटो फ़ील्ड को अधिलेखित करना चाहते हैं? अनुकूलित डेटा खो सकता है।',
     reupload: 'पुनः अपलोड करें',
+    reuploadReplaceFile: 'फ़ाइल बदलें',
+    reuploadReplaceFileSync: 'फ़ाइल बदलें + सिंक करें',
     delete: 'हटाएं',
     // eslint-disable-next-line @stylistic/max-len
     deleteConfirm: 'क्या आप सुनिश्चित हैं कि "{{photoTitle}}" को हटाना चाहते हैं?',

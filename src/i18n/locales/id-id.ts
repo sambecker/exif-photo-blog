@@ -164,6 +164,8 @@ export const TEXT: I18N = {
     // eslint-disable-next-line @stylistic/max-len
     syncOverwriteConfirm: 'Apakah Anda yakin ingin menimpa semua bidang foto? Data yang disesuaikan mungkin hilang.',
     reupload: 'Unggah ulang',
+    reuploadReplaceFile: 'Ganti berkas',
+    reuploadReplaceFileSync: 'Ganti berkas + sinkronkan',
     delete: 'Hapus',
     deleteConfirm: 'Apakah Anda yakin ingin menghapus "{{photoTitle}}"?',
     setVisibility: 'Visibilitas',

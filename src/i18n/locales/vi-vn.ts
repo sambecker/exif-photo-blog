@@ -164,6 +164,8 @@ export const TEXT: I18N = {
     // eslint-disable-next-line @stylistic/max-len
     syncOverwriteConfirm: 'Bạn có chắc chắn muốn ghi đè tất cả các trường ảnh? Dữ liệu tùy chỉnh có thể bị mất.',
     reupload: 'Tải lên lại',
+    reuploadReplaceFile: 'Thay thế tệp',
+    reuploadReplaceFileSync: 'Thay thế tệp + đồng bộ',
     delete: 'Xóa',
     deleteConfirm: 'Bạn có chắc chắn muốn xóa "{{photoTitle}}?"',
     setVisibility: 'Chế độ hiển thị',

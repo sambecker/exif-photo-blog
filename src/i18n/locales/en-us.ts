@@ -163,6 +163,8 @@ export const TEXT = {
     // eslint-disable-next-line @stylistic/max-len
     syncOverwriteConfirm: 'Are you sure you want to overwrite all photo fields? Customized data may be lost.',
     reupload: 'Reupload',
+    reuploadReplaceFile: 'Replace File',
+    reuploadReplaceFileSync: 'Replace File + Sync',
     delete: 'Delete',
     deleteConfirm: 'Are you sure you want to delete "{{photoTitle}}?"',
     setVisibility: 'Visibility',

@@ -164,6 +164,8 @@ export const TEXT: I18N = {
     // eslint-disable-next-line @stylistic/max-len
     syncOverwriteConfirm: 'আপনি কি নিশ্চিত যে আপনি সমস্ত ফটো ফিল্ড ওভাররাইট করতে চান? কাস্টমাইজড ডেটা হারিয়ে যেতে পারে।',
     reupload: 'পুনরায় আপলোড করুন',
+    reuploadReplaceFile: 'ফাইল প্রতিস্থাপন',
+    reuploadReplaceFileSync: 'ফাইল প্রতিস্থাপন + সিঙ্ক',
     delete: 'ডিলিট',
     deleteConfirm: 'আপনি কি "{{photoTitle}}" মুছে ফেলতে চান?',
     setVisibility: 'দৃশ্যমানতা',
