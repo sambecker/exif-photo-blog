@@ -150,6 +150,8 @@ export const TEXT: I18N = {
     appConfigShort: 'কনফিগারেশন',
     clearCache: 'ক্যাশ সাফ করুন',
     clearCacheSuccess: 'সাইট ক্যাশ সাফ করা হয়েছে',
+    // eslint-disable-next-line @stylistic/max-len
+    clearCacheConfirm: 'এটি পুরো সাইটের ক্যাশ মুছে দেবে এবং স্ট্যাটিকভাবে তৈরি পৃষ্ঠাগুলো পুনরায় তৈরি করবে। খরচ/পারফরম্যান্সের প্রভাব থাকতে পারে।',
     edit: 'এডিট',
     favorite: 'পছন্দ',
     unfavorite: 'পছন্দ অপসারণ',

@@ -1,28 +1,30 @@
 'use client';
 
-import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
-import { clearCacheAction } from '@/photo/actions';
-import { useAppState } from '@/app/AppState';
+import LoaderButton from '@/components/primitives/LoaderButton';
 import { BiTrash } from 'react-icons/bi';
 import { useAppText } from '@/i18n/state/client';
-import { toastSuccess } from '@/toast';
+import { useState } from 'react';
+import useClearCache from './useClearCache';
 
 export default function ClearCacheButton() {
-  const { invalidateSwr } = useAppState();
   const appText = useAppText();
+  const clearCache = useClearCache();
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
-    <form action={clearCacheAction}>
-      <SubmitButtonWithStatus
-        icon={<BiTrash size={16} />}
-        hideText="never"
-        onFormSubmit={() => {
-          invalidateSwr?.();
-          toastSuccess(appText.admin.clearCacheSuccess);
-        }}
-      >
-        {appText.admin.clearCache}
-      </SubmitButtonWithStatus>
-    </form>
+    <LoaderButton
+      icon={<BiTrash size={16} />}
+      hideText="never"
+      isLoading={isLoading}
+      onClick={() => {
+        const result = clearCache();
+        if (result) {
+          setIsLoading(true);
+          result.finally(() => setIsLoading(false));
+        }
+      }}
+    >
+      {appText.admin.clearCache}
+    </LoaderButton>
   );
 }

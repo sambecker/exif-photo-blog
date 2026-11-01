@@ -150,6 +150,8 @@ export const TEXT: I18N = {
     appConfigShort: 'Yapılandırma',
     clearCache: 'Önbelleği Temizle',
     clearCacheSuccess: 'Site önbelleği temizlendi',
+    // eslint-disable-next-line @stylistic/max-len
+    clearCacheConfirm: 'Bu işlem tüm site önbelleğini temizleyecek ve statik olarak oluşturulmuş sayfaları yeniden oluşturacaktır. Maliyet/performans etkileri olabilir.',
     edit: 'Düzenle',
     favorite: 'Favori',
     unfavorite: 'Favoriden Çıkar',

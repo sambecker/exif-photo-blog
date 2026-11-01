@@ -150,6 +150,7 @@ export const TEXT: I18N = {
     appConfigShort: '配置',
     clearCache: '清除缓存',
     clearCacheSuccess: '站点缓存已清除',
+    clearCacheConfirm: '这将清除整个站点缓存并重新构建所有静态生成的页面。可能会产生成本或性能影响。',
     edit: '编辑',
     favorite: '收藏',
     unfavorite: '取消收藏',

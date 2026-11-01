@@ -36,6 +36,7 @@ import IconAlbum from '@/components/icons/IconAlbum';
 import IconEdit from '@/components/icons/IconEdit';
 import { HEIGHT_CLASS } from '@/components/switcher/SwitcherItem';
 import { TbSquareRoundedCheck, TbSquareRoundedX } from 'react-icons/tb';
+import useClearCache from './useClearCache';
 
 const labelWithTrailingEllipsis = (text: string) => {
   const match = text.match(/^(.*?)\s*(\.{3}|…)\s*$/);
@@ -80,6 +81,8 @@ export default function AdminAppMenu({
   } = useEditTitlesState();
 
   const appText = useAppText();
+
+  const clearCache = useClearCache();
 
   const sectionUpload: MoreMenuSection = useMemo(() => ({ items: [{
     label: appText.admin.uploadPhotos,
@@ -214,12 +217,19 @@ export default function AdminAppMenu({
         size="small"
         className="translate-x-[-0.5px]"
       />,
-      items: [{
-        label: appText.admin.appInsightsShort,
-        href: PATH_ADMIN_INSIGHTS,
+      sections: [{
+        items: [{
+          label: appText.admin.appInsightsShort,
+          href: PATH_ADMIN_INSIGHTS,
+        }, {
+          label: appText.admin.appConfigShort,
+          href: PATH_ADMIN_CONFIGURATION,
+        }],
       }, {
-        label: appText.admin.appConfigShort,
-        href: PATH_ADMIN_CONFIGURATION,
+        items: [{
+          label: appText.admin.clearCache,
+          action: clearCache,
+        }],
       }],
     });
 
@@ -238,6 +248,7 @@ export default function AdminAppMenu({
     albumsCount,
     tagsCount,
     uploadsCount,
+    clearCache,
   ]);
 
   const sectionSignOut: MoreMenuSection = useMemo(() => ({

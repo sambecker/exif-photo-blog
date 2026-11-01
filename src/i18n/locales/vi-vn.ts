@@ -150,6 +150,8 @@ export const TEXT: I18N = {
     appConfigShort: 'Cấu hình',
     clearCache: 'Xóa bộ nhớ cache',
     clearCacheSuccess: 'Đã xóa bộ nhớ cache của trang web',
+    // eslint-disable-next-line @stylistic/max-len
+    clearCacheConfirm: 'Thao tác này sẽ xóa toàn bộ bộ nhớ đệm của trang web và tạo lại các trang được tạo tĩnh. Có thể có ảnh hưởng đến chi phí/hiệu suất.',
     edit: 'Chỉnh sửa',
     favorite: 'Yêu thích',
     unfavorite: 'Bỏ yêu thích',

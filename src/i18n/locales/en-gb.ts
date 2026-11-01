@@ -150,6 +150,8 @@ export const TEXT: I18N = {
     appConfigShort: 'Configuration',
     clearCache: 'Clear Cache',
     clearCacheSuccess: 'Site cache has been cleared',
+    // eslint-disable-next-line @stylistic/max-len
+    clearCacheConfirm: 'This will clear the entire site cache and rebuild any statically generated pages. There may be cost/performance implications.',
     edit: 'Edit',
     favorite: 'Favourite',
     unfavorite: 'Unfavourite',
