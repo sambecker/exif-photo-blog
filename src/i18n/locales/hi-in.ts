@@ -168,6 +168,11 @@ export const TEXT: I18N = {
     reupload: 'पुनः अपलोड करें',
     reuploadReplaceFile: 'फ़ाइल बदलें',
     reuploadReplaceFileSync: 'फ़ाइल बदलें + सिंक करें',
+    reuploadReplacing: 'फ़ाइल बदली जा रही है ...',
+    reuploadReplacingSync: 'फ़ाइल बदली और सिंक की जा रही है ...',
+    reuploadSuccess: 'फ़ोटो फ़ाइल बदल दी गई',
+    reuploadSuccessTitled: '"{{photoTitle}}" की फ़ाइल बदल दी गई',
+    reuploadFailure: 'फ़ोटो फ़ाइल बदलते समय कुछ गलत हो गया',
     delete: 'हटाएं',
     // eslint-disable-next-line @stylistic/max-len
     deleteConfirm: 'क्या आप सुनिश्चित हैं कि "{{photoTitle}}" को हटाना चाहते हैं?',

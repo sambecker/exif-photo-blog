@@ -31,7 +31,7 @@ import { MdOutlineFileDownload } from 'react-icons/md';
 import { IoMdColorFilter } from 'react-icons/io';
 import { FaArrowRight } from 'react-icons/fa6';
 import IconGrSync from '@/components/icons/IconGrSync';
-import { toastSuccess } from '@/toast';
+import { toastSuccess, toastWaiting, toastWarning } from '@/toast';
 import ColorDot from '@/photo/color/ColorDot';
 import { getKeyColorFromPhoto } from '@/photo/color/client';
 import InsightsIndicatorDot from './insights/InsightsIndicatorDot';
@@ -321,14 +321,51 @@ export default function AdminPhotoMenu({
           hidden
           onBlobReady={async ({ blob, extension }) => {
             const shouldSync = reuploadSyncRef.current;
-            return uploadPhotoFromClient(blob, extension)
-              .then(updatedStorageUrl =>
-                replacePhotoStorageAction(photo.id, updatedStorageUrl))
-              .then(() => shouldSync
-                ? syncPhotoAction(photo.id)
-                : undefined)
-              .then(() => revalidatePhoto?.(photo.id))
-              .finally(onUploadFinishRef.current);
+            // Menu may already be dismissed (e.g., Safari blurs it
+            // when the file picker opens) so report progress via toast
+            const toastId = toastWaiting(`${appText.admin.uploading} ...`);
+            const preventUnload = (e: BeforeUnloadEvent) => e.preventDefault();
+            window.addEventListener('beforeunload', preventUnload);
+            return uploadPhotoFromClient(blob, extension, {
+              onProgress: (loaded, total) => toastWaiting(
+                `${appText.admin.uploading} ` +
+                `${Math.round(loaded / total * 100)}%`,
+                Infinity,
+                toastId,
+              ),
+            })
+              .then(updatedStorageUrl => {
+                toastWaiting(
+                  shouldSync
+                    ? appText.admin.reuploadReplacingSync
+                    : appText.admin.reuploadReplacing,
+                  Infinity,
+                  toastId,
+                );
+                return replacePhotoStorageAction(
+                  photo.id,
+                  updatedStorageUrl,
+                  shouldSync,
+                );
+              })
+              .then(() => {
+                revalidatePhoto?.(photo.id);
+                toastSuccess(
+                  photo.title
+                    ? appText.admin.reuploadSuccessTitled(photo.title)
+                    : appText.admin.reuploadSuccess,
+                  undefined,
+                  toastId,
+                );
+              })
+              .catch(error => {
+                console.error(error);
+                toastWarning(appText.admin.reuploadFailure, undefined, toastId);
+              })
+              .finally(() => {
+                window.removeEventListener('beforeunload', preventUnload);
+                onUploadFinishRef.current?.();
+              });
           }}
           shouldResize={!PRESERVE_ORIGINAL_UPLOADS}
         />

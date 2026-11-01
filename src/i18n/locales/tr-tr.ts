@@ -168,6 +168,11 @@ export const TEXT: I18N = {
     reupload: 'Yeniden Yükle',
     reuploadReplaceFile: 'Dosyayı değiştir',
     reuploadReplaceFileSync: 'Dosyayı değiştir + senkronize et',
+    reuploadReplacing: 'Dosya değiştiriliyor ...',
+    reuploadReplacingSync: 'Dosya değiştiriliyor + senkronize ediliyor ...',
+    reuploadSuccess: 'Fotoğraf dosyası değiştirildi',
+    reuploadSuccessTitled: '"{{photoTitle}}" dosyası değiştirildi',
+    reuploadFailure: 'Fotoğraf dosyası değiştirilirken bir hata oluştu',
     delete: 'Sil',
     // eslint-disable-next-line @stylistic/max-len
     deleteConfirm: '"{{photoTitle}}" adlı fotoğrafı silmek istediğinize emin misiniz?',

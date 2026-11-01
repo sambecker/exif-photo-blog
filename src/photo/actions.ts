@@ -541,9 +541,14 @@ export const renamePhotoRecipeGloballyAction = async (formData: FormData) =>
     }
   });
 
+// Steps are ordered so an interrupted request never leaves the photo
+// pointing at missing files: new files are fully written before the
+// record changes, old files are only deleted once the record (and
+// optional sync) is committed, and caches are revalidated last
 export const replacePhotoStorageAction = async (
   photoId: string,
   updatedStorageUrl: string,
+  shouldSync?: boolean,
 ) =>
   runAuthenticatedAdminServerAction(async () => {
     const photo = await getPhoto(photoId, true);
@@ -572,6 +577,11 @@ export const replacePhotoStorageAction = async (
         };
       }
 
+      await storeOptimizedPhotosForUrl(updatedStorageUrl);
+
+      const existingStorageUrls = await getStorageUrlsForPhoto(photo)
+        .then(urls => urls.map(({ url }) => url));
+
       await updatePhoto({
         ...convertPhotoToPhotoDbInsert({
           ...photo,
@@ -581,13 +591,17 @@ export const replacePhotoStorageAction = async (
         ...imageFields,
       });
 
-      await storeOptimizedPhotosForUrl(updatedStorageUrl);
+      if (shouldSync) {
+        await syncPhoto(photo.id);
+      }
 
-      const existingStorageUrls = await getStorageUrlsForPhoto(photo)
-        .then(urls => urls.map(({ url }) => url));
       await Promise.all(existingStorageUrls.map(deleteFile));
 
-      revalidatePhoto(photo.id);
+      if (shouldSync) {
+        revalidateAllKeysAndPaths();
+      } else {
+        revalidatePhoto(photo.id);
+      }
     }
   });
 
@@ -622,104 +636,118 @@ export const getExifDataAction = async (
 // - generate AI text data, if enabled, and auto-generated fields are empty
 // - recalculate color data/sort if AI or color sort is enabled
 export const syncPhotoAction = async (
+  photoId: string,
+  options?: SyncPhotoOptions,
+) =>
+  runAuthenticatedAdminServerAction(async () => {
+    if (await syncPhoto(photoId, options)) {
+      revalidateAllKeysAndPaths();
+    }
+  });
+
+type SyncPhotoOptions = {
+  isBatch?: boolean,
+  syncMode?: 'auto' | 'only-missing' | 'overwrite',
+  updateMode?: boolean,
+};
+
+// Does not revalidate, returns true when the photo was updated
+const syncPhoto = async (
   photoId: string, {
     isBatch,
     syncMode = 'auto',
-  }: {
-    isBatch?: boolean,
-    syncMode?: 'auto' | 'only-missing' | 'overwrite',
-    updateMode?: boolean,
-  } = {},
-) =>
-  runAuthenticatedAdminServerAction(async () => {
-    const photo = await getPhoto(photoId ?? '', true);
+  }: SyncPhotoOptions = {},
+) => {
+  const photo = await getPhoto(photoId ?? '', true);
 
-    if (photo) {
+  if (photo) {
+    const {
+      formDataFromExif,
+      imageResizedBase64,
+      shouldStripGpsData,
+      fileBytes,
+    } = await extractImageDataFromBlobPath(photo.url, {
+      includeInitialPhotoFields: false,
+      generateBlurData: BLUR_ENABLED,
+      generateResizedImage: AI_CONTENT_GENERATION_ENABLED,
+      updateColorFields: AI_CONTENT_GENERATION_ENABLED,
+    });
+
+    const uniqueTags = await getUniqueTags();
+
+    let urlToDelete: string | undefined;
+    if (formDataFromExif) {
+      if (await shouldBackfillPhotoStorage(photo) || shouldStripGpsData) {
+        // Anonymize storage url on update if necessary by
+        // re-running image upload transfer logic
+        const url = await convertUploadToPhoto({
+          uploadUrl: photo.url,
+          fileBytes,
+          shouldStripGpsData,
+          shouldDeleteOrigin: false,
+        });
+        if (url) {
+          urlToDelete = photo.url;
+          photo.url = url;
+        }
+      }
+
       const {
-        formDataFromExif,
-        imageResizedBase64,
-        shouldStripGpsData,
-        fileBytes,
-      } = await extractImageDataFromBlobPath(photo.url, {
-        includeInitialPhotoFields: false,
-        generateBlurData: BLUR_ENABLED,
-        generateResizedImage: AI_CONTENT_GENERATION_ENABLED,
-        updateColorFields: AI_CONTENT_GENERATION_ENABLED,
+        title: atTitle,
+        caption: aiCaption,
+        tags: aiTags,
+        semantic: aiSemanticDescription,
+      } = await generateAiImageQueries({
+        imageBase64: imageResizedBase64,
+        textFieldsToGenerate: photo.updateStatus?.isMissingAiTextFields ?? [],
+        isBatch,
+        uniqueTags,
       });
 
-      const uniqueTags = await getUniqueTags();
+      const formDataFromPhoto = convertPhotoToFormData(photo);
 
-      let urlToDelete: string | undefined;
-      if (formDataFromExif) {
-        if (await shouldBackfillPhotoStorage(photo) || shouldStripGpsData) {
-          // Anonymize storage url on update if necessary by
-          // re-running image upload transfer logic
-          const url = await convertUploadToPhoto({
-            uploadUrl: photo.url,
-            fileBytes,
-            shouldStripGpsData,
-            shouldDeleteOrigin: false,
-          });
-          if (url) {
-            urlToDelete = photo.url;
-            photo.url = url;
-          }
+      Object.entries(formDataFromExif).forEach(([field, value]) => {
+        const existingValue =
+          formDataFromPhoto[field as keyof PhotoFormData];
+        switch (syncMode) {
+          case 'auto':
+            // Remove all fields already present in formDataFromPhoto
+            if (existingValue !== undefined) {
+              delete formDataFromExif[field as keyof PhotoFormData];
+            }
+            break;
+          case 'only-missing':
+            // Avoid overwriting fields with null data
+            if (existingValue !== undefined && !value) {
+              delete formDataFromExif[field as keyof PhotoFormData];
+            }
+            break;
         }
+      });
 
-        const {
-          title: atTitle,
-          caption: aiCaption,
-          tags: aiTags,
-          semantic: aiSemanticDescription,
-        } = await generateAiImageQueries({
-          imageBase64: imageResizedBase64,
-          textFieldsToGenerate: photo.updateStatus?.isMissingAiTextFields ?? [],
-          isBatch,
-          uniqueTags,
+      const photoFormDbInsert =
+        await convertFormDataToPhotoDbInsertAndLookupRecipeTitle({
+          ...formDataFromPhoto,
+          ...formDataFromExif,
+          ...!BLUR_ENABLED && { blurData: undefined },
+          ...!photo.title && { title: atTitle },
+          ...!photo.caption && { caption: aiCaption },
+          ...photo.tags.length === 0 && { tags: aiTags },
+          ...!photo.semanticDescription &&
+            { semanticDescription: aiSemanticDescription },
         });
 
-        const formDataFromPhoto = convertPhotoToFormData(photo);
-
-        Object.entries(formDataFromExif).forEach(([field, value]) => {
-          const existingValue =
-            formDataFromPhoto[field as keyof PhotoFormData];
-          switch (syncMode) {
-            case 'auto':
-              // Remove all fields already present in formDataFromPhoto
-              if (existingValue !== undefined) {
-                delete formDataFromExif[field as keyof PhotoFormData];
-              }
-              break;
-            case 'only-missing':
-              // Avoid overwriting fields with null data
-              if (existingValue !== undefined && !value) {
-                delete formDataFromExif[field as keyof PhotoFormData];
-              }
-              break;
-          }
+      await updatePhoto(photoFormDbInsert)
+        .then(async () => {
+          if (urlToDelete) { await deleteFile(urlToDelete); }
         });
 
-        const photoFormDbInsert =
-          await convertFormDataToPhotoDbInsertAndLookupRecipeTitle({
-            ...formDataFromPhoto,
-            ...formDataFromExif,
-            ...!BLUR_ENABLED && { blurData: undefined },
-            ...!photo.title && { title: atTitle },
-            ...!photo.caption && { caption: aiCaption },
-            ...photo.tags.length === 0 && { tags: aiTags },
-            ...!photo.semanticDescription &&
-              { semanticDescription: aiSemanticDescription },
-          });
-
-        await updatePhoto(photoFormDbInsert)
-          .then(async () => {
-            if (urlToDelete) { await deleteFile(urlToDelete); }
-          });
-
-        revalidateAllKeysAndPaths();
-      }
+      return true;
     }
-  });
+  }
+
+  return false;
+};
 
 export const syncPhotosAction = async (photosToSync: {
   photoId: string,
@@ -729,7 +757,7 @@ export const syncPhotosAction = async (photosToSync: {
     for (const { photoId, onlySyncColorData } of photosToSync) {
       await (onlySyncColorData
         ? storeColorDataForPhotoAction(photoId)
-        : syncPhotoAction(photoId, { isBatch: true }));
+        : syncPhoto(photoId, { isBatch: true }));
     }
     revalidateAllKeysAndPaths();
   });
