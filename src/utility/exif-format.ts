@@ -1,5 +1,10 @@
 import { formatNumberToFraction, roundToString } from './number';
 
+export const formatDigitalZoomRatio = (ratio?: number) =>
+  ratio !== undefined && Number.isFinite(ratio) && ratio > 1
+    ? `${roundToString(ratio)}×`
+    : undefined;
+
 export const formatAperture = (aperture?: number) =>
   aperture
     ? `ƒ/${roundToString(aperture)}`

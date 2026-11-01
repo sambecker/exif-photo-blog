@@ -251,6 +251,10 @@ const FORM_METADATA = (
     section: 'exif',
     label: 'focal length 35mm-equivalent',
   },
+  digitalZoomRatio: {
+    section: 'exif',
+    label: 'digital zoom ratio',
+  },
   lensMake: {
     section: 'exif',
     label: 'lens make',
@@ -522,6 +526,7 @@ export const convertFormDataToPhotoDbInsert = (
   }
   const locationDisplayName = photoForm.locationDisplayName;
   const keyColor = photoForm.keyColor;
+  const digitalZoomRatio = Number(photoForm.digitalZoomRatio);
   const hasKeyColorField = typeof keyColor === 'string' && keyColor.length > 0;
 
   // Parse FormData:
@@ -578,6 +583,8 @@ export const convertFormDataToPhotoDbInsert = (
     focalLength: parseInt(photoForm.focalLength ?? '') || undefined,
     focalLengthIn35MmFormat:
       parseInt(photoForm.focalLengthIn35MmFormat ?? '') || undefined,
+    digitalZoomRatio: Number.isFinite(digitalZoomRatio) && digitalZoomRatio >= 1
+      ? digitalZoomRatio : undefined,
     fNumber: photoForm.fNumber
       ? parseFloat(photoForm.fNumber)
       : undefined,
