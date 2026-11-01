@@ -163,26 +163,50 @@ it.each([
   expect(addUpload).not.toHaveBeenCalled();
 });
 
-it.each([undefined, false])('adds a photo with hidden=%s', async hidden => {
-  const [, add] = handlers();
-  const { addUpload } = require('../src/photo/add-upload');
-  addUpload.mockResolvedValue({ id: 'newphoto', hidden: hidden ?? true });
-  const uploadUrl =
-    'https://storage.example/photos/upload-1234567890abcdef.jpg';
-  const response = await add(requestFor('add', { uploadUrl, hidden }));
-  expect(response.status).toBe(200);
-  expect(addUpload).toHaveBeenCalledWith(expect.objectContaining({
-    url: uploadUrl,
-    hidden: String(hidden ?? true),
-    excludeFromFeeds: 'false',
-    shouldRevalidateAllKeysAndPaths: true,
-  }));
-});
+it.each([
+  [undefined, 'private', 'true', 'false'],
+  ['private', 'private', 'true', 'false'],
+  ['default', 'default', 'false', 'false'],
+  ['exclude', 'exclude', 'false', 'true'],
+])(
+  'adds a photo with visibility=%s',
+  async (visibility, expected, hidden, excludeFromFeeds) => {
+    const [, add] = handlers();
+    const { addUpload } = require('../src/photo/add-upload');
+    addUpload.mockResolvedValue({ id: 'newphoto', url: 'photo' });
+    const uploadUrl =
+      'https://storage.example/photos/upload-1234567890abcdef.jpg';
+    const response = await add(requestFor('add', { uploadUrl, visibility }));
+    expect(response.status).toBe(200);
+    expect(await response.json()).toEqual({
+      id: 'newphoto', url: 'photo', visibility: expected,
+    });
+    expect(addUpload).toHaveBeenCalledWith(expect.objectContaining({
+      url: uploadUrl,
+      hidden,
+      excludeFromFeeds,
+      shouldRevalidateAllKeysAndPaths: true,
+    }));
+  },
+);
+
+it.each(['hidden', 'public', true])(
+  'rejects an invalid visibility: %s',
+  async visibility => {
+    const [, add] = handlers();
+    const { addUpload } = require('../src/photo/add-upload');
+    const uploadUrl =
+      'https://storage.example/photos/upload-1234567890abcdef.jpg';
+    expect((await add(requestFor('add', { uploadUrl, visibility }))).status)
+      .toBe(400);
+    expect(addUpload).not.toHaveBeenCalled();
+  },
+);
 
 it('accepts upload URLs with uppercase extensions', async () => {
   const [, add] = handlers();
   const { addUpload } = require('../src/photo/add-upload');
-  addUpload.mockResolvedValue({ id: 'newphoto', hidden: true });
+  addUpload.mockResolvedValue({ id: 'newphoto', url: 'photo' });
   const uploadUrl =
     'https://storage.example/photos/upload-1234567890abcdef.JPEG';
   expect((await add(requestFor('add', { uploadUrl }))).status).toBe(200);
@@ -197,13 +221,19 @@ it('returns 422 when photo processing cannot add the upload', async () => {
   expect((await add(requestFor('add', { uploadUrl }))).status).toBe(422);
 });
 
-it('lists photos including hidden photos by default', async () => {
+it('lists all photos with their visibility', async () => {
   const [, , list] = handlers();
   const { getPhotos } = require('../src/photo/query');
-  getPhotos.mockResolvedValue([{ id: 'existing', url: 'photo', hidden: true }]);
+  getPhotos.mockResolvedValue([
+    { id: 'a', url: 'a', hidden: true },
+    { id: 'b', url: 'b', excludeFromFeeds: true },
+    { id: 'c', url: 'c' },
+  ]);
   const response = await list(requestFor('photos'));
   expect(getPhotos).toHaveBeenCalledWith({ hidden: 'include', limit: 10_000 });
-  expect(await response.json()).toEqual({ photos: [{
-    id: 'existing', url: 'photo', title: '', hidden: true,
-  }] });
+  expect(await response.json()).toEqual({ photos: [
+    { id: 'a', url: 'a', title: '', visibility: 'private' },
+    { id: 'b', url: 'b', title: '', visibility: 'exclude' },
+    { id: 'c', url: 'c', title: '', visibility: 'default' },
+  ] });
 });

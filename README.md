@@ -169,11 +169,11 @@ The script signs in with the existing admin credentials; no extra server setup:
 ```sh
 export ADMIN_EMAIL=... ADMIN_PASSWORD=...
 node scripts/photo-import.mjs --base https://photos.example.com upload photo.jpg
-node scripts/photo-import.mjs --base https://photos.example.com list --hidden only
+node scripts/photo-import.mjs --base https://photos.example.com list
 ```
 
-Uploads are hidden by default (`--visible` makes them visible) and are not
-idempotent: use `list` to check the result before retrying an uncertain upload.
+Uploads are private by default (`--visibility default` or `exclude` sets the
+same options as the admin photo form) and are not idempotent: use `list` to check the result before retrying an uncertain upload.
 See [script notes](scripts/README.md) for details.
 
 ### Categories

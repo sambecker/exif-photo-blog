@@ -2,6 +2,10 @@ import { auth } from '@/auth/server';
 import { addUpload } from '@/photo/add-upload';
 import { CURRENT_STORAGE } from '@/app/config';
 import { ACCEPTED_PHOTO_FILE_TYPES } from '@/photo';
+import {
+  updateFormDataWithVisibility,
+  VISIBILITY_VALUES,
+} from '@/photo/visibility';
 import { baseUrlForStorage } from '@/platforms/storage';
 import {
   generateLocalNaivePostgresString,
@@ -15,9 +19,8 @@ export const maxDuration = 60;
 const schema = z.object({
   uploadUrl: z.string(),
   title: z.string().optional(),
-  hidden: z.boolean().default(true),
+  visibility: z.enum(VISIBILITY_VALUES).default('private'),
   tags: z.string().optional(),
-  excludeFromFeeds: z.boolean().optional(),
 });
 
 export async function POST(request: Request) {
@@ -44,7 +47,7 @@ export async function POST(request: Request) {
     return new Response('Invalid photo', { status: 400 });
   }
 
-  const { uploadUrl, title, hidden, tags, excludeFromFeeds } = result.data;
+  const { uploadUrl, title, visibility, tags } = result.data;
   const baseUrl = baseUrlForStorage(CURRENT_STORAGE);
   if (!baseUrl || !uploadUrl.startsWith(`${baseUrl}/`)) {
     return new Response('Invalid upload URL', { status: 400 });
@@ -59,12 +62,14 @@ export async function POST(request: Request) {
     return new Response('Invalid upload URL', { status: 400 });
   }
 
+  const { hidden, excludeFromFeeds } =
+    updateFormDataWithVisibility({}, visibility);
   const photo = await addUpload({
     url: uploadUrl,
     title,
-    hidden: String(hidden),
     tags,
-    excludeFromFeeds: String(excludeFromFeeds ?? false),
+    hidden,
+    excludeFromFeeds,
     takenAtLocal: generateLocalPostgresString(),
     takenAtNaiveLocal: generateLocalNaivePostgresString(),
     shouldRevalidateAllKeysAndPaths: true,
@@ -72,5 +77,8 @@ export async function POST(request: Request) {
   if (!photo) {
     return new Response('Unable to add photo', { status: 422 });
   }
-  return Response.json(photo, { headers: { 'Cache-Control': 'no-store' } });
+  return Response.json(
+    { ...photo, visibility },
+    { headers: { 'Cache-Control': 'no-store' } },
+  );
 }

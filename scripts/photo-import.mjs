@@ -54,8 +54,7 @@ const main = async () => {
     options: {
       base: { type: 'string' },
       title: { type: 'string' },
-      visible: { type: 'boolean', default: false },
-      hidden: { type: 'string', default: 'include' },
+      visibility: { type: 'string', default: 'private' },
     },
   });
   const [command, file, ...extra] = positionals;
@@ -65,8 +64,8 @@ const main = async () => {
     (command === 'upload' && !file) || (command === 'list' && file)
   ) {
     throw new Error(
-      'Usage: --base URL upload FILE [--title T] [--visible]' +
-      ' | list [--hidden only|include|exclude]',
+      'Usage: --base URL upload FILE [--title T]' +
+      ' [--visibility private|default|exclude] | list',
     );
   }
 
@@ -90,13 +89,7 @@ const main = async () => {
   };
 
   if (command === 'list') {
-    if (!['only', 'include', 'exclude'].includes(values.hidden)) {
-      throw new Error('Invalid --hidden: use only, include, or exclude');
-    }
-    const result = await request(
-      'GET',
-      `/api/import/photos?hidden=${values.hidden}`,
-    );
+    const result = await request('GET', '/api/import/photos');
     console.log(JSON.stringify(result));
     return;
   }
@@ -134,13 +127,13 @@ const main = async () => {
   const photo = await request('POST', '/api/import/add', {
     uploadUrl: url,
     title: values.title,
-    hidden: !values.visible,
+    visibility: values.visibility,
   });
   console.log(JSON.stringify({
     file,
     id: photo.id,
     url: photo.url,
-    hidden: photo.hidden,
+    visibility: photo.visibility,
     title: values.title ?? null,
   }));
 };

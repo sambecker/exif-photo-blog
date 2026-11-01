@@ -16,14 +16,17 @@ node scripts/photo-import.mjs \
   upload /path/to/photo.jpg --title 'Photo title'
 
 node scripts/photo-import.mjs \
-  --base https://photos.example.com list --hidden only
+  --base https://photos.example.com list
 ```
 
-Uploads are hidden by default; add `--visible` to make a photo visible.
+`--visibility` uses the same options as the admin photo form: `private`
+(Private, visible only to admins), `default` (Default, viewable everywhere), or
+`exclude` (Hide from feeds). Unlike admin uploads, which default to Default,
+imports default to `private` so they can be reviewed before publishing.
 Upload output is one JSON line; `title` is the supplied override, or `null`
 when the existing server pipeline selects the title from EXIF/AI.
-List output is JSON, up to 10,000 photos; `--hidden` accepts `include` (default),
-`only`, or `exclude`. Accepted file types are the same as admin uploads
+List output is JSON with each photo's `visibility`, up to 10,000 photos,
+including private ones. Accepted file types are the same as admin uploads
 (jpg, jpeg, png).
 Image bytes go directly to storage, avoiding the serverless request body limit
 of 4.5 MB: a presigned PUT for S3, R2, or MinIO, or for Vercel Blob a

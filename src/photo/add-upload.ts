@@ -127,7 +127,7 @@ export const addUpload = async ({
       onFinish?.(url);
       // Re-submit with updated url
       onStreamUpdate?.(subheadFinal, 'added');
-      return { id: photo.id, url: photo.url, hidden: Boolean(photo.hidden) };
+      return { id: photo.id, url: photo.url };
     }
   }
 };
