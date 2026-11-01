@@ -145,7 +145,7 @@ export default function PhotoHeader({
               : headerType === 'photo-detail-with-entity'
                 ? isGridHighDensity
                   ? 'col-span-2 lg:col-span-3'
-                  : 'col-span-2 md:col-span-1 lg:col-span-2'
+                  : 'col-span-2'
                 : isGridHighDensity
                   ? 'col-span-3 sm:col-span-3 lg:col-span-5 w-[110%] xl:w-full'
                   : 'col-span-3 w-[110%] xl:w-full',
@@ -212,7 +212,7 @@ export default function PhotoHeader({
               // Center vertically with serif photo titles
               ? 'h-full items-center -translate-y-0.5'
               // Make full height for prev/next symbols
-              : 'max-sm:h-full',
+              : 'max-sm:h-4',
           )}>
             {selectedPhoto
               ? renderPrevNext
