@@ -87,8 +87,9 @@ export default function PhotoLink({
       </LinkWithLoaderBackground>
     : <span className={clsx(
       className,
-      'text-gray-300 dark:text-gray-700 cursor-default',
-      // Placeholder isn't a control — don't pick up button hover chrome
+      // Important so caller hover/text utilities (e.g. mobile icon buttons)
+      // can't repaint a non-interactive placeholder.
+      'text-gray-300! dark:text-gray-700! cursor-default',
       'hover:bg-transparent! active:bg-transparent!',
       'dark:hover:bg-transparent! dark:active:bg-transparent!',
       'hover:text-gray-300! dark:hover:text-gray-700!',
