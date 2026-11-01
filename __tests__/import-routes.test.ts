@@ -24,7 +24,10 @@ const originalStorage = process.env.NEXT_PUBLIC_STORAGE_PREFERENCE;
 const requestFor = (path: string, data?: unknown) => {
   return new Request(`https://photos.example/api/import/${path}`, {
     method: data === undefined ? 'GET' : 'POST',
-    ...data !== undefined && { body: JSON.stringify(data) },
+    ...data !== undefined && {
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    },
   });
 };
 
@@ -52,6 +55,48 @@ it('returns generic 401 responses without an admin session', async () => {
     expect(response.status).toBe(401);
     expect(await response.text()).toBe('Unauthorized');
   }
+});
+
+it.each([
+  undefined,
+  'text/plain',
+  'application/x-www-form-urlencoded',
+  'multipart/form-data; boundary=x',
+])('rejects POST requests with Content-Type %s', async contentType => {
+  const [presign, add] = handlers();
+  const { addUpload } = require('../src/photo/add-upload');
+  const { getSignedUrlForKey } = require('../src/platforms/storage');
+  for (const [handler, path, data] of [
+    [presign, 'presign', { extension: 'jpg' }],
+    [add, 'add', {
+      uploadUrl: 'https://storage.example/photos/upload-1234567890abcdef.jpg',
+    }],
+  ] as const) {
+    const response = await handler(new Request(
+      `https://photos.example/api/import/${path}`,
+      {
+        method: 'POST',
+        ...contentType && { headers: { 'Content-Type': contentType } },
+        body: JSON.stringify(data),
+      },
+    ));
+    expect(response.status).toBe(415);
+  }
+  expect(getSignedUrlForKey).not.toHaveBeenCalled();
+  expect(addUpload).not.toHaveBeenCalled();
+});
+
+it('accepts application/json with a charset', async () => {
+  const [presign] = handlers();
+  const response = await presign(new Request(
+    'https://photos.example/api/import/presign',
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'Application/JSON; charset=utf-8' },
+      body: JSON.stringify({ extension: 'jpg' }),
+    },
+  ));
+  expect(response.status).toBe(200);
 });
 
 it.each([

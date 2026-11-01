@@ -23,6 +23,14 @@ export async function POST(request: Request) {
     return new Response('Unauthorized', { status: 401 });
   }
 
+  const requestContentType = request.headers.get('content-type') ?? '';
+  if (
+    requestContentType.split(';')[0].trim().toLowerCase() !==
+    'application/json'
+  ) {
+    return new Response('Expected application/json', { status: 415 });
+  }
+
   let json: unknown;
   try {
     json = await request.json();

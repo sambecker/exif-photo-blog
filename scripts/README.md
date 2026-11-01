@@ -35,5 +35,7 @@ Uploads are not idempotent: use `list` before retrying an uncertain upload.
 Sign-in uses the standard Auth.js credentials flow: `GET /api/auth/csrf`, then
 `POST /api/auth/callback/credentials` with `csrfToken`, `email`, and `password`.
 Wrong credentials produce no session cookie and the script exits with an error.
+To keep credentials off plain HTTP, `--base` must use `https://`, except for
+`localhost`, `127.0.0.1`, and `[::1]`.
 
 For proxies, Node 24 supports `HTTPS_PROXY` with `node --use-env-proxy`.

@@ -18,6 +18,13 @@ export const cookiesFrom = (response, name) => response.headers
 
 // Standard Auth.js credentials sign-in (same provider as the admin sign-in)
 export const signIn = async (base, email, password) => {
+  const { protocol, hostname } = new URL(base);
+  if (
+    protocol !== 'https:' &&
+    !['localhost', '127.0.0.1', '[::1]'].includes(hostname)
+  ) {
+    throw new Error('--base must use https:// (except for localhost)');
+  }
   const csrf = await fetch(new URL('/api/auth/csrf', base));
   if (!csrf.ok) {
     throw new Error(`GET /api/auth/csrf: HTTP ${csrf.status}`);
