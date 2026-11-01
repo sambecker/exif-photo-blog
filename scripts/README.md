@@ -5,8 +5,9 @@ Requires Node >= 22 and Vercel Blob, S3, Cloudflare R2, or MinIO storage
 dependencies). The script signs
 in with the site's admin credentials, read from `ADMIN_EMAIL` and
 `ADMIN_PASSWORD` in the environment (the same values set on the server), and
-sends the resulting Auth.js session cookie with each `/api/import/*` request.
-Without an admin session, import endpoints return 401.
+sends the resulting Auth.js session cookie with each `/api/import/*` and
+`/api/photos/list` request. Without an admin session, these endpoints return
+401.
 
 ```sh
 export ADMIN_EMAIL=admin@example.com ADMIN_PASSWORD=...
@@ -26,7 +27,8 @@ imports default to `private` so they can be reviewed before publishing.
 Upload output is one JSON line; `title` is the supplied override, or `null`
 when the existing server pipeline selects the title from EXIF/AI.
 List output is JSON with each photo's `visibility`, up to 10,000 photos,
-including private ones. Accepted file types are the same as admin uploads
+including private ones; `list --visibility` filters by one option.
+Accepted file types are the same as admin uploads
 (jpg, jpeg, png).
 Image bytes go directly to storage, avoiding the serverless request body limit
 of 4.5 MB: a presigned PUT for S3, R2, or MinIO, or for Vercel Blob a

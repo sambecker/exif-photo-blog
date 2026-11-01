@@ -45,7 +45,7 @@ afterAll(() => {
 const handlers = () => [
   require('../app/api/import/presign/route').POST,
   require('../app/api/import/add/route').POST,
-  require('../app/api/import/photos/route').GET,
+  require('../app/api/photos/list/route').GET,
 ];
 
 it('returns generic 401 responses without an admin session', async () => {
@@ -221,7 +221,7 @@ it('returns 422 when photo processing cannot add the upload', async () => {
   expect((await add(requestFor('add', { uploadUrl }))).status).toBe(422);
 });
 
-it('lists all photos with their visibility', async () => {
+const listFor = async (search = '') => {
   const [, , list] = handlers();
   const { getPhotos } = require('../src/photo/query');
   getPhotos.mockResolvedValue([
@@ -229,11 +229,43 @@ it('lists all photos with their visibility', async () => {
     { id: 'b', url: 'b', excludeFromFeeds: true },
     { id: 'c', url: 'c' },
   ]);
-  const response = await list(requestFor('photos'));
+  return list(new Request(`https://photos.example/api/photos/list${search}`));
+};
+
+const LISTED_PHOTOS = {
+  a: { id: 'a', url: 'a', title: '', visibility: 'private' },
+  b: { id: 'b', url: 'b', title: '', visibility: 'exclude' },
+  c: { id: 'c', url: 'c', title: '', visibility: 'default' },
+};
+
+it('lists all photos with their visibility', async () => {
+  const response = await listFor();
+  const { getPhotos } = require('../src/photo/query');
   expect(getPhotos).toHaveBeenCalledWith({ hidden: 'include', limit: 10_000 });
-  expect(await response.json()).toEqual({ photos: [
-    { id: 'a', url: 'a', title: '', visibility: 'private' },
-    { id: 'b', url: 'b', title: '', visibility: 'exclude' },
-    { id: 'c', url: 'c', title: '', visibility: 'default' },
-  ] });
+  expect(await response.json()).toEqual({
+    photos: [LISTED_PHOTOS.a, LISTED_PHOTOS.b, LISTED_PHOTOS.c],
+  });
 });
+
+it.each([
+  ['?visibility=private', ['a']],
+  ['?visibility=exclude', ['b']],
+  ['?visibility=default', ['c']],
+] as const)('lists photos filtered by %s', async (search, ids) => {
+  const response = await listFor(search);
+  expect(await response.json()).toEqual({
+    photos: ids.map(id => LISTED_PHOTOS[id]),
+  });
+});
+
+it.each([
+  '?visibility=hidden',
+  '?visibility=',
+  '?visibility=private,exclude',
+  '?visibility=private&visibility=default',
+])(
+  'rejects an invalid visibility filter: %s',
+  async search => {
+    expect((await listFor(search)).status).toBe(400);
+  },
+);

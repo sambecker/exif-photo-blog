@@ -54,7 +54,7 @@ const main = async () => {
     options: {
       base: { type: 'string' },
       title: { type: 'string' },
-      visibility: { type: 'string', default: 'private' },
+      visibility: { type: 'string' },
     },
   });
   const [command, file, ...extra] = positionals;
@@ -65,7 +65,8 @@ const main = async () => {
   ) {
     throw new Error(
       'Usage: --base URL upload FILE [--title T]' +
-      ' [--visibility private|default|exclude] | list',
+      ' [--visibility private|default|exclude]' +
+      ' | list [--visibility private|default|exclude]',
     );
   }
 
@@ -89,7 +90,10 @@ const main = async () => {
   };
 
   if (command === 'list') {
-    const result = await request('GET', '/api/import/photos');
+    const query = values.visibility
+      ? `?${new URLSearchParams({ visibility: values.visibility })}`
+      : '';
+    const result = await request('GET', `/api/photos/list${query}`);
     console.log(JSON.stringify(result));
     return;
   }
