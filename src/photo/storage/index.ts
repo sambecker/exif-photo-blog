@@ -162,7 +162,7 @@ export const getDataUrlsForPhotos = async (
   addBypassSecret: boolean,
 ): Promise<{ id: string, urlData: string }[]> =>
   Promise.all(photos
-    .map(async({ id, url }) => {
+    .map(async ({ id, url }) => {
       // Check for optimized image first
       const optimizedUrl = await getSignedUrlForUrl(
         getOptimizedPhotoUrlForSuffix(url, optimizedSuffix),
