@@ -165,10 +165,7 @@ Create Upstash Redis store from storage tab of Vercel dashboard and link to your
 
 ### Programmatic uploads (optional)
 
-Upload photos from local scripts (Node >= 22). Works with Vercel Blob, S3,
-Cloudflare R2, or MinIO; image bytes go directly to storage, as with admin
-uploads (Vercel Blob uses this repo's installed `@vercel/blob` package).
-The script signs in with the existing admin credentials; no extra server setup:
+Upload photos from local script:
 
 ```sh
 export ADMIN_EMAIL=... ADMIN_PASSWORD=...
@@ -176,8 +173,10 @@ node scripts/photo-import.mjs --base https://photos.example.com upload photo.jpg
 node scripts/photo-import.mjs --base https://photos.example.com list
 ```
 
-Uploads are private by default (`--visibility default` or `exclude` sets the
-same options as the admin photo form) and are not idempotent: use `list` to check the result before retrying an uncertain upload.
+Requires Node.js v22 or later. Works with Vercel Blob, S3, Cloudflare R2, or MinIO; image bytes go directly to storage, as with admin uploads (Vercel Blob uses this repo's installed `@vercel/blob` package). Script signs in with existing admin credentials; no required server setup:
+
+Uploads are private by default (`--visibility default` sets the same options as the admin photo form) and not idempotent: use `list` to check the result before retrying an uncertain upload.
+
 See [script notes](scripts/README.md) for details.
 
 ### Categories
