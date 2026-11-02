@@ -31,9 +31,9 @@ export default function AlbumOverview({
   }} />;
 
   return count === 0
-    ? <AppGrid
-      contentMain={<div className="space-y-8 mt-1.5">
-        {header}
+    ? <div className="mt-1.5">
+      {header}
+      <AppGrid contentMain={
         <EmptyState icon={<IconPhoto />}>
           <div className="max-w-xs text-center space-y-1">
             <div className="font-bold">
@@ -44,8 +44,8 @@ export default function AlbumOverview({
             </div>
           </div>
         </EmptyState>
-      </div>}
-    />
+      } />
+    </div>
     : <PhotoGridHybridContainer {...{
       cacheKey: `album-${album.slug}`,
       photos,

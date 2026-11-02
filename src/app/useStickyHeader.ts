@@ -109,14 +109,13 @@ export default function useStickyHeader(
     }
   });
 
-  // Persistent banners are always sticky, so detect whether they're
-  // pinned at their sticky top rather than resting in document flow,
+  // Pinned at the sticky top, rather than resting in document flow,
   // without measuring layout while scrolling
   const [isAtStickyTop, setIsAtStickyTop] = useState(false);
 
   useEffect(() => {
     const element = ref.current;
-    if (tracksNav || !isEnabled || !element) { return; }
+    if (!isEnabled || !element) { return; }
     const observer = new IntersectionObserver(
       ([entry]) => setIsAtStickyTop(
         entry.boundingClientRect.top <= offset + 0.5,
@@ -125,9 +124,13 @@ export default function useStickyHeader(
     );
     observer.observe(element);
     return () => observer.disconnect();
-  }, [ref, tracksNav, isEnabled, offset]);
+  }, [ref, isEnabled, offset]);
 
-  const isOutOfPosition = isScrolled && isAtStickyTop;
+  // Nav-tracking levels only count once sticky positioning is active,
+  // so a header that merely scrolls past the pin line does not match
+  const isOutOfPosition = isAtStickyTop && (
+    tracksNav ? isPositioned : isScrolled
+  );
 
   const containerStyle: CSSProperties | undefined = isPositioned
     ? {

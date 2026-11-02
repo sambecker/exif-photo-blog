@@ -11,7 +11,7 @@ export default function StickySubNav({
   isEnabled,
 }: {
   children: ReactNode
-  className?: string
+  className?: string | ((isOutOfPosition: boolean) => string)
   isEnabled?: boolean
 }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -21,6 +21,7 @@ export default function StickySubNav({
     containerStyle,
     contentClassName,
     contentStyle,
+    isOutOfPosition,
   } = useStickyHeader(ref, isEnabled);
 
   return (
@@ -37,7 +38,9 @@ export default function StickySubNav({
             // Enlarge nav to ensure it fully masks underlying content
             'md:w-[calc(100%+8px)] md:translate-x-[-4px] md:px-[4px]',
             contentClassName,
-            className,
+            typeof className === 'function'
+              ? className(isOutOfPosition)
+              : className,
           )}
           style={contentStyle}
         >

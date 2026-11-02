@@ -6,7 +6,6 @@ import PhotoGridInfinite from './PhotoGridInfinite';
 import PhotosLarge from './PhotosLarge';
 import PhotosLargeInfinite from './PhotosLargeInfinite';
 import { clsx } from 'clsx/lite';
-import AnimateItems from '@/components/AnimateItems';
 import { ComponentProps, useCallback, useState, ReactNode } from 'react';
 import { GRID_SPACE_CLASSNAME } from '@/components';
 import { SortBy } from './sort';
@@ -52,13 +51,6 @@ export default function PhotoGridHybridContainer({
   const onAnimationComplete = useCallback(() =>
     setShouldAnimateDynamicItems(true), []);
 
-  const renderHeader = header &&
-    <AnimateItems
-      type="bottom"
-      items={[header]}
-      animateOnFirstLoadOnly
-    />;
-
   // Full frame only offered on photo sets, which always render a header
   const photosFull = header && isPhotoSetFull
     // Server sends grid-sized batch, so only show full-sized slice
@@ -66,10 +58,11 @@ export default function PhotoGridHybridContainer({
     ? photos.slice(0, INFINITE_SCROLL_FULL_INITIAL)
     : undefined;
 
+  // Header stays a sibling of the photos so sticky isn't trapped
   if (photosFull) {
     return (
-      <div className={className}>
-        <AppGrid className="mt-1.5 mb-6" contentMain={renderHeader} />
+      <div className={clsx('mt-1.5', className)}>
+        {header}
         <div className="space-y-1">
           <PhotosLarge {...{ photos: photosFull, ...categories }} />
           {count > photosFull.length &&
@@ -88,41 +81,35 @@ export default function PhotoGridHybridContainer({
     );
   }
 
-  const gridBody = (
-    <div className={clsx(
-      header && 'space-y-8 mt-1.5',
-      className,
-    )}>
-      {renderHeader}
-      <div className={matted && !MASONRY_GRID_ENABLED
-        // Match matted grid gap-y-2 between infinite-scroll batches below lg
-        ? 'max-lg:space-y-2'
-        : GRID_SPACE_CLASSNAME}
-      >
-        {(!MASONRY_GRID_ENABLED || count <= photos.length) && (
-          <PhotoGrid {...{
-            photos,
-            matted,
-            ...categories,
-            animateOnFirstLoadOnly,
-            onAnimationComplete,
-          }} />
-        )}
-        {count > photos.length &&
-          <PhotoGridInfinite {...{
-            // Keep grid and full frame caches separate
-            cacheKey: `${cacheKey}-grid`,
-            initialPhotos: MASONRY_GRID_ENABLED ? photos : undefined,
-            initialOffset: photos.length,
-            sortBy,
-            sortWithPriority,
-            excludeFromFeeds,
-            matted,
-            ...categories,
-            canStart: shouldAnimateDynamicItems,
-            animateOnFirstLoadOnly,
-          }} />}
-      </div>
+  const grid = (
+    <div className={matted && !MASONRY_GRID_ENABLED
+      // Match matted grid gap-y-2 between infinite-scroll batches below lg
+      ? 'max-lg:space-y-2'
+      : GRID_SPACE_CLASSNAME}
+    >
+      {(!MASONRY_GRID_ENABLED || count <= photos.length) && (
+        <PhotoGrid {...{
+          photos,
+          matted,
+          ...categories,
+          animateOnFirstLoadOnly,
+          onAnimationComplete,
+        }} />
+      )}
+      {count > photos.length &&
+        <PhotoGridInfinite {...{
+          // Keep grid and full frame caches separate
+          cacheKey: `${cacheKey}-grid`,
+          initialPhotos: MASONRY_GRID_ENABLED ? photos : undefined,
+          initialOffset: photos.length,
+          sortBy,
+          sortWithPriority,
+          excludeFromFeeds,
+          matted,
+          ...categories,
+          canStart: shouldAnimateDynamicItems,
+          animateOnFirstLoadOnly,
+        }} />}
     </div>
   );
 
@@ -131,16 +118,35 @@ export default function PhotoGridHybridContainer({
   // Masonry uses standard AppGrid width instead
   if (matted && !MASONRY_GRID_ENABLED && !sidebar) {
     return (
-      <div className={clsx('mx-auto w-full', LAYOUT_CLASS_FEED)}>
-        {gridBody}
+      <div className={clsx(
+        'mx-auto w-full',
+        LAYOUT_CLASS_FEED,
+        header && 'mt-1.5',
+        className,
+      )}>
+        {header}
+        {grid}
       </div>
     );
   }
 
-  return (
+  const gridSection = (
     <AppGrid
-      contentMain={gridBody}
+      contentMain={grid}
       contentSide={sidebar}
     />
+  );
+
+  if (!header) {
+    return className
+      ? <div className={className}>{gridSection}</div>
+      : gridSection;
+  }
+
+  return (
+    <div className={clsx('mt-1.5', className)}>
+      {header}
+      {gridSection}
+    </div>
   );
 }

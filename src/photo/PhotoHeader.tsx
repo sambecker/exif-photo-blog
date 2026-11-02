@@ -10,8 +10,10 @@ import {
 import { PhotoSetCategory } from '../category';
 import ShareButton from '@/share/ShareButton';
 import AnimateItems from '@/components/AnimateItems';
-import { Fragment, ReactNode } from 'react';
+import { ReactNode } from 'react';
+import AppGrid from '@/components/AppGrid';
 import DivDebugBaselineGrid from '@/components/DivDebugBaselineGrid';
+import StickySubNav from '@/components/StickySubNav';
 import PhotoPrevNextActions from './PhotoPrevNextActions';
 import PhotoLink from './PhotoLink';
 import ResponsiveText from '@/components/primitives/ResponsiveText';
@@ -127,111 +129,135 @@ export default function PhotoHeader({
       {content}
     </DivDebugBaselineGrid>;
 
+  const renderTitle = renderBlock(<>
+    {/* Content A: Filter Set or Photo Title */}
+    <div className={clsx(
+      'inline-flex',
+      (headerType !== 'photo-detail' || UPPERCASE_TITLES) && 'uppercase',
+      headerType === 'photo-set'
+        ? isGridHighDensity
+          ? 'col-span-2 lg:col-span-3'
+          : 'col-span-2 lg:col-span-2'
+        : headerType === 'photo-detail-with-entity'
+          ? isGridHighDensity
+            ? 'col-span-2 lg:col-span-3'
+            : 'col-span-2'
+          : isGridHighDensity
+            ? 'col-span-3 sm:col-span-3 lg:col-span-5 w-[110%] xl:w-full'
+            : 'col-span-3 w-[110%] xl:w-full',
+    )}>
+      {headerType === 'photo-detail-with-entity'
+        ? renderContentA
+        // Necessary for title truncation
+        : <h1 className={clsx(
+          'w-full truncate',
+          headerType !== 'photo-detail' && 'pr-1 sm:pr-2',
+        )}>
+          {renderContentA}
+        </h1>}
+    </div>
+    {/* Content B: Filter Set Meta or Photo Pagination */}
+    <div className={clsx(
+      'inline-flex gap-1 self-start',
+      'uppercase text-dim',
+      headerType === 'photo-set'
+        ? isGridHighDensity
+          ? 'col-span-2 sm:col-span-1 lg:col-span-2'
+          : 'col-span-2 sm:col-span-1'
+        : headerType === 'photo-detail-with-entity'
+          ? isGridHighDensity
+            ? 'col-span-1 lg:col-span-2'
+            : 'col-span-1'
+          : 'hidden!',
+    )}>
+      {entity && <>
+        {headerType === 'photo-set'
+          ? <>
+            {entityDescription}
+            {includeShareButton &&
+              <ShareButton {...{
+                photos,
+                ...categories,
+                count,
+                dateRange,
+                className: 'translate-x-[1px] translate-y-[1.5px] w-4',
+                prefetch: true,
+                dim: true,
+              }} />}
+          </>
+          : <ResponsiveText
+            shortText={appText.utility.paginate(
+              paginationIndex,
+              paginationCount,
+            )}
+          >
+            {appText.utility.paginateAction(
+              paginationIndex,
+              paginationCount,
+              entityVerb)}
+          </ResponsiveText>}
+      </>}
+    </div>
+    {/* Content C: Nav */}
+    <div className={clsx(
+      headerType === 'photo-set'
+        ? 'hidden sm:flex'
+        : 'flex',
+      'justify-end',
+      !entity && selectedPhoto !== undefined && PHOTO_TITLE_SERIF
+        // Center vertically with serif photo titles
+        ? 'h-full items-center -translate-y-0.5'
+        // Make full height for prev/next symbols
+        : 'max-sm:h-4',
+    )}>
+      {selectedPhoto
+        ? renderPrevNext
+        : renderDateRange}
+    </div>
+  </>);
+
+  // Descriptions stay in flow so a long album note doesn't stick
+  const renderRichContent = richContent
+    ? renderBlock(
+      <div className={clsx(
+        // Use 2/3 or 3/4 grid on larger screens
+        'col-span-4',
+        isGridHighDensity
+          ? 'lg:col-span-4'
+          : 'lg:col-span-3',
+        // Title bar keeps pb-8; preserve the previous 3rem gap
+        'mt-4 pb-8',
+      )}>
+        {richContent}
+      </div>,
+    )
+    : undefined;
+
   return (
-    <AnimateItems
-      type="bottom"
-      distanceOffset={10}
-      animateOnFirstLoadOnly
-      items={[<Fragment key="PhotoHeader">
-        {renderBlock(<>
-          {/* Content A: Filter Set or Photo Title */}
-          <div className={clsx(
-            'inline-flex',
-            (headerType !== 'photo-detail' || UPPERCASE_TITLES) && 'uppercase',
-            headerType === 'photo-set'
-              ? isGridHighDensity
-                ? 'col-span-2 lg:col-span-3'
-                : 'col-span-2 lg:col-span-2'
-              : headerType === 'photo-detail-with-entity'
-                ? isGridHighDensity
-                  ? 'col-span-2 lg:col-span-3'
-                  : 'col-span-2'
-                : isGridHighDensity
-                  ? 'col-span-3 sm:col-span-3 lg:col-span-5 w-[110%] xl:w-full'
-                  : 'col-span-3 w-[110%] xl:w-full',
-          )}>
-            {headerType === 'photo-detail-with-entity'
-              ? renderContentA
-              // Necessary for title truncation
-              : <h1 className={clsx(
-                'w-full truncate',
-                headerType !== 'photo-detail' && 'pr-1 sm:pr-2',
-              )}>
-                {renderContentA}
-              </h1>}
-          </div>
-          {/* Content B: Filter Set Meta or Photo Pagination */}
-          <div className={clsx(
-            'inline-flex gap-1 self-start',
-            'uppercase text-dim',
-            headerType === 'photo-set'
-              ? isGridHighDensity
-                ? 'col-span-2 sm:col-span-1 lg:col-span-2'
-                : 'col-span-2 sm:col-span-1'
-              : headerType === 'photo-detail-with-entity'
-                ? isGridHighDensity
-                  ? 'col-span-1 lg:col-span-2'
-                  : 'col-span-1'
-                : 'hidden!',
-          )}>
-            {entity && <>
-              {headerType === 'photo-set'
-                ? <>
-                  {entityDescription}
-                  {includeShareButton &&
-                    <ShareButton {...{
-                      photos,
-                      ...categories,
-                      count,
-                      dateRange,
-                      className: 'translate-x-[1px] translate-y-[1.5px] w-4',
-                      prefetch: true,
-                      dim: true,
-                    }} />}
-                </>
-                : <ResponsiveText
-                  shortText={appText.utility.paginate(
-                    paginationIndex,
-                    paginationCount,
-                  )}
-                >
-                  {appText.utility.paginateAction(
-                    paginationIndex,
-                    paginationCount,
-                    entityVerb)}
-                </ResponsiveText>}
-            </>}
-          </div>
-          {/* Content C: Nav */}
-          <div className={clsx(
-            headerType === 'photo-set'
-              ? 'hidden sm:flex'
-              : 'flex',
-            'justify-end',
-            !entity && selectedPhoto !== undefined && PHOTO_TITLE_SERIF
-              // Center vertically with serif photo titles
-              ? 'h-full items-center -translate-y-0.5'
-              // Make full height for prev/next symbols
-              : 'max-sm:h-4',
-          )}>
-            {selectedPhoto
-              ? renderPrevNext
-              : renderDateRange}
-          </div>
-        </>)}
-        {richContent && renderBlock(
-          <div className={clsx(
-            // Use 2/3 or 3/4 grid on larger screens
-            'col-span-4',
-            isGridHighDensity
-              ? 'lg:col-span-4'
-              : 'lg:col-span-3',
-            'mt-12',
-          )}>
-            {richContent}
-          </div>,
-        )}
-      </Fragment>]}
-    />
+    <>
+      <StickySubNav className={isOutOfPosition => clsx(
+        // Set pages keep the 2rem section gap. Detail only had 1.5rem
+        // before the large photo, so the set pad reads as leftover there.
+        selectedPhoto ? 'pb-6' : 'pb-8',
+        'border-b',
+        isOutOfPosition ? 'border-medium' : 'border-transparent mb-[-1px]',
+      )}>
+        <AnimateItems
+          type="bottom"
+          distanceOffset={10}
+          animateOnFirstLoadOnly
+          items={[renderTitle]}
+        />
+      </StickySubNav>
+      {renderRichContent &&
+        <AppGrid contentMain={
+          <AnimateItems
+            type="bottom"
+            distanceOffset={10}
+            animateOnFirstLoadOnly
+            items={[renderRichContent]}
+          />
+        } />}
+    </>
   );
 }
