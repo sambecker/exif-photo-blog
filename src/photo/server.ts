@@ -38,7 +38,6 @@ import exifr from 'exifr';
 import { getCompatibleExifValue } from '@/utility/exif';
 import { fetchUrlWithByteLimit } from '@/utility/fetch';
 import { getPlaceFromCoordinates } from '@/platforms/google-places';
-import { generateNanoid } from '@/utility/nanoid';
 import {
   isOmSystemCamera,
   OmRecipe,
@@ -192,7 +191,6 @@ export const extractImageDataFromBlobPath = async (
   const formDataFromExif: Partial<PhotoFormData> | undefined = dataExif
     ? {
       ...includeInitialPhotoFields && {
-        id: generateNanoid(),
         hidden: 'false',
         favorite: 'false',
         extension,

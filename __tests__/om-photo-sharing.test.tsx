@@ -15,7 +15,6 @@ jest.mock('next/navigation', () => ({
   useSearchParams: () => new URLSearchParams(),
 }));
 jest.mock('../src/components/image/ImageLarge', () => () => null);
-jest.mock('../src/place/PlaceMap', () => () => null);
 jest.mock('../src/utility/useMediaQuery', () => ({
   __esModule: true, default: () => true,
 }));
@@ -60,37 +59,6 @@ const profile: OmRecipe = {
   tone: { shadow: -4, mid: 0, highlight: 4 },
   shading: 3, sharpness: 0, contrast: 0,
 };
-
-describe.each([PhotoLarge, PhotoExpressive])('digital zoom', PhotoComponent => {
-  it.each([2, 1.4])('shows %s× digital zoom beside the native focal length',
-    digitalZoomRatio => {
-      const photo = parsePhotoFromDb({
-        ...basePhoto, focalLength: 17, digitalZoomRatio,
-      });
-      render(<AppStateContext value={{ supportsHover: false }}>
-        <PhotoComponent photo={photo} showCamera={false} showLens={false}
-          showFilm={false} showRecipe={false} prefetchRelatedLinks={false} />
-      </AppStateContext>);
-      const zoom = screen.getByRole('button', { name: `${digitalZoomRatio}×` });
-      expect(zoom.closest('li'))
-        .toBe(screen.getByRole('link', { name: '17mm' }).closest('li'));
-      fireEvent.click(zoom);
-      expect(screen.getAllByText('Digital zoom').length).toBeGreaterThan(0);
-    },
-  );
-
-  it.each([undefined, 0, 1, -2, NaN, Infinity])(
-    'hides inactive or invalid digital zoom %s', digitalZoomRatio => {
-      render(<AppStateContext value={{}}>
-        <PhotoComponent photo={parsePhotoFromDb({
-          ...basePhoto, focalLength: 17, digitalZoomRatio,
-        })} showCamera={false} showLens={false} showFilm={false}
-        showRecipe={false} prefetchRelatedLinks={false} />
-      </AppStateContext>);
-      expect(screen.queryByText(/×/)).toBeNull();
-    },
-  );
-});
 
 it.each([[14, 28], [17, 34], [25, 50]])(
   'shows native %imm alongside its %imm equivalent', (focal, equivalent) => {

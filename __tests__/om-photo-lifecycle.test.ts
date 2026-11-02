@@ -17,9 +17,6 @@ import { OmRecipe, parseOmRecipe } from '@/platforms/om-system/recipe';
 import { createOmRecipeData, getOmRecipe, parseRecipeData }
   from '@/recipe/serialization';
 import { deleteFile } from '@/platforms/storage';
-import { convertPhotoToFormData, convertFormDataToPhotoDbInsert }
-  from '@/photo/form';
-import { extractImageDataFromBlobPath } from '@/photo/server';
 
 jest.mock('../src/auth/server', () => ({
   runAuthenticatedAdminServerAction: (callback: () => unknown) => callback(),
@@ -79,7 +76,6 @@ const mono: OmRecipe = {
 };
 let strippedJpeg: Buffer;
 let penJpeg: Buffer;
-let digitalZoomJpeg: Buffer;
 
 beforeAll(async () => {
   strippedJpeg = await sharp({ create: {
@@ -100,20 +96,6 @@ beforeAll(async () => {
   penJpeg = Buffer.from(
     piexif.insert(exif, strippedJpeg.toString('binary')), 'binary',
   );
-  // Purple Petal Drops retains standard EXIF, but has no OM MakerNote.
-  const zoomExif = piexif.dump({
-    '0th': {
-      [piexif.ImageIFD.Make]: 'OM Digital Solutions',
-      [piexif.ImageIFD.Model]: 'PEN',
-    },
-    Exif: {
-      [piexif.ExifIFD.FocalLength]: [17, 1],
-      [piexif.ExifIFD.DigitalZoomRatio]: [2, 1],
-    },
-  });
-  digitalZoomJpeg = Buffer.from(
-    piexif.insert(zoomExif, strippedJpeg.toString('binary')), 'binary',
-  );
 });
 
 beforeEach(() => {
@@ -131,53 +113,6 @@ beforeEach(() => {
   jest.mocked(getOmFocalLengthIn35MmFormat).mockReturnValue(undefined);
   jest.mocked(fetchUrlWithByteLimit).mockImplementation(async () =>
     Uint8Array.from(penJpeg).buffer);
-});
-
-it.each(['auto', 'only-missing', 'overwrite'] as const)(
-  'recovers 2x digital zoom without inventing a recipe during %s Sync',
-  async syncMode => {
-    jest.mocked(fetchUrlWithByteLimit).mockResolvedValue(
-      Uint8Array.from(digitalZoomJpeg).buffer,
-    );
-    await syncPhotoAction('penphoto', { syncMode });
-    const [saved] = jest.mocked(updatePhoto).mock.calls[0];
-    expect(saved).toMatchObject({
-      focalLength: 17, digitalZoomRatio: 2,
-      recipeData: JSON.stringify(createOmRecipeData()), recipeTitle: undefined,
-    });
-    expect(getOmRecipeFromMakerNote).not.toHaveBeenCalled();
-    const form = convertPhotoToFormData(parsePhotoFromDb({
-      ...saved, tags: [], createdAt: new Date(), updatedAt: new Date(),
-    }));
-    form.title = 'Edited title';
-    expect(convertFormDataToPhotoDbInsert(form)).toMatchObject({
-      title: 'Edited title', digitalZoomRatio: 2,
-    });
-  },
-);
-
-it('reserves a photo ID before submitting Add', async () => {
-  const { formDataFromExif } = await extractImageDataFromBlobPath(
-    'https://photos.example/upload-original.jpeg', {
-      includeInitialPhotoFields: true, updateColorFields: false,
-    },
-  );
-  expect(formDataFromExif?.id).toMatch(/^[a-zA-Z0-9]{8}$/);
-  const id = formDataFromExif?.id;
-  expect(convertFormDataToPhotoDbInsert({ ...formDataFromExif }).id).toBe(id);
-  expect(convertFormDataToPhotoDbInsert({ ...formDataFromExif }).id).toBe(id);
-});
-
-it.each(['', '0', '-2', 'NaN', 'Infinity', '2x'])(
-  'does not save invalid digital zoom %s', digitalZoomRatio => {
-    expect(convertFormDataToPhotoDbInsert({ digitalZoomRatio })
-      .digitalZoomRatio).toBeUndefined();
-  },
-);
-
-it('keeps fractional digital zoom', () => {
-  expect(convertFormDataToPhotoDbInsert({ digitalZoomRatio: '1.4' })
-    .digitalZoomRatio).toBe(1.4);
 });
 
 it('fills a missing 35mm equivalent during only-missing Sync without a recipe',
@@ -225,7 +160,7 @@ it.each([
   async (syncMode, previousEquivalent, expectedEquivalent) => {
     const original = await getPhoto('penphoto');
     jest.mocked(getPhoto).mockResolvedValue({
-      ...original!, focalLength: 17, digitalZoomRatio: 2,
+      ...original!, focalLength: 17,
       focalLengthIn35MmFormat: previousEquivalent,
     });
     const exif = piexif.dump({
@@ -245,7 +180,7 @@ it.each([
       .mockImplementation((_bytes, _focal, zoom) => zoom === 2 ? 68 : 34);
     await syncPhotoAction('penphoto', { syncMode });
     expect(updatePhoto).toHaveBeenCalledWith(expect.objectContaining({
-      focalLength: 17, digitalZoomRatio: 2,
+      focalLength: 17,
       focalLengthIn35MmFormat: expectedEquivalent,
     }));
   },

@@ -495,23 +495,6 @@ export default function PhotoLarge({
                           >
                             {photo.focalLengthFormatted}
                           </Link>}
-                        {photo.digitalZoomRatioFormatted &&
-                          <>
-                            {' '}
-                            <Tooltip
-                              content="Digital zoom"
-                              sideOffset={3}
-                              supportMobile
-                            >
-                              <span className={clsx(
-                                'text-extra-dim',
-                                'decoration-dotted underline-offset-[3px]',
-                                'hover:underline',
-                              )}>
-                                {photo.digitalZoomRatioFormatted}
-                              </span>
-                            </Tooltip>
-                          </>}
                         {(
                           photo.focalLengthIn35MmFormatFormatted &&
                           // eslint-disable-next-line @stylistic/max-len

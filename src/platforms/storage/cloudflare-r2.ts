@@ -98,7 +98,7 @@ export const cloudflareR2List = async (
     })) ?? []);
 
 export const cloudflareR2Delete = async (Key: string) => {
-  await cloudflareR2Client().send(new DeleteObjectCommand({
+  cloudflareR2Client().send(new DeleteObjectCommand({
     Bucket: CLOUDFLARE_R2_BUCKET,
     Key,
   }));

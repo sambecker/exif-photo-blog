@@ -14,7 +14,6 @@ import {
   formatIso,
   formatExposureCompensation,
   formatExposureTime,
-  formatDigitalZoomRatio,
 } from '@/utility/exif-format';
 import { capitalize, parameterize } from '@/utility/string';
 import camelcaseKeys from 'camelcase-keys';
@@ -63,7 +62,6 @@ export interface PhotoExif {
   model?: string
   focalLength?: number
   focalLengthIn35MmFormat?: number
-  digitalZoomRatio?: number
   lensMake?: string
   lensModel?: string
   fNumber?: number
@@ -117,7 +115,6 @@ export interface Photo extends Omit<PhotoDb,
   'recipeData' | 'colorData'> {
   focalLengthFormatted?: string
   focalLengthIn35MmFormatFormatted?: string
-  digitalZoomRatioFormatted?: string
   fNumberFormatted?: string
   isoFormatted?: string
   exposureTimeFormatted?: string
@@ -150,8 +147,6 @@ export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {
       photoDb.focalLengthIn35MmFormat
         ? formatFocalLength(photoDb.focalLengthIn35MmFormat)
         : undefined,
-    digitalZoomRatioFormatted:
-      formatDigitalZoomRatio(photoDb.digitalZoomRatio),
     fNumberFormatted:
       formatAperture(photoDb.fNumber),
     isoFormatted:

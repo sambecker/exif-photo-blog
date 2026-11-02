@@ -110,7 +110,7 @@ import { TbPhoto } from 'react-icons/tb';
 import { Albums } from '@/album';
 import FieldsetAlbum from '@/album/FieldsetAlbum';
 import Form from 'next/form';
-import { unstable_rethrow, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import DateTimePicker from '@/components/DateTimePicker';
 
 const THUMBNAIL_SIZE = 300;
@@ -669,8 +669,9 @@ export default function PhotoForm({
           : updatePhotoAction
         )(data, redirectParam ?? PATH_ADMIN_PHOTOS)
           .catch(e => {
-            unstable_rethrow(e);
-            setFormActionErrorMessage(e.message);
+            if (e.message !== 'NEXT_REDIRECT') {
+              setFormActionErrorMessage(e.message);
+            }
           })}
         onSubmit={() => {
           setFormActionErrorMessage('');

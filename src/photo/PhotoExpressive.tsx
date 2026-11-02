@@ -547,17 +547,6 @@ export default function PhotoExpressive({
                         {focalLengthLink}
                       </Tooltip>
                       : focalLengthLink)}
-                    {photo.digitalZoomRatioFormatted &&
-                      <Tooltip content="Digital zoom" sideOffset={3}
-                        supportMobile>
-                        <span className={clsx(
-                          'text-extra-dim',
-                          'decoration-dotted underline-offset-[3px]',
-                          'hover:underline',
-                        )}>
-                          {photo.digitalZoomRatioFormatted}
-                        </span>
-                      </Tooltip>}
                     {photo.fNumberFormatted &&
                       <span>{photo.fNumberFormatted}</span>}
                   </li>}

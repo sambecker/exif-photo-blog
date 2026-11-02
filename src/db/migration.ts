@@ -126,13 +126,6 @@ export const MIGRATIONS: Migration[] = [{
     ALTER TABLE photos
     ADD COLUMN IF NOT EXISTS location JSONB
   `,
-}, {
-  label: '12: Digital Zoom',
-  fields: ['digital_zoom_ratio'],
-  run: () => sql`
-    ALTER TABLE photos
-    ADD COLUMN IF NOT EXISTS digital_zoom_ratio DOUBLE PRECISION
-  `,
 }];
 
 export const migrateAboutTableToLibrary = () =>
