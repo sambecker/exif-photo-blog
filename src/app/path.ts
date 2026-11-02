@@ -517,6 +517,14 @@ export const isPathAdminInfo = (pathname?: string) =>
   isPathAdminInsights(pathname) ||
   isPathAdminConfiguration(pathname);
 
+// Accept /photos/* and /t/* paths, but serve /p/* and /tag/*
+export const getPathAliasTarget = (pathname = '') => {
+  const photo = pathname.match(/^\/photos\/(.+)$/)?.[1];
+  if (photo) { return `${PREFIX_PHOTO}/${photo}`; }
+  const tag = pathname.match(/^\/t\/(.+)$/)?.[1];
+  if (tag) { return `${PREFIX_TAG}/${tag}`; }
+};
+
 export const isPathProtected = (pathname?: string) =>
   checkPathPrefix(pathname, PATH_ADMIN) ||
   checkPathPrefix(pathname, pathForTag(TAG_PRIVATE)) ||

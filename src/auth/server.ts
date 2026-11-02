@@ -1,6 +1,7 @@
-import { isPathProtected } from '@/app/path';
+import { getPathAliasTarget, isPathProtected } from '@/app/path';
 import NextAuth, { User } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
+import { NextResponse } from 'next/server';
 
 export const {
   handlers: { GET, POST },
@@ -32,10 +33,18 @@ export const {
   callbacks: {
     authorized({ auth, request }) {
       const { pathname } = request.nextUrl;
+      const aliasTarget = getPathAliasTarget(pathname);
 
-      const isUrlProtected = isPathProtected(pathname);
+      // Check aliases against their targets since rewrites skip the proxy
+      const isUrlProtected = isPathProtected(aliasTarget ?? pathname);
       const isUserLoggedIn = !!auth?.user;
       const isRequestAuthorized = !isUrlProtected || isUserLoggedIn;
+
+      if (isRequestAuthorized && aliasTarget) {
+        const url = request.nextUrl.clone();
+        url.pathname = aliasTarget;
+        return NextResponse.rewrite(url);
+      }
 
       return isRequestAuthorized;
     },
