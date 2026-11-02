@@ -471,6 +471,8 @@ export default function CommandKClient({
               annotation: formatCount(count),
               annotationAria: formatCountDescriptive(count),
               path: pathForTag(tag),
+              // "Private" is the label; photos are stored as hidden
+              ...isTagPrivate(tag) && { keywords: ['hidden'] },
             })),
           };
           case 'recipes': return {
