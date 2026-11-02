@@ -11,6 +11,19 @@ import {
 import Viewer from 'viewerjs';
 import ZoomControls from './ZoomControls';
 import { anchorViewerZoom, isPointerGestureActive } from '.';
+import { NextImageSize } from '@/platforms/next-image';
+
+// Zoom keeps loading the resolution served before `sizes` was introduced
+const IMAGE_WIDTH_ZOOM: NextImageSize = 2048;
+
+// With `sizes`, `src` falls back to the largest srcset candidate,
+// so prefer the zoom-width candidate when present
+const srcForZoom = (image: HTMLImageElement) =>
+  image.srcset
+    .split(', ')
+    .find(candidate => candidate.endsWith(` ${IMAGE_WIDTH_ZOOM}w`))
+    ?.split(' ')[0]
+  ?? image.src;
 
 export default function useImageZoomControls({
   refImageContainer,
@@ -80,7 +93,7 @@ export default function useImageZoomControls({
           url: (image: HTMLImageElement) => {
             // Addresses Safari bug where images don't load
             image.loading = 'eager';
-            return image.src;
+            return srcForZoom(image);
           },
           show: () => {
             setShouldRespondToKeyboardCommands?.(false);

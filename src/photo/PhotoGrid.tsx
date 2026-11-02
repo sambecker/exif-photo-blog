@@ -28,6 +28,7 @@ import { pathForPhoto } from '@/app/path';
 import LinkWithStatus from '@/components/LinkWithStatus';
 import Spinner from '@/components/Spinner';
 import useVisibility from '@/utility/useVisibility';
+import { LAYOUT_FEED, LAYOUT_MAIN } from '@/app/layout-metrics';
 
 // Width classes for matted tiles.
 // Below lg: landscapes fill the cell; portraits size as if in a square
@@ -44,6 +45,59 @@ function mattedPhotoBoxClass(aspectRatio: number) {
   return 'w-[calc(100%*var(--photo-ar))] lg:w-auto lg:h-[96%]';
 }
 
+// Max width of one column in a container capped at `width`
+const colWidth = (width: number, cols: number) =>
+  `${Math.ceil(width / cols)}px`;
+
+// Upper bounds for tile widths, mirroring column classes below
+// (and masonry breakpoints), capped by LAYOUT_MAIN / LAYOUT_FEED
+function sizesForPhotoGrid({
+  small,
+  isGridHighDensity,
+  useMatted,
+}: {
+  small?: boolean
+  isGridHighDensity?: boolean
+  useMatted?: boolean
+}) {
+  const xs = MASONRY_GRID_ENABLED ? 479 : 391;
+  // Viewport width at which content reaches LAYOUT_MAIN (shell inset: mx-3)
+  const main = LAYOUT_MAIN + 24;
+  if (useMatted) {
+    return [
+      '(max-width: 767px) 50vw',
+      '(max-width: 1023px) 34vw',
+      colWidth(LAYOUT_FEED, 4),
+    ].join(', ');
+  }
+  if (small) {
+    return [
+      `(max-width: ${xs}px) 34vw`,
+      `(max-width: ${main}px) 17vw`,
+      colWidth(LAYOUT_MAIN, 6),
+    ].join(', ');
+  }
+  if (isGridHighDensity) {
+    return [
+      `(max-width: ${xs}px) 50vw`,
+      '(max-width: 1023px) 25vw',
+      colWidth(LAYOUT_MAIN, 6),
+    ].join(', ');
+  }
+  if (MASONRY_GRID_ENABLED) {
+    return [
+      '(max-width: 639px) 50vw',
+      '(max-width: 767px) 25vw',
+      `(max-width: 1023px) ${colWidth(LAYOUT_MAIN, 3)}`,
+      colWidth(LAYOUT_MAIN, 4),
+    ].join(', ');
+  }
+  return [
+    '(max-width: 639px) 50vw',
+    colWidth(LAYOUT_MAIN, 4),
+  ].join(', ');
+}
+
 function PhotoGridMattedTile({
   photo,
   priority,
@@ -52,9 +106,11 @@ function PhotoGridMattedTile({
   onVisible,
   revalidatePhoto,
   classNamePhoto,
+  sizes,
   ...categories
 }: {
   photo: Photo
+  sizes?: string
   priority?: boolean
   selected?: boolean
   onSelectChange?: () => void
@@ -123,6 +179,7 @@ function PhotoGridMattedTile({
                 className="flex object-cover w-full h-full"
                 classNameImage="object-cover w-full h-full"
                 priority={priority}
+                sizes={sizes}
               />
             </>}
         </LinkWithStatus>
@@ -215,6 +272,8 @@ export default function PhotoGrid({
   // Embedded grids: stagger only on first load by default.
   const staggerOnFirstLoadOnlyResolved = staggerOnFirstLoadOnly ?? !useMatted;
 
+  const sizes = sizesForPhotoGrid({ small, isGridHighDensity, useMatted });
+
   const {
     isSelectingPhotos,
     isSelectingAllPhotos,
@@ -241,6 +300,7 @@ export default function PhotoGrid({
             : undefined}
           revalidatePhoto={revalidatePhoto}
           classNamePhoto={classNamePhoto}
+          sizes={sizes}
           {...categories}
         />
       );
@@ -275,6 +335,7 @@ export default function PhotoGrid({
         {...{
           photo,
           ...categories,
+          sizes,
           selected: isSelected,
           // More priority slots when masonry is on (helps LCP)
           priority: prioritizeInitialPhotos
