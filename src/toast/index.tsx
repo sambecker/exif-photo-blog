@@ -6,9 +6,13 @@ import { FaRegCircleCheck } from 'react-icons/fa6';
 
 const DEFAULT_DURATION = 4000;
 
+// Pass an existing toast id to update that toast in place
+type ToastId = string | number;
+
 export const toastSuccess = (
   message: ReactNode,
   duration = DEFAULT_DURATION,
+  id?: ToastId,
 ) => toast(
   message, {
     icon: <FaRegCircleCheck
@@ -16,12 +20,14 @@ export const toastSuccess = (
       className="text-medium"
     />,
     duration,
+    id,
   },
 );
 
 export const toastWarning = (
   message: ReactNode,
   duration = DEFAULT_DURATION,
+  id?: ToastId,
 ) => toast(
   message, {
     icon: <PiWarningBold
@@ -29,15 +35,18 @@ export const toastWarning = (
       className="text-medium"
     />,
     duration,
+    id,
   },
 );
 
 export const toastWaiting = (
   message: ReactNode,
   duration = Infinity,
+  id?: ToastId,
 ) => toast(
   message, {
     icon: <Spinner size={16} />,
     duration,
+    id,
   },
 );

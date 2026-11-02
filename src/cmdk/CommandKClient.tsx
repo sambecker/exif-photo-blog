@@ -112,8 +112,7 @@ import { useSelectPhotosState } from '@/admin/select/SelectPhotosState';
 import { useEditTitlesState } from '@/admin/edit-titles/EditTitlesState';
 import IconAlbum from '@/components/icons/IconAlbum';
 import usePhotoQuery from '@/photo/usePhotoQuery';
-import { clearCacheAction } from '@/photo/actions';
-import { toastSuccess } from '@/toast';
+import useClearCache from '@/admin/useClearCache';
 
 const DIALOG_TITLE = 'Global Command-K Menu';
 const DIALOG_DESCRIPTION = 'For searching photos, views, and settings';
@@ -179,7 +178,6 @@ export default function CommandKClient({
     clearAuthStateAndRedirectIfNecessary,
     isCommandKOpen: isOpen,
     nextCommandKQuery,
-    invalidateSwr,
     photosCountTotal,
     photosCountHidden = 0,
     uploadsCount,
@@ -208,6 +206,8 @@ export default function CommandKClient({
   } = useAppState();
 
   const { startUpload } = useUploadState();
+
+  const clearCache = useClearCache();
 
   const {
     isSelectingPhotos,
@@ -471,6 +471,8 @@ export default function CommandKClient({
               annotation: formatCount(count),
               annotationAria: formatCountDescriptive(count),
               path: pathForTag(tag),
+              // "Private" is the label; photos are stored as hidden
+              ...isTagPrivate(tag) && { keywords: ['hidden'] },
             })),
           };
           case 'recipes': return {
@@ -745,11 +747,7 @@ export default function CommandKClient({
     }, {
       label: appText.admin.clearCache,
       annotation: <IconLock narrow />,
-      action: () => clearCacheAction()
-        .then(() => {
-          invalidateSwr?.();
-          toastSuccess(appText.admin.clearCacheSuccess);
-        }),
+      action: clearCache,
     }, {
       explicitKey: appText.admin.appInsights,
       label: <span className="flex items-center gap-3">

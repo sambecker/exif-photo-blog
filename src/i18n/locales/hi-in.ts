@@ -150,6 +150,8 @@ export const TEXT: I18N = {
     appConfigShort: 'कॉन्फ़िगरेशन',
     clearCache: 'कैश साफ़ करें',
     clearCacheSuccess: 'साइट कैश साफ़ हो गया है',
+    // eslint-disable-next-line @stylistic/max-len
+    clearCacheConfirm: 'यह पूरी साइट का कैश साफ़ करेगा और स्थिर रूप से बनाए गए पेजों को फिर से बनाएगा। लागत/प्रदर्शन पर असर पड़ सकता है।',
     edit: 'संपादित करें',
     favorite: 'पसंदीदा',
     unfavorite: 'पसंदीदा नहीं',
@@ -164,6 +166,13 @@ export const TEXT: I18N = {
     // eslint-disable-next-line @stylistic/max-len
     syncOverwriteConfirm: 'क्या आप सुनिश्चित हैं कि आप सभी फोटो फ़ील्ड को अधिलेखित करना चाहते हैं? अनुकूलित डेटा खो सकता है।',
     reupload: 'पुनः अपलोड करें',
+    reuploadReplaceFile: 'फ़ाइल बदलें',
+    reuploadReplaceFileSync: 'फ़ाइल बदलें + सिंक करें',
+    reuploadReplacing: 'फ़ाइल बदली जा रही है ...',
+    reuploadReplacingSync: 'फ़ाइल बदली और सिंक की जा रही है ...',
+    reuploadSuccess: 'फ़ोटो फ़ाइल बदल दी गई',
+    reuploadSuccessTitled: '"{{photoTitle}}" की फ़ाइल बदल दी गई',
+    reuploadFailure: 'फ़ोटो फ़ाइल बदलते समय कुछ गलत हो गया',
     delete: 'हटाएं',
     // eslint-disable-next-line @stylistic/max-len
     deleteConfirm: 'क्या आप सुनिश्चित हैं कि "{{photoTitle}}" को हटाना चाहते हैं?',

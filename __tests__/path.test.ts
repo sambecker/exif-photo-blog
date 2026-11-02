@@ -1,6 +1,7 @@
 /* eslint-disable @stylistic/max-len */
 import {
   getEscapePath,
+  getPathAliasTarget,
   getPathComponents,
   isPathCamera,
   isPathCameraPhoto,
@@ -98,6 +99,25 @@ describe('Paths', () => {
     expect(isPathProtected(PATH_OG)).toBe(true);
     expect(isPathProtected(PATH_OG_ALL)).toBe(true);
     expect(isPathProtected(PATH_OG_SAMPLE)).toBe(true);
+  });
+  it('resolves aliases', () => {
+    expect(getPathAliasTarget(`/photos/${PHOTO_ID}`)).toBe(PATH_PHOTO);
+    expect(getPathAliasTarget(`/t/${TAG}`)).toBe(PATH_TAG);
+    expect(getPathAliasTarget(`/t/${TAG}/${PHOTO_ID}`)).toBe(PATH_TAG_PHOTO);
+    expect(getPathAliasTarget(`/t/${TAG_PRIVATE}`)).toBe(PATH_TAG_PRIVATE);
+    expect(getPathAliasTarget(`/t/${TAG_PRIVATE}/${PHOTO_ID}`)).toBe(PATH_TAG_PRIVATE_PHOTO);
+    expect(getPathAliasTarget('/photos')).toBeUndefined();
+    expect(getPathAliasTarget('/t/')).toBeUndefined();
+    expect(getPathAliasTarget(PATH_TAG)).toBeUndefined();
+    expect(getPathAliasTarget(PATH_PHOTO)).toBeUndefined();
+  });
+  it('protects private aliases', () => {
+    const isAliasProtected = (pathname: string) =>
+      isPathProtected(getPathAliasTarget(pathname) ?? pathname);
+    expect(isAliasProtected(`/t/${TAG_PRIVATE}`)).toBe(true);
+    expect(isAliasProtected(`/t/${TAG_PRIVATE}/${PHOTO_ID}`)).toBe(true);
+    expect(isAliasProtected(`/t/${TAG}`)).toBe(false);
+    expect(isAliasProtected(`/photos/${PHOTO_ID}`)).toBe(false);
   });
   it('can be classified', () => {
     // Positive

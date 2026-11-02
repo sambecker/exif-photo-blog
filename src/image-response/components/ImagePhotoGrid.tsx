@@ -84,7 +84,7 @@ export default async function ImagePhotoGrid({
   );
 
   const renderPhoto = (
-    { id, urlData }: typeof photoUrls[number],
+    { id, urlData }: NonNullable<typeof photoUrls>[number],
     width: number,
     height: number,
     style?: React.CSSProperties,
@@ -125,67 +125,69 @@ export default async function ImagePhotoGrid({
         overflow: 'hidden',
       }}
     >
-      {hasFiveLayout
-        ? <>
-          {renderPhoto(photoUrls[0], fiveLeftWidth, height, {
-            marginRight: gap,
-          })}
-          <div style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            flexShrink: 0,
-            width: fiveRightWidth,
-            height,
-          }}>
-            {photoUrls.slice(1, 5).map((photo, index) => {
-              const col = index % 2;
-              const row = Math.floor(index / 2);
-              return renderPhoto(
-                photo,
-                col === 1 ? fiveCellWidthLast : fiveCellWidth,
-                row === 1 ? fiveCellHeightLast : fiveCellHeight,
-                {
-                  marginRight: col === 0 ? gap : 0,
-                  marginBottom: row === 0 ? gap : 0,
-                },
-              );
-            })}
-          </div>
-        </>
-        : hasSplitLayout
+      {photoUrls && photoUrls.length > 0
+        ? hasFiveLayout
           ? <>
-            {renderPhoto(photoUrls[0], splitLeftWidth, height, {
+            {renderPhoto(photoUrls[0], fiveLeftWidth, height, {
               marginRight: gap,
             })}
             <div style={{
               display: 'flex',
-              flexDirection: 'column',
+              flexWrap: 'wrap',
               flexShrink: 0,
-              width: splitRightWidth,
+              width: fiveRightWidth,
               height,
             }}>
-              {photoUrls.slice(1, 3).map((photo, index) =>
-                renderPhoto(
+              {photoUrls.slice(1, 5).map((photo, index) => {
+                const col = index % 2;
+                const row = Math.floor(index / 2);
+                return renderPhoto(
                   photo,
-                  splitRightWidth,
-                  index === 0 ? splitTopHeight : splitBottomHeight,
-                  { marginBottom: index === 0 ? gap : 0 },
-                ))}
+                  col === 1 ? fiveCellWidthLast : fiveCellWidth,
+                  row === 1 ? fiveCellHeightLast : fiveCellHeight,
+                  {
+                    marginRight: col === 0 ? gap : 0,
+                    marginBottom: row === 0 ? gap : 0,
+                  },
+                );
+              })}
             </div>
           </>
-          : photoUrls.slice(0, count).map((photo, index) => {
-            const col = index % imagesPerRow;
-            const row = Math.floor(index / imagesPerRow);
-            return renderPhoto(
-              photo,
-              columnWidths[col],
-              rowHeights[row],
-              {
-                marginRight: col < imagesPerRow - 1 ? gap : 0,
-                marginBottom: row < rows - 1 ? gap : 0,
-              },
-            );
-          })}
+          : hasSplitLayout
+            ? <>
+              {renderPhoto(photoUrls[0], splitLeftWidth, height, {
+                marginRight: gap,
+              })}
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                flexShrink: 0,
+                width: splitRightWidth,
+                height,
+              }}>
+                {photoUrls.slice(1, 3).map((photo, index) =>
+                  renderPhoto(
+                    photo,
+                    splitRightWidth,
+                    index === 0 ? splitTopHeight : splitBottomHeight,
+                    { marginBottom: index === 0 ? gap : 0 },
+                  ))}
+              </div>
+            </>
+            : photoUrls.slice(0, count).map((photo, index) => {
+              const col = index % imagesPerRow;
+              const row = Math.floor(index / imagesPerRow);
+              return renderPhoto(
+                photo,
+                columnWidths[col],
+                rowHeights[row],
+                {
+                  marginRight: col < imagesPerRow - 1 ? gap : 0,
+                  marginBottom: row < rows - 1 ? gap : 0,
+                },
+              );
+            })
+        : null}
     </div>
   );
 }

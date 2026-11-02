@@ -153,16 +153,13 @@ export default function PhotoDetailPage({
   }
 
   return (
-    <div>
-      <AppGrid
-        className="mt-1.5 mb-6"
-        contentMain={customHeader ?? <PhotoHeader
-          selectedPhoto={photo}
-          photos={photos}
-          recipe={recipe}
-          hasAiContentGeneration={AI_CONTENT_GENERATION_ENABLED}
-        />}
-      />
+    <div className="mt-1.5">
+      {customHeader ?? <PhotoHeader
+        selectedPhoto={photo}
+        photos={photos}
+        recipe={recipe}
+        hasAiContentGeneration={AI_CONTENT_GENERATION_ENABLED}
+      />}
       <AnimateItems
         className="md:mb-8"
         animateFromAppState

@@ -150,6 +150,8 @@ export const TEXT: I18N = {
     appConfigShort: 'কনফিগারেশন',
     clearCache: 'ক্যাশ সাফ করুন',
     clearCacheSuccess: 'সাইট ক্যাশ সাফ করা হয়েছে',
+    // eslint-disable-next-line @stylistic/max-len
+    clearCacheConfirm: 'এটি পুরো সাইটের ক্যাশ মুছে দেবে এবং স্ট্যাটিকভাবে তৈরি পৃষ্ঠাগুলো পুনরায় তৈরি করবে। খরচ/পারফরম্যান্সের প্রভাব থাকতে পারে।',
     edit: 'এডিট',
     favorite: 'পছন্দ',
     unfavorite: 'পছন্দ অপসারণ',
@@ -164,6 +166,13 @@ export const TEXT: I18N = {
     // eslint-disable-next-line @stylistic/max-len
     syncOverwriteConfirm: 'আপনি কি নিশ্চিত যে আপনি সমস্ত ফটো ফিল্ড ওভাররাইট করতে চান? কাস্টমাইজড ডেটা হারিয়ে যেতে পারে।',
     reupload: 'পুনরায় আপলোড করুন',
+    reuploadReplaceFile: 'ফাইল প্রতিস্থাপন',
+    reuploadReplaceFileSync: 'ফাইল প্রতিস্থাপন + সিঙ্ক',
+    reuploadReplacing: 'ফাইল প্রতিস্থাপন হচ্ছে ...',
+    reuploadReplacingSync: 'ফাইল প্রতিস্থাপন + সিঙ্ক হচ্ছে ...',
+    reuploadSuccess: 'ছবির ফাইল প্রতিস্থাপিত হয়েছে',
+    reuploadSuccessTitled: '"{{photoTitle}}" এর ফাইল প্রতিস্থাপিত হয়েছে',
+    reuploadFailure: 'ছবির ফাইল প্রতিস্থাপনে কিছু ভুল হয়েছে',
     delete: 'ডিলিট',
     deleteConfirm: 'আপনি কি "{{photoTitle}}" মুছে ফেলতে চান?',
     setVisibility: 'দৃশ্যমানতা',

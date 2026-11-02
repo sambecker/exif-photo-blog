@@ -56,7 +56,9 @@ export default function PhotoUploadWithStatus({
 
   return (
     <div className={clsx(
-      'flex items-center gap-4',
+      'flex items-center',
+      // Eliminate phantom gap when status text isn't shown in /admin/photos
+      showStatusText && isUploading && 'gap-4',
       isUploading && 'cursor-not-allowed',
       expandStatus && 'w-full',
       className,

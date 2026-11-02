@@ -43,15 +43,30 @@ const ICON_CLASSNAME = clsx(
 
 // Match naked nav icon buttons (SwitcherItem width="narrow") on small screens.
 // sm+ stays text ("Prev" / "Next").
-const ICON_BUTTON_CLASSNAME = clsx(
+const ICON_BUTTON_LAYOUT_CLASSNAME = clsx(
   'max-sm:inline-flex max-sm:items-center max-sm:justify-center',
   'max-sm:w-[42px] max-sm:h-[32px] max-sm:rounded-lg',
   // LinkWithLoaderBackground adds its own padding and offset
   'max-sm:mx-0! max-sm:my-0! max-sm:px-0! max-sm:py-0!',
+);
+
+const ICON_BUTTON_CLASSNAME = clsx(
+  ICON_BUTTON_LAYOUT_CLASSNAME,
   'max-sm:text-gray-400 max-sm:dark:text-gray-600',
   'max-sm:hover:text-gray-700 max-sm:dark:hover:text-gray-400',
   'max-sm:hover:bg-gray-100 max-sm:active:bg-gray-200/75',
   'max-sm:dark:hover:bg-gray-800/75 max-sm:dark:active:bg-gray-900',
+);
+
+// No previous/next photo: lighter than the enabled icon, and not a control,
+// so hover/active must not shift the color or fill.
+const ICON_BUTTON_DISABLED_CLASSNAME = clsx(
+  ICON_BUTTON_LAYOUT_CLASSNAME,
+  'max-sm:text-gray-300! max-sm:dark:text-gray-700!',
+  'max-sm:hover:text-gray-300! max-sm:dark:hover:text-gray-700!',
+  'max-sm:active:text-gray-300! max-sm:dark:active:text-gray-700!',
+  'max-sm:hover:bg-transparent! max-sm:active:bg-transparent!',
+  'max-sm:dark:hover:bg-transparent! max-sm:dark:active:bg-transparent!',
 );
 
 export default function PhotoPrevNextActions({
@@ -230,7 +245,9 @@ export default function PhotoPrevNextActions({
             ref={refPrevious}
             photo={previousPhoto}
             nextPhotoAnimation={ANIMATION_RIGHT}
-            className={ICON_BUTTON_CLASSNAME}
+            className={previousPhoto
+              ? ICON_BUTTON_CLASSNAME
+              : ICON_BUTTON_DISABLED_CLASSNAME}
             scroll={false}
             loaderType="badge"
             prefetch
@@ -259,7 +276,9 @@ export default function PhotoPrevNextActions({
             ref={refNext}
             photo={nextPhoto}
             nextPhotoAnimation={ANIMATION_LEFT}
-            className={ICON_BUTTON_CLASSNAME}
+            className={nextPhoto
+              ? ICON_BUTTON_CLASSNAME
+              : ICON_BUTTON_DISABLED_CLASSNAME}
             scroll={false}
             loaderType="badge"
             prefetch

@@ -150,6 +150,8 @@ export const TEXT: I18N = {
     appConfigShort: 'Cấu hình',
     clearCache: 'Xóa bộ nhớ cache',
     clearCacheSuccess: 'Đã xóa bộ nhớ cache của trang web',
+    // eslint-disable-next-line @stylistic/max-len
+    clearCacheConfirm: 'Thao tác này sẽ xóa toàn bộ bộ nhớ đệm của trang web và tạo lại các trang được tạo tĩnh. Có thể có ảnh hưởng đến chi phí/hiệu suất.',
     edit: 'Chỉnh sửa',
     favorite: 'Yêu thích',
     unfavorite: 'Bỏ yêu thích',
@@ -164,6 +166,13 @@ export const TEXT: I18N = {
     // eslint-disable-next-line @stylistic/max-len
     syncOverwriteConfirm: 'Bạn có chắc chắn muốn ghi đè tất cả các trường ảnh? Dữ liệu tùy chỉnh có thể bị mất.',
     reupload: 'Tải lên lại',
+    reuploadReplaceFile: 'Thay thế tệp',
+    reuploadReplaceFileSync: 'Thay thế tệp + đồng bộ',
+    reuploadReplacing: 'Đang thay thế tệp ...',
+    reuploadReplacingSync: 'Đang thay thế tệp + đồng bộ ...',
+    reuploadSuccess: 'Đã thay thế tệp ảnh',
+    reuploadSuccessTitled: 'Đã thay thế tệp "{{photoTitle}}"',
+    reuploadFailure: 'Đã xảy ra lỗi khi thay thế tệp ảnh',
     delete: 'Xóa',
     deleteConfirm: 'Bạn có chắc chắn muốn xóa "{{photoTitle}}?"',
     setVisibility: 'Chế độ hiển thị',

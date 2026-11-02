@@ -150,6 +150,8 @@ export const TEXT: I18N = {
     appConfigShort: 'Konfigurasi',
     clearCache: 'Bersihkan Cache',
     clearCacheSuccess: 'Cache situs telah dibersihkan',
+    // eslint-disable-next-line @stylistic/max-len
+    clearCacheConfirm: 'Ini akan membersihkan seluruh cache situs dan membangun ulang halaman yang dibuat secara statis. Mungkin ada implikasi biaya/kinerja.',
     edit: 'Edit',
     favorite: 'Favorit',
     unfavorite: 'Hapus dari Favorit',
@@ -164,6 +166,13 @@ export const TEXT: I18N = {
     // eslint-disable-next-line @stylistic/max-len
     syncOverwriteConfirm: 'Apakah Anda yakin ingin menimpa semua bidang foto? Data yang disesuaikan mungkin hilang.',
     reupload: 'Unggah ulang',
+    reuploadReplaceFile: 'Ganti berkas',
+    reuploadReplaceFileSync: 'Ganti berkas + sinkronkan',
+    reuploadReplacing: 'Mengganti berkas ...',
+    reuploadReplacingSync: 'Mengganti berkas + menyinkronkan ...',
+    reuploadSuccess: 'Berkas foto diganti',
+    reuploadSuccessTitled: 'Berkas "{{photoTitle}}" diganti',
+    reuploadFailure: 'Terjadi kesalahan saat mengganti berkas foto',
     delete: 'Hapus',
     deleteConfirm: 'Apakah Anda yakin ingin menghapus "{{photoTitle}}"?',
     setVisibility: 'Visibilitas',

@@ -150,6 +150,8 @@ export const TEXT: I18N = {
     appConfigShort: 'Configuração',
     clearCache: 'Limpar cache',
     clearCacheSuccess: 'O cache do site foi limpo',
+    // eslint-disable-next-line @stylistic/max-len
+    clearCacheConfirm: 'Isso vai limpar todo o cache do site e reconstruir as páginas geradas estaticamente. Pode haver implicações de custo/desempenho.',
     edit: 'Editar',
     favorite: 'Favoritar',
     unfavorite: 'Remover dos favoritos',
@@ -164,6 +166,13 @@ export const TEXT: I18N = {
     // eslint-disable-next-line @stylistic/max-len
     syncOverwriteConfirm: 'Tem certeza de que deseja sobrescrever todos os campos da foto? Dados personalizados podem ser perdidos.',
     reupload: 'Enviar novamente',
+    reuploadReplaceFile: 'Substituir arquivo',
+    reuploadReplaceFileSync: 'Substituir arquivo e sincronizar',
+    reuploadReplacing: 'Substituindo arquivo ...',
+    reuploadReplacingSync: 'Substituindo arquivo e sincronizando ...',
+    reuploadSuccess: 'Arquivo da foto substituído',
+    reuploadSuccessTitled: 'Arquivo de "{{photoTitle}}" substituído',
+    reuploadFailure: 'Algo deu errado ao substituir o arquivo da foto',
     delete: 'Excluir',
     deleteConfirm: 'Tem certeza de que deseja excluir "{{photoTitle}}"?',
     setVisibility: 'Visibilidade',

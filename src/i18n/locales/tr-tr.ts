@@ -150,6 +150,8 @@ export const TEXT: I18N = {
     appConfigShort: 'Yapılandırma',
     clearCache: 'Önbelleği Temizle',
     clearCacheSuccess: 'Site önbelleği temizlendi',
+    // eslint-disable-next-line @stylistic/max-len
+    clearCacheConfirm: 'Bu işlem tüm site önbelleğini temizleyecek ve statik olarak oluşturulmuş sayfaları yeniden oluşturacaktır. Maliyet/performans etkileri olabilir.',
     edit: 'Düzenle',
     favorite: 'Favori',
     unfavorite: 'Favoriden Çıkar',
@@ -164,6 +166,13 @@ export const TEXT: I18N = {
     // eslint-disable-next-line @stylistic/max-len
     syncOverwriteConfirm: 'Tüm fotoğraf alanlarının üzerine yazmak istediğinize emin misiniz? Özelleştirilmiş veriler kaybolabilir.',
     reupload: 'Yeniden Yükle',
+    reuploadReplaceFile: 'Dosyayı değiştir',
+    reuploadReplaceFileSync: 'Dosyayı değiştir + senkronize et',
+    reuploadReplacing: 'Dosya değiştiriliyor ...',
+    reuploadReplacingSync: 'Dosya değiştiriliyor + senkronize ediliyor ...',
+    reuploadSuccess: 'Fotoğraf dosyası değiştirildi',
+    reuploadSuccessTitled: '"{{photoTitle}}" dosyası değiştirildi',
+    reuploadFailure: 'Fotoğraf dosyası değiştirilirken bir hata oluştu',
     delete: 'Sil',
     // eslint-disable-next-line @stylistic/max-len
     deleteConfirm: '"{{photoTitle}}" adlı fotoğrafı silmek istediğinize emin misiniz?',

@@ -46,8 +46,9 @@ export type PhotoQueryOptions = {
   photoIds?: string[]
 };
 
+// Treat any unexpected value as sensitive since actions accept client input
 export const areOptionsSensitive = (options: PhotoQueryOptions) =>
-  options.hidden === 'include' || options.hidden === 'only';
+  options.hidden !== undefined && options.hidden !== 'exclude';
 
 export const getJoinsFromOptions = (options: PhotoQueryOptions) =>
   options.album
@@ -83,12 +84,13 @@ export const getWheresFromOptions = (
   let valuesIndex = initialValuesIndex;
 
   switch (hidden) {
-    case 'exclude':
-      wheres.push('hidden IS NOT TRUE');
+    case 'include':
       break;
     case 'only':
       wheres.push('hidden IS TRUE');
       break;
+    default:
+      wheres.push('hidden IS NOT TRUE');
   }
 
   if (excludeFromFeeds) {
