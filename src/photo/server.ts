@@ -38,6 +38,7 @@ import exifr from 'exifr';
 import { getCompatibleExifValue } from '@/utility/exif';
 import { fetchUrlWithByteLimit } from '@/utility/fetch';
 import { getPlaceFromCoordinates } from '@/platforms/google-places';
+import { generateNanoid } from '@/utility/nanoid';
 
 const IMAGE_WIDTH_BLUR = 200;
 const IMAGE_WIDTH_DEFAULT = 200;
@@ -146,6 +147,7 @@ export const extractImageDataFromBlobPath = async (
   const formDataFromExif = dataExif
     ? {
       ...includeInitialPhotoFields && {
+        id: generateNanoid(),
         hidden: 'false',
         favorite: 'false',
         extension,

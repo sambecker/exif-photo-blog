@@ -112,17 +112,22 @@ export const createPhotoAction = async (
       await convertFormDataToPhotoDbInsertAndLookupRecipeTitle(formData);
 
     const albumTitles = getAlbumTitlesFromFormData(formData);
+    const uploadUrl = photo.url;
+    const existingPhoto = await getPhoto(photo.id, true);
 
-    const updatedUrl = await convertUploadToPhoto({
-      uploadUrl: photo.url,
+    const updatedUrl = existingPhoto?.url ?? await convertUploadToPhoto({
+      uploadUrl,
       shouldStripGpsData,
+      // Keep the upload retryable until the photo and its related data save.
+      shouldDeleteOrigin: false,
     });
     
     if (updatedUrl) {
       photo.url = updatedUrl;
-      await insertPhoto(photo);
+      if (!existingPhoto) { await insertPhoto(photo); }
       await addAlbumTitlesToPhoto(albumTitles, photo.id, false);
       await propagateRecipeTitleIfNecessary(formData, photo);
+      if (uploadUrl !== updatedUrl) { await deleteFile(uploadUrl); }
       revalidateAllKeysAndPaths();
       redirect(redirectPath);
     }

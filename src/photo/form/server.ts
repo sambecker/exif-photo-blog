@@ -57,6 +57,7 @@ export const convertExifToFormData = (
     model: getExifValue('Model'),
     focalLength: getExifValue('FocalLength')?.toString(),
     focalLengthIn35MmFormat:getExifValue('FocalLengthIn35mmFormat')?.toString(),
+    digitalZoomRatio: getExifValue('DigitalZoomRatio')?.toString(),
     lensMake: getExifValue('LensMake'),
     lensModel: getExifValue('LensModel'),
     fNumber: (
