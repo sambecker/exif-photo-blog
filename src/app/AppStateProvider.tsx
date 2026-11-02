@@ -100,7 +100,17 @@ export default function AppStateProvider({
   const [adminUpdateTimes, setAdminUpdateTimes] =
     useState<Date[]>([]);
   // VIEW
+  // Full/grid on photo sets is local view state. Start each path as grid
+  // so a previous set's full view does not carry into the next one.
   const [isPhotoSetFull, setIsPhotoSetFull] = useState(false);
+  const [isPhotoSetFullPathname, setIsPhotoSetFullPathname] =
+    useState(pathname);
+  if (pathname !== isPhotoSetFullPathname) {
+    setIsPhotoSetFullPathname(pathname);
+    if (isPhotoSetFull) {
+      setIsPhotoSetFull(false);
+    }
+  }
   // DEBUG
   const [isGridHighDensity, setIsGridHighDensity] =
     useState(HIGH_DENSITY_GRID);
