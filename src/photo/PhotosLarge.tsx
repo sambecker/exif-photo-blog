@@ -50,6 +50,11 @@ export default function PhotosLarge({
           query={query}
           recent={recent}
           year={year}
+          camera={camera}
+          lens={lens}
+          recipe={recipe}
+          film={film}
+          focal={focal}
           // Avoid repeating the category the set is already filtered by
           showCamera={!camera}
           showLens={!lens}

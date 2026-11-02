@@ -19,7 +19,7 @@ import PhotoTags from '@/tag/PhotoTags';
 import ShareButton from '@/share/ShareButton';
 import DownloadButton from '@/components/DownloadButton';
 import PhotoCamera from '../camera/PhotoCamera';
-import { cameraFromPhoto } from '@/camera';
+import { Camera, cameraFromPhoto } from '@/camera';
 import PhotoFilm from '@/film/PhotoFilm';
 import { sortTagsArray } from '@/tag';
 import DivDebugBaselineGrid from '@/components/DivDebugBaselineGrid';
@@ -52,7 +52,7 @@ import useRecipeOverlay from '../recipe/useRecipeOverlay';
 import PhotoRecipeOverlay from '@/recipe/PhotoRecipeOverlay';
 import PhotoRecipe from '@/recipe/PhotoRecipe';
 import PhotoLens from '@/lens/PhotoLens';
-import { lensFromPhoto } from '@/lens';
+import { Lens, lensFromPhoto } from '@/lens';
 import MaskedScroll from '@/components/MaskedScroll';
 import { useAppText } from '@/i18n/state/client';
 import { Album } from '@/album';
@@ -109,6 +109,11 @@ export default function PhotoLarge({
   query?: string
   recent?: boolean
   year?: string
+  camera?: Camera
+  lens?: Lens
+  recipe?: string
+  film?: string
+  focal?: number
   revalidatePhoto?: RevalidatePhoto
   showTitle?: boolean
   showTitleAsH1?: boolean
