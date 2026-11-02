@@ -1,8 +1,10 @@
 /* eslint-disable @stylistic/max-len */
 import {
+  areOptionsSensitive,
   generateManyToManyValues,
   getOrderByFromOptions,
   getWheresFromOptions,
+  PhotoQueryOptions,
 } from '@/db';
 
 describe('Postgres', () => {
@@ -47,5 +49,28 @@ describe('Postgres', () => {
         wheresValues: [],
         lastValuesIndex: 1,
       });
+  });
+  it('Excludes hidden photos unless explicitly requested', () => {
+    expect(getWheresFromOptions({ hidden: 'exclude' }).wheres)
+      .toBe('WHERE hidden IS NOT TRUE');
+    expect(getWheresFromOptions({ hidden: 'only' }).wheres)
+      .toBe('WHERE hidden IS TRUE');
+    expect(getWheresFromOptions({ hidden: 'include' }).wheres)
+      .toBe('');
+    // Malformed values from client-invoked server actions
+    for (const hidden of ['x', null, ['only'], true, 0]) {
+      expect(getWheresFromOptions({ hidden } as unknown as PhotoQueryOptions).wheres)
+        .toBe('WHERE hidden IS NOT TRUE');
+    }
+  });
+  it('Treats non-excluding hidden options as sensitive', () => {
+    expect(areOptionsSensitive({})).toBe(false);
+    expect(areOptionsSensitive({ hidden: 'exclude' })).toBe(false);
+    expect(areOptionsSensitive({ hidden: 'include' })).toBe(true);
+    expect(areOptionsSensitive({ hidden: 'only' })).toBe(true);
+    for (const hidden of ['x', null, ['only'], true, 0]) {
+      expect(areOptionsSensitive({ hidden } as unknown as PhotoQueryOptions))
+        .toBe(true);
+    }
   });
 });
