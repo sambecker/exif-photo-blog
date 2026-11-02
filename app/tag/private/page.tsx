@@ -1,3 +1,4 @@
+import AppGrid from '@/components/AppGrid';
 import Note from '@/components/Note';
 import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
 import { getPhotosMetaCached, getPhotosNoStore } from '@/photo/cache';
@@ -60,12 +61,18 @@ export default async function PrivateTagPage() {
       photos={photos}
       count={count}
       tag={TAG_PRIVATE}
-      header={<div className="space-y-6">
+      // Keep the note out of the sticky title's box so the title can
+      // stick for the whole grid, and inside the column so it doesn't
+      // stretch across the viewport
+      header={<>
         <PrivateHeader {...{ photos, count, dateRange }} />
-        <Note>
-          Visible only to admins (uploads only secure via obscurity)
-        </Note>
-      </div>}
+        <AppGrid
+          className="mb-8"
+          contentMain={<Note>
+            Visible only to admins (uploads only secure via obscurity)
+          </Note>}
+        />
+      </>}
     />
   );
 }
