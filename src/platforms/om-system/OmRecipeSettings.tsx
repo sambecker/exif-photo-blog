@@ -260,20 +260,20 @@ export default function OmRecipeSettings({ recipe }: { recipe: OmRecipe }) {
       </section>
       <section {...panelProps(2)}>
         <RecipeGrid className="grid-rows-[auto_1fr_auto]">
-          <RecipeGridCell span={8} label={formatOmWbShift(wb)}>
+          <RecipeGridCell span={12} label={formatOmWbShift(wb)}>
             {formatOmWhiteBalance(wb).toUpperCase()}
-          </RecipeGridCell>
-          <RecipeGridCell label="Shading">
-            {omSignedValue(recipe.shading)}
           </RecipeGridCell>
           <RecipeGridCell span={12} isChart>
             <WhiteBalanceShift whiteBalance={wb} />
           </RecipeGridCell>
-          <RecipeGridCell span={6} label="Sharpness">
+          <RecipeGridCell label="Sharpness">
             {omSignedValue(recipe.sharpness)}
           </RecipeGridCell>
-          <RecipeGridCell span={6} label="Contrast">
+          <RecipeGridCell label="Contrast">
             {omSignedValue(recipe.contrast)}
+          </RecipeGridCell>
+          <RecipeGridCell label="Shading">
+            {omSignedValue(recipe.shading)}
           </RecipeGridCell>
         </RecipeGrid>
       </section>
