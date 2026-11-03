@@ -12,6 +12,7 @@ import {
 } from '@/app/path';
 import AdminNavClient from './AdminNavClient';
 import { getAppText } from '@/i18n/state/server';
+
 export default async function AdminNav() {
   const [
     countPhotos,

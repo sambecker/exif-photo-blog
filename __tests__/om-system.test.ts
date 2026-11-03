@@ -18,7 +18,6 @@ import {
   parseOmRecipe,
   formatOmWbShift,
   labelForOmRecipeKey,
-  omRecipeKeyAliases,
 } from '@/platforms/om-system/recipe';
 import { formatRecipe } from '@/recipe';
 import { createOmRecipeData, getOmRecipe, parseRecipeData }
@@ -310,23 +309,17 @@ describe('OM SYSTEM and Olympus profiles', () => {
     expect(formatRecipe('classic-chrome')).toBe('Classic Chrome');
   });
 
-  it('filters OM galleries by key and keeps Fuji title queries unchanged', () => {
+  it('filters OM galleries by key like any other recipe title', () => {
     const key = createOmRecipeKey(requireRecipe(fixtures.color4));
     expect(key).toMatch(/^om-v1-color-/);
-    const legacy = key.replace(/^om-/, 'om-pen-');
-    expect(isOmRecipeKey(legacy)).toBe(true);
-    expect(labelForOmRecipeKey(legacy))
-      .toBe('Color Recipe');
-    expect(omRecipeKeyAliases(legacy)).toEqual([key, legacy]);
-    for (const recipe of [key, legacy]) {
+    expect(labelForOmRecipeKey(key)).toBe('Color Recipe');
+    expect(isOmRecipeKey(key.replace(/^om-/, 'om-pen-'))).toBe(false);
+    for (const recipe of [key, 'kodachrome']) {
       expect(getWheresFromOptions({ recipe })).toMatchObject({
-        wheres: expect.stringContaining('recipe_title IN ($1, $2)'),
-        wheresValues: [key, legacy],
+        wheres: expect.stringContaining('recipe_title=$1'),
+        wheresValues: [recipe],
       });
     }
-    expect(getWheresFromOptions({ recipe: 'kodachrome' })).toMatchObject({
-      wheres: expect.stringContaining('recipe_title=$1'),
-    });
   });
 
   it('preserves extracted settings and identity through an ordinary photo edit', () => {

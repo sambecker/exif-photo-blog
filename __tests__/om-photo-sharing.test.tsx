@@ -45,7 +45,7 @@ beforeAll(() => {
   };
 });
 
-const key = `om-pen-v1-color-${'a'.repeat(64)}`;
+const key = `om-v1-color-${'a'.repeat(64)}`;
 const basePhoto = parsePhotoFromDb({
   id: 'penphoto', url: 'https://photos.example/photo.jpg', extension: 'jpg',
   title: 'Gallery photo', tags: [], aspectRatio: 4 / 3,
@@ -112,7 +112,7 @@ it.each(['photo', 'expressive', 'gallery', 'selected gallery'] as const)(
           showLens={false} showFilm={false} prefetchRelatedLinks={false} />
         : source === 'expressive'
           ? <PhotoExpressive photo={photo} prefetchRelatedLinks={false} />
-          : <RecipeHeader recipe={key.replace(/^om-pen-/, 'om-')}
+          : <RecipeHeader recipe={key}
             photos={[firstPhoto, photo]}
             selectedPhoto={source === 'selected gallery' ? photo : undefined}
           />}

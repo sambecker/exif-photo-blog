@@ -9,7 +9,7 @@ const FUJIFILM_RECIPE_KEY_PATTERN = /^fujifilm-v1-([a-z0-9-]+)-[a-f0-9]{64}$/;
 
 // Postgres-compatible pattern matching every generated recipe key
 export const RECIPE_HASH_KEY_PATTERN_DB =
-  '^(om(-pen)?-v1-(color|mono)|fujifilm-v1-[a-z0-9-]+)-[a-f0-9]{64}$';
+  '^(om-v1-(color|mono)|fujifilm-v1-[a-z0-9-]+)-[a-f0-9]{64}$';
 
 export const isFujifilmRecipeKey = (key?: string): boolean =>
   FUJIFILM_RECIPE_KEY_PATTERN.test(key ?? '');

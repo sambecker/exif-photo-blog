@@ -123,8 +123,8 @@ it('fills a missing 35mm equivalent during only-missing Sync without a recipe',
     expect(updatePhoto).toHaveBeenCalledWith(expect.objectContaining({
       focalLength: 25, focalLengthIn35MmFormat: 50,
     }));
-    expect(getOmFocalLengthIn35MmFormat)
-      .toHaveBeenCalledWith(Buffer.from('fixture'), 25);
+    expect(jest.mocked(getOmFocalLengthIn35MmFormat).mock.calls[0]
+      .slice(0, 2)).toEqual([Buffer.from('fixture'), 25]);
   },
 );
 
@@ -151,12 +151,12 @@ it('keeps an explicit 35mm equivalent instead of deriving one', async () => {
 });
 
 it.each([
-  ['auto', 34, 68],
+  ['auto', undefined, 68],
   ['auto', 80, 80],
-  ['only-missing', 34, 68],
+  ['only-missing', undefined, 68],
   ['overwrite', 34, 68],
 ] as const)(
-  '%s Sync updates a derived equivalent %i to %i with 2x zoom',
+  '%s Sync derives a 2x zoom equivalent from %s to %i',
   async (syncMode, previousEquivalent, expectedEquivalent) => {
     const original = await getPhoto('penphoto');
     jest.mocked(getPhoto).mockResolvedValue({

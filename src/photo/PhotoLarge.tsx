@@ -316,10 +316,10 @@ export default function PhotoLarge({
                 onClose={hideRecipeOverlay}
               />}
           {showInlineRecipeOverlay &&
-            omRecipe && photo.recipeTitle && <OmRecipeOverlay
+            omRecipe && recipeTitle && <OmRecipeOverlay
             ref={refRecipe}
             recipe={omRecipe}
-            recipeKey={photo.recipeTitle}
+            recipeKey={recipeTitle}
             onClose={hideRecipeOverlay}
           />}
         </AnimatePresence>
@@ -462,10 +462,10 @@ export default function PhotoLarge({
                           isShowingRecipeOverlay={isShowingRecipeOverlay}
                         />}
                       {showRecipeContent && omRecipe &&
-                        photo.recipeTitle && <PhotoOmRecipe
+                        recipeTitle && <PhotoOmRecipe
                         ref={refPhotoRecipe}
                         recipe={omRecipe}
-                        recipeKey={photo.recipeTitle}
+                        recipeKey={recipeTitle}
                         contrast="medium"
                         prefetch={prefetchRelatedLinks}
                         toggleRecipeOverlay={toggleRecipeOverlay}

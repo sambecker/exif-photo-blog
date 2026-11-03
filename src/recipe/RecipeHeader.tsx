@@ -8,8 +8,6 @@ import { descriptionForRecipePhotos, getRecipePropsFromPhotos } from '.';
 import { AI_CONTENT_GENERATION_ENABLED } from '@/app/config';
 import { useAppText } from '@/i18n/state/client';
 import PhotoOmRecipe from '@/platforms/om-system/PhotoOmRecipe';
-import { isOmRecipeKey, omRecipeKeyAliases }
-  from '@/platforms/om-system/recipe';
 import { getOmRecipe } from './serialization';
 
 export default function RecipeHeader({
@@ -32,13 +30,9 @@ export default function RecipeHeader({
   const appText = useAppText();
 
   const recipeProps = getRecipePropsFromPhotos(photos, selectedPhoto);
-  const recipeTitles = isOmRecipeKey(recipe)
-    ? omRecipeKeyAliases(recipe)
-    : [recipe];
   const findOmPhoto = (candidates: (Photo | undefined)[]) =>
     candidates.find(photo =>
-      getOmRecipe(photo?.recipeData) && photo?.recipeTitle &&
-        recipeTitles.includes(photo.recipeTitle));
+      getOmRecipe(photo?.recipeData) && photo?.recipeTitle === recipe);
   // Custom titles may name recipes from either brand
   const omPhoto = findOmPhoto([selectedPhoto]) ??
     (recipeProps ? undefined : findOmPhoto(photos));

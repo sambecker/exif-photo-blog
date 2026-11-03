@@ -96,8 +96,7 @@ describe('recipe hash keys', () => {
 
   it('recognizes generated keys in JS and Postgres patterns', () => {
     const pattern = new RegExp(RECIPE_HASH_KEY_PATTERN_DB);
-    const legacyOmKey = omKey.replace(/^om-/, 'om-pen-');
-    for (const key of [fujiKey, omKey, legacyOmKey]) {
+    for (const key of [fujiKey, omKey]) {
       expect(isRecipeHashKey(key)).toBe(true);
       expect(pattern.test(key)).toBe(true);
     }

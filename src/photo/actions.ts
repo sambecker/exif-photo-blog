@@ -604,7 +604,6 @@ const syncPhoto = async (
       imageResizedBase64,
       shouldStripGpsData,
       fileBytes,
-      unzoomedFocalLengthIn35MmFormat,
       error,
     } = await extractImageDataFromBlobPath(photo.url, {
       includeInitialPhotoFields: false,
@@ -664,13 +663,6 @@ const syncPhoto = async (
         }
         const existingValue =
           formDataFromPhoto[field as keyof PhotoFormData];
-        if (field === 'focalLengthIn35MmFormat' &&
-          unzoomedFocalLengthIn35MmFormat !== undefined &&
-          Number(existingValue) === unzoomedFocalLengthIn35MmFormat &&
-          Number(value) > unzoomedFocalLengthIn35MmFormat) {
-          // Correct an old sensor-derived value that omitted digital zoom.
-          return;
-        }
         switch (syncMode) {
           case 'auto':
             // Remove all fields already present in formDataFromPhoto

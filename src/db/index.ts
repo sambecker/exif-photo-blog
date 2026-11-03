@@ -8,8 +8,6 @@ import { getPathComponents } from '@/app/path';
 import { getAlbumFromSlug } from '@/album/query';
 import { isTagPrivate } from '@/tag';
 import { getPhotoCount } from '@/photo/query';
-import { isOmRecipeKey, omRecipeKeyAliases }
-  from '@/platforms/om-system/recipe';
 
 export const GENERATE_STATIC_PARAMS_LIMIT = 1000;
 export const PHOTO_DEFAULT_LIMIT = 100;
@@ -160,14 +158,8 @@ export const getWheresFromOptions = (
     wheresValues.push(film);
   }
   if (recipe) {
-    if (isOmRecipeKey(recipe)) {
-      wheres.push(`recipe_title IN ($${valuesIndex++}, $${valuesIndex++})`);
-      wheresValues.push(...omRecipeKeyAliases(recipe));
-      wheres.push('recipe_data->>\'camera\' = \'om-system\'');
-    } else {
-      wheres.push(`recipe_title=$${valuesIndex++}`);
-      wheresValues.push(recipe);
-    }
+    wheres.push(`recipe_title=$${valuesIndex++}`);
+    wheresValues.push(recipe);
   }
   // Compare against undefined so focal lengths of 0 are filtered
   if (focal !== undefined) {

@@ -119,16 +119,10 @@ export const parseOmRecipe = (value: unknown): OmRecipe | undefined => {
   }
 };
 
-const OM_RECIPE_KEY_PATTERN = /^om-(?:pen-)?v1-(color|mono)-[a-f0-9]{64}$/;
+const OM_RECIPE_KEY_PATTERN = /^om-v1-(color|mono)-[a-f0-9]{64}$/;
 
 export const isOmRecipeKey = (key?: string): boolean =>
   OM_RECIPE_KEY_PATTERN.test(key ?? '');
-
-// Keep galleries and shared URLs from the initial PEN implementation working.
-export const omRecipeKeyAliases = (key: string): [string, string] => {
-  const canonical = key.replace(/^om-pen-/, 'om-');
-  return [canonical, canonical.replace(/^om-/, 'om-pen-')];
-};
 
 export const labelForOmRecipeKey = (key: string) =>
   OM_RECIPE_KEY_PATTERN.exec(key)?.[1] === 'color'

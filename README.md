@@ -527,11 +527,9 @@ Thank you ❤️ translators: [@sconetto](https://github.com/sconetto) (`pt-br`,
 
 #### How do OM SYSTEM and Olympus recipes work?
 
-> Upload camera-original JPEGs taken with a Color or Monochrome Profile on supported OM SYSTEM and Olympus cameras. The photo's "Color recipe" or "Mono recipe" link opens a gallery of photos with matching active settings. The adjacent +/× button opens a compact read-only viewer with tabs for color or mono settings, tone, and white balance. Slot numbers and exposure compensation do not determine recipe matches. Noise Filter and Gradation are outside the recipe. If required metadata is missing or unsupported, no recipe is shown.
+> Upload camera-original JPEGs taken with a Color or Monochrome Profile. The photo's "Color recipe" or "Mono recipe" link opens a gallery of photos with matching settings, and the adjacent + button shows the settings themselves. Ordinary picture modes and Art Filters don't produce recipes, and profile slot numbers, exposure compensation, Noise Filter, and Gradation don't affect matching. As with Fujifilm, editing an image on your phone before uploading can strip the data recipes depend on.
 >
-> Previously uploaded OM SYSTEM and Olympus photos are marked as missing OM recipes in `/admin/photos` until synced. Sync reads the original once; absent/incomplete results are saved so photos without recipes are not flagged again, while failed downloads remain flagged for retry. Stored originals must retain the required MakerNotes. Support follows the active profile metadata, not the camera model. Ordinary picture modes and Art Filters do not count as recipes.
->
-> OM recipes reuse `recipe_title` and `recipe_data` (tagged with `camera: "om-system"`) for the settings and import status. Existing recipe data without a camera tag remains Fujifilm data. No additional database columns are required. If you tested an earlier version of this PR that used separate OM columns, sync affected photos to populate the shared fields; matching gallery URLs stay the same.
+> Photos uploaded before recipe support are flagged in `/admin/photos` until they're synced once.
 
 #### How are recipes titled?
 > When a Fujifilm or OM photo is imported, it uses the custom title already given to photos with matching recipe settings (and film simulation, for Fujifilm). Otherwise, it gets a generated title based on a hash of its settings, displayed as e.g. "Classic Chrome recipe" or "Color recipe." Recipe titles and data can be edited on any photo, and the "auto-title" checkbox next to the recipe title label switches back to the generated format. Changing a recipe title renames it on every photo that shares it, and the form shows how many photos will be affected before saving.
