@@ -2,6 +2,7 @@
 import {
   sql,
   query,
+  Primitive,
 } from '@/platforms/postgres';
 import {
   convertArrayToPostgresString,
@@ -37,6 +38,16 @@ import {
   OUTDATED_UPDATE_AT_THRESHOLD,
 } from '@/photo/update';
 import { Recipes } from '@/recipe';
+import { isRecipeHashKey, RECIPE_HASH_KEY_PATTERN_DB } from '@/recipe/key';
+import {
+  OM_CAMERA_MAKES,
+  OM_RECIPE_VERSION,
+} from '@/platforms/om-system/recipe';
+import {
+  getFujifilmRecipe,
+  getOmRecipe,
+  parseRecipeData,
+} from '@/recipe/serialization';
 import { Years } from '@/year';
 import { PhotoColorData } from '@/photo/color/client';
 import { safelyQuery } from '@/db/query';
@@ -281,12 +292,24 @@ export const addTagsToPhotos = (tags: string[], photoIds: string[]) =>
     convertArrayToPostgresString(photoIds),
   ]), 'addTagsToPhotos');
 
-export const deletePhotoRecipeGlobally = (recipe: string) =>
+export const getPhotoRecipeFieldsForTitle = (recipe: string) =>
+  safelyQuery(() => sql<{
+    id: string
+    recipe_data: object | null
+  }>`
+    SELECT id, recipe_data FROM photos
+    WHERE recipe_title=${recipe}
+  `.then(({ rows }) => rows), 'getPhotoRecipeFieldsForTitle');
+
+export const updateRecipeTitleForPhoto = (
+  photoId: string,
+  recipeTitle?: string,
+) =>
   safelyQuery(() => sql`
     UPDATE photos
-    SET recipe_title=NULL
-    WHERE recipe_title=${recipe}
-  `, 'deletePhotoRecipeGlobally');
+    SET recipe_title=${recipeTitle ?? null}
+    WHERE id=${photoId}
+  `, 'updateRecipeTitleForPhoto');
 
 export const renamePhotoRecipeGlobally = (
   recipe: string,
@@ -373,21 +396,23 @@ export const getUniqueTags = async (includeHidden?: boolean) =>
   })))
   , 'getUniqueTags');
 
-export const getUniqueRecipes = async () =>
-  safelyQuery(() => sql`
+export const getUniqueRecipes = async (includeHidden?: boolean) =>
+  safelyQuery(() => query(`
     SELECT DISTINCT recipe_title,
       COUNT(*),
       MAX(updated_at) as last_modified
     FROM photos
-    WHERE hidden IS NOT TRUE AND recipe_title IS NOT NULL
+    WHERE recipe_title IS NOT NULL
+    AND recipe_title !~ $1
+    ${includeHidden ? '' : 'AND hidden IS NOT TRUE'}
     GROUP BY recipe_title
     ORDER BY recipe_title ASC
-  `.then(({ rows }): Recipes => rows
-      .map(({ recipe_title, count, last_modified }) => ({
-        recipe: recipe_title,
-        count: parseInt(count, 10),
-        lastModified: last_modified as Date,
-      })))
+  `, [RECIPE_HASH_KEY_PATTERN_DB]).then(({ rows }): Recipes => rows
+    .map(({ recipe_title, count, last_modified }) => ({
+      recipe: recipe_title,
+      count: parseInt(count, 10),
+      lastModified: last_modified as Date,
+    })))
   , 'getUniqueRecipes');
 
 export const getUniqueYears = async () =>
@@ -406,20 +431,131 @@ export const getUniqueYears = async () =>
       lastModified: last_modified as Date,
     }))), 'getUniqueYears');
 
-export const getRecipeTitleForData = async (
+// Preserve legacy JSONB strings as well as objects when matching recipes.
+// The camera discriminator is metadata, not a Fujifilm setting.
+const recipeDataForMatching = (data: string | object) => {
+  const parsed = typeof data === 'string' ? JSON.parse(data) : data;
+  return JSON.stringify(parsed && typeof parsed === 'object' &&
+    !Array.isArray(parsed)
+    ? Object.fromEntries(Object.entries(parsed)
+      .filter(([key]) => key !== 'camera'))
+    : parsed);
+};
+
+// OM recipes match on settings alone, Fujifilm recipes on settings + film
+// (includes legacy check on pre-stringified JSON)
+const recipeDataMatchClause = (
   data: string | object,
-  film: string,
-) =>
-  // Includes legacy check on pre-stringified JSON
-  safelyQuery(() => sql`
-    SELECT recipe_title FROM photos
-    WHERE hidden IS NOT TRUE
-    AND recipe_data=${typeof data === 'string' ? data : JSON.stringify(data)}
-    AND film=${film}
-    LIMIT 1
-  `
-    .then(({ rows }) => rows[0]?.recipe_title as string | undefined)
-  , 'getRecipeTitleForData');
+  film: string | undefined,
+  values: Primitive[],
+) => {
+  const parsed = parseRecipeData(data);
+  const omRecipe = getOmRecipe(parsed);
+  if (omRecipe) {
+    values.push(JSON.stringify(omRecipe));
+    return `(
+      recipe_data->>'camera' = 'om-system'
+      AND recipe_data->'recipe' = $${values.length}::jsonb
+    )`;
+  }
+  if (getFujifilmRecipe(parsed) && film) {
+    values.push(recipeDataForMatching(data), film);
+    return `(
+      COALESCE(recipe_data->>'camera', 'fujifilm') = 'fujifilm'
+      AND CASE WHEN jsonb_typeof(recipe_data) = 'object'
+        THEN recipe_data - 'camera' ELSE recipe_data END
+        = $${values.length - 1}::jsonb
+      AND film = $${values.length}
+    )`;
+  }
+};
+
+// Most common custom (non-hash) title for matching recipe data
+export const getCustomRecipeTitleForData = async (
+  data: string | object,
+  film?: string,
+) => {
+  const values: Primitive[] = [RECIPE_HASH_KEY_PATTERN_DB];
+  const match = recipeDataMatchClause(data, film, values);
+  return match
+    ? safelyQuery(() => query(`
+      SELECT recipe_title FROM photos
+      WHERE hidden IS NOT TRUE
+      AND recipe_title IS NOT NULL
+      AND recipe_title !~ $1
+      AND ${match}
+      GROUP BY recipe_title
+      ORDER BY COUNT(*) DESC, recipe_title ASC
+      LIMIT 1
+    `, values)
+      .then(({ rows }) => rows[0]?.recipe_title as string | undefined)
+    , 'getCustomRecipeTitleForData')
+    : undefined;
+};
+
+export type RecipeRename = {
+  photoId?: string
+  previousTitle?: string
+  title: string
+  recipeData?: string
+  film?: string
+};
+
+// Photos sharing the previous title, plus untitled/generated-title photos
+// with matching data. Hash titles only apply to photos with matching data.
+const recipeRenameWhere = ({
+  photoId,
+  previousTitle,
+  title,
+  recipeData,
+  film,
+}: RecipeRename, values: Primitive[]) => {
+  values.push(photoId ?? '', title);
+  const match = recipeData
+    ? recipeDataMatchClause(recipeData, film, values)
+    : undefined;
+  const conditions: string[] = [];
+  if (previousTitle && (match || !isRecipeHashKey(title))) {
+    values.push(previousTitle);
+    conditions.push(match && isRecipeHashKey(title)
+      ? `(recipe_title = $${values.length} AND ${match})`
+      : `recipe_title = $${values.length}`);
+  }
+  if (match) {
+    values.push(RECIPE_HASH_KEY_PATTERN_DB);
+    conditions.push(`(${match} AND (
+      recipe_title IS NULL OR recipe_title ~ $${values.length}
+    ))`);
+  }
+  return conditions.length > 0
+    ? `id <> $1
+      AND recipe_title IS DISTINCT FROM $2
+      AND (${conditions.join(' OR ')})`
+    : undefined;
+};
+
+export const getRecipeRenameCount = async (rename: RecipeRename) => {
+  const values: Primitive[] = [];
+  const where = recipeRenameWhere(rename, values);
+  return where
+    ? safelyQuery(() => query(
+      `SELECT COUNT(*) FROM photos WHERE ${where}`,
+      values,
+    ).then(({ rows }) => parseInt(rows[0].count, 10))
+    , 'getRecipeRenameCount')
+    : 0;
+};
+
+export const renameRecipeForMatchingPhotos = async (rename: RecipeRename) => {
+  const values: Primitive[] = [];
+  const where = recipeRenameWhere(rename, values);
+  if (where) {
+    await safelyQuery(() => query(
+      `UPDATE photos SET recipe_title = $2 WHERE ${where}`,
+      values,
+    ), 'renameRecipeForMatchingPhotos');
+  }
+};
 
 export const getRecipeDataForTitle = async (title: string) =>
   safelyQuery(() => sql`
@@ -428,6 +564,7 @@ export const getRecipeDataForTitle = async (title: string) =>
     AND recipe_title=${title}
     AND recipe_data IS NOT NULL
     AND recipe_data::text <> 'null'
+    AND COALESCE(recipe_data->>'camera', 'fujifilm') = 'fujifilm'
     ORDER BY taken_at DESC
     LIMIT 1
   `
@@ -435,34 +572,6 @@ export const getRecipeDataForTitle = async (title: string) =>
       ? JSON.stringify(rows[0].recipe_data)
       : undefined)
   , 'getRecipeDataForTitle');
-
-export const getPhotosNeedingRecipeTitleCount = async (
-  data: string,
-  film: string,
-  photoIdToExclude?: string,
-) =>
-  safelyQuery(() => sql`
-    SELECT COUNT(*)
-    FROM photos
-    WHERE recipe_title IS NULL
-    AND recipe_data=${data}
-    AND film=${film}
-    AND id <> ${photoIdToExclude}
-  `.then(({ rows }) => parseInt(rows[0].count, 10))
-  , 'getPhotosNeedingRecipeTitleCount');
-
-export const updateAllMatchingRecipeTitles = (
-  title: string,
-  data: string,
-  film: string,
-) =>
-  safelyQuery(() => sql`
-    UPDATE photos
-    SET recipe_title=${title}
-    WHERE recipe_title IS NULL
-    AND recipe_data=${data}
-    AND film=${film}
-  `, 'updateAllMatchingRecipeTitles');
 
 export const getUniqueFilms = async () =>
   safelyQuery(() => sql`
@@ -739,11 +848,22 @@ const needsColorDataWhereClauses =
   )`]
     : [];
 
+// Mirrors isPhotoMissingOmRecipe
+const needsOmRecipeWhereClauses = [`(
+  LOWER(TRIM(make)) IN (${OM_CAMERA_MAKES
+    .map(make => `'${make.replaceAll('\'', '\'\'')}'`).join(', ')})
+  AND CASE WHEN recipe_data->>'camera' = 'om-system'
+    THEN COALESCE(recipe_data->>'checkedVersion', '0')
+      <> '${OM_RECIPE_VERSION}'
+    ELSE TRUE END
+)`];
+
 const needsSyncWhereStatement =
   `WHERE ${[
     ...outdatedWhereClauses,
     ...needsAiTextWhereClauses,
     ...needsColorDataWhereClauses,
+    ...needsOmRecipeWhereClauses,
   ].join(' OR ')}`;
 
 export const getPhotosInNeedOfUpdate = () =>

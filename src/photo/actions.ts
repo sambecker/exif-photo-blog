@@ -11,9 +11,10 @@ import {
   getPhotos,
   addTagsToPhotos,
   getUniqueTags,
-  deletePhotoRecipeGlobally,
+  getPhotoRecipeFieldsForTitle,
+  updateRecipeTitleForPhoto,
   renamePhotoRecipeGlobally,
-  getPhotosNeedingRecipeTitleCount,
+  getRecipeRenameCount,
   getRecipeDataForTitle,
   updateColorDataForPhoto,
   getColorDataForPhotos,
@@ -55,7 +56,9 @@ import {
   convertFormDataToPhotoDbInsertAndLookupRecipeTitle,
   deletePhotoAndFiles,
   extractImageDataFromBlobPath,
+  getAutoRecipeTitle,
   propagateRecipeTitleIfNecessary,
+  shouldPreserveRecipeTitle,
 } from './server';
 import { TAG_FAVS, isPhotoFav, isTagFavs } from '@/tag';
 import { convertPhotoToPhotoDbInsert, Photo, PhotoDbInsert } from '.';
@@ -98,6 +101,12 @@ import {
   COMMAND_K_PHOTO_LIMIT,
   getPhotosQueryData,
 } from '@/query/data';
+import { isOmSystemCamera }
+  from '@/platforms/om-system/recipe';
+
+import { isOmRecipeData, parseRecipeData } from '@/recipe/serialization';
+import { createRecipeHashKey } from '@/recipe/server';
+import { parameterize } from '@/utility/string';
 
 // Private actions
 
@@ -111,6 +120,10 @@ export const createPhotoAction = async (
     const photo =
       await convertFormDataToPhotoDbInsertAndLookupRecipeTitle(formData);
 
+    // Title the photo would have been given without user input
+    const previousRecipeTitle =
+      await getAutoRecipeTitle(photo.recipeData, photo.film);
+
     const albumTitles = getAlbumTitlesFromFormData(formData);
 
     const updatedUrl = await convertUploadToPhoto({
@@ -122,7 +135,11 @@ export const createPhotoAction = async (
       photo.url = updatedUrl;
       await insertPhoto(photo);
       await addAlbumTitlesToPhoto(albumTitles, photo.id, false);
-      await propagateRecipeTitleIfNecessary(formData, photo);
+      await propagateRecipeTitleIfNecessary(
+        formData,
+        photo,
+        previousRecipeTitle,
+      );
       revalidateAllKeysAndPaths();
       redirect(redirectPath);
     }
@@ -226,6 +243,9 @@ export const updatePhotoAction = async (
     const photo =
       await convertFormDataToPhotoDbInsertAndLookupRecipeTitle(formData);
 
+    const previousRecipeTitle = await getPhoto(photo.id, true)
+      .then(existingPhoto => existingPhoto?.recipeTitle);
+
     const albumTitles = getAlbumTitlesFromFormData(formData);
     await addAlbumTitlesToPhoto(albumTitles, photo.id);
    
@@ -246,7 +266,11 @@ export const updatePhotoAction = async (
         if (urlToDelete) {
           await deleteFile(urlToDelete);
         }
-        await propagateRecipeTitleIfNecessary(formData, photo);
+        await propagateRecipeTitleIfNecessary(
+          formData,
+          photo,
+          previousRecipeTitle,
+        );
       });
 
     revalidateAllKeysAndPaths();
@@ -339,17 +363,20 @@ export const upgradeTagToAlbumAction = async (tag: string) =>
     upgradeTagToAlbum(tag).then(revalidateAllKeysAndPaths),
   );
 
-export const getPhotosNeedingRecipeTitleCountAction = async (
-  recipeData: string,
-  film: string,
-  photoIdToExclude?: string,
+export const getRecipeRenameCountAction = async (
+  ...args: Parameters<typeof getRecipeRenameCount>
 ) =>
+  runAuthenticatedAdminServerAction(async () => {
+    const [{ title, ...rename }] = args;
+    return await getRecipeRenameCount({
+      ...rename,
+      title: parameterize(title),
+    });
+  });
+
+export const getRecipeHashKeyAction = async (recipeData?: string) =>
   runAuthenticatedAdminServerAction(async () =>
-    await getPhotosNeedingRecipeTitleCount(
-      recipeData,
-      film,
-      photoIdToExclude,
-    ),
+    createRecipeHashKey(recipeData),
   );
 
 export const getRecipeDataForTitleAction = async (recipeTitle: string) =>
@@ -408,7 +435,14 @@ export const deletePhotoRecipeGloballyAction = async (formData: FormData) =>
   runAuthenticatedAdminServerAction(async () => {
     const recipe = formData.get('recipe') as string;
 
-    await deletePhotoRecipeGlobally(recipe);
+    // OM photos fall back to generated titles, Fujifilm photos to none
+    const photos = await getPhotoRecipeFieldsForTitle(recipe);
+    for (const { id, recipe_data } of photos) {
+      await updateRecipeTitleForPhoto(
+        id,
+        createRecipeHashKey(recipe_data ?? undefined),
+      );
+    }
 
     revalidatePhotosKey();
     revalidateAdminPaths();
@@ -446,22 +480,37 @@ export const replacePhotoStorageAction = async (
 
       const {
         formDataFromExif,
+        error,
       } = await extractImageDataFromBlobPath(updatedStorageUrl, {
         generateBlurData: BLUR_ENABLED,
+        refreshOmRecipe: isOmSystemCamera(photo.make),
       });
 
-      let imageFields: Partial<PhotoDbInsert> = {};
-      if (formDataFromExif) {
-        const photoDbInsert = convertFormDataToPhotoDbInsert(formDataFromExif);
-        imageFields = {
-          blurData: photoDbInsert.blurData,
-          width: photoDbInsert.width,
-          height: photoDbInsert.height,
-          aspectRatio: photoDbInsert.aspectRatio,
-          colorData: photoDbInsert.colorData,
-          colorSort: photoDbInsert.colorSort,
-        };
+      if (error || !formDataFromExif) {
+        throw new Error(error ?? 'Could not read replacement image metadata');
       }
+      const photoDbInsert = convertFormDataToPhotoDbInsert(formDataFromExif);
+      const imageFields: Partial<PhotoDbInsert> = {
+        blurData: photoDbInsert.blurData,
+        width: photoDbInsert.width,
+        height: photoDbInsert.height,
+        aspectRatio: photoDbInsert.aspectRatio,
+        colorData: photoDbInsert.colorData,
+        colorSort: photoDbInsert.colorSort,
+        // OM settings describe the new source, including an absent recipe.
+        ...(isOmSystemCamera(photo.make) ||
+          isOmRecipeData(photo.recipeData) ||
+          isOmRecipeData(parseRecipeData(photoDbInsert.recipeData))) && {
+          recipeData: photoDbInsert.recipeData,
+          recipeTitle: shouldPreserveRecipeTitle(
+            photo.recipeTitle,
+            photo,
+            photoDbInsert,
+          )
+            ? photo.recipeTitle
+            : photoDbInsert.recipeTitle || undefined,
+        },
+      };
 
       await storeOptimizedPhotosForUrl(updatedStorageUrl);
 
@@ -552,12 +601,16 @@ const syncPhoto = async (
       imageResizedBase64,
       shouldStripGpsData,
       fileBytes,
+      error,
     } = await extractImageDataFromBlobPath(photo.url, {
       includeInitialPhotoFields: false,
       generateBlurData: BLUR_ENABLED,
       generateResizedImage: AI_CONTENT_GENERATION_ENABLED,
       updateColorFields: AI_CONTENT_GENERATION_ENABLED,
+      refreshOmRecipe: isOmSystemCamera(photo.make),
     });
+
+    if (error) { throw new Error(error); }
 
     const uniqueTags = await getUniqueTags();
 
@@ -593,6 +646,18 @@ const syncPhoto = async (
       const formDataFromPhoto = convertPhotoToFormData(photo);
 
       Object.entries(formDataFromExif).forEach(([field, value]) => {
+        if (field === 'recipeTitle' && shouldPreserveRecipeTitle(
+          photo.recipeTitle, photo, formDataFromExif,
+        )) {
+          delete formDataFromExif.recipeTitle;
+          return;
+        }
+        if ((isOmSystemCamera(photo.make) ||
+          isOmRecipeData(parseRecipeData(formDataFromExif.recipeData))) &&
+          (field === 'recipeData' || field === 'recipeTitle')) {
+          // OM settings always reflect the current source image.
+          return;
+        }
         const existingValue =
           formDataFromPhoto[field as keyof PhotoFormData];
         switch (syncMode) {

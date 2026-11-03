@@ -5,7 +5,7 @@ import { getUniqueRecipes } from '@/photo/query';
 import { pluralize } from '@/utility/string';
 
 export default async function AdminRecipesPage() {
-  const recipes = await getUniqueRecipes().catch(() => []);
+  const recipes = await getUniqueRecipes(true).catch(() => []);
   
   const appText = await getAppText();
 

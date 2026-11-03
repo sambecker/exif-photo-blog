@@ -367,7 +367,7 @@ export default function TagInput({
     <div
       ref={containerRef}
       className="flex flex-col w-full group"
-      onFocus={() => setShouldShowMenu(true)}
+      onFocus={() => { if (!readOnly) { setShouldShowMenu(true); } }}
       onBlur={e => {
         if (!e.currentTarget.contains(e.relatedTarget)) {
           if (shouldRevealRawText) {
@@ -432,14 +432,20 @@ export default function TagInput({
               key={option}
               type="button"
               aria-label={`Remove tag "${option}"`}
+              disabled={readOnly}
               className={clsx(
                 'inline-flex items-center gap-2 min-w-0',
                 'text-main',
-                'cursor-pointer select-none',
+                'select-none',
                 'whitespace-nowrap',
                 'px-1.5 py-0.5',
                 'bg-gray-200/60 dark:bg-gray-800',
-                'active:bg-gray-200 dark:active:bg-gray-900',
+                readOnly
+                  ? 'cursor-not-allowed'
+                  : clsx(
+                    'cursor-pointer',
+                    'active:bg-gray-200 dark:active:bg-gray-900',
+                  ),
                 'rounded-sm',
                 'border-none shadow-none',
               )}
@@ -448,7 +454,8 @@ export default function TagInput({
               {defaultIconSelected}
               {renderTag(labelForValueOverride?.(option) || option)}
             </button>)}
-        <input
+        {/* Omit text entry when read-only tags are present (keeps 1 line) */}
+        {!(readOnly && selectedOptions.length > 0) && <input
           id={id}
           ref={inputRef}
           type="text"
@@ -477,7 +484,7 @@ export default function TagInput({
           }
           onFocus={() => {
             setSelectedOptionIndex(undefined);
-            if (shouldRevealRawText && !isRevealingRawText) {
+            if (shouldRevealRawText && !isRevealingRawText && !readOnly) {
               const next = rawTextOnFocusRef.current ?? value;
               rawTextOnFocusRef.current = null;
               ignoreRawTextCommitRef.current = false;
@@ -486,14 +493,14 @@ export default function TagInput({
             }
           }}
           onClick={() => {
-            if (!shouldShowMenu) { setShouldShowMenu(true); }
+            if (!shouldShowMenu && !readOnly) { setShouldShowMenu(true); }
           }}
           aria-autocomplete="list"
           aria-expanded={shouldShowMenu}
           aria-haspopup="true"
           aria-controls={shouldShowMenu ? ARIA_ID_TAG_OPTIONS : undefined}
           role="combobox"
-        />
+        />}
         <input
           type="hidden"
           name={name}

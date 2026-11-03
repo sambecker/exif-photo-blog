@@ -3,8 +3,11 @@ import ImageCaption from '../image-response/components/ImageCaption';
 import ImagePhotoGrid from '../image-response/components/ImagePhotoGrid';
 import ImageContainer from '../image-response/components/ImageContainer';
 import type { NextImageSize } from '@/platforms/next-image';
-import { formatTag } from '@/tag';
-import { generateRecipeLines, getRecipePropsFromPhotos } from '@/recipe';
+import {
+  formatRecipe,
+  generateRecipeLines,
+  getRecipePropsFromPhotos,
+} from '@/recipe';
 import PhotoFilmIcon from '@/film/PhotoFilmIcon';
 import {
   isStringFujifilmSimulationLabel,
@@ -67,7 +70,7 @@ export default function RecipeImageResponse({
             marginRight: height * .02,
           }}
         />,
-        title: formatTag(recipe).toLocaleUpperCase(),
+        title: formatRecipe(recipe).toLocaleUpperCase(),
       }}>
         {data &&
           <div

@@ -60,7 +60,9 @@ import { convertPlaceToAutocomplete, Place } from '@/place';
 import ErrorNote from '@/components/ErrorNote';
 import { convertRecipesForForm, Recipes } from '@/recipe';
 import deepEqual from 'fast-deep-equal/es6/react';
-import ApplyRecipeTitleGloballyCheckbox from './ApplyRecipesGloballyCheckbox';
+import RecipeTitleHashCheckbox from './RecipeTitleHashCheckbox';
+import RecipeTitleRenameWarning from './RecipeTitleRenameWarning';
+import { canCreateRecipeHashKey, isRecipeHashKey } from '@/recipe/key';
 import FieldsetRecipeData from './FieldsetRecipeData';
 import { convertFilmsForForm, Films } from '@/film';
 import {
@@ -476,15 +478,6 @@ export default function PhotoForm({
     }
   };
 
-  const onMatchResults = useCallback((didFindMatchingPhotos: boolean) => {
-    setFormData(data => ({
-      ...data,
-      applyRecipeTitleGlobally: didFindMatchingPhotos
-        ? 'true'
-        : 'false',
-    }));
-  }, [setFormData]);
-
   // Recipe data copied in from a chosen title can be replaced by subsequent
   // titles, and is never used to search for photos needing that title
   const [copiedRecipeData, setCopiedRecipeData] = useState<string>();
@@ -844,18 +837,28 @@ export default function PhotoForm({
                             <PhotoFilmIcon />
                           </span>}
                         />;
-                      case 'applyRecipeTitleGlobally':
-                        return <ApplyRecipeTitleGloballyCheckbox
+                      case 'recipeTitle':
+                        return <FieldsetWithStatus
                           key={key}
                           {...fieldProps}
-                          photoId={initialPhotoForm.id}
-                          recipeTitle={formData.recipeTitle}
-                          hasRecipeTitleChanged={
-                            changedFormKeys.includes('recipeTitle')}
-                          recipeData={formData.recipeData}
-                          film={formData.film}
-                          didCopyRecipeData={didCopyRecipeData}
-                          onMatchResults={onMatchResults}
+                          readOnly={fieldProps.readOnly ||
+                            isRecipeHashKey(formData.recipeTitle)}
+                          labelAccessory={(
+                            canCreateRecipeHashKey(formData.recipeData) ||
+                            isRecipeHashKey(formData.recipeTitle)
+                          ) && <RecipeTitleHashCheckbox
+                            recipeTitle={formData.recipeTitle}
+                            recipeData={formData.recipeData}
+                            onChange={recipeTitle => setFormData(data =>
+                              ({ ...data, recipeTitle }))}
+                          />}
+                          footer={<RecipeTitleRenameWarning
+                            photoId={initialPhotoForm.id}
+                            previousTitle={initialPhotoForm.recipeTitle}
+                            recipeTitle={formData.recipeTitle}
+                            recipeData={formData.recipeData}
+                            film={formData.film}
+                          />}
                         />;
                       case 'recipeData':
                         return <FieldsetRecipeData
