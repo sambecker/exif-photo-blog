@@ -6,13 +6,15 @@ import {
   getCustomRecipeTitleForData,
   renameRecipeForMatchingPhotos,
 } from '@/photo/query';
-import { createFujifilmRecipeKey, createRecipeHashKey } from '@/recipe/server';
+import {
+  createFujifilmRecipeKey,
+  createRecipeHashKey,
+  createRecipeIdentityKey,
+} from '@/recipe/server';
 import {
   canCreateRecipeHashKey,
-  isFujifilmRecipeKey,
   isRecipeHashKey,
   RECIPE_HASH_KEY_PATTERN_DB,
-  recipeTitleForDisplay,
 } from '@/recipe/key';
 import { formatRecipe } from '@/recipe';
 import { createOmRecipeData } from '@/recipe/serialization';
@@ -64,8 +66,8 @@ const omForm = {
 
 beforeEach(() => jest.clearAllMocks());
 
-describe('recipe hash keys', () => {
-  it('ignores key order and camera tags in Fujifilm recipe data', () => {
+describe('recipe keys', () => {
+  it('ignores key order and camera tags in Fujifilm recipe identity', () => {
     const reordered = JSON.parse(JSON.stringify({
       highlight: -1,
       grainEffect: { size: 'off', roughness: 'off' },
@@ -75,7 +77,7 @@ describe('recipe hash keys', () => {
     }));
     expect(createFujifilmRecipeKey(reordered, 'classic-chrome'))
       .toBe(fujiKey);
-    expect(createRecipeHashKey(fujiData, 'classic-chrome')).toBe(fujiKey);
+    expect(createRecipeIdentityKey(fujiData, 'classic-chrome')).toBe(fujiKey);
   });
 
   it('distinguishes Fujifilm recipes by film and settings', () => {
@@ -84,46 +86,36 @@ describe('recipe hash keys', () => {
       'classic-chrome')).not.toBe(fujiKey);
   });
 
-  it('requires film for Fujifilm keys but not OM keys', () => {
+  it('only generates titles for OM recipes', () => {
     expect(createRecipeHashKey(fujiData)).toBeUndefined();
     expect(canCreateRecipeHashKey(fujiData)).toBe(false);
-    expect(canCreateRecipeHashKey(fujiData, 'classic-chrome')).toBe(true);
     expect(createRecipeHashKey(omData)).toBe(omKey);
     expect(canCreateRecipeHashKey(omData)).toBe(true);
+    expect(createRecipeIdentityKey(omData)).toBe(omKey);
     expect(createRecipeHashKey(JSON.stringify(createOmRecipeData())))
       .toBeUndefined();
   });
 
   it('recognizes generated keys in JS and Postgres patterns', () => {
     const pattern = new RegExp(RECIPE_HASH_KEY_PATTERN_DB);
-    for (const key of [fujiKey, omKey]) {
-      expect(isRecipeHashKey(key)).toBe(true);
-      expect(pattern.test(key)).toBe(true);
-    }
-    for (const key of ['street-color', 'fujifilm-v1-acros', `${fujiKey}-2`]) {
+    expect(isRecipeHashKey(omKey)).toBe(true);
+    expect(pattern.test(omKey)).toBe(true);
+    for (const key of ['street-color', fujiKey, `${omKey}-2`]) {
       expect(isRecipeHashKey(key)).toBe(false);
       expect(pattern.test(key)).toBe(false);
     }
-    expect(isFujifilmRecipeKey(omKey)).toBe(false);
   });
 
   it('labels generated keys generically', () => {
-    expect(formatRecipe(fujiKey)).toBe('Classic Chrome Recipe');
     expect(formatRecipe(omKey)).toBe('Color Recipe');
     expect(formatRecipe('street-color')).toBe('Street Color');
-  });
-
-  it('displays generated Fujifilm titles as untitled', () => {
-    expect(recipeTitleForDisplay(fujiKey)).toBeUndefined();
-    expect(recipeTitleForDisplay(omKey)).toBe(omKey);
-    expect(recipeTitleForDisplay('street-color')).toBe('street-color');
   });
 });
 
 describe('recipe titles on save', () => {
   it.each([
-    ['Fujifilm', fujiForm, fujiKey],
-    ['OM', omForm, omKey],
+    ['Fujifilm', fujiForm],
+    ['OM', omForm],
   ])('prefers a custom match for untitled %s recipes', async (_, form) => {
     jest.mocked(getCustomRecipeTitleForData)
       .mockResolvedValueOnce('street-color');
@@ -133,16 +125,16 @@ describe('recipe titles on save', () => {
   });
 
   it.each([
-    ['Fujifilm', fujiForm, fujiKey],
+    ['Fujifilm', fujiForm, undefined],
     ['OM', omForm, omKey],
-  ])('falls back to a hash for untitled %s recipes', async (_, form, key) => {
+  ])('falls back to %s default titles', async (_, form, key) => {
     const photo =
       await convertFormDataToPhotoDbInsertAndLookupRecipeTitle(form);
     expect(photo.recipeTitle).toBe(key);
   });
 
   it.each([
-    ['Fujifilm', fujiForm, fujiKey],
+    ['Fujifilm', fujiForm, undefined],
     ['OM', omForm, omKey],
   ])('derives submitted %s hash titles from data', async (_, form, key) => {
     const forged = `om-v1-mono-${'b'.repeat(64)}`;

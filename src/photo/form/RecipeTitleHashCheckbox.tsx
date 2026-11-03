@@ -8,12 +8,10 @@ import { getRecipeHashKeyAction } from '../actions';
 export default function RecipeTitleHashCheckbox({
   recipeTitle,
   recipeData,
-  film,
   onChange,
 }: {
   recipeTitle?: string
   recipeData?: string
-  film?: string
   onChange: (recipeTitle: string) => void
 }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -24,7 +22,7 @@ export default function RecipeTitleHashCheckbox({
 
   const isHash = isRecipeHashKey(recipeTitle);
   const isDisabled =
-    isLoading || (!isHash && !canCreateRecipeHashKey(recipeData, film));
+    isLoading || (!isHash && !canCreateRecipeHashKey(recipeData));
 
   return (
     <label htmlFor={id} className={clsx(
@@ -41,7 +39,7 @@ export default function RecipeTitleHashCheckbox({
           if (e.target.checked) {
             customTitle.current = recipeTitle;
             setIsLoading(true);
-            getRecipeHashKeyAction(recipeData, film)
+            getRecipeHashKeyAction(recipeData)
               .then(key => { if (key) { onChange(key); } })
               .finally(() => setIsLoading(false));
           } else {

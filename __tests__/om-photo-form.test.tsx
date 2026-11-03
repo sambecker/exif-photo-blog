@@ -59,22 +59,35 @@ it.each([recipe, undefined])(
     expect(submitted.get('recipeTitle')).toBe(title);
     const recipeData = form.querySelector('textarea[name="recipeData"]');
     expect(recipeData).toHaveProperty('readOnly', false);
-    const hash = screen.getByLabelText('auto-title');
-    expect(hash).toHaveProperty('checked', Boolean(value));
     if (value) {
+      const hash = screen.getByLabelText('auto-title');
+      expect(hash).toHaveProperty('checked', true);
+      expect(hash).toHaveProperty('disabled', false);
       // Auto-titles render as a single, non-interactive tag
       expect(form.querySelector('#recipeTitle')).toBeNull();
       expect(screen.getByRole('button', { name: `Remove tag "${title}"` }))
         .toHaveProperty('disabled', true);
     } else {
+      expect(screen.queryByLabelText('auto-title')).toBeNull();
       expect(form.querySelector('#recipeTitle'))
         .toHaveProperty('readOnly', false);
     }
-    expect(hash).toHaveProperty('disabled', !value);
     expect(form.querySelector('input[name="applyRecipeTitleGlobally"]'))
       .toBeNull();
   },
 );
+
+it('omits the hash checkbox for Fujifilm recipes', () => {
+  render(<PhotoForm type="edit" initialPhotoForm={{
+    id: 'fujiphoto', url: 'https://example.test/photo.jpg', extension: 'jpg',
+    make: 'FUJIFILM', model: 'X100VI', aspectRatio: '1.5',
+    film: 'classic-chrome', recipeData: JSON.stringify({ highlight: -1 }),
+    takenAt: '2026-10-29T12:00:00Z', takenAtNaive: '2026-10-29 12:00:00',
+  }} albums={[]} uniqueTags={[]} uniqueRecipes={[]} uniqueFilms={[]} />);
+  expect(screen.queryByLabelText('auto-title')).toBeNull();
+  expect(document.querySelector('#recipeTitle'))
+    .toHaveProperty('readOnly', false);
+});
 
 it('leaves the hash checkbox unchecked for custom titles', () => {
   const data = JSON.stringify(createOmRecipeData(recipe));

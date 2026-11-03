@@ -529,10 +529,10 @@ Thank you ❤️ translators: [@sconetto](https://github.com/sconetto) (`pt-br`,
 
 > Upload camera-original JPEGs taken with a Color or Monochrome Profile. The photo's "Color recipe" or "Mono recipe" link opens a gallery of photos with matching settings, and the adjacent + button shows the settings themselves. Ordinary picture modes and Art Filters don't produce recipes, and profile slot numbers, exposure compensation, Noise Filter, and Gradation don't affect matching. As with Fujifilm, editing an image on your phone before uploading can strip the data recipes depend on.
 >
-> Photos uploaded before recipe support are flagged in `/admin/photos` until they're synced once.
+> OM SYSTEM and Olympus photos uploaded before recipe support are flagged in `/admin/photos` until they're synced once.
 
 #### How are recipes titled?
-> When a Fujifilm or OM photo is imported, it uses the custom title already given to photos with matching recipe settings (and film simulation, for Fujifilm). Otherwise, it gets a generated title based on a hash of its settings, displayed as e.g. "Classic Chrome recipe" or "Color recipe." Recipe titles and data can be edited on any photo, and the "auto-title" checkbox next to the recipe title label switches back to the generated format. Changing a recipe title renames it on every photo that shares it, and the form shows how many photos will be affected before saving.
+> When a Fujifilm or OM photo is imported, it uses the custom title already given to photos with matching recipe settings (and film simulation, for Fujifilm). Otherwise, Fujifilm recipes stay untitled, and their settings can be viewed from the film simulation's + button. OM recipes are labeled "Color recipe" or "Mono recipe," and the "auto-title" checkbox next to an OM photo's recipe title switches back to this label after a custom title has been set. Changing a recipe title on a photo renames it on every photo that shares it, and the form shows how many photos will be affected before saving.
 
 #### My Fujifilm recipes are missing/displaying incorrect data. What should I do?
 > If you don't see a recipe, first try syncing your photo from the ••• menu, or from `/admin/photos`. If the data looks incorrect, open an issue with the file in question attached in order for it to be investigated. Fujifilm file specifications have evolved over time and recipe parsing may need to be adjusted based on camera model/vintage.

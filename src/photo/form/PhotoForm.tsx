@@ -62,7 +62,7 @@ import { convertRecipesForForm, Recipes } from '@/recipe';
 import deepEqual from 'fast-deep-equal/es6/react';
 import RecipeTitleHashCheckbox from './RecipeTitleHashCheckbox';
 import RecipeTitleRenameWarning from './RecipeTitleRenameWarning';
-import { isRecipeHashKey } from '@/recipe/key';
+import { canCreateRecipeHashKey, isRecipeHashKey } from '@/recipe/key';
 import FieldsetRecipeData from './FieldsetRecipeData';
 import { convertFilmsForForm, Films } from '@/film';
 import {
@@ -843,10 +843,12 @@ export default function PhotoForm({
                           {...fieldProps}
                           readOnly={fieldProps.readOnly ||
                             isRecipeHashKey(formData.recipeTitle)}
-                          labelAccessory={<RecipeTitleHashCheckbox
+                          labelAccessory={(
+                            canCreateRecipeHashKey(formData.recipeData) ||
+                            isRecipeHashKey(formData.recipeTitle)
+                          ) && <RecipeTitleHashCheckbox
                             recipeTitle={formData.recipeTitle}
                             recipeData={formData.recipeData}
-                            film={formData.film}
                             onChange={recipeTitle => setFormData(data =>
                               ({ ...data, recipeTitle }))}
                           />}

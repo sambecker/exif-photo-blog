@@ -27,15 +27,19 @@ export const createFujifilmRecipeKey = (
   return `fujifilm-v1-${parameterize(film, true)}-${hash}`;
 };
 
-export const createRecipeHashKey = (
+// Generated titles are only stored for OM recipes (Fujifilm stays untitled)
+export const createRecipeHashKey = (recipeData?: string | object) => {
+  const omRecipe = getOmRecipe(parseRecipeData(recipeData));
+  if (omRecipe) { return createOmRecipeKey(omRecipe); }
+};
+
+// Identifies recipe settings (and film, for Fujifilm) for comparison only
+export const createRecipeIdentityKey = (
   recipeData?: string | object,
   film?: string,
 ) => {
-  const data = parseRecipeData(recipeData);
-  const omRecipe = getOmRecipe(data);
-  if (omRecipe) { return createOmRecipeKey(omRecipe); }
-  const fujifilmRecipe = getFujifilmRecipe(data);
-  if (fujifilmRecipe && film) {
-    return createFujifilmRecipeKey(fujifilmRecipe, film);
-  }
+  const fujifilmRecipe = getFujifilmRecipe(parseRecipeData(recipeData));
+  return fujifilmRecipe && film
+    ? createFujifilmRecipeKey(fujifilmRecipe, film)
+    : createRecipeHashKey(recipeData);
 };

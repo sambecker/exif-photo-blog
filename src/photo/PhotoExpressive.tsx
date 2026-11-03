@@ -68,8 +68,6 @@ import useMediaQuery from '@/utility/useMediaQuery';
 import PhotoOmRecipe from '@/platforms/om-system/PhotoOmRecipe';
 import OmRecipeOverlay from '@/platforms/om-system/OmRecipeOverlay';
 import { getFujifilmRecipe, getOmRecipe } from '@/recipe/serialization';
-import { recipeTitleForDisplay } from '@/recipe/key';
-
 // Photo frame is 90% of the 3:2 matte (`md:h-[90%]` below)
 const EXPRESSIVE_PHOTO_FRAME_HEIGHT = 'md:max-h-[90%]';
 
@@ -180,7 +178,7 @@ export default function PhotoExpressive({
   const tags = sortTagsArray(photo.tags);
   const camera = cameraFromPhoto(photo);
   const lens = lensFromPhoto(photo);
-  const recipeTitle = recipeTitleForDisplay(photo.recipeTitle);
+  const { recipeTitle } = photo;
 
   const showExifContent = shouldShowExifDataForPhoto(photo);
   const showCameraContent = shouldShowCameraDataForPhoto(photo);

@@ -374,12 +374,9 @@ export const getRecipeRenameCountAction = async (
     });
   });
 
-export const getRecipeHashKeyAction = async (
-  recipeData?: string,
-  film?: string,
-) =>
+export const getRecipeHashKeyAction = async (recipeData?: string) =>
   runAuthenticatedAdminServerAction(async () =>
-    createRecipeHashKey(recipeData, film),
+    createRecipeHashKey(recipeData),
   );
 
 export const getRecipeDataForTitleAction = async (recipeTitle: string) =>
@@ -438,13 +435,13 @@ export const deletePhotoRecipeGloballyAction = async (formData: FormData) =>
   runAuthenticatedAdminServerAction(async () => {
     const recipe = formData.get('recipe') as string;
 
-    // Photos fall back to generated titles
+    // OM photos fall back to generated titles, Fujifilm photos to none
     const photos = await getPhotoRecipeFieldsForTitle(recipe);
-    for (const { id, recipe_data, film } of photos) {
-      await updateRecipeTitleForPhoto(id, createRecipeHashKey(
-        recipe_data ?? undefined,
-        film ?? undefined,
-      ));
+    for (const { id, recipe_data } of photos) {
+      await updateRecipeTitleForPhoto(
+        id,
+        createRecipeHashKey(recipe_data ?? undefined),
+      );
     }
 
     revalidatePhotosKey();

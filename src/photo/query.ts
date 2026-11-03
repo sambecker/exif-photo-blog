@@ -295,10 +295,9 @@ export const addTagsToPhotos = (tags: string[], photoIds: string[]) =>
 export const getPhotoRecipeFieldsForTitle = (recipe: string) =>
   safelyQuery(() => sql<{
     id: string
-    film: string | null
     recipe_data: object | null
   }>`
-    SELECT id, film, recipe_data FROM photos
+    SELECT id, recipe_data FROM photos
     WHERE recipe_title=${recipe}
   `.then(({ rows }) => rows), 'getPhotoRecipeFieldsForTitle');
 

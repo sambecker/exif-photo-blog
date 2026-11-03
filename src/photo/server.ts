@@ -50,7 +50,10 @@ import {
 import { createOmRecipeData, getOmRecipe, isOmRecipeData, parseRecipeData }
   from '@/recipe/serialization';
 import { isRecipeHashKey } from '@/recipe/key';
-import { createRecipeHashKey } from '@/recipe/server';
+import {
+  createRecipeHashKey,
+  createRecipeIdentityKey,
+} from '@/recipe/server';
 
 const IMAGE_WIDTH_BLUR = 200;
 const IMAGE_WIDTH_DEFAULT = 200;
@@ -200,10 +203,14 @@ export const extractImageDataFromBlobPath = async (
     : undefined;
 
   if (formDataFromExif && (recipe || didCheckOmRecipe)) {
-    formDataFromExif.recipeTitle = await getAutoRecipeTitle(
+    const recipeTitle = await getAutoRecipeTitle(
       formDataFromExif.recipeData,
       formDataFromExif.film,
-    ) ?? '';
+    );
+    // OM titles always reflect the source, Fujifilm titles only matches
+    if (recipeTitle || didCheckOmRecipe) {
+      formDataFromExif.recipeTitle = recipeTitle ?? '';
+    }
   }
 
   return {
@@ -356,7 +363,7 @@ export const getAutoRecipeTitle = async (
 ) =>
   recipeData
     ? await getCustomRecipeTitleForData(recipeData, film) ??
-      createRecipeHashKey(recipeData, film)
+      createRecipeHashKey(recipeData)
     : undefined;
 
 type RecipeFields = { recipeData?: string | object, film?: string };
@@ -368,9 +375,10 @@ export const shouldPreserveRecipeTitle = (
   next: RecipeFields,
 ) => {
   if (!title || isRecipeHashKey(title)) { return false; }
-  const previousKey = createRecipeHashKey(previous.recipeData, previous.film);
+  const previousKey =
+    createRecipeIdentityKey(previous.recipeData, previous.film);
   return previousKey !== undefined &&
-    previousKey === createRecipeHashKey(next.recipeData, next.film);
+    previousKey === createRecipeIdentityKey(next.recipeData, next.film);
 };
 
 export const convertFormDataToPhotoDbInsertAndLookupRecipeTitle =
@@ -390,7 +398,7 @@ export const convertFormDataToPhotoDbInsertAndLookupRecipeTitle =
         await getAutoRecipeTitle(photo.recipeData, photo.film);
     } else if (isRecipeHashKey(photo.recipeTitle)) {
       // Derive hash titles from data rather than trusting a submitted title
-      photo.recipeTitle = createRecipeHashKey(photo.recipeData, photo.film);
+      photo.recipeTitle = createRecipeHashKey(photo.recipeData);
     }
 
     return photo;
