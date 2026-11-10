@@ -1,4 +1,10 @@
 packages: []
+peerDependencyRules:
+  allowedVersions:
+    # eslint-config-next 16.4+ supports ESLint 10; these plugins' peer ranges lag.
+    eslint-plugin-import>eslint: '10'
+    eslint-plugin-jsx-a11y>eslint: '10'
+    eslint-plugin-react>eslint: '10'
 allowBuilds:
   '@parcel/watcher': true
   '@tailwindcss/oxide': true
