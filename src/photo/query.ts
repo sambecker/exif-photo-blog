@@ -52,6 +52,8 @@ import { Years } from '@/year';
 import { PhotoColorData } from '@/photo/color/client';
 import { safelyQuery } from '@/db/query';
 
+type PhotoDbRowWithFolderIndex = PhotoDb & { folder_index: number };
+
 export const createPhotosTable = () =>
   sql`
     CREATE TABLE IF NOT EXISTS photos (
@@ -671,6 +673,63 @@ export const getPhotos = async (options: PhotoQueryOptions = {}) =>
     // Seemingly necessary to pass `options` for expected cache behavior
     options,
   );
+
+// Fetch photos for many folders at once, returning one array per folder.
+// Each folder is a parenthesized subquery so that its own ORDER BY and
+// LIMIT stay scoped to that folder instead of leaking across the union.
+// Replaces a fan-out of one round trip per folder, which exceeds the
+// platform request timeout when a page has hundreds of folders
+export const getPhotosForFolders = async (
+  folderOptions: PhotoQueryOptions[],
+) => safelyQuery(
+  async () => {
+    if (folderOptions.length === 0) { return []; }
+
+    const values = [] as Primitive[];
+
+    const subqueries = folderOptions.map((options, folderIndex) => {
+      const {
+        wheres,
+        wheresValues,
+        lastValuesIndex,
+      } = getWheresFromOptions(options, values.length + 1);
+      values.push(...wheresValues);
+
+      const {
+        limitAndOffset,
+        limitAndOffsetValues,
+      } = getLimitAndOffsetFromOptions(options, lastValuesIndex);
+      values.push(...limitAndOffsetValues);
+
+      return [
+        `(SELECT p.*, ${folderIndex} AS folder_index FROM photos p`,
+        getJoinsFromOptions(options),
+        wheres,
+        getOrderByFromOptions(options),
+        limitAndOffset,
+        ')',
+      ].filter(Boolean).join(' ');
+    });
+
+    const { rows } = await query<PhotoDbRowWithFolderIndex>(
+      subqueries.join(' UNION ALL '),
+      values,
+    );
+
+    const folders = folderOptions.map(() => [] as Photo[]);
+
+    rows.forEach(row => {
+      // index 0 is falsy, so check for list membership
+      if (folders[row.folder_index]) {
+        folders[row.folder_index].push(parsePhotoFromDb(row));
+      }
+    });
+
+    return folders;
+  },
+  'getPhotosForFolders',
+  folderOptions,
+);
 
 export const getPhotoIds = async (options: PhotoQueryOptions = {}) =>
   safelyQuery(
