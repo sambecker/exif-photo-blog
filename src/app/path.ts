@@ -17,6 +17,8 @@ export const PATH_ADMIN                 = '/admin';
 export const PATH_API                   = '/api';
 export const PATH_SIGN_IN               = '/sign-in';
 export const PATH_OG                    = '/og';
+export const PATH_HOME_IMAGE            = '/home-image';
+export const PATH_TEMPLATE_IMAGE        = '/template-image';
 
 // Core: inferred
 export const PATH_GRID_INFERRED = GRID_HOMEPAGE_ENABLED
@@ -296,7 +298,7 @@ export const ABSOLUTE_PATH_RSS_XML =
   `${getBaseUrl()}${PATH_RSS_XML}`;
 
 export const ABSOLUTE_PATH_HOME_IMAGE =
-  `${getBaseUrl()}/home-image`;
+  `${getBaseUrl()}${PATH_HOME_IMAGE}`;
 
 export const absolutePathForPhoto = (
   params: PhotoPathParams,

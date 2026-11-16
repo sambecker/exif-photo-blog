@@ -26,6 +26,7 @@ export default function PhotoAvatar({
           alt={altTextForPhoto(photo)}
           blurDataURL={photo.blurData}
           aspectRatio={photo.aspectRatio}
+          sizes="48px"
         />
         : placeholder && <span className={clsx(
           'w-full h-full',
