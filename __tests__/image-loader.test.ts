@@ -1,7 +1,10 @@
 /**
  * @jest-environment node
  */
-import imageLoader, { originalImageLoader } from '@/utility/image-loader';
+import imageLoader, {
+  getOptimizedVariantUrl,
+  originalImageLoader,
+} from '@/utility/image-loader';
 
 const ORIGINAL =
   'https://bucket.s3.sa-east-1.amazonaws.com/photo-rFgmziSu3D4Qh6qT.jpg';
@@ -20,12 +23,12 @@ describe('imageLoader', () => {
       .toBe(`${ORIGINAL.replace('.jpg', '')}-lg.jpg`);
   });
 
-  it('falls back to the default optimizer for widths above the largest variant',
-    () => {
-      const url = imageLoader({ src: ORIGINAL, width: 1200 });
-      expect(url).toContain('/_next/image?url=');
-      expect(url).toContain('w=1200');
-    });
+  it('caps widths above the largest variant at -lg', () => {
+    expect(imageLoader({ src: ORIGINAL, width: 1200 }))
+      .toBe(`${ORIGINAL.replace('.jpg', '')}-lg.jpg`);
+    expect(imageLoader({ src: ORIGINAL, width: 2048 }))
+      .toBe(`${ORIGINAL.replace('.jpg', '')}-lg.jpg`);
+  });
 
   it('leaves non-photo sources to the default optimizer', () => {
     const qr =
@@ -43,5 +46,22 @@ describe('imageLoader', () => {
   it('reproduces the default optimizer URL as the fallback loader', () => {
     expect(originalImageLoader({ src: ORIGINAL, width: 640, quality: 75 }))
       .toBe(`/_next/image?url=${encodeURIComponent(ORIGINAL)}&w=640&q=75`);
+  });
+});
+
+describe('getOptimizedVariantUrl', () => {
+  it('returns the variant URL for photo sources', () => {
+    expect(getOptimizedVariantUrl(ORIGINAL, 300))
+      .toBe(`${ORIGINAL.replace('.jpg', '')}-md.jpg`);
+    expect(getOptimizedVariantUrl(ORIGINAL, 2048))
+      .toBe(`${ORIGINAL.replace('.jpg', '')}-lg.jpg`);
+  });
+
+  it('returns undefined for non-photo and data sources', () => {
+    expect(getOptimizedVariantUrl('data:image/svg+xml,abc', 640))
+      .toBeUndefined();
+    expect(
+      getOptimizedVariantUrl('https://api.qrserver.com/v1/x', 640),
+    ).toBeUndefined();
   });
 });

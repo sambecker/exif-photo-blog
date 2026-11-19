@@ -18,7 +18,11 @@ export const generateFeedMedia = (
   photo: Photo,
   size: NextImageSize,
 ): FeedMedia => ({
-  url: getOptimizedPhotoUrl({ imageUrl: photo.url, size }),
+  url: getOptimizedPhotoUrl({
+    imageUrl: photo.url,
+    size,
+    useNextImage: false,
+  }),
   width: size,
   height: Math.round(size / photo.aspectRatio),
 });
