@@ -22,6 +22,7 @@ import {
 } from '@/utility/string';
 import { requestScrollToTop } from '@/utility/useScrollPositionMemory';
 import { getNextImageUrlForRequest } from '@/platforms/next-image';
+import { getOptimizedVariantUrl } from '@/utility/image-loader';
 
 const FOLDER_WIDTH = 143;
 const FOLDER_HEIGHT = 93;
@@ -209,15 +210,17 @@ function FolderPhotoImage({
   size?: 'small' | 'medium' | 'large'
 }) {
   // Raw <img> avoids next/image client JS + decode() overhead across
-  // hundreds of tiny folder tiles; still hit the optimizer at w=200
-  const src = getNextImageUrlForRequest({
-    imageUrl: photo.url,
-    size: size === 'large'
-      ? 640
-      : size === 'medium'
-        ? 200
-        : 100,
-  });
+  // hundreds of tiny folder tiles; serve the pre-generated variant directly
+  // and fall back to the optimizer only if that variant is missing.
+  const width = size === 'large'
+    ? 640
+    : size === 'medium'
+      ? 200
+      : 100;
+  const optimizedSrc = getOptimizedVariantUrl(photo.url, width);
+  const fallbackSrc =
+    getNextImageUrlForRequest({ imageUrl: photo.url, size: width });
+  const src = optimizedSrc ?? fallbackSrc;
   return (
     <div className={clsx('flex relative', className)}>
       <img
@@ -229,6 +232,12 @@ function FolderPhotoImage({
         )}
         loading="lazy"
         decoding="async"
+        onError={event => {
+          const image = event.currentTarget;
+          if (optimizedSrc && image.src !== fallbackSrc) {
+            image.src = fallbackSrc;
+          }
+        }}
       />
     </div>
   );

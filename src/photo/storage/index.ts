@@ -40,8 +40,6 @@ const OPTIMIZED_FILE_SIZES = [{
 
 type OptimizedSuffix = (typeof OPTIMIZED_FILE_SIZES)[number]['suffix'];
 
-const OPTIMIZED_SUFFIX_DEFAULT: OptimizedSuffix = 'md';
-
 const getOptimizedFileName = ({
   fileNameBase,
   suffix,
@@ -98,8 +96,8 @@ export const uploadPhotoFromClient = (
   uploadFileFromClient(file, PREFIX_PHOTO, extension, true, options);
 
 const getSuffixFromNextImageSize = (nextSize: NextImageSize) =>
-  OPTIMIZED_FILE_SIZES.find(({ size }) => size === nextSize)?.suffix
-    ?? OPTIMIZED_SUFFIX_DEFAULT;
+  OPTIMIZED_FILE_SIZES.find(({ size }) => nextSize <= size)?.suffix
+    ?? OPTIMIZED_FILE_SIZES[OPTIMIZED_FILE_SIZES.length - 1].suffix;
 
 export const getOptimizedPhotoUrl = (
   args: Parameters<typeof getNextImageUrlForRequest>[0] & {

@@ -15,8 +15,8 @@ const OPTIMIZED_SIZES = [
   { suffix: 'lg', width: 1080 },
 ] as const;
 
-const MAX_OPTIMIZED_WIDTH =
-  OPTIMIZED_SIZES[OPTIMIZED_SIZES.length - 1].width;
+const LARGEST_SUFFIX =
+  OPTIMIZED_SIZES[OPTIMIZED_SIZES.length - 1].suffix;
 
 // Matches storage photo URLs, e.g.
 //   .../photo-rFgmziSu3D4Qh6qT.jpg        (original)
@@ -39,21 +39,19 @@ const getDefaultImageUrl = (
   return `/_next/image?url=${url}&w=${width}&q=${quality || 75}`;
 };
 
-export default function imageLoader({
-  src,
-  width,
-  quality,
-}: ImageLoaderProps) {
+// Resolve the pre-generated variant URL for a photo source, or return
+// `undefined` for non-photo sources (data URLs, QR codes, etc.).
+export function getOptimizedVariantUrl(
+  src: string,
+  width: number,
+): string | undefined {
   if (typeof src !== 'string' || src.startsWith('data:')) {
-    return src;
+    return undefined;
   }
 
   const match = src.match(PHOTO_URL_PATTERN);
-
-  // Only photo storage URLs are eligible for a pre-generated variant;
-  // everything else (and very large widths) keeps the on-demand optimizer.
-  if (!match || width > MAX_OPTIMIZED_WIDTH) {
-    return getDefaultImageUrl(src, width, quality);
+  if (!match) {
+    return undefined;
   }
 
   const urlBase = match[1];
@@ -65,12 +63,27 @@ export default function imageLoader({
     return src;
   }
 
-  const suffix = OPTIMIZED_SIZES.find(({ width: w }) => width <= w)?.suffix;
-  if (!suffix) {
-    return getDefaultImageUrl(src, width, quality);
-  }
+  // Smallest variant that covers the requested width; widths beyond what we
+  // pre-generate (e.g. full-frame retina) cap at the largest variant rather
+  // than falling back to the on-demand optimizer, which would re-download
+  // the full-resolution original.
+  const suffix =
+    OPTIMIZED_SIZES.find(({ width: w }) => width <= w)?.suffix
+    ?? LARGEST_SUFFIX;
 
   return `${urlBase}/${fileNameBase}-${suffix}.${extension}`;
+}
+
+export default function imageLoader({
+  src,
+  width,
+  quality,
+}: ImageLoaderProps) {
+  if (typeof src !== 'string' || src.startsWith('data:')) {
+    return src;
+  }
+  return getOptimizedVariantUrl(src, width)
+    ?? getDefaultImageUrl(src, width, quality);
 }
 
 // Reproduces the default `/_next/image` optimizer URL. Used to re-try the
