@@ -5,6 +5,7 @@ import { BLUR_ENABLED } from '@/app/config';
 import { useAppState } from '@/app/AppState';
 import { clsx }  from 'clsx/lite';
 import Image, { ImageProps } from 'next/image';
+import { originalImageLoader } from '@/utility/image-loader';
 import {
   ComponentProps,
   RefObject,
@@ -107,6 +108,8 @@ function ImageWithFallbackForSrc({
   const [isPainted, setIsPainted] = useState(false);
   const [shouldFade, setShouldFade] = useState(false);
   const [didError, setDidError] = useState(false);
+  // Tracks whether we already retried the original via the default optimizer
+  const [didFallback, setDidFallback] = useState(false);
 
   // Always fade on first app load, after server-rendered fallbacks
   const [isFirstAppLoad] = useState(!hasLoadedWithAnimations);
@@ -190,7 +193,15 @@ function ImageWithFallbackForSrc({
     }
   }, [isRevealed, removeFallbackOncePainted]);
 
-  const onError = useCallback(() => setDidError(true), []);
+  const onError = useCallback(() => {
+    // A pre-generated optimized variant may be missing for a photo. Retry
+    // once against the original via the default optimizer before giving up.
+    if (didFallback) {
+      setDidError(true);
+    } else {
+      setDidFallback(true);
+    }
+  }, [didFallback]);
 
   const getBlurClass = () => {
     switch (blurCompatibilityLevel) {
@@ -290,6 +301,7 @@ function ImageWithFallbackForSrc({
       <Image ref={setRefs} {...{
         ...props,
         priority,
+        loader: didFallback ? originalImageLoader : undefined,
         className: clsx(
           classNameImage,
           'relative',
