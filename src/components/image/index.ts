@@ -3,8 +3,8 @@ import {
   getNextImageUrlForRequest,
   NextImageSize,
 } from '@/platforms/next-image';
-import { resolveOptimizedPhotoUrlForSize } from '@/photo/storage';
-import ImageWithFallback from './ImageWithFallback';
+import { resolveOptimizedPhotoUrlForSize } from '@/photo/storage/optimized';
+import type ImageWithFallback from './ImageWithFallback';
 
 // Height determined by intrinsic photo aspect ratio
 export const IMAGE_WIDTH_SMALL = 50;

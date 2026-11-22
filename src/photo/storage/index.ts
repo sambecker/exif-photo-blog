@@ -12,55 +12,21 @@ import {
 } from '@/platforms/storage';
 import { Photo } from '..';
 import { fetchBase64ImageFromUrl } from '@/utility/image';
+import {
+  getOptimizedFileName,
+  getOptimizedUrl,
+  OPTIMIZED_FILE_SIZES,
+  OptimizedSuffix,
+  PREFIX_PHOTO,
+} from './optimized';
 
-const PREFIX_PHOTO = 'photo';
+export { resolveOptimizedPhotoUrlForSize } from './optimized';
+
 const PREFIX_UPLOAD = 'upload';
 
 const EXTENSION_DEFAULT = 'jpg';
-const EXTENSION_OPTIMIZED = 'jpg';
-
-// For the time being, make compatible with `next/image` sizes
-const OPTIMIZED_FILE_SIZES = [{
-  suffix: 'sm',
-  size: 200,
-  quality: 90,
-}, {
-  suffix: 'md',
-  size: 640,
-  quality: 90,
-}, {
-  suffix: 'lg',
-  size: 1080,
-  quality: 80,
-}] as const satisfies {
-  suffix: string
-  size: NextImageSize
-  quality: number
-}[];
-
-type OptimizedSuffix = (typeof OPTIMIZED_FILE_SIZES)[number]['suffix'];
 
 const OPTIMIZED_SUFFIX_DEFAULT: OptimizedSuffix = 'md';
-
-const getOptimizedFileName = ({
-  fileNameBase,
-  suffix,
-}: {
-  fileNameBase: string
-  suffix: OptimizedSuffix
-}) =>
-  `${fileNameBase}-${suffix}.${EXTENSION_OPTIMIZED}`;
-
-const getOptimizedUrl =({
-  urlBase,
-  fileNameBase,
-  suffix,
-}: {
-  urlBase: string
-  fileNameBase: string
-  suffix: OptimizedSuffix
-}) =>
-  `${urlBase}/${getOptimizedFileName({ fileNameBase, suffix })}`;
 
 export const getOptimizedPhotoFileMeta = (fileNameBase: string) =>
   OPTIMIZED_FILE_SIZES.map(({ suffix, ...rest }) => ({
@@ -131,27 +97,6 @@ export const getOptimizedPhotoUrlForSuffix = (
 ) => {
   const { urlBase, fileNameBase } = getFileNamePartsFromStorageUrl(url);
   return getOptimizedUrl({ urlBase, fileNameBase, suffix });
-};
-
-const MAX_OPTIMIZED_THUMBNAIL_SIZE = 640;
-
-export const resolveOptimizedPhotoUrlForSize = (
-  url: string,
-  maxWidth: number,
-): string | undefined => {
-  if (!(maxWidth > 0) || maxWidth > MAX_OPTIMIZED_THUMBNAIL_SIZE) {
-    return undefined;
-  }
-  const match = OPTIMIZED_FILE_SIZES.find(({ size }) => size >= maxWidth);
-  if (!match) { return undefined; }
-  const { urlBase, fileNameBase } = getFileNamePartsFromStorageUrl(url);
-  if (
-    urlBase &&
-    fileNameBase.startsWith(`${PREFIX_PHOTO}-`) &&
-    !OPTIMIZED_FILE_SIZES.some(s => fileNameBase.endsWith(`-${s.suffix}`))
-  ) {
-    return getOptimizedUrl({ urlBase, fileNameBase, suffix: match.suffix });
-  }
 };
 
 const getTestOptimizedPhotoUrl = (url: string) =>

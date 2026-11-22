@@ -5,7 +5,7 @@ import { BLUR_ENABLED } from '@/app/config';
 import { useAppState } from '@/app/AppState';
 import { clsx }  from 'clsx/lite';
 import Image, { ImageProps } from 'next/image';
-import { resolveOptimizedPhotoUrlForSize } from '@/photo/storage';
+import { resolveOptimizedPhotoUrlForSize } from '@/photo/storage/optimized';
 import { isImageOrientationMismatched } from '.';
 import {
   ComponentProps,
@@ -144,6 +144,10 @@ function ImageWithFallbackForSrc({
       mountedAt.current = performance.now();
     }
     const image = ref.current;
+    // After swapping src, the element still reports the previous
+    // (rejected) image as complete until the new request starts,
+    // so defer revealing the fallback to onLoad
+    if (didFallback) { return; }
     if (!isFirstAppLoad && image?.complete && image.naturalWidth > 0) {
       if (
         canFallback &&
@@ -158,6 +162,7 @@ function ImageWithFallbackForSrc({
     }
   }, [
     isFirstAppLoad,
+    didFallback,
     canFallback,
     expectedAspectRatio,
     removeFallbackOncePainted,
