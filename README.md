@@ -239,6 +239,13 @@ Create Upstash Redis store from storage tab of Vercel dashboard and link to your
     - `all`
     - `none`
 - `NEXT_PUBLIC_SITE_FEEDS = 1` enables feeds at `/feed.json` and `/rss.xml`
+- `BLOCK_AI_CRAWLERS`
+  - Configures AI crawler rules in `/robots.txt`
+  - Accepted values:
+    - `ALL`: blocks known AI crawlers from every page
+    - `SOME` (default): blocks AI training crawlers, allows AI search crawlers on pages but not generated images
+    - `NONE`: allows all AI crawling
+  - Admin, API, and internal image paths are disallowed for all crawlers unless set to `NONE`
 
 ### Scripts & Analytics
 - Web Analytics

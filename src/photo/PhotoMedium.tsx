@@ -24,7 +24,6 @@ export default function PhotoMedium({
   className,
   onVisible,
   debugColor,
-  sizes,
   ...categories
 }: {
   photo: Photo
@@ -34,7 +33,6 @@ export default function PhotoMedium({
   className?: string
   onVisible?: () => void
   debugColor?: boolean
-  sizes?: string
 } & PhotoSetCategory) {
   const ref = useRef<HTMLAnchorElement>(null);
 
@@ -82,7 +80,6 @@ export default function PhotoMedium({
             classNameImage="object-cover w-full h-full"
             alt={altTextForPhoto(photo)}
             loading={priority ? 'eager' : undefined}
-            sizes={sizes}
           />
         </div>}
     </LinkWithStatus>

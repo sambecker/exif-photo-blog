@@ -156,6 +156,8 @@ export default function AdminAppConfigurationClient({
   hasSocialKeys,
   socialKeys,
   areSiteFeedsEnabled,
+  hasBlockAiCrawlers,
+  blockAiCrawlers,
   // Scripts & Analytics
   hasPageScriptUrls,
   pageScriptUrls,
@@ -1164,6 +1166,17 @@ export default function AdminAppConfigurationClient({
             {' '}
             feeds
             {renderEnvVars(['NEXT_PUBLIC_SITE_FEEDS'])}
+          </ChecklistRow>
+          <ChecklistRow
+            title={`Block AI crawlers: ${blockAiCrawlers.toLowerCase()}`}
+            status={hasBlockAiCrawlers}
+            optional
+          >
+            Set environment variable to {'"ALL"'} to block known
+            AI crawlers from every page, {'"SOME"'} (default) to block
+            AI training crawlers and keep AI search crawlers away from
+            generated images, or {'"NONE"'} to allow all AI crawling
+            {renderEnvVars(['BLOCK_AI_CRAWLERS'])}
           </ChecklistRow>
         </>;
       case 'Scripts & Analytics':

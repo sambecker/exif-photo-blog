@@ -446,6 +446,13 @@ export const SOCIAL_NETWORKS = parseSocialKeysFromString(
 );
 export const SITE_FEEDS_ENABLED =
   process.env.NEXT_PUBLIC_SITE_FEEDS === '1';
+export const BLOCK_AI_CRAWLERS: 'ALL' | 'SOME' | 'NONE' = (() => {
+  switch ((process.env.BLOCK_AI_CRAWLERS ?? '').toUpperCase()) {
+    case 'ALL': return 'ALL';
+    case 'NONE': return 'NONE';
+    default: return 'SOME';
+  }
+})();
 
 // SCRIPTS & ANALYTICS
 
@@ -604,6 +611,8 @@ export const APP_CONFIGURATION = {
   hasSocialKeys: Boolean(process.env.NEXT_PUBLIC_SOCIAL_NETWORKS),
   socialKeys: SOCIAL_NETWORKS,
   areSiteFeedsEnabled: SITE_FEEDS_ENABLED,
+  hasBlockAiCrawlers: Boolean(process.env.BLOCK_AI_CRAWLERS),
+  blockAiCrawlers: BLOCK_AI_CRAWLERS,
   // Scripts & Analytics
   hasPageScriptUrls: PAGE_SCRIPT_URLS.length > 0,
   pageScriptUrls: PAGE_SCRIPT_URLS,
