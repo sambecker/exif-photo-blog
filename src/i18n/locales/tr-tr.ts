@@ -165,9 +165,15 @@ export const TEXT: I18N = {
     syncOverwrite: 'Üzerine Yaz',
     // eslint-disable-next-line @stylistic/max-len
     syncOverwriteConfirm: 'Tüm fotoğraf alanlarının üzerine yazmak istediğinize emin misiniz? Özelleştirilmiş veriler kaybolabilir.',
-    reupload: 'Yeniden Yükle',
-    reuploadReplaceFile: 'Dosyayı değiştir',
-    reuploadReplaceFileSync: 'Dosyayı değiştir + senkronize et',
+    files: 'Dosyalar',
+    filesReupload: 'Dosyayı yeniden yükle',
+    filesReuploadSync: 'Dosyayı yeniden yükle + senkronize et',
+    filesRegenerateOptimized: 'Optimize dosyaları yeniden oluştur',
+    filesRegeneratingOptimized: 'Optimize dosyalar yeniden oluşturuluyor ...',
+    // eslint-disable-next-line @stylistic/max-len
+    filesRegenerateOptimizedSuccess: '{{count}} optimize dosya yeniden oluşturuldu',
+    // eslint-disable-next-line @stylistic/max-len
+    filesRegenerateOptimizedFailure: 'Optimize dosyalar yeniden oluşturulurken bir hata oluştu',
     reuploadReplacing: 'Dosya değiştiriliyor ...',
     reuploadReplacingSync: 'Dosya değiştiriliyor + senkronize ediliyor ...',
     reuploadSuccess: 'Fotoğraf dosyası değiştirildi',

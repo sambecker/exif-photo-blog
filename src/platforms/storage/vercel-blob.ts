@@ -42,7 +42,11 @@ export const vercelBlobPut = (
   file: Buffer,
   fileName: string,
 ): Promise<string> =>
-  put(fileName, file, { access: 'public' })
+  put(fileName, file, {
+    access: 'public',
+    // Optimized regenerations (and similar) rewrite the same filenames
+    allowOverwrite: true,
+  })
     .then(({ url }) => url);
 
 export const vercelBlobCopy = (

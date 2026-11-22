@@ -165,9 +165,14 @@ export const TEXT: I18N = {
     syncOverwrite: 'अधिलेखित करें',
     // eslint-disable-next-line @stylistic/max-len
     syncOverwriteConfirm: 'क्या आप सुनिश्चित हैं कि आप सभी फोटो फ़ील्ड को अधिलेखित करना चाहते हैं? अनुकूलित डेटा खो सकता है।',
-    reupload: 'पुनः अपलोड करें',
-    reuploadReplaceFile: 'फ़ाइल बदलें',
-    reuploadReplaceFileSync: 'फ़ाइल बदलें + सिंक करें',
+    files: 'फ़ाइलें',
+    filesReupload: 'फ़ाइल पुनः अपलोड करें',
+    filesReuploadSync: 'फ़ाइल पुनः अपलोड करें + सिंक करें',
+    filesRegenerateOptimized: 'अनुकूलित फ़ाइलें पुनः बनाएँ',
+    filesRegeneratingOptimized: 'अनुकूलित फ़ाइलें पुनः बनाई जा रही हैं ...',
+    filesRegenerateOptimizedSuccess: '{{count}} अनुकूलित फ़ाइलें पुनः बनाई गईं',
+    // eslint-disable-next-line @stylistic/max-len
+    filesRegenerateOptimizedFailure: 'अनुकूलित फ़ाइलें पुनः बनाते समय कुछ गलत हो गया',
     reuploadReplacing: 'फ़ाइल बदली जा रही है ...',
     reuploadReplacingSync: 'फ़ाइल बदली और सिंक की जा रही है ...',
     reuploadSuccess: 'फ़ोटो फ़ाइल बदल दी गई',

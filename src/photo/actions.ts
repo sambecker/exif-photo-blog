@@ -94,7 +94,10 @@ import {
   upgradeTagToAlbum,
 } from '@/album/server';
 import { addPhotoAlbumIds } from '@/album/query';
-import { getStorageUrlsForPhoto } from './storage';
+import {
+  getOptimizedPhotoFileMeta,
+  getStorageUrlsForPhoto,
+} from './storage';
 import type { VisibilityValue } from './visibility';
 import { addUpload } from './add-upload';
 import {
@@ -458,6 +461,19 @@ export const renamePhotoRecipeGloballyAction = async (formData: FormData) =>
       revalidatePhotosKey();
       revalidateRecipesKey();
       redirect(PATH_ADMIN_RECIPES);
+    }
+  });
+
+export const regenerateOptimizedFilesForPhotoAction = async (
+  photoId: string,
+) =>
+  runAuthenticatedAdminServerAction(async () => {
+    const photo = await getPhoto(photoId, true);
+    if (photo) {
+      await storeOptimizedPhotosForUrl(photo.url);
+      revalidatePhoto(photo.id);
+      const { fileNameBase } = getFileNamePartsFromStorageUrl(photo.url);
+      return getOptimizedPhotoFileMeta(fileNameBase).length;
     }
   });
 

@@ -9,6 +9,7 @@ import {
 } from '@/app/path';
 import {
   deletePhotoAction,
+  regenerateOptimizedFilesForPhotoAction,
   replacePhotoStorageAction,
   setPhotoVisibilityAction,
   storeColorDataForPhotoAction,
@@ -238,17 +239,41 @@ export default function AdminPhotoMenu({
       }],
     });
     items.push({
-      label: appText.admin.reupload,
+      label: appText.admin.files,
       icon: <IconUpload
         size={16}
         className="translate-x-[-1px] translate-y-px"
       />,
       items: [{
-        label: appText.admin.reuploadReplaceFile,
+        label: appText.admin.filesReupload,
         action: () => openReuploadPicker(false),
       }, {
-        label: appText.admin.reuploadReplaceFileSync,
+        label: appText.admin.filesReuploadSync,
         action: () => openReuploadPicker(true),
+      }, {
+        label: appText.admin.filesRegenerateOptimized,
+        action: () => {
+          const toastId = toastWaiting(
+            appText.admin.filesRegeneratingOptimized,
+          );
+          return regenerateOptimizedFilesForPhotoAction(photo.id)
+            .then(count => {
+              revalidatePhoto?.(photo.id);
+              toastSuccess(
+                appText.admin.filesRegenerateOptimizedSuccess(count ?? 0),
+                undefined,
+                toastId,
+              );
+            })
+            .catch(error => {
+              console.error(error);
+              toastWarning(
+                appText.admin.filesRegenerateOptimizedFailure,
+                undefined,
+                toastId,
+              );
+            });
+        },
       }],
     });
 

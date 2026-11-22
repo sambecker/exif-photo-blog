@@ -165,9 +165,15 @@ export const TEXT: I18N = {
     syncOverwrite: 'ওভাররাইট করুন',
     // eslint-disable-next-line @stylistic/max-len
     syncOverwriteConfirm: 'আপনি কি নিশ্চিত যে আপনি সমস্ত ফটো ফিল্ড ওভাররাইট করতে চান? কাস্টমাইজড ডেটা হারিয়ে যেতে পারে।',
-    reupload: 'পুনরায় আপলোড করুন',
-    reuploadReplaceFile: 'ফাইল প্রতিস্থাপন',
-    reuploadReplaceFileSync: 'ফাইল প্রতিস্থাপন + সিঙ্ক',
+    files: 'ফাইল',
+    filesReupload: 'ফাইল পুনরায় আপলোড',
+    filesReuploadSync: 'ফাইল পুনরায় আপলোড + সিঙ্ক',
+    filesRegenerateOptimized: 'অপ্টিমাইজড ফাইল পুনরায় তৈরি',
+    filesRegeneratingOptimized: 'অপ্টিমাইজড ফাইল পুনরায় তৈরি হচ্ছে ...',
+    // eslint-disable-next-line @stylistic/max-len
+    filesRegenerateOptimizedSuccess: '{{count}}টি অপ্টিমাইজড ফাইল পুনরায় তৈরি হয়েছে',
+    // eslint-disable-next-line @stylistic/max-len
+    filesRegenerateOptimizedFailure: 'অপ্টিমাইজড ফাইল পুনরায় তৈরিতে কিছু ভুল হয়েছে',
     reuploadReplacing: 'ফাইল প্রতিস্থাপন হচ্ছে ...',
     reuploadReplacingSync: 'ফাইল প্রতিস্থাপন + সিঙ্ক হচ্ছে ...',
     reuploadSuccess: 'ছবির ফাইল প্রতিস্থাপিত হয়েছে',

@@ -165,9 +165,15 @@ export const TEXT: I18N = {
     syncOverwrite: 'Timpa',
     // eslint-disable-next-line @stylistic/max-len
     syncOverwriteConfirm: 'Apakah Anda yakin ingin menimpa semua bidang foto? Data yang disesuaikan mungkin hilang.',
-    reupload: 'Unggah ulang',
-    reuploadReplaceFile: 'Ganti berkas',
-    reuploadReplaceFileSync: 'Ganti berkas + sinkronkan',
+    files: 'Berkas',
+    filesReupload: 'Unggah ulang berkas',
+    filesReuploadSync: 'Unggah ulang berkas + sinkronkan',
+    filesRegenerateOptimized: 'Buat ulang berkas yang dioptimalkan',
+    filesRegeneratingOptimized: 'Membuat ulang berkas yang dioptimalkan ...',
+    // eslint-disable-next-line @stylistic/max-len
+    filesRegenerateOptimizedSuccess: '{{count}} berkas yang dioptimalkan dibuat ulang',
+    // eslint-disable-next-line @stylistic/max-len
+    filesRegenerateOptimizedFailure: 'Terjadi kesalahan saat membuat ulang berkas yang dioptimalkan',
     reuploadReplacing: 'Mengganti berkas ...',
     reuploadReplacingSync: 'Mengganti berkas + menyinkronkan ...',
     reuploadSuccess: 'Berkas foto diganti',

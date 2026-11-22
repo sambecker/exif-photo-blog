@@ -165,9 +165,14 @@ export const TEXT: I18N = {
     syncOverwrite: 'Overwrite',
     // eslint-disable-next-line @stylistic/max-len
     syncOverwriteConfirm: 'Are you sure you want to overwrite all photo fields? Customised data may be lost.',
-    reupload: 'Reupload',
-    reuploadReplaceFile: 'Replace File',
-    reuploadReplaceFileSync: 'Replace File + Sync',
+    files: 'Files',
+    filesReupload: 'Reupload file',
+    filesReuploadSync: 'Reupload file + sync',
+    filesRegenerateOptimized: 'Regenerate optimized files',
+    filesRegeneratingOptimized: 'Regenerating optimized files ...',
+    filesRegenerateOptimizedSuccess: '{{count}} optimized files regenerated',
+    // eslint-disable-next-line @stylistic/max-len
+    filesRegenerateOptimizedFailure: 'Something went wrong regenerating optimized files',
     reuploadReplacing: 'Replacing file ...',
     reuploadReplacingSync: 'Replacing file + syncing ...',
     reuploadSuccess: 'Photo file replaced',
