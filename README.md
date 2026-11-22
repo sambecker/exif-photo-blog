@@ -259,10 +259,10 @@ See [script notes](scripts/README.md) for details.
 - `BLOCK_AI_CRAWLERS`
   - Configures AI crawler rules in `/robots.txt`
   - Accepted values:
-    - `ALL`: blocks known AI crawlers from every page
-    - `SOME` (default): blocks AI training crawlers, allows AI search crawlers on pages but not generated images
-    - `NONE`: allows all AI crawling
-  - Admin, API, and internal image paths are disallowed for all crawlers unless set to `NONE`
+    - `all`: blocks all known crawlers from every page
+    - `some` (default): blocks training crawlers, allows search crawlers on pages but not generated images
+    - `none`: blocks nothing
+  - Admin, API, and internal image paths are disallowed for all crawlers unless set to `none`
 
 ### Scripts & Analytics
 - Web Analytics

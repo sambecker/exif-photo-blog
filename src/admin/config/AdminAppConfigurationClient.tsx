@@ -1168,14 +1168,14 @@ export default function AdminAppConfigurationClient({
             {renderEnvVars(['NEXT_PUBLIC_SITE_FEEDS'])}
           </ChecklistRow>
           <ChecklistRow
-            title={`Block AI crawlers: ${blockAiCrawlers.toLowerCase()}`}
+            title={`Block AI crawlers: ${blockAiCrawlers}`}
             status={hasBlockAiCrawlers}
             optional
           >
-            Set environment variable to {'"ALL"'} to block known
-            AI crawlers from every page, {'"SOME"'} (default) to block
-            AI training crawlers and keep AI search crawlers away from
-            generated images, or {'"NONE"'} to allow all AI crawling
+            Set environment variable to {'"all"'} to block every page,
+            {' '}{'"some"'} (default) to block training crawlers and keep
+            search crawlers away from generated images, or {'"none"'}
+            {' '}to block nothing
             {renderEnvVars(['BLOCK_AI_CRAWLERS'])}
           </ChecklistRow>
         </>;

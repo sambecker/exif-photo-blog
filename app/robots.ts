@@ -55,7 +55,7 @@ const GENERATED_IMAGE_PATHS = [
 
 const rulesForBlockAiCrawlers = (): MetadataRoute.Robots['rules'] => {
   switch (BLOCK_AI_CRAWLERS) {
-    case 'ALL':
+    case 'all':
       return [{
         userAgent: [...AI_TRAINING_CRAWLERS, ...AI_SEARCH_CRAWLERS],
         disallow: '/',
@@ -64,7 +64,7 @@ const rulesForBlockAiCrawlers = (): MetadataRoute.Robots['rules'] => {
         allow: '/',
         disallow: DISALLOWED_PATHS,
       }];
-    case 'SOME':
+    case 'some':
       return [{
         userAgent: AI_TRAINING_CRAWLERS,
         disallow: '/',
@@ -79,7 +79,7 @@ const rulesForBlockAiCrawlers = (): MetadataRoute.Robots['rules'] => {
         allow: '/',
         disallow: DISALLOWED_PATHS,
       }];
-    case 'NONE':
+    case 'none':
       return {
         userAgent: '*',
         allow: '/',

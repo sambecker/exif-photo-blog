@@ -446,11 +446,11 @@ export const SOCIAL_NETWORKS = parseSocialKeysFromString(
 );
 export const SITE_FEEDS_ENABLED =
   process.env.NEXT_PUBLIC_SITE_FEEDS === '1';
-export const BLOCK_AI_CRAWLERS: 'ALL' | 'SOME' | 'NONE' = (() => {
-  switch ((process.env.BLOCK_AI_CRAWLERS ?? '').toUpperCase()) {
-    case 'ALL': return 'ALL';
-    case 'NONE': return 'NONE';
-    default: return 'SOME';
+export const BLOCK_AI_CRAWLERS: 'all' | 'some' | 'none' = (() => {
+  switch ((process.env.BLOCK_AI_CRAWLERS ?? '').toLowerCase()) {
+    case 'all': return 'all';
+    case 'none': return 'none';
+    default: return 'some';
   }
 })();
 
