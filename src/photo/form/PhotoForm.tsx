@@ -491,7 +491,7 @@ export default function PhotoForm({
                       {fileName}
                     </Link>
                     <span className="shrink-0 whitespace-nowrap text-dim">
-                      {size}
+                      {isOptimized && isRegeneratingOptimized ? '—' : size}
                       {/* Show dimensions for original file when available */}
                       {!isOptimized && formData.width && formData.height &&
                         ` @ ${formData.width}×${formData.height}`}
@@ -500,7 +500,7 @@ export default function PhotoForm({
                 })}
                 <div className={clsx(
                   'flex items-center justify-between gap-2',
-                  'mt-2 -mx-2 px-2 py-1.5',
+                  'mt-2 -ml-2 px-2 py-1.5',
                   'rounded-md bg-extra-dim',
                 )}>
                   {optimizedGeneratedAt &&
