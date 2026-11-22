@@ -363,7 +363,7 @@ importers:
         specifier: ^4.1.0
         version: 4.1.0
       eslint:
-        specifier: ^10.15.0
+        specifier: ^10
         version: 10.15.0(jiti@2.7.0)(supports-color@8.1.1)
       eslint-config-next:
         specifier: 16.4.6
