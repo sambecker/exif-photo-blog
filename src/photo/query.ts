@@ -52,7 +52,7 @@ import { Years } from '@/year';
 import { PhotoColorData } from '@/photo/color/client';
 import { safelyQuery } from '@/db/query';
 
-type PhotoDbRowWithFolderIndex = PhotoDb & { folder_index: number };
+type PhotoDbRowWithQueryIndex = PhotoDb & { query_index: number };
 
 export const createPhotosTable = () =>
   sql`
@@ -674,34 +674,34 @@ export const getPhotos = async (options: PhotoQueryOptions = {}) =>
     options,
   );
 
-const FOLDER_QUERY_BATCH_SIZE = 1000;
+const PHOTO_QUERY_BATCH_SIZE = 1000;
 
-// Fetch photos for many folders at once, returning one array per folder.
-// Each folder is a parenthesized subquery so that its own ORDER BY and
-// LIMIT stay scoped to that folder instead of leaking across the union.
-// Replaces a fan-out of one round trip per folder, which exceeds the
-// platform request timeout when a page has hundreds of folders
-export const getPhotosForFolders = async (
-  folderOptions: PhotoQueryOptions[],
+// Fetch photos for many queries at once, returning one array per query.
+// Each query is a parenthesized subquery so that its own ORDER BY and
+// LIMIT stay scoped to that query instead of leaking across the union.
+// Replaces a fan-out of one round trip per query, which exceeds the
+// platform request timeout when a page issues hundreds of queries
+export const getPhotosForQueries = async (
+  queries: PhotoQueryOptions[],
 ) => safelyQuery(
   async () => {
-    if (folderOptions.length === 0) { return []; }
+    if (queries.length === 0) { return []; }
 
-    const folders = folderOptions.map(() => [] as Photo[]);
+    const results = queries.map(() => [] as Photo[]);
 
     for (
       let batchStart = 0;
-      batchStart < folderOptions.length;
-      batchStart += FOLDER_QUERY_BATCH_SIZE
+      batchStart < queries.length;
+      batchStart += PHOTO_QUERY_BATCH_SIZE
     ) {
-      const batch = folderOptions.slice(
+      const batch = queries.slice(
         batchStart,
-        batchStart + FOLDER_QUERY_BATCH_SIZE,
+        batchStart + PHOTO_QUERY_BATCH_SIZE,
       );
       const values = [] as Primitive[];
 
       const subqueries = batch.map((options, index) => {
-        const folderIndex = batchStart + index;
+        const queryIndex = batchStart + index;
         const {
           wheres,
           wheresValues,
@@ -716,7 +716,7 @@ export const getPhotosForFolders = async (
         values.push(...limitAndOffsetValues);
 
         return [
-          `(SELECT p.*, ${folderIndex} AS folder_index FROM photos p`,
+          `(SELECT p.*, ${queryIndex} AS query_index FROM photos p`,
           getJoinsFromOptions(options),
           wheres,
           getOrderByFromOptions(options),
@@ -725,23 +725,23 @@ export const getPhotosForFolders = async (
         ].filter(Boolean).join(' ');
       });
 
-      const { rows } = await query<PhotoDbRowWithFolderIndex>(
+      const { rows } = await query<PhotoDbRowWithQueryIndex>(
         subqueries.join(' UNION ALL '),
         values,
       );
 
-      rows.forEach(({ folder_index, ...row }) => {
+      rows.forEach(({ query_index, ...row }) => {
         // index 0 is falsy, so check for list membership
-        if (folders[folder_index]) {
-          folders[folder_index].push(parsePhotoFromDb(row));
+        if (results[query_index]) {
+          results[query_index].push(parsePhotoFromDb(row));
         }
       });
     }
 
-    return folders;
+    return results;
   },
-  'getPhotosForFolders',
-  { folderCount: folderOptions.length },
+  'getPhotosForQueries',
+  { queryCount: queries.length },
 );
 
 export const getPhotoIds = async (options: PhotoQueryOptions = {}) =>

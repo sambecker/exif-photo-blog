@@ -22,7 +22,7 @@ import { AppTextState } from '@/i18n/state';
 import { formatLensText } from '@/lens';
 import { Photo } from '@/photo';
 import { getPhotoCached, getPhotosCached } from '@/photo/cache';
-import { getPhotosForFolders } from '@/photo/query';
+import { getPhotosForQueries } from '@/photo/query';
 import {
   PHOTO_FOLDER_MAX_PHOTOS,
   PHOTO_FOLDER_PEEK_PHOTOS,
@@ -202,7 +202,7 @@ export const getLibraryFolderRows = async (
   const folderQueries = rows.flatMap(row => row.queries);
 
   // Single round trip for every folder instead of one query per folder
-  const folderPhotos = await getPhotosForFolders(
+  const folderPhotos = await getPhotosForQueries(
     folderQueries.map(({ options }) => ({
       ...options,
       sortBy: 'random',
