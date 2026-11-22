@@ -42,6 +42,7 @@ import {
   minioGetSignedUrl,
 } from './minio';
 import { PATH_API_PRESIGNED_URL } from '@/app/path';
+import { getFileNamePartsFromStorageUrl } from './url';
 
 export type StorageListItem = {
   url: string
@@ -68,27 +69,7 @@ export const generateStorageId = () => generateNanoid(16);
 export const generateFileNameWithId = (prefix: string) =>
   `${prefix}-${generateStorageId()}`;
 
-export const getFileNamePartsFromStorageUrl = (url: string) => {
-  const [
-    _,
-    urlBase = '',
-    fileName = '',
-    fileNameBase = '',
-    fileId = '',
-    fileModifier = '',
-    fileExtension = '',
-  ] = url.match(
-    /^(.+)\/((-*[a-z0-9]+-*([a-z0-9]+)-*([a-z0-9]+)*)\.([a-z]{1,4}))$/i,
-  ) ?? [];
-  return {
-    urlBase,
-    fileName,
-    fileNameBase,
-    fileId,
-    fileModifier,
-    fileExtension,
-  };
-};
+export { getFileNamePartsFromStorageUrl };
 
 export const labelForStorage = (type: StorageType): string => {
   switch (type) {
