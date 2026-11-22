@@ -47,7 +47,6 @@ export default async function AdminAppInsights() {
       nodeVersion={APP_CONFIGURATION.nodeVersion}
       insights={getAllInsights({
         codeMeta,
-        photosCount,
         photosCountNeedSync,
         photosCountPortrait,
       })}

@@ -30,7 +30,6 @@ import { IoCheckmarkCircleOutline, IoSyncCircle } from 'react-icons/io5';
 import clsx from 'clsx/lite';
 import { PATH_ADMIN_PHOTOS_UPDATES } from '@/app/path';
 import { LiaBroomSolid } from 'react-icons/lia';
-import { IoMdGrid } from 'react-icons/io';
 import { RiSpeedMiniLine } from 'react-icons/ri';
 import AdminLink from '../AdminLink';
 import EmptyState from '@/components/EmptyState';
@@ -158,7 +157,6 @@ export default function AdminAppInsightsClient({
     noConfiguredMetaDescription,
     photosNeedSync,
     photoMatting,
-    gridFirst,
     noStaticOptimization,
   } = insights;
 
@@ -501,21 +499,6 @@ export default function AdminAppInsightsClient({
                 {' '}
                 <EnvVar
                   variable="NEXT_PUBLIC_MATTE_PHOTOS"
-                  value="1"
-                  trailingContent="."
-                />
-              </>}
-            />}
-            {(gridFirst || debug) && <ScoreCardRow
-              icon={<IoMdGrid size={18} className="translate-y-[-1px]" />}
-              content="Grid homepage"
-              expandContent={<>
-                Now that you have enough photos, consider switching your
-                {' '}
-                default view to grid by setting
-                {' '}
-                <EnvVar
-                  variable="NEXT_PUBLIC_GRID_HOMEPAGE"
                   value="1"
                   trailingContent="."
                 />

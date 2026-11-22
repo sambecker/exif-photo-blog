@@ -10,14 +10,11 @@ import {
   IS_META_DESCRIPTION_CONFIGURED,
   IS_META_TITLE_CONFIGURED,
   HAS_STATIC_OPTIMIZATION,
-  GRID_HOMEPAGE_ENABLED,
   AI_CONTENT_GENERATION_ENABLED,
   HAS_DEPRECATED_ENV_VARS,
 } from '@/app/config';
 import { PhotoDateRangePostgres } from '@/photo';
 import { getGitHubMeta } from '@/platforms/github';
-
-const BASIC_PHOTO_INSTALLATION_COUNT = 32;
 
 const AdminAppInsightCode = [
   'noFork',
@@ -33,7 +30,6 @@ const _INSIGHTS_TEMPLATE = [
   'noConfiguredMetaTitle',
   'noConfiguredMetaDescription',
   'photoMatting',
-  'gridFirst',
   'noStaticOptimization',
 ] as const;
 type AdminAppInsightRecommendation = typeof _INSIGHTS_TEMPLATE[number];
@@ -133,10 +129,8 @@ export const indicatorStatusForSignificantInsights = ({
 export const getAllInsights = ({
   codeMeta,
   photosCountNeedSync,
-  photosCount,
   photosCountPortrait,
 }: Parameters<typeof getSignificantInsights>[0] & {
-  photosCount: number
   photosCountPortrait: number
 }) => ({
   ...getSignificantInsights({ codeMeta, photosCountNeedSync }),
@@ -145,9 +139,5 @@ export const getAllInsights = ({
   noConfiguredMetaTitle: !IS_META_TITLE_CONFIGURED,
   noConfiguredMetaDescription: !IS_META_DESCRIPTION_CONFIGURED,
   photoMatting: photosCountPortrait > 0 && !MATTE_PHOTOS,
-  gridFirst: (
-    photosCount >= BASIC_PHOTO_INSTALLATION_COUNT &&
-    !GRID_HOMEPAGE_ENABLED
-  ),
   noStaticOptimization: !HAS_STATIC_OPTIMIZATION,
 });
