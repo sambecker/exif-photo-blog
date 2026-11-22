@@ -52,6 +52,8 @@ import { Years } from '@/year';
 import { PhotoColorData } from '@/photo/color/client';
 import { safelyQuery } from '@/db/query';
 
+type PhotoDbRowWithQueryIndex = PhotoDb & { query_index: number };
+
 export const createPhotosTable = () =>
   sql`
     CREATE TABLE IF NOT EXISTS photos (
@@ -671,6 +673,76 @@ export const getPhotos = async (options: PhotoQueryOptions = {}) =>
     // Seemingly necessary to pass `options` for expected cache behavior
     options,
   );
+
+const PHOTO_QUERY_BATCH_SIZE = 1000;
+
+// Fetch photos for many queries at once, returning one array per query.
+// Each query is a parenthesized subquery so that its own ORDER BY and
+// LIMIT stay scoped to that query instead of leaking across the union.
+// Replaces a fan-out of one round trip per query, which exceeds the
+// platform request timeout when a page issues hundreds of queries
+export const getPhotosForQueries = async (
+  queries: PhotoQueryOptions[],
+) => safelyQuery(
+  async () => {
+    if (queries.length === 0) { return []; }
+
+    const results = queries.map(() => [] as Photo[]);
+
+    for (
+      let batchStart = 0;
+      batchStart < queries.length;
+      batchStart += PHOTO_QUERY_BATCH_SIZE
+    ) {
+      const batch = queries.slice(
+        batchStart,
+        batchStart + PHOTO_QUERY_BATCH_SIZE,
+      );
+      const values = [] as Primitive[];
+
+      const subqueries = batch.map((options, index) => {
+        const queryIndex = batchStart + index;
+        const {
+          wheres,
+          wheresValues,
+          lastValuesIndex,
+        } = getWheresFromOptions(options, values.length + 1);
+        values.push(...wheresValues);
+
+        const {
+          limitAndOffset,
+          limitAndOffsetValues,
+        } = getLimitAndOffsetFromOptions(options, lastValuesIndex);
+        values.push(...limitAndOffsetValues);
+
+        return [
+          `(SELECT p.*, ${queryIndex} AS query_index FROM photos p`,
+          getJoinsFromOptions(options),
+          wheres,
+          getOrderByFromOptions(options),
+          limitAndOffset,
+          ')',
+        ].filter(Boolean).join(' ');
+      });
+
+      const { rows } = await query<PhotoDbRowWithQueryIndex>(
+        subqueries.join(' UNION ALL '),
+        values,
+      );
+
+      rows.forEach(({ query_index, ...row }) => {
+        // index 0 is falsy, so check for list membership
+        if (results[query_index]) {
+          results[query_index].push(parsePhotoFromDb(row));
+        }
+      });
+    }
+
+    return results;
+  },
+  'getPhotosForQueries',
+  { queryCount: queries.length },
+);
 
 export const getPhotoIds = async (options: PhotoQueryOptions = {}) =>
   safelyQuery(
