@@ -40,6 +40,8 @@ const OPTIMIZED_FILE_SIZES = [{
 
 type OptimizedSuffix = (typeof OPTIMIZED_FILE_SIZES)[number]['suffix'];
 
+const OPTIMIZED_SUFFIX_DEFAULT: OptimizedSuffix = 'md';
+
 const getOptimizedFileName = ({
   fileNameBase,
   suffix,
@@ -96,8 +98,8 @@ export const uploadPhotoFromClient = (
   uploadFileFromClient(file, PREFIX_PHOTO, extension, true, options);
 
 const getSuffixFromNextImageSize = (nextSize: NextImageSize) =>
-  OPTIMIZED_FILE_SIZES.find(({ size }) => nextSize <= size)?.suffix
-    ?? OPTIMIZED_FILE_SIZES[OPTIMIZED_FILE_SIZES.length - 1].suffix;
+  OPTIMIZED_FILE_SIZES.find(({ size }) => size === nextSize)?.suffix
+    ?? OPTIMIZED_SUFFIX_DEFAULT;
 
 export const getOptimizedPhotoUrl = (
   args: Parameters<typeof getNextImageUrlForRequest>[0] & {
@@ -129,6 +131,27 @@ export const getOptimizedPhotoUrlForSuffix = (
 ) => {
   const { urlBase, fileNameBase } = getFileNamePartsFromStorageUrl(url);
   return getOptimizedUrl({ urlBase, fileNameBase, suffix });
+};
+
+const MAX_OPTIMIZED_THUMBNAIL_SIZE = 640;
+
+export const resolveOptimizedPhotoUrlForSize = (
+  url: string,
+  maxWidth: number,
+): string | undefined => {
+  if (!(maxWidth > 0) || maxWidth > MAX_OPTIMIZED_THUMBNAIL_SIZE) {
+    return undefined;
+  }
+  const match = OPTIMIZED_FILE_SIZES.find(({ size }) => size >= maxWidth);
+  if (!match) { return undefined; }
+  const { urlBase, fileNameBase } = getFileNamePartsFromStorageUrl(url);
+  if (
+    urlBase &&
+    fileNameBase.startsWith(`${PREFIX_PHOTO}-`) &&
+    !OPTIMIZED_FILE_SIZES.some(s => fileNameBase.endsWith(`-${s.suffix}`))
+  ) {
+    return getOptimizedUrl({ urlBase, fileNameBase, suffix: match.suffix });
+  }
 };
 
 const getTestOptimizedPhotoUrl = (url: string) =>

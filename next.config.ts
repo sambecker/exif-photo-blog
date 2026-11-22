@@ -76,8 +76,6 @@ const IMAGE_QUALITY =
 
 const nextConfig: NextConfig = {
   images: {
-    loader: 'custom',
-    loaderFile: './src/utility/image-loader.ts',
     imageSizes: [100, 200],
     qualities: [75, IMAGE_QUALITY],
     remotePatterns,

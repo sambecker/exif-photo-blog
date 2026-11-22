@@ -5,7 +5,8 @@ import { BLUR_ENABLED } from '@/app/config';
 import { useAppState } from '@/app/AppState';
 import { clsx }  from 'clsx/lite';
 import Image, { ImageProps } from 'next/image';
-import { originalImageLoader } from '@/utility/image-loader';
+import { resolveOptimizedPhotoUrlForSize } from '@/photo/storage';
+import { isImageOrientationMismatched } from '.';
 import {
   ComponentProps,
   RefObject,
@@ -80,6 +81,7 @@ export default function ImageWithFallback(props: Props) {
 
 function ImageWithFallbackForSrc({
   ref: refProp,
+  src,
   className,
   classNameImage = 'object-cover h-full',
   blurDataURL,
@@ -95,6 +97,10 @@ function ImageWithFallbackForSrc({
   const width = Number(props.width);
   const height = Number(props.height);
   const hasDimensions = width > 0 && height > 0;
+  const expectedAspectRatio = hasDimensions ? width / height : undefined;
+  const optimizedSrc = !props.sizes && typeof src === 'string'
+    ? resolveOptimizedPhotoUrlForSize(src, width * 2)
+    : undefined;
 
   // Fallbacks matching the photo's footprint stay beneath it indefinitely,
   // showing through whenever the photo isn't painted (e.g., when browsers
@@ -108,8 +114,12 @@ function ImageWithFallbackForSrc({
   const [isPainted, setIsPainted] = useState(false);
   const [shouldFade, setShouldFade] = useState(false);
   const [didError, setDidError] = useState(false);
-  // Tracks whether we already retried the original via the default optimizer
+  // Tracks whether we already retried original src when an optimized
+  // derivative is missing or has mismatched orientation
   const [didFallback, setDidFallback] = useState(false);
+
+  const canFallback = Boolean(optimizedSrc) && !didFallback;
+  const activeSrc = canFallback ? optimizedSrc! : src;
 
   // Always fade on first app load, after server-rendered fallbacks
   const [isFirstAppLoad] = useState(!hasLoadedWithAnimations);
@@ -133,11 +143,23 @@ function ImageWithFallbackForSrc({
     mountedAt.current = performance.now();
     const image = ref.current;
     if (!isFirstAppLoad && image?.complete && image.naturalWidth > 0) {
+      if (
+        canFallback &&
+        isImageOrientationMismatched(image, expectedAspectRatio)
+      ) {
+        setDidFallback(true);
+        return;
+      }
       setIsRevealed(true);
       isOpaque.current = true;
       removeFallbackOncePainted(image);
     }
-  }, [isFirstAppLoad, removeFallbackOncePainted]);
+  }, [
+    isFirstAppLoad,
+    canFallback,
+    expectedAspectRatio,
+    removeFallbackOncePainted,
+  ]);
 
   // Restore removable fallbacks while hidden
   // in case decoded images are discarded
@@ -160,6 +182,13 @@ function ImageWithFallbackForSrc({
   ) => {
     const image = event.currentTarget;
     if (isOpaque.current) { return; }
+    if (
+      canFallback &&
+      isImageOrientationMismatched(image, expectedAspectRatio)
+    ) {
+      setDidFallback(true);
+      return;
+    }
     const isQuick =
       !isFirstAppLoad &&
       !document.hidden &&
@@ -178,7 +207,12 @@ function ImageWithFallbackForSrc({
       setShouldFade(true);
       setIsRevealed(true);
     }
-  }, [isFirstAppLoad, removeFallbackOncePainted]);
+  }, [
+    isFirstAppLoad,
+    canFallback,
+    expectedAspectRatio,
+    removeFallbackOncePainted,
+  ]);
 
   const onTransitionEnd = useCallback((
     event: TransitionEvent<HTMLImageElement>,
@@ -194,14 +228,12 @@ function ImageWithFallbackForSrc({
   }, [isRevealed, removeFallbackOncePainted]);
 
   const onError = useCallback(() => {
-    // A pre-generated optimized variant may be missing for a photo. Retry
-    // once against the original via the default optimizer before giving up.
-    if (didFallback) {
-      setDidError(true);
-    } else {
+    if (canFallback) {
       setDidFallback(true);
+    } else {
+      setDidError(true);
     }
-  }, [didFallback]);
+  }, [canFallback]);
 
   const getBlurClass = () => {
     switch (blurCompatibilityLevel) {
@@ -298,20 +330,24 @@ function ImageWithFallbackForSrc({
       >
         {renderPlaceholder()}
       </div>
-      <Image ref={setRefs} {...{
-        ...props,
-        priority,
-        loader: didFallback ? originalImageLoader : undefined,
-        className: clsx(
-          classNameImage,
-          'relative',
-          shouldFade && 'transition-opacity duration-300 ease-in',
-          showImage ? 'opacity-100' : 'opacity-0',
-        ),
-        onLoad,
-        onError,
-        onTransitionEnd,
-      }} />
+      <Image
+        key={typeof activeSrc === 'string' ? activeSrc : undefined}
+        ref={setRefs}
+        {...{
+          ...props,
+          src: activeSrc,
+          priority,
+          className: clsx(
+            classNameImage,
+            'relative',
+            shouldFade && 'transition-opacity duration-300 ease-in',
+            showImage ? 'opacity-100' : 'opacity-0',
+          ),
+          onLoad,
+          onError,
+          onTransitionEnd,
+        }}
+      />
     </div>
   );
 }
