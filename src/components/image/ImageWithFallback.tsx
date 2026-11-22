@@ -140,7 +140,9 @@ function ImageWithFallbackForSrc({
 
   // Reveal cached images before first paint to avoid flashing fallbacks
   useLayoutEffect(() => {
-    mountedAt.current = performance.now();
+    if (mountedAt.current === 0) {
+      mountedAt.current = performance.now();
+    }
     const image = ref.current;
     if (!isFirstAppLoad && image?.complete && image.naturalWidth > 0) {
       if (
@@ -181,7 +183,13 @@ function ImageWithFallbackForSrc({
     event: SyntheticEvent<HTMLImageElement>,
   ) => {
     const image = event.currentTarget;
-    if (isOpaque.current) { return; }
+    if (
+      isOpaque.current ||
+      !image.complete ||
+      image.naturalWidth === 0
+    ) {
+      return;
+    }
     if (
       canFallback &&
       isImageOrientationMismatched(image, expectedAspectRatio)
@@ -198,7 +206,14 @@ function ImageWithFallbackForSrc({
     await nextPaint();
     await decode(image, DECODE_TIMEOUT_MS);
     await nextPaint();
-    if (!image.isConnected || isOpaque.current) { return; }
+    if (
+      !image.isConnected ||
+      !image.complete ||
+      image.naturalWidth === 0 ||
+      isOpaque.current
+    ) {
+      return;
+    }
     if (isQuick) {
       setIsRevealed(true);
       isOpaque.current = true;
@@ -330,24 +345,20 @@ function ImageWithFallbackForSrc({
       >
         {renderPlaceholder()}
       </div>
-      <Image
-        key={typeof activeSrc === 'string' ? activeSrc : undefined}
-        ref={setRefs}
-        {...{
-          ...props,
-          src: activeSrc,
-          priority,
-          className: clsx(
-            classNameImage,
-            'relative',
-            shouldFade && 'transition-opacity duration-300 ease-in',
-            showImage ? 'opacity-100' : 'opacity-0',
-          ),
-          onLoad,
-          onError,
-          onTransitionEnd,
-        }}
-      />
+      <Image ref={setRefs} {...{
+        ...props,
+        src: activeSrc,
+        priority,
+        className: clsx(
+          classNameImage,
+          'relative',
+          shouldFade && 'transition-opacity duration-300 ease-in',
+          showImage ? 'opacity-100' : 'opacity-0',
+        ),
+        onLoad,
+        onError,
+        onTransitionEnd,
+      }} />
     </div>
   );
 }
