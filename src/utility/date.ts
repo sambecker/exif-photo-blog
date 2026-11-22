@@ -128,7 +128,8 @@ export const convertTimestampToNaivePostgresString = (
   timestamp?: AmbiguousTimestamp,
 ) =>
   dateFromTimestamp(timestamp)
-    .toISOString().replace(
+    .toISOString()
+    .replace(
       /(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2}:\d{2})(.[\d]+Z)*/,
       '$1 $2',
     );
