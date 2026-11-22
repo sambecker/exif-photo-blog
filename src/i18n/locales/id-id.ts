@@ -169,6 +169,7 @@ export const TEXT: I18N = {
     filesReupload: 'Unggah ulang berkas',
     filesReuploadSync: 'Unggah ulang berkas + sinkronkan',
     filesRegenerateOptimized: 'Buat ulang berkas yang dioptimalkan',
+    filesRegenerateOptimizedShort: 'Buat ulang berkas',
     filesRegeneratingOptimized: 'Membuat ulang berkas yang dioptimalkan ...',
     // eslint-disable-next-line @stylistic/max-len
     filesRegenerateOptimizedSuccess: '{{count}} berkas yang dioptimalkan dibuat ulang',

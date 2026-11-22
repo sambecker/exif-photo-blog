@@ -167,6 +167,7 @@ export const TEXT: I18N = {
     filesReupload: '重新上传文件',
     filesReuploadSync: '重新上传文件并同步',
     filesRegenerateOptimized: '重新生成优化文件',
+    filesRegenerateOptimizedShort: '重新生成文件',
     filesRegeneratingOptimized: '正在重新生成优化文件 ...',
     filesRegenerateOptimizedSuccess: '已重新生成 {{count}} 个优化文件',
     filesRegenerateOptimizedFailure: '重新生成优化文件时出错',

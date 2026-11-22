@@ -169,6 +169,7 @@ export const TEXT: I18N = {
     filesReupload: 'Dosyayı yeniden yükle',
     filesReuploadSync: 'Dosyayı yeniden yükle + senkronize et',
     filesRegenerateOptimized: 'Optimize dosyaları yeniden oluştur',
+    filesRegenerateOptimizedShort: 'Dosyaları yeniden oluştur',
     filesRegeneratingOptimized: 'Optimize dosyalar yeniden oluşturuluyor ...',
     // eslint-disable-next-line @stylistic/max-len
     filesRegenerateOptimizedSuccess: '{{count}} optimize dosya yeniden oluşturuldu',

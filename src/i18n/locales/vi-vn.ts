@@ -169,6 +169,7 @@ export const TEXT: I18N = {
     filesReupload: 'Tải lên lại tệp',
     filesReuploadSync: 'Tải lên lại tệp + đồng bộ',
     filesRegenerateOptimized: 'Tạo lại tệp đã tối ưu',
+    filesRegenerateOptimizedShort: 'Tạo lại tệp',
     filesRegeneratingOptimized: 'Đang tạo lại tệp đã tối ưu ...',
     filesRegenerateOptimizedSuccess: 'Đã tạo lại {{count}} tệp đã tối ưu',
     filesRegenerateOptimizedFailure: 'Đã xảy ra lỗi khi tạo lại tệp đã tối ưu',

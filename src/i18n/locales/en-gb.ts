@@ -169,6 +169,7 @@ export const TEXT: I18N = {
     filesReupload: 'Reupload file',
     filesReuploadSync: 'Reupload file + sync',
     filesRegenerateOptimized: 'Regenerate optimized files',
+    filesRegenerateOptimizedShort: 'Regenerate files',
     filesRegeneratingOptimized: 'Regenerating optimized files ...',
     filesRegenerateOptimizedSuccess: '{{count}} optimized files regenerated',
     // eslint-disable-next-line @stylistic/max-len

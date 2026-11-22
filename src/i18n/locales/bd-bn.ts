@@ -169,6 +169,7 @@ export const TEXT: I18N = {
     filesReupload: 'ফাইল পুনরায় আপলোড',
     filesReuploadSync: 'ফাইল পুনরায় আপলোড + সিঙ্ক',
     filesRegenerateOptimized: 'অপ্টিমাইজড ফাইল পুনরায় তৈরি',
+    filesRegenerateOptimizedShort: 'ফাইল পুনরায় তৈরি',
     filesRegeneratingOptimized: 'অপ্টিমাইজড ফাইল পুনরায় তৈরি হচ্ছে ...',
     // eslint-disable-next-line @stylistic/max-len
     filesRegenerateOptimizedSuccess: '{{count}}টি অপ্টিমাইজড ফাইল পুনরায় তৈরি হয়েছে',

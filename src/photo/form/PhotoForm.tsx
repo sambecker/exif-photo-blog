@@ -478,16 +478,19 @@ export default function PhotoForm({
                       ? <Spinner
                         size={14}
                         color="dim"
-                        className="translate-y-[1px]"
+                        className="shrink-0 translate-y-[1px]"
                       />
-                      : <TbPhoto className="translate-y-[1px] text-medium" />}
+                      : <TbPhoto className={clsx(
+                        'shrink-0 translate-y-[1px] text-medium',
+                      )} />}
                     <Link
                       href={url}
                       target="_blank"
+                      className="truncate"
                     >
                       {fileName}
                     </Link>
-                    <span className="text-dim">
+                    <span className="shrink-0 whitespace-nowrap text-dim">
                       {size}
                       {/* Show dimensions for original file when available */}
                       {!isOptimized && formData.width && formData.height &&

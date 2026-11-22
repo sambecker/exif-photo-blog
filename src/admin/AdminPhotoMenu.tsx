@@ -28,6 +28,7 @@ import MoreMenu, { MoreMenuSection } from '@/components/more/MoreMenu';
 import { renderMenuItemCheck } from '@/components/more/MoreMenuItem';
 import { useAppState } from '@/app/AppState';
 import { RevalidatePhoto } from '@/photo/InfinitePhotoScroll';
+import ResponsiveText from '@/components/primitives/ResponsiveText';
 import { MdOutlineFileDownload } from 'react-icons/md';
 import { IoMdColorFilter } from 'react-icons/io';
 import { FaArrowRight } from 'react-icons/fa6';
@@ -252,6 +253,11 @@ export default function AdminPhotoMenu({
         action: () => openReuploadPicker(true),
       }, {
         label: appText.admin.filesRegenerateOptimized,
+        labelComplex: <ResponsiveText
+          shortText={appText.admin.filesRegenerateOptimizedShort}
+        >
+          {appText.admin.filesRegenerateOptimized}
+        </ResponsiveText>,
         action: () => {
           const toastId = toastWaiting(
             appText.admin.filesRegeneratingOptimized,
