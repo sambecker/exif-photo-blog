@@ -5,6 +5,8 @@ import { BLUR_ENABLED } from '@/app/config';
 import { useAppState } from '@/app/AppState';
 import { clsx }  from 'clsx/lite';
 import Image, { ImageProps } from 'next/image';
+import { resolveOptimizedPhotoUrlForSize } from '@/photo/storage/optimized';
+import { isImageOrientationMismatched } from '.';
 import {
   ComponentProps,
   RefObject,
@@ -79,6 +81,7 @@ export default function ImageWithFallback(props: Props) {
 
 function ImageWithFallbackForSrc({
   ref: refProp,
+  src,
   className,
   classNameImage = 'object-cover h-full',
   blurDataURL,
@@ -94,6 +97,10 @@ function ImageWithFallbackForSrc({
   const width = Number(props.width);
   const height = Number(props.height);
   const hasDimensions = width > 0 && height > 0;
+  const expectedAspectRatio = hasDimensions ? width / height : undefined;
+  const optimizedSrc = !props.sizes && typeof src === 'string'
+    ? resolveOptimizedPhotoUrlForSize(src, width * 2)
+    : undefined;
 
   // Fallbacks matching the photo's footprint stay beneath it indefinitely,
   // showing through whenever the photo isn't painted (e.g., when browsers
@@ -107,6 +114,12 @@ function ImageWithFallbackForSrc({
   const [isPainted, setIsPainted] = useState(false);
   const [shouldFade, setShouldFade] = useState(false);
   const [didError, setDidError] = useState(false);
+  // Tracks whether we already retried original src when an optimized
+  // derivative is missing or has mismatched orientation
+  const [didFallback, setDidFallback] = useState(false);
+
+  const canFallback = Boolean(optimizedSrc) && !didFallback;
+  const activeSrc = canFallback ? optimizedSrc! : src;
 
   // Always fade on first app load, after server-rendered fallbacks
   const [isFirstAppLoad] = useState(!hasLoadedWithAnimations);
@@ -127,14 +140,33 @@ function ImageWithFallbackForSrc({
 
   // Reveal cached images before first paint to avoid flashing fallbacks
   useLayoutEffect(() => {
-    mountedAt.current = performance.now();
+    if (mountedAt.current === 0) {
+      mountedAt.current = performance.now();
+    }
     const image = ref.current;
+    // After swapping src, the element still reports the previous
+    // (rejected) image as complete until the new request starts,
+    // so defer revealing the fallback to onLoad
+    if (didFallback) { return; }
     if (!isFirstAppLoad && image?.complete && image.naturalWidth > 0) {
+      if (
+        canFallback &&
+        isImageOrientationMismatched(image, expectedAspectRatio)
+      ) {
+        setDidFallback(true);
+        return;
+      }
       setIsRevealed(true);
       isOpaque.current = true;
       removeFallbackOncePainted(image);
     }
-  }, [isFirstAppLoad, removeFallbackOncePainted]);
+  }, [
+    isFirstAppLoad,
+    didFallback,
+    canFallback,
+    expectedAspectRatio,
+    removeFallbackOncePainted,
+  ]);
 
   // Restore removable fallbacks while hidden
   // in case decoded images are discarded
@@ -156,7 +188,20 @@ function ImageWithFallbackForSrc({
     event: SyntheticEvent<HTMLImageElement>,
   ) => {
     const image = event.currentTarget;
-    if (isOpaque.current) { return; }
+    if (
+      isOpaque.current ||
+      !image.complete ||
+      image.naturalWidth === 0
+    ) {
+      return;
+    }
+    if (
+      canFallback &&
+      isImageOrientationMismatched(image, expectedAspectRatio)
+    ) {
+      setDidFallback(true);
+      return;
+    }
     const isQuick =
       !isFirstAppLoad &&
       !document.hidden &&
@@ -166,7 +211,14 @@ function ImageWithFallbackForSrc({
     await nextPaint();
     await decode(image, DECODE_TIMEOUT_MS);
     await nextPaint();
-    if (!image.isConnected || isOpaque.current) { return; }
+    if (
+      !image.isConnected ||
+      !image.complete ||
+      image.naturalWidth === 0 ||
+      isOpaque.current
+    ) {
+      return;
+    }
     if (isQuick) {
       setIsRevealed(true);
       isOpaque.current = true;
@@ -175,7 +227,12 @@ function ImageWithFallbackForSrc({
       setShouldFade(true);
       setIsRevealed(true);
     }
-  }, [isFirstAppLoad, removeFallbackOncePainted]);
+  }, [
+    isFirstAppLoad,
+    canFallback,
+    expectedAspectRatio,
+    removeFallbackOncePainted,
+  ]);
 
   const onTransitionEnd = useCallback((
     event: TransitionEvent<HTMLImageElement>,
@@ -190,7 +247,13 @@ function ImageWithFallbackForSrc({
     }
   }, [isRevealed, removeFallbackOncePainted]);
 
-  const onError = useCallback(() => setDidError(true), []);
+  const onError = useCallback(() => {
+    if (canFallback) {
+      setDidFallback(true);
+    } else {
+      setDidError(true);
+    }
+  }, [canFallback]);
 
   const getBlurClass = () => {
     switch (blurCompatibilityLevel) {
@@ -289,6 +352,7 @@ function ImageWithFallbackForSrc({
       </div>
       <Image ref={setRefs} {...{
         ...props,
+        src: activeSrc,
         priority,
         className: clsx(
           classNameImage,

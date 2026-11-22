@@ -7,6 +7,7 @@ import {
   formatExposureTime,
   formatExposureCompensation,
 } from '@/utility/exif-format';
+import { parseCachedPhotoDates, parsePhotoFromDb } from '@/photo';
 
 describe('EXIF', () => {
   describe('dimensions from exif', () => {
@@ -110,6 +111,42 @@ describe('EXIF', () => {
       expect(formatExposureCompensation(-1.119)).toBe('-1.12ev');
       expect(formatExposureCompensation(-1.112340989)).toBe('-1.11ev');
       expect(formatExposureCompensation(1.9595959)).toBe('+1.96ev');
+    });
+    it('recovers camera third stops rounded to tenths when requested', () => {
+      const options = { thirdsRoundedToTenths: true };
+      expect(formatExposureCompensation(-0.3, options)).toBe('-1/3ev');
+      expect(formatExposureCompensation(-0.7, options)).toBe('-2/3ev');
+      expect(formatExposureCompensation(0.3, options)).toBe('+1/3ev');
+      expect(formatExposureCompensation(0.7, options)).toBe('+2/3ev');
+      expect(formatExposureCompensation(-1.3, options)).toBe('-1 1/3ev');
+      expect(formatExposureCompensation(1.7, options)).toBe('+1 2/3ev');
+      expect(formatExposureCompensation(0.5, options)).toBe('+1/2ev');
+      expect(formatExposureCompensation(0.1, options)).toBe('+1/10ev');
+      expect(formatExposureCompensation(0.3)).toBe('+3/10ev');
+      expect(formatExposureCompensation(-0.7)).toBe('-7/10ev');
+    });
+    it('fixes rounded OM exposure labels on fresh and cached photos', () => {
+      for (const make of ['OM Digital Solutions', 'OLYMPUS CORPORATION']) {
+        const photo = parsePhotoFromDb({
+          id: 'exposure', url: 'https://example.test/photo.jpg',
+          extension: 'jpg',
+          make, model: 'PEN', aspectRatio: 4 / 3,
+          tags: [],
+          exposureCompensation: -0.7,
+          takenAt: new Date(), createdAt: new Date(), updatedAt: new Date(),
+          takenAtNaive: '2026-10-20 12:00:00',
+        });
+        expect(photo.exposureCompensationFormatted).toBe('-2/3ev');
+        expect(photo.exposureCompensation).toBe(-0.7);
+        const cached = parseCachedPhotoDates({
+          ...photo, exposureCompensationFormatted: '-7/10ev',
+        });
+        expect(cached.exposureCompensationFormatted).toBe('-2/3ev');
+        const otherCamera = parseCachedPhotoDates({
+          ...photo, make: 'FUJIFILM',
+        });
+        expect(otherCamera.exposureCompensationFormatted).toBe('-7/10ev');
+      }
     });
   });
 });

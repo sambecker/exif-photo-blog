@@ -19,7 +19,8 @@ export default function PhotoRecipe({
   ...props
 }: {
   recipe: string
-} & Partial<ComponentProps<typeof PhotoRecipeOverlayButton>>
+} & Partial<Pick<ComponentProps<typeof PhotoRecipeOverlayButton>,
+  'toggleRecipeOverlay' | 'isShowingRecipeOverlay'>>
   & EntityLinkExternalProps) {
   const { getRecipeCount } = useCategoryCounts();
   return (

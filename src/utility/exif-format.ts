@@ -15,12 +15,21 @@ export const formatExposureTime = (exposureTime = 0) =>
       : `${exposureTime}s`
     : undefined;
 
-export const formatExposureCompensation = (exposureCompensation?: number) => {
+export const formatExposureCompensation = (
+  exposureCompensation?: number,
+  { thirdsRoundedToTenths = false }: { thirdsRoundedToTenths?: boolean } = {},
+) => {
   if (
     exposureCompensation &&
     Math.abs(exposureCompensation) > 0.01
   ) {
-    return `${formatNumberToFraction(exposureCompensation)}ev`;
+    const thirds = Math.round(exposureCompensation * 3) / 3;
+    // Some cameras encode third-stop settings as tenths, e.g. -0.3 and -0.7.
+    // Only recover thirds whose rounded encoding matches the recorded value.
+    const value = thirdsRoundedToTenths &&
+      Math.round(thirds * 10) / 10 === exposureCompensation
+      ? thirds : exposureCompensation;
+    return `${formatNumberToFraction(value)}ev`;
   } else {
     return undefined;
   }

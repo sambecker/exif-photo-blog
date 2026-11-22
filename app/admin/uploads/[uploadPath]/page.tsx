@@ -20,7 +20,6 @@ import {
   HAS_LOCATION_SERVICES,
 } from '@/app/config';
 import ErrorNote from '@/components/ErrorNote';
-import { getRecipeTitleForData } from '@/photo/query';
 import { getAlbumsWithMeta } from '@/album/query';
 import { addAiTextToFormData } from '@/photo/ai/server';
 import AdminPage from '@/admin/AdminPage';
@@ -72,29 +71,15 @@ export default async function UploadPage({ params, searchParams }: Params) {
     redirect(PATH_ADMIN);
   }
 
-  const [
-    recipeTitle,
-    formDataFromExif,
-  ] = await Promise.all([
-    _formDataFromExif?.recipeData && _formDataFromExif.film
-      ? getRecipeTitleForData(
-        _formDataFromExif.recipeData, 
-        _formDataFromExif.film,
-      )
-      : undefined,
-    addAiTextToFormData({
-      formData: _formDataFromExif,
-      imageBase64: imageThumbnailBase64,
-      uniqueTags,
-    }),
-  ]);
+  const formDataFromExif = await addAiTextToFormData({
+    formData: _formDataFromExif,
+    imageBase64: imageThumbnailBase64,
+    uniqueTags,
+  });
 
   const hasAiContentGeneration = AI_CONTENT_GENERATION_ENABLED;
 
   if (formDataFromExif) {
-    if (recipeTitle) {
-      formDataFromExif.recipeTitle = recipeTitle;
-    }
     if (typeof title === 'string') {
       formDataFromExif.title = title;
     }

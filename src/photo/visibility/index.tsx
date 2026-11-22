@@ -5,7 +5,9 @@ import { SelectMenuOptionType } from '@/components/SelectMenuOption';
 import { Photo } from '..';
 import { AppTextState } from '@/i18n/state';
 
-export type VisibilityValue = 'default' | 'exclude' | 'private';
+export const VISIBILITY_VALUES = ['default', 'exclude', 'private'] as const;
+
+export type VisibilityValue = typeof VISIBILITY_VALUES[number];
 
 export const getVisibilityOptions = (
   appText: AppTextState,

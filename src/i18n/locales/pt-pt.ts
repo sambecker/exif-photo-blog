@@ -165,9 +165,15 @@ export const TEXT: I18N = {
     syncOverwrite: 'Sobrescrever',
     // eslint-disable-next-line @stylistic/max-len
     syncOverwriteConfirm: 'Tens certeza de que queres sobrescrever todos os campos da fotografia? Dados personalizados podem ser perdidos.',
-    reupload: 'Carregar novamente',
-    reuploadReplaceFile: 'Substituir ficheiro',
-    reuploadReplaceFileSync: 'Substituir ficheiro e sincronizar',
+    files: 'Ficheiros',
+    filesReupload: 'Carregar ficheiro novamente',
+    filesReuploadSync: 'Carregar ficheiro novamente e sincronizar',
+    filesRegenerateOptimized: 'Regenerar ficheiros otimizados',
+    filesRegeneratingOptimized: 'A regenerar ficheiros otimizados ...',
+    // eslint-disable-next-line @stylistic/max-len
+    filesRegenerateOptimizedSuccess: '{{count}} ficheiros otimizados regenerados',
+    // eslint-disable-next-line @stylistic/max-len
+    filesRegenerateOptimizedFailure: 'Algo correu mal ao regenerar os ficheiros otimizados',
     reuploadReplacing: 'A substituir ficheiro ...',
     reuploadReplacingSync: 'A substituir ficheiro e sincronizar ...',
     reuploadSuccess: 'Ficheiro da fotografia substituído',

@@ -21,7 +21,7 @@ import {
   formatCountDescriptive,
 } from '@/utility/string';
 import { requestScrollToTop } from '@/utility/useScrollPositionMemory';
-import { getNextImageUrlForRequest } from '@/platforms/next-image';
+import { getOptimizedNextImageProps } from '@/components/image';
 
 const FOLDER_WIDTH = 143;
 const FOLDER_HEIGHT = 93;
@@ -210,18 +210,18 @@ function FolderPhotoImage({
 }) {
   // Raw <img> avoids next/image client JS + decode() overhead across
   // hundreds of tiny folder tiles; still hit the optimizer at w=200
-  const src = getNextImageUrlForRequest({
-    imageUrl: photo.url,
-    size: size === 'large'
-      ? 640
-      : size === 'medium'
-        ? 200
-        : 100,
-  });
   return (
     <div className={clsx('flex relative', className)}>
       <img
-        src={src}
+        {...getOptimizedNextImageProps({
+          imageUrl: photo.url,
+          size: size === 'large'
+            ? 640
+            : size === 'medium'
+              ? 200
+              : 100,
+          aspectRatio: photo.aspectRatio,
+        })}
         alt={altTextForPhoto(photo)}
         className={clsx(
           classNameImage,

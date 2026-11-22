@@ -32,6 +32,7 @@ _Submit your site as an example by [opening an issue](https://github.com/sambeck
 - AI-generated text descriptions
 - RSS/JSON feeds
 - Support for Fujifilm recipes and film simulations
+- OM SYSTEM and Olympus color and mono recipes, with galleries for matching settings
 
 <img src="/readme/og-image-share.png" alt="OG Image Preview" width=600 />
 
@@ -162,6 +163,22 @@ To add location meta to entities like photos and albums:
 ### Rate limiting
 
 Create Upstash Redis store from storage tab of Vercel dashboard and link to your project (if required, add environment variable prefix `EXIF`) in order to enable rate limiting—no further configuration necessary.
+
+### Programmatic uploads (optional)
+
+Upload photos from local script:
+
+```sh
+export ADMIN_EMAIL=... ADMIN_PASSWORD=...
+node scripts/photo-import.mjs --base https://photos.example.com upload photo.jpg
+node scripts/photo-import.mjs --base https://photos.example.com list
+```
+
+Requires Node.js v22 or later. Works with Vercel Blob, S3, Cloudflare R2, or MinIO; image bytes go directly to storage, as with admin uploads (Vercel Blob uses this repo's installed `@vercel/blob` package). Script signs in with existing admin credentials; no required server setup:
+
+Uploads are private by default (`--visibility default` sets the same options as the admin photo form) and not idempotent: use `list` to check the result before retrying an uncertain upload.
+
+See [script notes](scripts/README.md) for details.
 
 ### Categories
 - `NEXT_PUBLIC_CATEGORY_VISIBILITY`
@@ -479,6 +496,9 @@ Thank you ❤️ translators: [@sconetto](https://github.com/sconetto) (`pt-br`,
 #### How do I edit multiple photos?
 > In the admin menu, select "Batch edit ..." From there, you can perform bulk tag, favorite, and delete actions.
 
+#### Why do my images appear flipped/rotated incorrectly?
+> For a number of reasons, only EXIF orientations: 1, 3, 6, and 8 are supported. Orientations 2, 4, 5, and 7—which make use of mirroring—are not supported. Additionally, photos from earlier app installations may have incorrectly optimized photos. Try choosing "Regenerate optimized files" from the admin menu to mitigate.
+
 #### Why don't my photo changes show up immediately?
 > This template statically optimizes core views such as `/` and `/grid` to minimize visitor load times. Consequently, when photos are added, edited, or removed, it might take several minutes for those changes to propagate. If it seems like a change is not taking effect, try navigating to `/admin/configuration` and clicking "Clear Cache."
 
@@ -515,14 +535,20 @@ Thank you ❤️ translators: [@sconetto](https://github.com/sconetto) (`pt-br`,
 #### Why aren't Fujifilm simulations importing alongside EXIF data?
 > Fujifilm simulation data is stored in vendor-specific Makernote binaries embedded in EXIF data. Under certain circumstances an intermediary may strip out this data. For instance, there is a known issue on iOS where editing an image, e.g., cropping it, causes Makernote data loss. If simulation data appears to be missing, try importing the original file as it was stored by the camera. Additionally, if you can confirm the simulation mode, you can edit the photo and manually select it.
 
+#### How do OM SYSTEM and Olympus recipes work?
+
+> Upload camera-original JPEGs taken with a Color or Monochrome Profile. The photo's "Color recipe" or "Mono recipe" link opens a gallery of photos with matching settings, and the adjacent + button shows the settings themselves. Ordinary picture modes and Art Filters don't produce recipes, and profile slot numbers, exposure compensation, Noise Filter, and Gradation don't affect matching. As with Fujifilm, editing an image on your phone before uploading can strip the data recipes depend on.
+>
+> OM SYSTEM and Olympus photos uploaded before recipe support are flagged in `/admin/photos` until they're synced once.
+
+#### How are recipes titled?
+> When a Fujifilm or OM photo is imported, it uses the custom title already given to photos with matching recipe settings (and film simulation, for Fujifilm). Otherwise, Fujifilm recipes stay untitled, and their settings can be viewed from the film simulation's + button. OM recipes are labeled "Color recipe" or "Mono recipe," and the "auto-title" checkbox next to an OM photo's recipe title switches back to this label after a custom title has been set. Changing a recipe title on a photo renames it on every photo that shares it, and the form shows how many photos will be affected before saving.
+
 #### My Fujifilm recipes are missing/displaying incorrect data. What should I do?
 > If you don't see a recipe, first try syncing your photo from the ••• menu, or from `/admin/photos`. If the data looks incorrect, open an issue with the file in question attached in order for it to be investigated. Fujifilm file specifications have evolved over time and recipe parsing may need to be adjusted based on camera model/vintage.
 
 #### How do I hide Fujifilm content such as a recipes and film simulations?
 > This can be accomplished by setting `NEXT_PUBLIC_CATEGORY_VISIBILITY` (which has a default value of `tags,cameras,lenses,recipes,films`) to `tags,cameras,lenses`.
-
-#### Why do my images appear flipped/rotated incorrectly?
-> For a number of reasons, only EXIF orientations: 1, 3, 6, and 8 are supported. Orientations 2, 4, 5, and 7—which make use of mirroring—are not supported.
 
 #### Why does my image placeholder blur look different from photo to photo?
 > Earlier versions of this template generated blur data on the client, which varied visually from browser to browser. Data is now generated consistently on the server. If you wish to update blur data for a particular photo, edit the photo in question, make no changes, and choose "Update."

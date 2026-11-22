@@ -1,11 +1,8 @@
 'use client';
 
-import LoaderButton from '@/components/primitives/LoaderButton';
 import PhotoFilm from '@/film/PhotoFilm';
 import clsx from 'clsx/lite';
-import { ReactNode, RefObject } from 'react';
-import { IoCloseCircle } from 'react-icons/io5';
-import { motion } from 'framer-motion';
+import { RefObject } from 'react';
 import {
   addSign,
   formatGrain,
@@ -15,10 +12,11 @@ import {
   generateRecipeText,
   RecipeProps,
 } from '.';
-import { TbChecklist } from 'react-icons/tb';
 import CopyButton from '@/components/CopyButton';
 import PhotoRecipe from './PhotoRecipe';
 import { useAppText } from '@/i18n/state/client';
+import RecipeOverlay, { RecipeOverlayTitle } from './RecipeOverlay';
+import RecipeGrid, { RecipeGridCell } from './RecipeGrid';
 
 export default function PhotoRecipeOverlay({
   ref,
@@ -49,179 +47,99 @@ export default function PhotoRecipeOverlay({
 
   const appText = useAppText();
 
-  const whiteBalanceTypeFormatted = formatWhiteBalance(data);
-
-  const renderDataSquare = (
-    value: ReactNode,
-    label?: string,
-    colSpan = 'col-span-4',
-  ) => (
-    <div className={clsx(
-      'flex flex-col items-center justify-center gap-0.5 min-w-0',
-      'rounded-lg border',
-      'border-neutral-200/40',
-      'bg-neutral-100/30 hover:bg-neutral-100/50',
-      label && 'p-1',
-      colSpan,
-    )}>
-      <div className="truncate max-w-full tracking-wide">
-        {typeof value === 'number' ? addSign(value) : value}
-      </div>
-      {label && <div className={clsx(
-        'text-[10px] leading-none tracking-wide font-medium text-black/50',
-        'uppercase',
-      )}>
-        {label}
-      </div>}
-    </div>
-  );
-
-  const renderRecipeTitle =
-    <div className="flex items-center gap-1.5 w-full">
-      <TbChecklist
-        size={17}
-        className="opacity-80 translate-y-[1px]"
-      />
-      <div className={clsx(
-        'text-[15px] uppercase',
-        'translate-y-[0.5px] tracking-wide',
-        'truncate max-w-full',
-      )}>
-        {title ? formatRecipe(title) : 'Recipe'}
-      </div>
-    </div>;
-
   return (
-    <motion.div
+    <RecipeOverlay
       ref={ref}
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.95 }}
-      className={clsx(
-        'z-10',
-        'w-[20rem] p-2 space-y-3',
-        'scroll-mt-8',
-        'rounded-2xl',
-        isOnPhoto
-          ? 'shadow-2xl'
-          // Soften shadow to mimic <Modal />
-          : 'shadow-2xl/20 dark:shadow-2xl/100',
-        'text-[13.5px] text-black',
-        'bg-white/70 outline outline-neutral-400/15',
-        'backdrop-blur-xl saturate-[300%]',
-      )}
-    >
-      <div className={clsx(
-        'flex items-center gap-2 h-6',
-        'pl-1.5 pr-0.5',
-        'translate-y-[0.5px]',
-      )}>
-        <div className={clsx(
-          'grow translate-y-[0.5px]',
-          title && 'hover:opacity-50 active:opacity-75',
-        )}>
-          {title
-            ? <PhotoRecipe
-              recipe={title}
-              contrast="frosted"
-              className={clsx(
-                'text-[15px]',
-                '[&>*>*>*>*]:text-black',
-                'tracking-wide',
-              )}
-            />
-            : renderRecipeTitle}
-        </div>
-        <CopyButton
-          label={`${title
-            ? `${formatRecipe(title).toLocaleUpperCase()} recipe`
-            : 'Recipe'}`}
-          text={generateRecipeText({ title, data, film })}
-          iconSize={17}
-          className={clsx(
-            'translate-y-[-1.5px]',
-            'text-black/40 active:text-black/75',
-            'hover:text-black/40',
-          )}
-          tooltip={appText.tooltip.recipeCopy}
-          tooltipColor="frosted-light"
-        />
-        <span>
-          <LoaderButton
-            icon={<IoCloseCircle size={22} />}
-            onClick={onClose}
+      onClose={onClose}
+      isOnPhoto={isOnPhoto}
+      title={title
+        ? <div className="hover:opacity-50 active:opacity-75">
+          <PhotoRecipe
+            recipe={title}
+            contrast="frosted"
             className={clsx(
-              'link p-0 m-0',
-              '-translate-y-px',
-              'text-black/30 active:text-black/50',
+              'text-[15px]',
+              '[&>*>*>*>*]:text-black',
+              'tracking-wide',
             )}
           />
-        </span>
-      </div>
-      <div className="grid grid-cols-12 gap-2">
-        {/* ROW */}
-        <div className="col-span-8">
-          {renderDataSquare(
-            <div className="flex items-center gap-1.5">
-              <PhotoFilm
-                film={film}
-                make={isOnPhoto ? make : undefined}
-                contrast="frosted"
-                className={clsx(
-                  'translate-y-[-0.5px]',
-                  '*:text-black! *:active:text-black!',
-                  'opacity-80 hover:opacity-60 active:opacity-80',
-                )}
-                badged={false}
-              />
-            </div>,
-            undefined,
-            'py-0.5',
-          )}
         </div>
-        {renderDataSquare(
-          `DR${dynamicRange.development}`,
-          undefined,
-          'col-span-4 py-0.5',
+        : <RecipeOverlayTitle>Recipe</RecipeOverlayTitle>}
+      actions={<CopyButton
+        label={`${title
+          ? `${formatRecipe(title).toLocaleUpperCase()} recipe`
+          : 'Recipe'}`}
+        text={generateRecipeText({ title, data, film })}
+        iconSize={17}
+        className={clsx(
+          'translate-y-[-1.5px]',
+          'text-black/40 active:text-black/75',
+          'hover:text-black/40',
         )}
+        tooltip={appText.tooltip.recipeCopy}
+        tooltipColor="frosted-light"
+      />}
+    >
+      <RecipeGrid>
         {/* ROW */}
-        {renderDataSquare(
-          whiteBalanceTypeFormatted.toUpperCase(),
-          `R${addSign(whiteBalance?.red)} / B${addSign(whiteBalance?.blue)}`,
-          'col-span-8',
-        )}
-        {renderDataSquare(
-          formatNoiseReduction(data),
-          'ISO NR',
-          'col-span-4',
-        )}
+        <RecipeGridCell span={8}>
+          <div className="flex items-center gap-1.5">
+            <PhotoFilm
+              film={film}
+              make={isOnPhoto ? make : undefined}
+              contrast="frosted"
+              className={clsx(
+                'translate-y-[-0.5px]',
+                '*:text-black! *:active:text-black!',
+                'opacity-80 hover:opacity-60 active:opacity-80',
+              )}
+              badged={false}
+            />
+          </div>
+        </RecipeGridCell>
+        <RecipeGridCell>
+          {`DR${dynamicRange.development}`}
+        </RecipeGridCell>
         {/* ROW */}
-        {renderDataSquare(highlight, 'Highlight', 'col-span-6')}
-        {renderDataSquare(shadow, 'Shadow', 'col-span-6')}
+        <RecipeGridCell
+          span={8}
+          label={
+            `R${addSign(whiteBalance?.red)} / B${addSign(whiteBalance?.blue)}`}
+        >
+          {formatWhiteBalance(data).toUpperCase()}
+        </RecipeGridCell>
+        <RecipeGridCell label="ISO NR">
+          {formatNoiseReduction(data)}
+        </RecipeGridCell>
         {/* ROW */}
-        {renderDataSquare(color, 'Color')}
-        {renderDataSquare(sharpness, 'Sharpness')}
-        {renderDataSquare(clarity, 'Clarity')}
+        <RecipeGridCell span={6} label="Highlight">
+          {addSign(highlight)}
+        </RecipeGridCell>
+        <RecipeGridCell span={6} label="Shadow">
+          {addSign(shadow)}
+        </RecipeGridCell>
         {/* ROW */}
-        {renderDataSquare(
-          colorChromeEffect?.toLocaleUpperCase() ?? 'N/A',
-          'Color Chrome',
-          'col-span-6',
-        )}
-        {renderDataSquare(
-          colorChromeFXBlue?.toLocaleUpperCase() ?? 'N/A',
-          'FX Blue',
-          'col-span-6',
-        )}
+        <RecipeGridCell label="Color">{addSign(color)}</RecipeGridCell>
+        <RecipeGridCell label="Sharpness">{addSign(sharpness)}</RecipeGridCell>
+        <RecipeGridCell label="Clarity">{addSign(clarity)}</RecipeGridCell>
         {/* ROW */}
-        {renderDataSquare(
-          formatGrain(data),
-          'grain',
-          'col-span-6',
-        )}
-        {renderDataSquare(bwAdjustment ?? 0, 'BW ADJ', 'col-span-3')}
-        {renderDataSquare(bwMagentaGreen ?? 0, 'BW M/G', 'col-span-3')}
-      </div>
-    </motion.div>
+        <RecipeGridCell span={6} label="Color Chrome">
+          {colorChromeEffect?.toLocaleUpperCase() ?? 'N/A'}
+        </RecipeGridCell>
+        <RecipeGridCell span={6} label="FX Blue">
+          {colorChromeFXBlue?.toLocaleUpperCase() ?? 'N/A'}
+        </RecipeGridCell>
+        {/* ROW */}
+        <RecipeGridCell span={6} label="grain">
+          {formatGrain(data)}
+        </RecipeGridCell>
+        <RecipeGridCell span={3} label="BW ADJ">
+          {addSign(bwAdjustment ?? 0)}
+        </RecipeGridCell>
+        <RecipeGridCell span={3} label="BW M/G">
+          {addSign(bwMagentaGreen ?? 0)}
+        </RecipeGridCell>
+      </RecipeGrid>
+    </RecipeOverlay>
   );
 }

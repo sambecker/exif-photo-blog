@@ -3,18 +3,21 @@
 import clsx from 'clsx/lite';
 import { FaPlus } from 'react-icons/fa6';
 import Tooltip from '@/components/Tooltip';
-import { useRef } from 'react';
+import { ComponentPropsWithoutRef, Ref, useRef } from 'react';
 import { useAppText } from '@/i18n/state/client';
 
 export default function PhotoRecipeOverlayButton({
+  ref: forwardedRef,
   className,
   toggleRecipeOverlay,
   isShowingRecipeOverlay,
+  onClick,
+  ...props
 }: {
-  className?: string
-  toggleRecipeOverlay: () => void
+  ref?: Ref<HTMLButtonElement>
+  toggleRecipeOverlay?: () => void
   isShowingRecipeOverlay?: boolean
-}) {
+} & ComponentPropsWithoutRef<'button'>) {
   const ref = useRef<HTMLButtonElement>(null);
 
   const appText = useAppText();
@@ -22,9 +25,18 @@ export default function PhotoRecipeOverlayButton({
   return (
     <Tooltip content={appText.tooltip.recipeInfo} triggerIsFocusable>
       <button
-        ref={ref}
+        {...props}
+        ref={node => {
+          ref.current = node;
+          if (typeof forwardedRef === 'function') {
+            return forwardedRef(node);
+          } else if (forwardedRef) {
+            forwardedRef.current = node;
+          }
+        }}
         type="button"
-        onClick={() => {
+        onClick={event => {
+          onClick?.(event);
           toggleRecipeOverlay?.();
           // Avoid unexpected tooltip trigger
           ref.current?.blur();

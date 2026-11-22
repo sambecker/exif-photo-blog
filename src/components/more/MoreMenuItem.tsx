@@ -142,7 +142,7 @@ export default function MoreMenuItem({
           href={href}
           className={clsx(
             'inline-flex items-center grow',
-            'text-sm text-main hover:text-main',
+            'text-base text-main hover:text-main',
             // Enlarge clickable area
             '-m-2 p-2',
             keyCommand && 'sm:-mr-10',
@@ -164,7 +164,7 @@ export default function MoreMenuItem({
           hideText="never"
           styleAs="link-without-hover"
           // h-auto: link style defaults to h-4, which clips tall nav icons
-          className="text-sm grow text-left h-auto!"
+          className="text-base grow text-left h-auto!"
           classNameIcon={iconSlotClass}
           classNameContent={classNameContent}
         >

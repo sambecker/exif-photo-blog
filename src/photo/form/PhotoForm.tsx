@@ -32,6 +32,7 @@ import Checkbox from '@/components/Checkbox';
 import {
   createPhotoAction,
   getAiColorAction,
+  regenerateOptimizedFilesForPhotoAction,
   updatePhotoAction,
 } from '../actions';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
@@ -42,7 +43,7 @@ import {
   PATH_ADMIN_PHOTOS,
   PATH_ADMIN_UPLOADS,
 } from '@/app/path';
-import { toastSuccess, toastWarning } from '@/toast';
+import { toastSuccess, toastWaiting, toastWarning } from '@/toast';
 import { getDimensionsFromSize } from '@/utility/size';
 import ImageWithFallback from '@/components/image/ImageWithFallback';
 import { Tags, convertTagsForForm } from '@/tag';
@@ -50,6 +51,7 @@ import { AiContent } from '../ai/useAiImageQueries';
 import AiButton from '../ai/AiButton';
 import { HiSparkles } from 'react-icons/hi';
 import LoaderButton from '@/components/primitives/LoaderButton';
+import ResponsiveText from '@/components/primitives/ResponsiveText';
 import Spinner from '@/components/Spinner';
 import usePreventNavigation from '@/utility/usePreventNavigation';
 import { useAppState } from '@/app/AppState';
@@ -60,7 +62,9 @@ import { convertPlaceToAutocomplete, Place } from '@/place';
 import ErrorNote from '@/components/ErrorNote';
 import { convertRecipesForForm, Recipes } from '@/recipe';
 import deepEqual from 'fast-deep-equal/es6/react';
-import ApplyRecipeTitleGloballyCheckbox from './ApplyRecipesGloballyCheckbox';
+import RecipeTitleHashCheckbox from './RecipeTitleHashCheckbox';
+import RecipeTitleRenameWarning from './RecipeTitleRenameWarning';
+import { canCreateRecipeHashKey, isRecipeHashKey } from '@/recipe/key';
 import FieldsetRecipeData from './FieldsetRecipeData';
 import { convertFilmsForForm, Films } from '@/film';
 import {
@@ -110,6 +114,7 @@ import FieldsetAlbum from '@/album/FieldsetAlbum';
 import Form from 'next/form';
 import { useSearchParams } from 'next/navigation';
 import DateTimePicker from '@/components/DateTimePicker';
+import { formatDistanceToNowStrict } from 'date-fns';
 
 const THUMBNAIL_SIZE = 300;
 /** Form cap. The floating thumb is placed to the right of this. */
@@ -187,6 +192,9 @@ export default function PhotoForm({
     .join(','));
   const [isLoadingPlace, setIsLoadingPlace] = useState(false);
   const [isLoadingKeyColor, setIsLoadingKeyColor] = useState(false);
+  const [isRegeneratingOptimized, setIsRegeneratingOptimized] = useState(false);
+  const [optimizedGeneratedAtOverride, setOptimizedGeneratedAtOverride] =
+    useState<Date>();
 
   const areAlbumTitlesModified = albumTitles !== photoAlbumTitles
     .sort((a, b) => a.localeCompare(b))
@@ -269,6 +277,43 @@ export default function PhotoForm({
   }, [updatedExifData]);
 
   const url = formData.url ?? '';
+
+  const optimizedGeneratedAt = useMemo(() => {
+    if (optimizedGeneratedAtOverride) {
+      return optimizedGeneratedAtOverride;
+    }
+    const dates = photoStorageUrls
+      .filter(({ url }) =>
+        Boolean(getFileNamePartsFromStorageUrl(url).fileModifier))
+      .map(({ uploadedAt }) => uploadedAt)
+      .filter((date): date is Date => Boolean(date))
+      .sort((a, b) => b.getTime() - a.getTime());
+    return dates[0];
+  }, [optimizedGeneratedAtOverride, photoStorageUrls]);
+
+  const regenerateOptimizedFiles = useCallback(() => {
+    if (!formData.id) { return; }
+    setIsRegeneratingOptimized(true);
+    const toastId = toastWaiting(appText.admin.filesRegeneratingOptimized);
+    regenerateOptimizedFilesForPhotoAction(formData.id)
+      .then(count => {
+        setOptimizedGeneratedAtOverride(new Date());
+        toastSuccess(
+          appText.admin.filesRegenerateOptimizedSuccess(count ?? 0),
+          undefined,
+          toastId,
+        );
+      })
+      .catch(error => {
+        console.error(error);
+        toastWarning(
+          appText.admin.filesRegenerateOptimizedFailure,
+          undefined,
+          toastId,
+        );
+      })
+      .finally(() => setIsRegeneratingOptimized(false));
+  }, [appText.admin, formData.id]);
 
   const regenerateKeyColor = useCallback(async () => {
     if (!url) { return; }
@@ -424,11 +469,18 @@ export default function PhotoForm({
                     fileName,
                     fileModifier,
                   } = getFileNamePartsFromStorageUrl(url);
+                  const isOptimized = Boolean(fileModifier);
                   return <div
                     key={url}
                     className="flex items-center gap-2"
                   >
-                    <TbPhoto className="translate-y-[1px] text-medium" />
+                    {isOptimized && isRegeneratingOptimized
+                      ? <Spinner
+                        size={14}
+                        color="dim"
+                        className="translate-y-[1px]"
+                      />
+                      : <TbPhoto className="translate-y-[1px] text-medium" />}
                     <Link
                       href={url}
                       target="_blank"
@@ -438,11 +490,40 @@ export default function PhotoForm({
                     <span className="text-dim">
                       {size}
                       {/* Show dimensions for original file when available */}
-                      {!fileModifier && formData.width && formData.height &&
+                      {!isOptimized && formData.width && formData.height &&
                         ` @ ${formData.width}×${formData.height}`}
                     </span>
                   </div>;
                 })}
+                <div className={clsx(
+                  'flex items-center justify-between gap-2',
+                  'mt-2 -mx-2 px-2 py-1.5',
+                  'rounded-md bg-extra-dim',
+                )}>
+                  {optimizedGeneratedAt &&
+                    <span className="text-medium">
+                      <span className="sm:hidden">
+                        {`Generated ${formatDistanceToNowStrict(
+                          optimizedGeneratedAt,
+                        )} ago`}
+                      </span>
+                      <span className="hidden sm:inline">
+                        {`Files generated ${formatDistanceToNowStrict(
+                          optimizedGeneratedAt,
+                        )} ago`}
+                      </span>
+                    </span>}
+                  <LoaderButton
+                    styleAs="link"
+                    hideText="never"
+                    isLoading={isRegeneratingOptimized}
+                    onClick={regenerateOptimizedFiles}
+                  >
+                    <ResponsiveText shortText="Regenerate">
+                      Regenerate Files
+                    </ResponsiveText>
+                  </LoaderButton>
+                </div>
               </div>
             </SmallDisclosure>
             : null;
@@ -475,15 +556,6 @@ export default function PhotoForm({
       );
     }
   };
-
-  const onMatchResults = useCallback((didFindMatchingPhotos: boolean) => {
-    setFormData(data => ({
-      ...data,
-      applyRecipeTitleGlobally: didFindMatchingPhotos
-        ? 'true'
-        : 'false',
-    }));
-  }, [setFormData]);
 
   // Recipe data copied in from a chosen title can be replaced by subsequent
   // titles, and is never used to search for photos needing that title
@@ -844,18 +916,28 @@ export default function PhotoForm({
                             <PhotoFilmIcon />
                           </span>}
                         />;
-                      case 'applyRecipeTitleGlobally':
-                        return <ApplyRecipeTitleGloballyCheckbox
+                      case 'recipeTitle':
+                        return <FieldsetWithStatus
                           key={key}
                           {...fieldProps}
-                          photoId={initialPhotoForm.id}
-                          recipeTitle={formData.recipeTitle}
-                          hasRecipeTitleChanged={
-                            changedFormKeys.includes('recipeTitle')}
-                          recipeData={formData.recipeData}
-                          film={formData.film}
-                          didCopyRecipeData={didCopyRecipeData}
-                          onMatchResults={onMatchResults}
+                          readOnly={fieldProps.readOnly ||
+                            isRecipeHashKey(formData.recipeTitle)}
+                          labelAccessory={(
+                            canCreateRecipeHashKey(formData.recipeData) ||
+                            isRecipeHashKey(formData.recipeTitle)
+                          ) && <RecipeTitleHashCheckbox
+                            recipeTitle={formData.recipeTitle}
+                            recipeData={formData.recipeData}
+                            onChange={recipeTitle => setFormData(data =>
+                              ({ ...data, recipeTitle }))}
+                          />}
+                          footer={<RecipeTitleRenameWarning
+                            photoId={initialPhotoForm.id}
+                            previousTitle={initialPhotoForm.recipeTitle}
+                            recipeTitle={formData.recipeTitle}
+                            recipeData={formData.recipeData}
+                            film={formData.film}
+                          />}
                         />;
                       case 'recipeData':
                         return <FieldsetRecipeData

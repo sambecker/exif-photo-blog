@@ -49,6 +49,7 @@ export default function FieldsetWithStatus({
   type = 'text',
   inputRef: inputRefProp,
   accessory,
+  labelAccessory,
   footer,
   hideLabel,
   tabIndex,
@@ -88,6 +89,7 @@ export default function FieldsetWithStatus({
   type?: FieldSetType
   inputRef?: RefObject<HTMLInputElement | null>
   accessory?: ReactNode
+  labelAccessory?: ReactNode
   footer?: ReactNode
   hideLabel?: boolean
   tabIndex?: number
@@ -154,7 +156,11 @@ export default function FieldsetWithStatus({
         ),
         className,
       )}>
-        {!hideLabel &&
+        {!hideLabel && <div className={clsx(
+          labelAccessory
+            ? 'flex flex-wrap items-center gap-x-3'
+            : 'contents',
+        )}>
           <label
             htmlFor={id}
             className={clsx(
@@ -211,7 +217,9 @@ export default function FieldsetWithStatus({
               <span className="translate-y-[1.5px]">
                 <Spinner />
               </span>}
-          </label>}
+          </label>
+          {labelAccessory}
+        </div>}
         <div className="flex gap-2">
           {selectOptions
             ? <SelectMenu

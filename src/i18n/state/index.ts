@@ -47,6 +47,9 @@ export const generateAppTextState = (i18n: I18N) => {
         i18n.admin.deleteConfirm.replace('{{photoTitle}}', photoTitle),
       reuploadSuccessTitled: (photoTitle: string) =>
         i18n.admin.reuploadSuccessTitled.replace('{{photoTitle}}', photoTitle),
+      filesRegenerateOptimizedSuccess: (count: number) =>
+        i18n.admin.filesRegenerateOptimizedSuccess
+          .replace('{{count}}', count.toString()),
       setVisibilityPlaceholder: (quantity: string) =>
         i18n.admin.setVisibilityPlaceholder.replace('{{quantity}}', quantity),
       setVisibilityConfirm: (visibility: string, quantity: string) =>

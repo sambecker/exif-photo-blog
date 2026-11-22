@@ -136,7 +136,7 @@ export default function MoreMenu({
                       'outline-none focus:outline-none',
                       'flex items-center h-8.5 gap-3',
                       'px-2 py-2 rounded-lg',
-                      'text-sm text-main hover:text-main',
+                      'text-base text-main hover:text-main',
                       getMenuItemColorClasses(),
                       'select-none',
                       'cursor-pointer',

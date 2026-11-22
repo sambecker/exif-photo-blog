@@ -31,7 +31,7 @@ export default function CommandKItem({
       className={clsx (
         'px-2',
         accessory ? 'py-2' : 'py-1',
-        'rounded-md cursor-pointer tracking-wide',
+        'rounded-md cursor-pointer tracking-wide text-base',
         'active:bg-gray-200/75! dark:active:bg-gray-800/55!',
         ...loading
           ? [

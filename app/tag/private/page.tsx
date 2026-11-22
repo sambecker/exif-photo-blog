@@ -68,7 +68,7 @@ export default async function PrivateTagPage() {
         <PrivateHeader {...{ photos, count, dateRange }} />
         <AppGrid
           className="mb-8"
-          contentMain={<Note>
+          contentMain={<Note animate>
             Visible only to admins (uploads only secure via obscurity)
           </Note>}
         />

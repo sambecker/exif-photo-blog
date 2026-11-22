@@ -24,7 +24,8 @@ export default function PhotoFilm({
 }: {
   film: string
   make?: string
-} & Partial<ComponentProps<typeof PhotoRecipeOverlayButton>>
+} & Partial<Pick<ComponentProps<typeof PhotoRecipeOverlayButton>,
+  'toggleRecipeOverlay' | 'isShowingRecipeOverlay'>>
   & EntityLinkExternalProps) {
   const { getFilmCount } = useCategoryCounts();
   
