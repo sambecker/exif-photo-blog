@@ -6,8 +6,32 @@ import {
   getWheresFromOptions,
   PhotoQueryOptions,
 } from '@/db';
+import { getPhotosForFolders } from '@/photo/query';
+import { query } from '@/platforms/postgres';
+
+jest.mock('../src/platforms/postgres', () => ({
+  query: jest.fn(),
+  sql: jest.fn(),
+}));
+
+const mockedQuery = query as jest.MockedFunction<typeof query>;
+
+const DB_PHOTO_ROW = {
+  id: 'photo001',
+  url: 'https://example.test/photo.jpg',
+  extension: 'jpg',
+  aspect_ratio: 1.5,
+  tags: ['street'],
+  taken_at: new Date('2025-01-01T12:00:00.000Z'),
+  taken_at_naive: '2025-01-01 12:00:00',
+  updated_at: new Date('2025-01-01T12:00:00.000Z'),
+  created_at: new Date('2025-01-01T12:00:00.000Z'),
+};
 
 describe('Postgres', () => {
+  beforeEach(() => {
+    mockedQuery.mockReset();
+  });
   it('orders random photo queries with a stable recency stride', () => {
     expect(getOrderByFromOptions({ sortBy: 'random', limit: 3 }))
       .toBe('ORDER BY (ROW_NUMBER() OVER (ORDER BY taken_at DESC, id) - 1) % 6, taken_at DESC, id');
@@ -72,5 +96,70 @@ describe('Postgres', () => {
       expect(areOptionsSensitive({ hidden } as unknown as PhotoQueryOptions))
         .toBe(true);
     }
+  });
+  it('Batches folder photo queries with scoped parameters and strips folder_index', async () => {
+    expect(await getPhotosForFolders([])).toEqual([]);
+    expect(mockedQuery).not.toHaveBeenCalled();
+
+    mockedQuery.mockResolvedValueOnce({
+      rows: [
+        { ...DB_PHOTO_ROW, id: 'photo000', folder_index: 0 },
+        { ...DB_PHOTO_ROW, id: 'photo002', folder_index: 2 },
+      ],
+      rowCount: 2,
+      command: 'SELECT',
+      oid: 0,
+      fields: [],
+    });
+
+    const folders = await getPhotosForFolders([
+      { tag: 'favs', sortBy: 'random', limit: 3 },
+      { year: '2024', sortBy: 'random', limit: 3 },
+      { focal: 35, sortBy: 'random', limit: 3 },
+    ]);
+
+    expect(mockedQuery).toHaveBeenCalledTimes(1);
+    const [sqlText, values] = mockedQuery.mock.calls[0];
+    expect(sqlText).toContain('0 AS folder_index');
+    expect(sqlText).toContain('1 AS folder_index');
+    expect(sqlText).toContain('2 AS folder_index');
+    expect(values).toEqual(['favs', 3, 0, '2024', 3, 0, 35, 3, 0]);
+
+    expect(folders.map(f => f.map(p => p.id))).toEqual([
+      ['photo000'],
+      [],
+      ['photo002'],
+    ]);
+    expect(folders[0][0]).not.toHaveProperty('folderIndex');
+    expect(folders[0][0]).not.toHaveProperty('folder_index');
+  });
+  it('Chunks folder photo queries beyond 1000 folders', async () => {
+    mockedQuery
+      .mockResolvedValueOnce({
+        rows: [{ ...DB_PHOTO_ROW, id: 'first', folder_index: 0 }],
+        rowCount: 1,
+        command: 'SELECT',
+        oid: 0,
+        fields: [],
+      })
+      .mockResolvedValueOnce({
+        rows: [{ ...DB_PHOTO_ROW, id: 'last', folder_index: 1000 }],
+        rowCount: 1,
+        command: 'SELECT',
+        oid: 0,
+        fields: [],
+      });
+
+    const options = Array.from({ length: 1001 }, (_, i) => ({
+      tag: `tag-${i}`,
+      limit: 3,
+    }));
+
+    const folders = await getPhotosForFolders(options);
+
+    expect(mockedQuery).toHaveBeenCalledTimes(2);
+    expect(mockedQuery.mock.calls[1][1]).toEqual(['tag-1000', 3, 0]);
+    expect(folders[0][0].id).toBe('first');
+    expect(folders[1000][0].id).toBe('last');
   });
 });

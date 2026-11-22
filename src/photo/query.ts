@@ -674,6 +674,8 @@ export const getPhotos = async (options: PhotoQueryOptions = {}) =>
     options,
   );
 
+const FOLDER_QUERY_BATCH_SIZE = 1000;
+
 // Fetch photos for many folders at once, returning one array per folder.
 // Each folder is a parenthesized subquery so that its own ORDER BY and
 // LIMIT stay scoped to that folder instead of leaking across the union.
@@ -685,50 +687,61 @@ export const getPhotosForFolders = async (
   async () => {
     if (folderOptions.length === 0) { return []; }
 
-    const values = [] as Primitive[];
-
-    const subqueries = folderOptions.map((options, folderIndex) => {
-      const {
-        wheres,
-        wheresValues,
-        lastValuesIndex,
-      } = getWheresFromOptions(options, values.length + 1);
-      values.push(...wheresValues);
-
-      const {
-        limitAndOffset,
-        limitAndOffsetValues,
-      } = getLimitAndOffsetFromOptions(options, lastValuesIndex);
-      values.push(...limitAndOffsetValues);
-
-      return [
-        `(SELECT p.*, ${folderIndex} AS folder_index FROM photos p`,
-        getJoinsFromOptions(options),
-        wheres,
-        getOrderByFromOptions(options),
-        limitAndOffset,
-        ')',
-      ].filter(Boolean).join(' ');
-    });
-
-    const { rows } = await query<PhotoDbRowWithFolderIndex>(
-      subqueries.join(' UNION ALL '),
-      values,
-    );
-
     const folders = folderOptions.map(() => [] as Photo[]);
 
-    rows.forEach(row => {
-      // index 0 is falsy, so check for list membership
-      if (folders[row.folder_index]) {
-        folders[row.folder_index].push(parsePhotoFromDb(row));
-      }
-    });
+    for (
+      let batchStart = 0;
+      batchStart < folderOptions.length;
+      batchStart += FOLDER_QUERY_BATCH_SIZE
+    ) {
+      const batch = folderOptions.slice(
+        batchStart,
+        batchStart + FOLDER_QUERY_BATCH_SIZE,
+      );
+      const values = [] as Primitive[];
+
+      const subqueries = batch.map((options, index) => {
+        const folderIndex = batchStart + index;
+        const {
+          wheres,
+          wheresValues,
+          lastValuesIndex,
+        } = getWheresFromOptions(options, values.length + 1);
+        values.push(...wheresValues);
+
+        const {
+          limitAndOffset,
+          limitAndOffsetValues,
+        } = getLimitAndOffsetFromOptions(options, lastValuesIndex);
+        values.push(...limitAndOffsetValues);
+
+        return [
+          `(SELECT p.*, ${folderIndex} AS folder_index FROM photos p`,
+          getJoinsFromOptions(options),
+          wheres,
+          getOrderByFromOptions(options),
+          limitAndOffset,
+          ')',
+        ].filter(Boolean).join(' ');
+      });
+
+      const { rows } = await query<PhotoDbRowWithFolderIndex>(
+        subqueries.join(' UNION ALL '),
+        values,
+      );
+
+      rows.forEach(({ folder_index, ...row }) => {
+        // index 0 is falsy, so check for list membership
+        if (folders[folder_index]) {
+          folders[folder_index].push(parsePhotoFromDb(row));
+        }
+      });
+    }
 
     return folders;
   },
   'getPhotosForFolders',
-  folderOptions,
+  { folderCount: folderOptions.length },
 );
 
 export const getPhotoIds = async (options: PhotoQueryOptions = {}) =>
