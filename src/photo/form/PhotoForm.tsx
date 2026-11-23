@@ -108,7 +108,8 @@ import {
   StorageListResponse,
 } from '@/platforms/storage';
 import SmallDisclosure from '@/components/SmallDisclosure';
-import { TbPhoto } from 'react-icons/tb';
+import { TbFiles, TbPhoto } from 'react-icons/tb';
+import IconGrSync from '@/components/icons/IconGrSync';
 import { Albums } from '@/album';
 import FieldsetAlbum from '@/album/FieldsetAlbum';
 import Form from 'next/form';
@@ -462,7 +463,16 @@ export default function PhotoForm({
             No storage found for photo
           </span>
           : photoStorageUrls.length > 1
-            ? <SmallDisclosure label="Optimized file set">
+            ? <SmallDisclosure label={
+              <span className="inline-flex items-center gap-1.5">
+                <TbFiles className={clsx(
+                  'shrink-0 text-[16px]',
+                  'translate-[-1px] translate-y-[0.5px]',
+                  'text-medium',
+                )} />
+                Optimized file set
+              </span>
+            }>
               <div className="space-y-1">
                 {photoStorageUrls.map(({ url, size }) => {
                   const {
@@ -501,7 +511,7 @@ export default function PhotoForm({
                 <div className={clsx(
                   'flex items-center justify-between gap-2',
                   'mt-2 -ml-2 px-2 py-1.5',
-                  'rounded-md bg-extra-dim',
+                  'rounded-lg bg-extra-dim',
                 )}>
                   {optimizedGeneratedAt &&
                     <span className="text-medium">
@@ -519,6 +529,11 @@ export default function PhotoForm({
                   <LoaderButton
                     styleAs="link"
                     hideText="never"
+                    icon={<IconGrSync
+                      className="size-3.5 translate-y-[0.5px] text-medium"
+                    />}
+                    className="h-4.5"
+                    classNameIcon="size-3.5"
                     isLoading={isRegeneratingOptimized}
                     onClick={regenerateOptimizedFiles}
                   >
