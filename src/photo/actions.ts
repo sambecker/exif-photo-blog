@@ -616,7 +616,6 @@ const syncPhoto = async (
       formDataFromExif,
       imageResizedBase64,
       shouldStripGpsData,
-      fileBytes,
       error,
     } = await extractImageDataFromBlobPath(photo.url, {
       includeInitialPhotoFields: false,
@@ -637,7 +636,6 @@ const syncPhoto = async (
         // re-running image upload transfer logic
         const url = await convertUploadToPhoto({
           uploadUrl: photo.url,
-          fileBytes,
           shouldStripGpsData,
           shouldDeleteOrigin: false,
         });

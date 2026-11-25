@@ -55,7 +55,6 @@ export const addUpload = async ({
     formDataFromExif,
     imageResizedBase64,
     shouldStripGpsData,
-    fileBytes,
   } = await extractImageDataFromBlobPath(url, {
     includeInitialPhotoFields: true,
     generateBlurData: BLUR_ENABLED,
@@ -108,7 +107,6 @@ export const addUpload = async ({
 
     const updatedUrl = await convertUploadToPhoto({
       uploadUrl: url,
-      fileBytes,
       shouldStripGpsData,
     });
     if (updatedUrl) {

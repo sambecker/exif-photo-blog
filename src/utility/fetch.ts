@@ -1,23 +1,19 @@
-export const fetchUrlWithByteLimit = async (
+import { Readable } from 'stream';
+
+// Fetch only the leading bytes of a remote object, used to read image
+// metadata (EXIF/XMP/MakerNote) without buffering the full file.
+export const fetchUrlHeader = async (
   url: string,
   maxBytes: number,
 ): Promise<ArrayBuffer> => {
-  const response = await fetch(url, { cache: 'no-store' });
+  const response = await fetch(url, {
+    cache: 'no-store',
+    headers: { Range: `bytes=0-${maxBytes - 1}` },
+  });
 
   if (!response.ok) {
-    // A cloned response can delay cancellation until its other branch drains.
-    // Cleanup must not block reporting an HTTP error or a size-limit failure.
     void response.body?.cancel().catch(() => undefined);
     throw new Error(`Fetch failed with status ${response.status}`);
-  }
-
-  // Cloud storage providers report `content-length` on GET, allowing most
-  // oversized images to be rejected before the body is read. The stream
-  // below is what enforces the cap when the header is missing or too small.
-  const contentLength = Number(response.headers.get('content-length'));
-  if (Number.isFinite(contentLength) && contentLength > maxBytes) {
-    void response.body?.cancel().catch(() => undefined);
-    throw new Error(`Image is too large (${contentLength} bytes)`);
   }
 
   if (!response.body) {
@@ -29,14 +25,13 @@ export const fetchUrlWithByteLimit = async (
   let byteLength = 0;
 
   try {
-    let result = await reader.read();
-    while (!result.done) {
-      byteLength += result.value.byteLength;
-      if (byteLength > maxBytes) {
-        throw new Error(`Image is too large (max ${maxBytes} bytes)`);
-      }
-      chunks.push(result.value);
-      result = await reader.read();
+    // Cap the read even if the server ignores Range and streams everything.
+    while (byteLength < maxBytes) {
+      const { done, value } = await reader.read();
+      if (done) { break; }
+      const take = Math.min(value.byteLength, maxBytes - byteLength);
+      chunks.push(take === value.byteLength ? value : value.slice(0, take));
+      byteLength += take;
     }
 
     const bytes = new Uint8Array(byteLength);
@@ -49,4 +44,23 @@ export const fetchUrlWithByteLimit = async (
   } finally {
     void reader.cancel().catch(() => undefined);
   }
+};
+
+// Fetch a remote object as a Node.js stream for piping into `sharp`,
+// avoiding a full in-memory buffer.
+export const fetchUrlStream = async (
+  url: string,
+): Promise<NodeJS.ReadableStream> => {
+  const response = await fetch(url, { cache: 'no-store' });
+
+  if (!response.ok) {
+    void response.body?.cancel().catch(() => undefined);
+    throw new Error(`Fetch failed with status ${response.status}`);
+  }
+
+  if (!response.body) {
+    throw new Error('No response body');
+  }
+
+  return Readable.fromWeb(response.body as never);
 };
