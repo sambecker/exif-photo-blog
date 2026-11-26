@@ -31,12 +31,12 @@ import {
   getCustomRecipeTitleForData,
   renameRecipeForMatchingPhotos,
 } from '@/photo/query';
-import { MAX_PHOTO_UPLOAD_SIZE_IN_BYTES, PhotoDbInsert } from '.';
+import { PhotoDbInsert } from '.';
 import { convertExifToFormData } from './form/server';
 import { getColorFieldsForPhotoForm } from './color/server';
 import exifr from 'exifr';
 import { getCompatibleExifValue } from '@/utility/exif';
-import { fetchUrlWithByteLimit } from '@/utility/fetch';
+import { fetchUrlHeader, fetchUrlStream } from '@/utility/fetch';
 import { getPlaceFromCoordinates } from '@/platforms/google-places';
 import {
   isOmSystemCamera,
@@ -59,10 +59,10 @@ const IMAGE_WIDTH_BLUR = 200;
 const IMAGE_WIDTH_DEFAULT = 200;
 const IMAGE_QUALITY_DEFAULT = 80;
 
-// Buffers an image, refusing to exceed `maxBytes`, so that oversized
-// photos fail fast instead of exhausting serverless memory
-export const fetchImageUrlSafely = (url: string) =>
-  fetchUrlWithByteLimit(url, MAX_PHOTO_UPLOAD_SIZE_IN_BYTES);
+// EXIF, XMP, and MakerNote data live in the leading bytes of an image, so
+// parsing only needs a bounded header fetch rather than the full file.
+// Kept generous to cover large embedded thumbnails and XMP packets.
+const MAX_EXIF_HEADER_BYTES = 4 * 1024 * 1024;
 
 export const extractImageDataFromBlobPath = async (
   blobPath: string, {
@@ -86,7 +86,6 @@ export const extractImageDataFromBlobPath = async (
   formDataFromExif?: Partial<PhotoFormData>
   imageResizedBase64?: string
   shouldStripGpsData?: boolean
-  fileBytes?: ArrayBuffer
   error?: string
 }> => {
   const url = decodeURIComponent(blobPath);
@@ -107,8 +106,8 @@ export const extractImageDataFromBlobPath = async (
   let shouldStripGpsData = false;
   let error: string | undefined;
 
-  const fileBytes = blobPath
-    ? await fetchImageUrlSafely(url)
+  const headerBytes = blobPath
+    ? await fetchUrlHeader(url, MAX_EXIF_HEADER_BYTES)
       .catch(e => {
         error = `Error fetching image from ${url}: "${e.message}"`;
         return undefined;
@@ -116,13 +115,13 @@ export const extractImageDataFromBlobPath = async (
     : undefined;
 
   try {
-    if (fileBytes) {
-      const parser = ExifParserFactory.create(Buffer.from(fileBytes));
+    if (headerBytes) {
+      const parser = ExifParserFactory.create(Buffer.from(headerBytes));
 
       // Data for form
       parser.enableBinaryFields(false);
       dataExif = parser.parse();
-      dataExifr = await exifr.parse(fileBytes, { xmp: true });
+      dataExifr = await exifr.parse(headerBytes, { xmp: true });
 
       // Capture film simulation for Fujifilm or Picture Control for Nikon
       const isOmCamera = isOmSystemCamera(dataExif.tags?.Make);
@@ -163,11 +162,11 @@ export const extractImageDataFromBlobPath = async (
       didCheckOmRecipe = isOmCamera || (refreshOmRecipe && !recipe);
 
       if (generateBlurData) {
-        blurData = await blurImage(fileBytes);
+        blurData = await blurImage(await fetchUrlStream(url));
       }
 
       if (generateResizedImage) {
-        imageResizedBase64 = await resizeImage(fileBytes);
+        imageResizedBase64 = await resizeImage(await fetchUrlStream(url));
       }
 
       shouldStripGpsData = GEO_PRIVACY_ENABLED && (
@@ -226,7 +225,6 @@ export const extractImageDataFromBlobPath = async (
     },
     imageResizedBase64,
     shouldStripGpsData,
-    fileBytes,
     error,
   };
 };
@@ -264,25 +262,46 @@ const getLocationFormFieldsFromExif = async (
   }
 };
 
+type ImageInput = ArrayBuffer | NodeJS.ReadableStream;
+
+// sharp consumes Readable stream input via `pipe` rather than as a direct
+// argument, and its published types only list Buffer/ArrayBuffer/TypedArray/
+// string inputs, hence the split handling.
+const sharpFrom = (image: ImageInput): Sharp => {
+  if (image instanceof ArrayBuffer) {
+    return sharp(image);
+  }
+  const instance = sharp();
+  const stream = image as NodeJS.ReadableStream;
+  // If the download fails mid-stream, end the input so sharp rejects on the
+  // truncated data instead of hanging or emitting an unhandled stream error.
+  stream.on('error', err => {
+    console.log('Error streaming image input', err);
+    instance.end();
+  });
+  stream.pipe(instance);
+  return instance;
+};
+
 const generateBase64 = async (
-  image: ArrayBuffer,
+  image: ImageInput,
   middleware?: (sharp: Sharp) => Sharp,
 ) => 
-  (middleware ? middleware(sharp(image)) : sharp(image))
+  (middleware ? middleware(sharpFrom(image)) : sharpFrom(image))
     .withMetadata()
     .toFormat('jpeg', { quality: IMAGE_QUALITY_DEFAULT })
     .toBuffer()
     .then(data => `data:image/jpeg;base64,${data.toString('base64')}`);
 
 const resizeImage = async (
-  image: ArrayBuffer,
+  image: ImageInput,
   width = IMAGE_WIDTH_DEFAULT,
 ) => 
   generateBase64(image, sharp => sharp
     .resize(width),
   );
 
-const blurImage = async (image: ArrayBuffer) => 
+const blurImage = async (image: ImageInput) => 
   generateBase64(image, sharp => sharp
     .resize(IMAGE_WIDTH_BLUR)
     .modulate({ saturation: 1.15 })
@@ -302,29 +321,27 @@ export const resizeImageFromUrl = async (
   url: string,
   width?: number,
 ) => 
-  fetch(decodeURIComponent(url))
-    .then(res => res.arrayBuffer())
-    .then(buffer => resizeImage(buffer, width))
+  fetchUrlStream(decodeURIComponent(url))
+    .then(stream => resizeImage(stream, width))
     .catch(e => {
       console.log(`Error resizing image from URL (${url})`, e);
       return '';
     });
 
 export const blurImageFromUrl = async (url: string) => 
-  fetch(decodeURIComponent(url))
-    .then(res => res.arrayBuffer())
-    .then(buffer => blurImage(buffer))
+  fetchUrlStream(decodeURIComponent(url))
+    .then(stream => blurImage(stream))
     .catch(e => {
       console.log(`Error blurring image from URL (${url})`, e);
       return '';
     });
 
 export const resizeImageToBytes = async (
-  image: ArrayBuffer,
+  image: ImageInput,
   width: number,
   quality = IMAGE_QUALITY_DEFAULT,
 ) => 
-  sharp(image)
+  sharpFrom(image)
     .rotate()
     .keepIccProfile()
     .resize(width)
@@ -333,8 +350,8 @@ export const resizeImageToBytes = async (
 
 const GPS_NULL_STRING = '-';
 
-export const removeGpsData = async (image: ArrayBuffer) =>
-  sharp(image)
+export const removeGpsData = async (image: ImageInput) =>
+  sharpFrom(image)
     .withExifMerge({
       IFD3: {
         GPSMapDatum: GPS_NULL_STRING,
